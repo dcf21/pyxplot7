@@ -1,0 +1,119 @@
+ ____       __  ______  _       _      PYXPLOT
+|  _ \ _   _\ \/ /  _ \| | ___ | |_    Version 0.6.2
+| |_) | | | |\  /| |_) | |/ _ \| __|   19/01/2006
+|  __/| |_| |/  \|  __/| | (_) | |_
+|_|    \__, /_/\_\_|   |_|\___/ \__|   Copyright (C) 2006 Dominic Ford
+       |___/
+
+With thanks to Joerg Lehmann and Andre Wobst for writing PyX, and to
+Ross Church for his many helpful suggestions along the way.
+
+Send comments, bug reports, feature requests and coffee supplies to:
+<coders@pyxplot.org.uk>
+
+-----
+
+
+
+1. INTRODUCTION
+
+PyXPlot is a commandline graphing package, which, for ease of use, has an
+interface based heavily upon that of gnuplot -- perhaps UNIX's most widely-used
+plotting package. Despite the shared interface, however, PyXPlot is intended to
+significantly improve upon the quality of gnuplot's output, producing
+publication-quality figures. The commandline interface has also been extended,
+providing a wealth of new features, and short-cuts for some operations which
+were felt to be excessively cumbersome in the original.
+
+The motivation behind PyXPlot's creation was the apparent lack of a free
+plotting package which combined both high-quality output and a simple
+interface.  Some -- pgplot for one -- provided very attractive output, but
+required a program to be written each time a plot was to be produced -- a
+potentially time consuming task. Others, gnuplot being the prime example, were
+quick and simple to use, but produced less attractive results.
+
+PyXPlot attempts to fill that gap, offering the best of both worlds. Though the
+interface is based upon that of gnuplot, text is now rendered with all of the
+beauty and flexibility of the LaTeX typesetting environment; the "multiplot"
+environment is made massively more flexible, making it easy to produce
+galleries of plots; and the range of possible output formats is extended -- to
+name but a few of the enhancements. A number of examples of the results of
+which PyXPlot is capable can be seen on the PyXPlot website:
+<http://www.srcf.ucam.org/pyxplot/>.
+
+
+
+2. SYSTEM REQUIREMENTS
+
+PyXPlot is presently only supported for Linux. It requires that the following
+software packages (not included) be installed:
+
+bash     (The bash shell)
+python   (Version 2.3 or later)
+latex    (Used for all textual labels)
+convert  (ImageMagick; needed for the gif, png and jpg terminals)
+
+The following package is not required for installation, but many PyXPlot
+features are disabled when it is not present, including the fit and spline
+commands and the integration of functions. It is very strongly recommended:
+
+scipy    (Python Scientific Library)
+
+The following package is not required for installation, but it is not possible
+to use the X11 terminal, i.e. to display plots on screen, without it:
+
+gv       (Ghostview; used for the X11 terminal)
+
+
+
+3. INSTALLATION
+
+
+3A. INSTALLATION AS USER
+
+The following steps describe the installation of PyXPlot from a .tar.gz archive
+by a user without superuser (i.e. root) access to his machine. It is assumed
+that the packages listed above have already been installed; if they are not,
+you need to contact your system administrator.
+
+* Unpack the distributed .tar.gz:
+
+tar xvfz pyxplot_0.6.1.tar.gz
+cd pyxplot
+
+* Run the installation script:
+
+./configure
+make
+
+* Finally, start PyXPlot:
+
+./pyxplot
+
+
+3B. SYSTEM-WIDE INSTALLATION
+
+Having completed the steps described above, PyXPlot may be installed
+system-wide by a superuser with the following additional step:
+
+make install
+
+By default, the PyXPlot executable installs to /usr/local/bin/pyxplot.  If
+desired, this installation path may be modified in the file Makefile.skel, by
+changing the variable USRDIR in the first line to an alternative desired
+installation location.
+
+PyXPlot may now be started by any system user, simply by typing:
+
+pyxplot
+
+
+
+4. FURTHER INFORMATION
+
+Full documentation can be found in doc/pyxplot.tex , or in doc/pyxplot.pdf
+after installation. This document is alternatively available from the PyXPlot
+website: <http://www.pyxplot.org.uk/>.
+
+----
+Dominic Ford

@@ -1,0 +1,57 @@
+# MANPAGE_PYXPLOT_WATCH.PY
+#
+# The code in this file is part of PyXPlot
+# <http://www.pyxplot.org.uk>
+#
+# Copyright (C) 2006-7 Dominic Ford <coders@pyxplot.org.uk>
+#
+# $Id: manpage.py,v 1.10 2007/02/21 03:48:00 dcf21 Exp $
+#
+# PyXPlot is free software; you can redistribute it and/or modify it under the
+# terms of the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any later
+# version.
+#
+# You should have received a copy of the GNU General Public License along with
+# PyXPlot; if not, write to the Free Software Foundation, Inc., 51 Franklin
+# Street, Fifth Floor, Boston, MA  02110-1301, USA
+
+# ----------------------------------------------------------------------------
+
+# Generate manpage for PyXPlot watcher
+
+import sys
+
+docpath     = sys.argv[1]
+author      = open("AUTHORS","r").read()
+description = ""
+
+sys.stdout.write("""
+.\" pyxplot_watch.man
+.\" Dominic Ford
+.\" 21/02/2007
+
+.\" Man page for pyxplot_watch
+
+.TH PYXPLOT_WATCH 1
+.SH NAME
+pyxplot_watch \- a commandline plotting package, with interface similar to that of
+gnuplot, which produces publication-quality output.
+.SH SYNOPSIS
+.B pyxplot_watch
+[file ...]
+.SH DESCRIPTION
+pyxplot_watch is a part of the PyXPlot plotting package; it is a simple tool
+for watching PyXPlot command script files, and executing them whenever they are
+modified. It is should be followed on the commandline by a list of command
+scripts which are to be watched.  Full documentation can be found in:
+%s
+.SH AUTHOR
+%s.
+.SH CREDITS
+Thanks to Joerg Lehmann and Andre Wobst for writing the PyX graphics library
+for python, upon which this software is heavily built, and also to Ross Church
+for his many useful comments and suggestions during its development.
+.SH "SEE ALSO"
+.BR pyxplot (1), gnuplot (1)
+"""%(docpath,author))

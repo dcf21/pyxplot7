@@ -1,0 +1,98 @@
+# MAKEFILE.SKEL
+#
+# The code in this file is part of PyXPlot
+# <http://www.pyxplot.org.uk>
+#
+# Copyright (C) 2006-7 Dominic Ford <coders@pyxplot.org.uk>
+#
+# $Id: Makefile.skel,v 1.29 2007/02/21 03:48:00 dcf21 Exp $
+#
+# PyXPlot is free software; you can redistribute it and/or modify it under the
+# terms of the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any later
+# version.
+#
+# You should have received a copy of the GNU General Public License along with
+# PyXPlot; if not, write to the Free Software Foundation, Inc., 51 Franklin
+# Street, Fifth Floor, Boston, MA  02110-1301, USA
+
+# ----------------------------------------------------------------------------
+
+# Skeleton Makefile for PyXPlot... this is configured by running ./configure,
+# which adds two lines of the form:
+#
+# PYTHON_COMMAND=/usr/bin/python2.4
+# GV_COMMAND=/usr/bin/gv
+
+# Location of final code. Change the value of USRDIR below to install PyXPlot
+# to a location other than /usr/local:
+
+USRDIR=/usr/local
+BINDIR=${USRDIR}/bin
+SRCDIR=${USRDIR}/share/pyxplot
+DOCDIR=${USRDIR}/share/doc/pyxplot
+MANDIR=${USRDIR}/man/man1
+
+# Version information.
+
+VERSION=0.6.2.4
+DATE=xx/02/2007
+
+default: setup
+
+clean:
+	${MAKE_COMMAND} -C doc PYXPLOT=../src/__init__.py clean
+	rm -f src/*.pyc
+	rm -f src/__init__.py src/pyxplot_watch src/gp_version.py src/gp_version_install.py
+	rm -f pyxplot.1
+	rm -f pyxplot
+	rm -Rf src/pyx
+
+setup:
+	echo "#!${PYTHON_COMMAND}      "                                                >  src/__init__.py
+	echo "try: __import__('pyxplot')"                                               >> src/__init__.py
+	echo "except KeyboardInterrupt: print 'PyXPlot has received SIGINT: Exitting.'" >> src/__init__.py
+	echo "#!${PYTHON_COMMAND}      "   >  src/pyxplot_watch
+	echo "__import__('pyxplot_watch')" >> src/pyxplot_watch
+	echo "VERSION='${VERSION}'"        >  src/gp_version.py
+	echo "DATE='${DATE}'"              >> src/gp_version.py
+	echo "SRCDIR='`pwd`/src/'"         >> src/gp_version.py
+	echo "DOCDIR='`pwd`/doc/'"         >> src/gp_version.py
+	echo "GHOSTVIEW='${GV_COMMAND}'"   >> src/gp_version.py
+	echo "VERSION='${VERSION}'"        >  src/gp_version_install.py
+	echo "DATE='${DATE}'"              >> src/gp_version_install.py
+	echo "SRCDIR='${SRCDIR}'"          >> src/gp_version_install.py
+	echo "DOCDIR='${DOCDIR}'"          >> src/gp_version_install.py
+	echo "GHOSTVIEW='${GV_COMMAND}'"   >> src/gp_version_install.py
+	rm -rf src/pyx
+	gzip -dc PyX-0.9.tar.gz | tar xf -
+	mv -f PyX-0.9/pyx src
+	rm -rf PyX-0.9
+	chmod 755 src/__init__.py
+	${MAKE_COMMAND} -s -C doc PYXPLOT=../src/__init__.py
+	echo "exit" | src/__init__.py
+	${PYTHON_COMMAND} manpage_pyxplot.py       ${DOCDIR}/pyxplot.pdf > pyxplot.1
+	${PYTHON_COMMAND} manpage_pyxplot_watch.py ${DOCDIR}/pyxplot.pdf > pyxplot_watch.1
+	rm -rf pyxplot
+	ln -s src/__init__.py pyxplot
+
+install:
+	install -d ${SRCDIR} ${BINDIR} ${DOCDIR} ${MANDIR} ${DOCDIR}/examples ${DOCDIR}/examples/eps
+	rm -rf ${SRCDIR}/pyx
+	cp -r src/pyx ${SRCDIR}
+	chmod -R 755 ${SRCDIR}/pyx
+	install -m644 src/*.py ${SRCDIR}
+	install -m644 src/gp_version_install.py ${SRCDIR}/gp_version.py
+	install -m644 src/*.pyc ${SRCDIR}
+	install -m644 src/*.xml ${SRCDIR}
+	install -m755 src/__init__.py ${SRCDIR}
+	install -m755 src/pyxplot_watch ${SRCDIR}
+	rm -f ${BINDIR}/pyxplot
+	ln -s ${SRCDIR}/__init__.py ${BINDIR}/pyxplot
+	rm -f ${BINDIR}/pyxplot_watch
+	ln -s ${SRCDIR}/pyxplot_watch ${BINDIR}/pyxplot_watch
+	install -m644 doc/pyxplot.tex doc/pyxplot.pdf ${DOCDIR}
+	install -m644 doc/examples/example* ${DOCDIR}/examples
+	install -m644 doc/examples/eps/* ${DOCDIR}/examples/eps
+	install -m644 pyxplot.1       ${MANDIR}/pyxplot.1
+	install -m644 pyxplot_watch.1 ${MANDIR}/pyxplot_watch.1
