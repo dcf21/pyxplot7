@@ -5,7 +5,7 @@
 #
 # Copyright (C) 2006-7 Dominic Ford <coders@pyxplot.org.uk>
 #
-# $Id: gp_children.py,v 1.24 2007/02/21 03:48:00 dcf21 Exp $
+# $Id$
 #
 # PyXPlot is free software; you can redistribute it and/or modify it under the
 # terms of the GNU General Public License as published by the Free Software
