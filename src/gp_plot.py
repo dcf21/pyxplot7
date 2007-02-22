@@ -5,7 +5,7 @@
 #
 # Copyright (C) 2006-7 Dominic Ford <coders@pyxplot.org.uk>
 #
-# $Id: gp_plot.py,v 1.122 2007/02/21 03:48:00 dcf21 Exp $
+# $Id$
 #
 # PyXPlot is free software; you can redistribute it and/or modify it under the
 # terms of the GNU General Public License as published by the Free Software
@@ -904,7 +904,7 @@ def plot_dataset_makeaxes_makenonlink(Msettings, Maxes_this):
       if (axis['SETTINGS']['TICDIR'] in ['INWARD' ,'BOTH']): innerticklength = graph.axis.painter.ticklength.normal
       if (axis['SETTINGS']['TICDIR'] in ['OUTWARD','BOTH']): outerticklength = graph.axis.painter.ticklength.normal
       if (lab[:8] == "nolabels") and ((len(lab)==8) or (lab[8]==":")):
-       axis["AXIS"] = axistype(title=lab[9:],min=axis_min,max=axis_max,parter=None,manualticks=tick_list,painter=graph.axis.painter.regular(innerticklength=innerticklength,outerticklength=outerticklength,basepathattrs=[gp_settings.pyx_colours[Msettings['AXESCOLOUR']]],tickattrs=[gp_settings.pyx_colours[Msettings['AXESCOLOUR']]],labelattrs=None,gridattrs=gridalloc))
+       axis["AXIS"] = axistype(title=lab[9:],min=axis_min,max=axis_max,parter=None,manualticks=tick_list,painter=graph.axis.painter.regular(innerticklength=innerticklength,outerticklength=outerticklength,basepathattrs=[gp_settings.pyx_colours[Msettings['AXESCOLOUR']]],tickattrs=[gp_settings.pyx_colours[Msettings['AXESCOLOUR']]],labelattrs=None,titleattrs=[text.size(Msettings['FONTSIZE']),gp_settings.pyx_colours[Msettings['TEXTCOLOUR']]],gridattrs=gridalloc))
       elif (lab[:12] == "nolabelstics") and ((len(lab)==12) or (lab[12]==":")):
        axis["AXIS"] = axistype(title=lab[13:],min=axis_min,max=axis_max,parter=None,manualticks=tick_list,painter=graph.axis.painter.regular(innerticklength=innerticklength,outerticklength=outerticklength,basepathattrs=[gp_settings.pyx_colours[Msettings['AXESCOLOUR']]],tickattrs=None,labelattrs=None,gridattrs=gridalloc))
       elif (lab[:9] == "invisible") and ((len(lab)==9) or (lab[9]==":")):
