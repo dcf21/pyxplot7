@@ -1,0 +1,49 @@
+# EX_AXISTICS.PPL
+#
+# The code in this file is part of PyXPlot
+# <http://www.pyxplot.org.uk>
+#
+# Copyright (C) 2006-7 Dominic Ford <coders@pyxplot.org.uk>
+#
+# $Id: Makefile 5 2007-02-22 09:43:42Z dcf21 $
+#
+# PyXPlot is free software; you can redistribute it and/or modify it under the
+# terms of the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any later
+# version.
+#
+# You should have received a copy of the GNU General Public License along with
+# PyXPlot; if not, write to the Free Software Foundation, Inc., 51 Franklin
+# Street, Fifth Floor, Boston, MA  02110-1301, USA
+
+# ----------------------------------------------------------------------------
+
+# This script produces a figure for the PyXPlot Users' Guide
+
+# Call common initialisation script
+reset
+load "examples/fig_init.ppl"
+
+# Set output destination
+set output "examples/eps/ex_axistics.eps"
+
+# Main body of figure script
+set size ratio 0.2
+set xrange [0:10]
+set x2range [0:10]
+set x3range [0:10]
+set x4range [0:10]
+set xlabel "X axis"
+set x2label "X2 axis"
+set x3label "X3 axis"
+set x4label "X4 axis"
+set ylabel "Y axis"
+set nomxtics
+set nomx2tics
+set nomx3tics
+set nomx4tics
+set xtics 2,1,5
+set x2tics ("a" 2, "b" 3, "c" 4, "d" 5)
+set x3tics 2
+set x4tics border autofreq
+plot

@@ -1,0 +1,42 @@
+# EX_MULTIAXES.PPL
+#
+# The code in this file is part of PyXPlot
+# <http://www.pyxplot.org.uk>
+#
+# Copyright (C) 2006-7 Dominic Ford <coders@pyxplot.org.uk>
+#
+# $Id: Makefile 5 2007-02-22 09:43:42Z dcf21 $
+#
+# PyXPlot is free software; you can redistribute it and/or modify it under the
+# terms of the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any later
+# version.
+#
+# You should have received a copy of the GNU General Public License along with
+# PyXPlot; if not, write to the Free Software Foundation, Inc., 51 Franklin
+# Street, Fifth Floor, Boston, MA  02110-1301, USA
+
+# ----------------------------------------------------------------------------
+
+# This script produces a figure for the PyXPlot Users' Guide
+
+# Call common initialisation script
+reset
+load "examples/fig_init.ppl"
+
+# Set output destination
+set output "examples/eps/ex_multiaxes.eps"
+
+# Main body of figure script
+set width 7.0
+set size ratio 0.5
+set xlabel "The X axis"
+set x2label "The X2 axis"
+set x3label "The X3 axis"
+set x4label "The X4 axis"
+set x6label "The X8 axis"
+set ylabel "The Y axis"
+set y2label "The Y2 axis"
+set y3label "The Y3 axis"
+plot
+

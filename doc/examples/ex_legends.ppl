@@ -1,0 +1,41 @@
+# EX_LEGENDS.PPL
+#
+# The code in this file is part of PyXPlot
+# <http://www.pyxplot.org.uk>
+#
+# Copyright (C) 2006-7 Dominic Ford <coders@pyxplot.org.uk>
+#
+# $Id: Makefile 5 2007-02-22 09:43:42Z dcf21 $
+#
+# PyXPlot is free software; you can redistribute it and/or modify it under the
+# terms of the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any later
+# version.
+#
+# You should have received a copy of the GNU General Public License along with
+# PyXPlot; if not, write to the Free Software Foundation, Inc., 51 Franklin
+# Street, Fifth Floor, Boston, MA  02110-1301, USA
+
+# ----------------------------------------------------------------------------
+
+# This script produces a figure for the PyXPlot Users' Guide
+
+# Call common initialisation script
+reset
+load "examples/fig_init.ppl"
+
+# Set output destination
+set output "examples/eps/ex_legends.eps"
+
+# Main body of figure script
+set xrange [0:0.75]
+set yrange [0:0.75]
+set xlabel "$x$"
+set ylabel "$y$"
+set key below
+set keycolumns 2
+plot x        title "$x$"        , \
+     x*exp(x) title "$x \exp(x)$", \
+     sin(x)   title "$  \sin(x)$", \
+     x*cos(x) title "$x \cos(x)$"
+

@@ -23,7 +23,7 @@
 PYXPLOT = `which pyxplot`
 EXAMPLEDIR = examples
 EPSDIR = $(EXAMPLEDIR)/eps
-EPSFILES = $(EPSDIR)/ex_axislab.eps $(EPSDIR)/ex_multiaxes.eps $(EPSDIR)/ex_axistics.eps $(EPSDIR)/ex_legends.eps $(EPSDIR)/ex_seminar.eps $(EPSDIR)/ex_funcsplice1.eps $(EPSDIR)/ex_funcsplice2.eps
+EPSFILES = $(EPSDIR)/ex_cover.eps $(EPSDIR)/ex_axislab.eps $(EPSDIR)/ex_multiaxes.eps $(EPSDIR)/ex_axistics.eps $(EPSDIR)/ex_legends.eps $(EPSDIR)/ex_seminar.eps $(EPSDIR)/ex_barchart1.eps $(EPSDIR)/ex_barchart2.eps $(EPSDIR)/ex_funcsplice1.eps $(EPSDIR)/ex_funcsplice2.eps
 
 all: $(EPSFILES) pyxplot.pdf
 
@@ -32,10 +32,9 @@ clean:
 	rm -f pyxplot.pdf pyxplot.ps pyxplot.dvi pyxplot.aux pyxplot.idx pyxplot.ilg pyxplot.ind pyxplot.log pyxplot.toc
 	rm -Rf html
 
-$(EPSDIR)/%.eps: $(EXAMPLEDIR)/%
-	echo "Producing example plot $<..."
+$(EPSDIR)/%.eps: $(EXAMPLEDIR)/%.ppl
+	echo "Producing example plot $*..."
 	mkdir -p $(EPSDIR)
-	cd $(EXAMPLEDIR)
 	$(PYXPLOT) $< > /dev/null
 
 %.pdf: %.ps

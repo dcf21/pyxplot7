@@ -30,37 +30,30 @@
 
 \begin{titlepage}
 \normalsize
-\vspace*{4.0cm}
+\vspace*{0.5cm}
 \begin{center}
 {\Huge \bf PyXPlot Users' Guide}\\
 \end{center}
-\medskip
-\medskip
+\vspace*{0.5cm}
 \begin{center}
 {\LARGE \bf A Commandline Plotting Package, \\ \vspace{2mm} with Interface similar to that of Gnuplot, \\ \vspace{2mm} which produces \\ \vspace{2mm} Publication-Quality Output. \\}
 \end{center}
-\medskip
-\medskip
+\vspace*{0.5cm}
 \begin{center}
 {\Large Version \version \\}
 \end{center}
-\bigskip
-\vskip 2.5cm
+\vspace*{0.0cm}
 \begin{center}
-{Dominic Ford\\
-Trinity College\\
-Cambridge\\
-CB2 1TQ\\
-UK\\
-Email: \noindent \texttt{coders@pyxplot.org.uk}}
+\includegraphics[width=10cm]{examples/eps/ex_cover.eps}
 \end{center}
-
-\vfill
-\bigskip
+\vspace*{0.0cm}
+\begin{center}
+{\Large Dominic Ford \\ \vspace{2mm} Email: \noindent \texttt{coders@pyxplot.org.uk} \\ }
+\end{center}
+\vspace*{0.5cm}
 \begin{center}
 {\Large \reldate \\}
 \end{center}
-\vfill
 \end{titlepage}
 
 \pagenumbering{roman}
@@ -95,7 +88,8 @@ beauty and flexibility of the \LaTeX\ typesetting environment; the
 ``multiplot'' environment is made massively more flexible, making it easy to
 produce galleries of plots; and the range of possible output formats is
 extended -- to name but a few of the enhancements. A number of examples of the
-results of which PyXPlot is capable can be seen in Section~\ref{gallery}.
+results of which PyXPlot is capable can be seen on the project
+website\footnote{\url{http://www.pyxplot.org.uk/}}.
 
 As well as the ease of use and flexibility of gnuplot's commandline interface
 -- it can be used either interactively, read a list of commands from a file, or
@@ -124,24 +118,13 @@ Chapter~\ref{gnuplot_intro}. However, the attention of past gnuplot users is
 drawn to one of the key changes to the interface -- namely that all textual
 labels on plots are now printed using the \LaTeX\ typesetting environment. This
 does unfortunately introduce some incompatibility with the original, since some
-strings which were valid before are no longer valid. For example:
+strings which were valid before are no longer valid (see
+Section~\ref{sec:latex_incompatibility} for more details). For example:
 
 \begin{verbatim}set xlabel 'x^2'\end{verbatim}
 
 \noindent would have been valid in gnuplot, but now needs to be written in
-\LaTeX\ mathmode as:\footnote{As in gnuplot, all textual labels in PyXPlot % DCF21 COMPLAINT
-should be enclosed in either single or double quotes. If one were to want to
-render a string containing apostrophes, it would be necessary to enclose the
-string in double quotes, to prevent confusion between the apostrophe in the
-\LaTeX, and the closing quote at the end of the line. However, to allow for
-those wanting to render \LaTeX\ strings containing both single and double quote
-characters -- for example, ``\texttt{J$\backslash$"org's Data}'' -- PyXPlot
-recognises the backslash character to be an escape character when followed by
-either ' or " in a \LaTeX\ string. This is the \textit{only} case in which
-PyXPlot considers $\backslash$ an escape character. Consequently, in the
-example above, the ``\texttt{$\backslash$"}'' would need to be double escaped:
-``\texttt{J$\backslash\backslash$"org's Data}''.\index{escape
-characters}\index{quote characters}\index{special characters}}
+\LaTeX\ mathmode as:
 
 \begin{verbatim}set xlabel '$x^2$'\end{verbatim}
 
@@ -205,7 +188,7 @@ installed; if they are not, you need to contact your system administrator.
 \item Unpack the distributed .tar.gz:
 
 \begin{verbatim}
-tar xvfz pyxplot_0.6.2.tar.gz
+tar xvfz pyxplot_0.6.3.tar.gz
 cd pyxplot
 \end{verbatim}
 
@@ -266,10 +249,11 @@ be downloaded from:\\ \url{http://www.gnu.org/copyleft/gpl.html}.
 In this chapter, I shall provide a brief overview of the basic operation of
 PyXPlot, essentially covering those areas of syntax which are borrowed directly
 from gnuplot. Users who are already familiar with gnuplot may wish to skim or
-skip this chapter, though Section~\ref{missing_features}, detailing which
-parts of gnuplot's interface are and are not supported in PyXPlot, may be of
-interest. In the following chapter, I shall go on to describe PyXPlot's
-extensions of gnuplot's interface.
+skip this chapter, though Section~\ref{sec:latex_incompatibility}, describing
+the use of \LaTeX\ to render text, and Section~\ref{missing_features},
+detailing which parts of gnuplot's interface are and are not supported in
+PyXPlot, may be of interest. In the following chapter, I shall go on to
+describe PyXPlot's extensions of gnuplot's interface.
 
 Describing gnuplot's interface in its entirety is a substantial task, and what
 follows is only an overview; novice users can find many excellent tutorials on
@@ -396,26 +380,70 @@ a =
 f(x) =
 \end{verbatim}
 
+\section{Axis Labels and Titles}
+\label{sec:latex_incompatibility}
+
 Labels can be applied to the two axes of the plot, and a title put at the top:
 
 \begin{verbatim}
 set xlabel 'This is the X axis'
 set ylabel 'This is the Y axis'
-set title 'A Plot of sin(x)'
+set title 'A plot of sin(x)'
 plot sin(x)
 \end{verbatim}
 
-\noindent All such text labels are displayed using \LaTeX, and so any \LaTeX\ 
-commands can be used, for example to put equations on axes:
+\begin{figure}
+\begin{center}
+\includegraphics{examples/eps/ex_axislab.eps}
+\end{center}
+\caption{A simple first plot with axis labels. See the text for more details.}
+\label{fig:ex_axislab}
+\end{figure}
+
+\noindent The output from this simple example is shown in
+Figure~\ref{fig:ex_axislab}. All such text labels should be placed between
+either single (') or double (") quotes. They are displayed using \LaTeX, and so
+any \LaTeX\ commands can be used, for example to put equations on axes:
 
 \begin{verbatim}
 set xlabel '$\frac{x^2}{c^2}$'
 \end{verbatim}
 
-
 \noindent As a caveat, however, this does mean that care needs to be taken to
 escape any of \LaTeX's reserved characters -- i.e.:
 $\backslash$~\&~\%~\#~\{~\}~\$~\_~\^{} or $\sim$.
+
+Because of the use of quotes to delimit text labels, special care needs to be
+taken when apostrophe and quote characters are used. The following command
+would raise an error, because the apostrophe would be interpretted as marking
+the end of the text label:
+
+\begin{verbatim}
+set xlabel 'My plot's X axis'
+\end{verbatim}
+
+\noindent The following would achieve the desired effect:
+
+\begin{verbatim}
+set xlabel "My plot's X axis"
+\end{verbatim}
+
+\noindent To allow one to render \LaTeX\ strings containing both single and
+double quote characters -- for example, to put a German umlaut on the name
+``J\"org'' in the \LaTeX\ string ``\texttt{J$\backslash$"org's Data}'' --
+PyXPlot recognises the backslash character to be an escape character when
+followed by either ' or " in a \LaTeX\ string. This is the \textit{only} case
+in which PyXPlot considers $\backslash$ an escape character. To render the
+example string above, one would type:
+
+\begin{verbatim}
+set xlabel "J\\"org's Data"
+\end{verbatim}
+
+Two backslashes are used; the first is a PyXPlot escape character, used so that
+the " character is not interpretted as delimiting the string. The second is the
+\LaTeX\ escape character used to produce the umlaut.  \index{escape
+characters}\index{quote characters}\index{special characters}
 
 Having set labels and titles, they may be removed thus:
 
@@ -440,7 +468,7 @@ command} restores all configurable parameters to their default states.
 
 \section{Operators and Functions}
 
-As has already been seen above, some functions such as $\sin(x)$ are
+As has already been seen above, some mathematical functions such as $\sin(x)$ are
 pre-defined within PyXPlot. A list of frequently-used functions which are
 predefined in PyXPlot is given in Table~\ref{functions_table}\footnote{Users
 with some programming experience may be interested to know that all of the
@@ -484,6 +512,10 @@ log($x[,base]$)&
 Return the logarithm of $x$ to the given base. If the base not specified, returns the natural logarithm (base $e$) of $x$.\\
 log10($x$)&
 Return the base 10 logarithm of $x$.\\
+max($x$,$y$,...)&
+Return the greatest of the numerical values supplied.\\
+min($x$,$y$,...)&
+Return the least of the numerical values supplied.\\
 modf($x$)&
 Return the fractional and integer parts of $x$.  Both results carry the sign of $x$.  The integer part is returned as a real.\\
 pow($x,y$)&
@@ -564,6 +596,8 @@ plot the sum of the values in the first two columns of the datafile, plus
 three, on the horizontal axis, against two plus the value in the third column
 on the vertical axis. A more advanced example might be:
 
+\newpage % WHY IS THIS NECESSARY??
+
 \begin{verbatim}
 plot 'datafile' using 3.0:$($2)
 \end{verbatim}
@@ -633,7 +667,7 @@ plot 'datafile' every a:b:c:d:e:f
 
 The values have the following meanings:
 
-\begin{longtable}{p{1.2cm}p{10.5cm}}
+\begin{longtable}{p{1.0cm}p{10.5cm}}
 $a$ & Plot data only from every $a\,$th line in datafile. \\
 $b$ & Plot only data from every $b\,$th block within each index block. \\
 $c$ & Plot only from line $c$ onwards within each block. \\
@@ -657,8 +691,6 @@ A final modifier for selecting which parts of a datafile are plotted is
 \texttt{select}, which plots only those data points which satisfy some given
 criterion. This is an extension of gnuplot's original syntax, and is described
 in Section~\ref{select_modifier}.
-
-\newpage % Why is the necessary???
 
 \section{Directing Where Output Goes}
 \label{directing_output}
@@ -799,7 +831,7 @@ The former specifies what shape of points should be used to plot the dataset,
 and the latter, whether a line should be continuous, dotted, dash-dotted, etc.
 Different integers correspond to different styles.
 
-The default plotting style refered to above can also be changed.  For example:
+The default plotting style referred to above can also be changed.  For example:
 
 \begin{verbatim}
 set style data lines
@@ -994,7 +1026,7 @@ supported by this version include:
 \item Fitting of functions to data via the \texttt{fit} command.
 \item Basic 2d plotting and replotting of functions and datafiles, with the following styles: \texttt{lines}, \texttt{points}, \texttt{linespoints}, \texttt{dots}, \texttt{boxes}, \texttt{steps}, \texttt{fsteps}, \texttt{histeps}, \texttt{impulses}, \texttt{csplines}, \texttt{acsplines} and errorbars of all flavours (see Section \ref{errorbars} for details of changes to errorbars).
 \item Automatic and manual selection of linestyles, linetypes, linewidths, pointtypes and pointsizes.
-\item Use of dual axes. Note: Operation here differs slightly from original gnuplot; dual axes are displayed whenever they are defined, there is no need to \texttt{set xtics nomirror}. See the details in the following section.
+\item Use of dual axes. Note: Operation here differs slightly from original gnuplot; dual axes are displayed whenever they are defined, there is no need to \texttt{set xtics nomirror}. See the details in the following chapter.
 \item Placing arrows and textual labels on plots.
 \item Putting grids on plots (colour can be set, but not linestyle).
 \item Setting plot aspect ratios with \texttt{set size ratio} or \texttt{set size square}.
@@ -1006,7 +1038,7 @@ Gnuplot features which PyXPlot does not presently support include:
 
 \begin{itemize}
 \item Parametric function plotting.
-\item Three-dimensional plotting (i.e. the \texttt{splot} command).
+\item Three-dimensional plotting (i.e. gnuplot's \texttt{splot} command).
 \end{itemize}
 
 \chapter{Extensions of Gnuplot's Interface}
@@ -1126,7 +1158,7 @@ given below, followed by a list of the recognised settings:
 
 \begin{verbatim} 
 set terminal { X11_singlewindow | X11_multiwindow | X11_persist |
-               postscript | eps | gif | png | jpg }
+               postscript | eps | pdf | gif | png | jpg }
              { colour | color | monochrome }
              { portrait | landscape }
              { invert | noinvert }
@@ -1136,18 +1168,21 @@ set terminal { X11_singlewindow | X11_multiwindow | X11_persist |
 
 \begin{longtable}{p{3cm}p{9cm}}
 \texttt{x11\_singlewindow} & Displays plots on the screen (in X11 windows, using ghostview). Each time a new plot is generated, it replaces the old one, preventing the desktop from becoming flooded with old plots.\footnote{The author is aware of a bug, that this terminal can occasionally go blank when a new plot is generated. This is a known bug in ghostview, and can be worked around by selecting File $\to$ Reload within the ghostview window.} \textbf{[default when running interactively; see below]}\\
+\end{longtable} % WHY IS THIS NECESSARY??
+\begin{longtable}{p{3cm}p{9cm}}
 \texttt{x11\_multiwindow} & As above, but each new plot appears in a new window, and the old plots remain visible. As many plots as may be desired can be left on the desktop simultaneously.\\
 \texttt{x11\_persist} & As above, but plot windows remain open after PyXPlot closes.\\
 \texttt{postscript} & Sends output to a postscript file. The filename for this file should be set using \texttt{set output}. \textbf{[default when running non-interactively; see below]}\index{postscript output}\\
 \texttt{eps} & As above, but produces encapsulated postscript.\index{encapsulated postscript}\index{postscript!encapsulated}\\
+\texttt{pdf} & As above, but produces pdf output.\index{pdf output}\\
+\texttt{gif} & Sends output to a gif image file; as above, the filename should be set using \texttt{set output}.\index{gif output}\\
+\texttt{png} & As above, but produces a png image.\index{png output}\\
+\texttt{jpg} & As above, but produces a jpeg image.\index{jpeg output}\\
 \texttt{colour} & Allows datasets to be plotted in colour. Automatically they will be displayed in a series of different colours, or alternatively colours may be specified using the \texttt{with colour} plot modifier (see below). \textbf{[default]}\index{colour output}\\
 \texttt{color} & Equivalent to the above; provided for users of nationalities which can't spell. \smiley \\
 \texttt{monochrome} & Opposite to the above; all datasets will be plotted in black.\index{monochrome output}\\
 \texttt{portrait} & Sets plots to be displayed in upright (normal) orientation. \textbf{[default]}\index{portrait orientation}\\
 \texttt{landscape} & Opposite of the above; produces side-ways plots. Not very useful when displayed on the screen, but you fit more on a sheet of paper that way around.\index{landscape orientation}\\
-\texttt{gif} & Sends output to a gif image file; as above, the filename should be set using \texttt{set output}.\index{gif output}\\
-\texttt{png} & As above, but produces a png image.\index{png output}\\
-\texttt{jpg} & As above, but produces a jpeg image.\index{jpeg output}\\
 \texttt{invert} & Modifier for the gif, png and jpg terminals; produces output with inverted colours.\footnote{This terminal setting is useful for producing plots to embed in talk slideshows, which often contain bright text on a dark background. It only works when producing bitmapped output, though a similar effect can be achieved in postscript using the \texttt{set textcolour} and \texttt{set axescolour} commands (see Section~\ref{set_colours}).}\index{colours!inverting}\\
 \texttt{noinvert} & Modifier for the gif, png and jpg terminals; opposite to the above. \textbf{[default]}\\
 \texttt{transparent} & Modifier for the gif and png terminals; produces output with a transparent background.\index{transparent terminal}\index{gif output!transparency}\index{png output!transparency}\\
@@ -1194,9 +1229,8 @@ encapsulated, output, the papersize for this output is read from your system
 locale settings. It may be changed, however, with the \texttt{set
 papersize}\index{set papersize command@\texttt{set papersize} command} command,
 which may be followed either by the name of a recognised papersize, or by the
-dimensions of a user-defined size, specified as a
-\texttt{height},\texttt{width} pair, both being measured in millimetres. For
-example:
+dimensions of a user-defined size, specified as a \texttt{height},
+\texttt{width} pair, both being measured in millimetres. For example:
 
 \begin{verbatim}
 set papersize a4
@@ -1310,7 +1344,18 @@ an $x3$-axis is explicitly created.
 Unlike gnuplot, which allowed only a maximum of two parallel axes to be added
 to plots, PyXPlot allows an unlimited number of axes to be used. Odd-numbered
 $x$-axes appear below the plot, and even numbered $x$-axes above it; a similar
-rule applies for $y$-axes, to the left and to the right.
+rule applies for $y$-axes, to the left and to the right. This is illustrated in
+Figure~\ref{fig:ex_multiaxes}.
+
+\begin{figure}
+\begin{center}
+\includegraphics{examples/eps/ex_multiaxes.eps}
+\end{center}
+\caption{A plot demonstating the use of large numbers of axes. Odd-numbered
+$x$-axes appear below the plot, and even numbered $x$-axes above it; a similar
+rule applies for $y$-axes, to the left and to the right.}
+\label{fig:ex_multiaxes}
+\end{figure}
 
 As discussed in the previous chapter, the ranges of axes can be set either
 using the \texttt{set xrange} command\index{set xrange command@\texttt{set
@@ -1428,23 +1473,33 @@ In the second example, they would be labelled ``a'', ``b'', ``c'' and ``d'':
 \begin{verbatim}
 set xtics 2, 1, 5
 
-set xtics ("a" 2, "b" 3, "c" 4, "d" 5)
+set x2tics ("a" 2, "b" 3, "c" 4, "d" 5)
 \end{verbatim}
 
 The following example would place tick marks at intervals of two units along
-the $x$-axis:
+the $x3$-axis:
 
 \begin{verbatim}
-set xtics 2
+set x3tics 2
 \end{verbatim}
 
 The following example would restore the automatic placement of tics along the
-$x3$-axis, placing those ticks facing outwards from the graph:
+$x4$-axis, placing those ticks facing outwards from the graph:
 
 \begin{verbatim}
-set xtics border autofreq
+set x4tics border autofreq
 \end{verbatim}
 
+\begin{figure}
+\begin{center}
+\includegraphics{examples/eps/ex_axistics.eps}
+\end{center}
+\caption{A plot demonstrating the use of the {\tt set xtics} command. The commands used to create the axes in this plot are as given in the text.}
+\label{fig:ex_axistics}
+\end{figure}
+
+
+All of the examples above are illustrated in Figure~\ref{fig:ex_axistics}.
 Minor tick marks can be placed on axes with the \texttt{set mxtics} command,
 which has the same syntax as above.
 
@@ -1500,6 +1555,16 @@ example:
 \begin{verbatim}
 set keycolumns 2
 \end{verbatim}
+
+An example of a plot with a two-column legend is given in Figure~\ref{fig:ex_legends.eps}.
+
+\begin{figure}
+\begin{center}
+\includegraphics{examples/eps/ex_legends.eps}
+\end{center}
+\caption{An example of a plot with a two-column legend, positioned below the plot using {\tt set key below}.}
+\label{fig:ex_legends}
+\end{figure}
 
 \subsection{The \texttt{linestyle} keyword}
 
@@ -2223,14 +2288,21 @@ plot 'datafile' with boxes
 
 \noindent Horizontally, the interfaces between the bars are, by default, at the
 midpoints along the $x$-axis between the specified datapoints (see, for
-example, panel (a) of figure~\ref{fig_ex7}, and the script which produced it,
-in Section~\ref{example7}).  Alternatively, the widths of the bars may be set
-using the \texttt{set boxwidth} command. In this case, all of the bars will be
-centred upon their specified $x$-coordinates, and have total widths equalling
-that specified in the \texttt{set boxwidth}\index{set boxwidth
-command@\texttt{set boxwidth} command} command. Consequently, there may be gaps
-between them, or they may overlap, as seen in panel (c) of
-figure~\ref{fig_ex7}.
+example, Panel~(a) of Figure~\ref{fig:ex_barchart2}).  Alternatively, the
+widths of the bars may be set using the \texttt{set boxwidth} command. In this
+case, all of the bars will be centred upon their specified $x$-coordinates, and
+have total widths equalling that specified in the \texttt{set
+boxwidth}\index{set boxwidth command@\texttt{set boxwidth} command} command.
+Consequently, there may be gaps between them, or they may overlap, as seen in
+Panel~(c) of Figure~\ref{fig:ex_barchart2}.
+
+\begin{figure}
+\begin{center}
+\includegraphics{examples/eps/ex_barchart2.eps}
+\end{center}
+\caption{A gallery of different bar chart styles which PyXPlot can produce. See the text for more details.}
+\label{fig:ex_barchart2}
+\end{figure}
 
 Having set a fixed box width, the default automatic width mode may be restored
 either with the \texttt{unset boxwidth} command, or by setting the boxwidth to
@@ -2246,8 +2318,9 @@ plot 'datafile' using 1:2:3 with wboxes
 \end{verbatim}
 
 \noindent This plot style expects three columns of data to be specified: the
-$x$- and $y$-coordinates of each bar, and the width in the third column. Panel
-(b) of figure~\ref{fig_ex7} shows an example of this plot style in use.
+$x$- and $y$-coordinates of each bar, and the width in the third column.
+Panel~(b) of Figure~\ref{fig:ex_barchart2} shows an example of this plot style
+in use.
 
 By default, the bars all originate from the line $y=0$, as is normally wanted
 for a histogram. However, should it be desired for the bars to start from a
@@ -2258,10 +2331,18 @@ command, for example:
 set boxfrom 5
 \end{verbatim}
 
-\noindent All of the bars would then originate from the line $y=5$. Panel (f)
-of figure~\ref{fig_ex6} shows the kind of effect that is achieved; for
+\noindent All of the bars would then originate from the line $y=5$. Panel~(f)
+of Figure~\ref{fig:ex_barchart1} shows the kind of effect that is achieved; for
 comparison, panel (b) of the same figure shows the same bar chart with the
 boxes starting from their default position at $y=0$.
+
+\begin{figure}
+\begin{center}
+\includegraphics{examples/eps/ex_barchart1.eps}
+\end{center}
+\caption{A second gallery of different bar chart styles which PyXPlot can produce. See the text for more details.}
+\label{fig:ex_barchart1}
+\end{figure}
 
 The bars may be filled using the \texttt{with fillcolour}\index{fillcolour
 modifier@\texttt{fillcolour} modifier} modifier, followed by the name of a
@@ -2272,11 +2353,11 @@ plot 'datafile' with boxes fillcolour blue
 plot 'datafile' with boxes fc 4
 \end{verbatim}
 
-\noindent Panels (c) and (d) of figure~\ref{fig_ex7} demonstrate the use of
-filled bars.
+\noindent Panels~(c) and (d) of Figure~\ref{fig:ex_barchart2} demonstrate the
+use of filled bars.
 
 Finally, the \texttt{impulses} plot style, as in gnuplot, produces bars of zero
-width; see panel (e) of figure~\ref{fig_ex6} for an example.
+width; see Panel~(e) of Figure~\ref{fig:ex_barchart1} for an example.
 
 \subsection{Stacked Bar Charts}
 
@@ -2299,9 +2380,9 @@ used to plot the upper bar.
 \subsection{Steps}
 
 As an alternative to solid boxes, a graph may also be plotted with ``steps'';
-see panels (a), (c) and (d) of figure~\ref{fig_ex6} for examples. As is
-illustrated by these panels, three flavours of steps are available (exactly as
-in gnuplot):
+see Panels~(a), (c) and (d) of Figure~\ref{fig:ex_barchart1} for examples. As
+is illustrated by these panels, three flavours of steps are available (exactly
+as in gnuplot):
 
 \begin{verbatim}
 plot 'datafile' with steps 
@@ -2353,9 +2434,17 @@ f(x)[-2:7] = sin(x)
 plot f(x)
 \end{verbatim}
 
+\begin{figure}
+\begin{center}
+\includegraphics{examples/eps/ex_funcsplice1.eps}
+\end{center}
+\caption{A simple example of the use of function splicing to truncate the function $\sin(x)$ at $x=-2$ and $x=7$. See details in the text.}
+\label{fig:ex_funcsplice1}
+\end{figure}
+
 \label{splice} \noindent The output of this particular example can be seen in
-panel (a) of figure~\ref{fig_ex9}. A similar effect could also have been
-achieved with the \texttt{select} keyword; see Section~\ref{select_modifier}.
+Figure~\ref{fig:ex_funcspline1}. A similar effect could also have been achieved
+with the \texttt{select} keyword; see Section~\ref{select_modifier}.
 
 It is possible to make multiple declarations of the same function, over
 different regions of argument space; if there is an overlap in the valid
@@ -2375,16 +2464,25 @@ f(x) = 0
 f(x)[0:] = 1
 \end{verbatim}
 
-\noindent The declaration of a function similar to a top-hat function is
-demonstrated in panel (b) of figure~\ref{fig_ex9}. The following example would
-define $f(x)$ to follow the Fibonacci sequence, though it is not at all
-computationally efficient, and it is inadvisable to evaluate it for $x>8$:
+\noindent The following example would define $f(x)$ to follow the Fibonacci
+sequence, though it is not at all computationally efficient, and it is
+inadvisable to evaluate it for $x>8$:
 
 \begin{verbatim}
 f(x) = 1
 f(x)[2:] = f(x-1) + f(x-2)
 plot [0:8] f(x)
 \end{verbatim}
+
+\begin{figure}
+\begin{center}
+\includegraphics{examples/eps/ex_funcsplice2.eps}
+\end{center}
+\caption{An example of the use of function splicing to define a function which does not have an analytic form -- in this case, the Fibonacci sequence. See the text for details.}
+\label{fig:ex_funcsplice2}
+\end{figure}
+
+\noindent The output of this example can be seen in Figure~\ref{fig:ex_funcsplice2}
 
 \section{Datafile Interpolation: Spline Fitting}
 \label{spline_command}
@@ -3116,10 +3214,11 @@ command to do this.
 \section{eps}\index{eps command@\texttt{eps} command}
 
 \begin{verbatim}
-eps '<filename>' [at <x>, <y>] [rotate <angle>] [width <width>] [height <height>]
+eps '<filename>' [at <x>, <y>] [rotate <angle>] [width <width>]
+                 [height <height>]
 \end{verbatim}
 
-The {\tt eps } command places an eps format file into the current plot.  The
+The {\tt eps} command places an eps format file into the current plot.  The
 {\tt at} modifier can be used to specify the position of the bottom-left corner
 of the file, otherwise it is placed at the origin.  If the {\tt rotate} modifier
 is used the image is rotated by the specified angle counter-clockwise.  Either
@@ -3203,7 +3302,8 @@ To exit any help page, press the `{\tt q}' key.
 \section{jpeg}\index{jpeg command@\texttt{jpeg} command}
 
 \begin{verbatim}
-jpeg '<filename>' [at <x>, <y>] [rotate <angle>] [width <width>] [height <height>]
+jpeg '<filename>' [at <x>, <y>] [rotate <angle>] [width <width>]
+                  [height <height>]
 \end{verbatim}
 
 The {\tt jpeg} command places a jpeg format bitmap image into the current plot.
@@ -3349,9 +3449,10 @@ plot sin(x) with points
 The following plot styles are recognised: {\tt lines}, {\tt points}, {\tt
 linespoints}, {\tt dots}, {\tt boxes}, {\tt wboxes}, {\tt impulses}, {\tt
 steps}, {\tt histeps}, {\tt fsteps}, {\tt xerrorbars}, {\tt yerrorbars}, {\tt
-xyerrorbars}, {\tt xerrorrange}, {\tt yerrorrange}, {\tt xyerrorrange}, {\tt
-arrows\_head}, {\tt arrows\_nohead}, {\tt arrows\_twohead}, {\tt csplines}, {\tt
-acsplines}.
+xyerrorbars}, {\tt xerrorrange}, {\tt yerrorrange}, {\tt xyerrorrange},
+\newline\noindent % WHY IS THIS NECESSARY?
+{\tt arrows\_head}, {\tt arrows\_nohead}, {\tt arrows\_twohead}, {\tt
+csplines}, {\tt acsplines}.
 
 In addition, {\tt lp} and {\tt pl} are recognised as abbreviations
 for {\tt linespoints}; {\tt errorbars} is recognised as an abbreviation for {\tt
@@ -3842,7 +3943,7 @@ set fontsize 2
 \end{verbatim}
 
 The default value is zero, \LaTeX's normal fount size. As an alternative, fount
-sizes can be specified directly in the \LaTeX text of labels, for example:
+sizes can be specified directly in the \LaTeX\ text of labels, for example:
 
 \begin{verbatim}
 set xlabel '\Large This is a BIG label'
@@ -4597,11 +4698,12 @@ should output plots, for example setting whether it should output plots to files
 or display them in a window on the screen. Various options can also be set
 within many of the graphic formats which PyXPlot supports using this command.
 
-The following graphic formats are supported:  {\tt X11\_singlewindow}, {\tt
-X11\_multiwindow}, {\tt X11\_persist}, {\tt postscript}, {\tt eps}, {\tt pdf},
-{\tt gif}, {\tt jpeg}, {\tt png}. To select one of these formats, simply type
-the name of the desired format after the {\tt set terminal} command. To obtain
-more details on each, see the subtopics below.
+The following graphic formats are supported:  {\tt X11\_singlewindow},
+\newline\noindent % WHY IS THIS NECESSARY?
+{\tt X11\_multiwindow}, {\tt X11\_persist}, {\tt postscript}, {\tt eps}, {\tt
+pdf}, {\tt gif}, {\tt jpeg}, {\tt png}. To select one of these formats, simply
+type the name of the desired format after the {\tt set terminal} command. To
+obtain more details on each, see the subtopics below.
 
 The following settings, which can also be typed following the {\tt set terminal}
 command, are used to change the options within some of these graphic formats:
@@ -5141,316 +5243,6 @@ unset linewidth
 The list of keywords which can follow the {\tt unset} command are essentially
 the same as those which can follow the {\tt set} command.
 
-\chapter{Examples}
-\label{examples}
-
-This chapter contains a few example PyXPlot plot scripts to illustrate its
-features. For each example, the plotting script is given, and an illustration
-of the resulting output.
-
-\section{Example 1: Plotting Functions -- A Simple First Plot}
-
-As a simple first example, we plot two trigonometric functions. The syntax here
-is exactly as would have been used in the original gnuplot. The output is shown
-in figure~\ref{fig_ex1}.
-
-\vspace{1cm}
-\noindent \textbf{PyXPlot Script:}
-
-\VerbatimInput{examples/example1}
-
-\newpage
-\section{Example 2: Stacking Many Plots Together -- Multiplot}
-
-\index{multiplot}
-\index{set origin command@\texttt{set origin} command}
-In this example, we use the multiplot environment to produce a gallery of
-several plots. The \texttt{set origin} command is used to position each one. We
-also make use of multiple $y$-axes in the top-left plot: the functions
-$\sin(x)$ and $\sin^2(x)$ are plotted together, but on different $y$ scales.
-The output is shown in figure~\ref{fig_ex2}.
-
-\vspace{1cm}
-\noindent \textbf{PyXPlot Script:}
-
-\VerbatimInput{examples/example2} 
-
-\newpage
-\section{Example 3: Plotting A Datafile -- Using Multiple Axes}
-
-\index{multiple axes}\index{axes!multiple}
-This is a more complicated example. First of all, we plot two datafiles, one
-using a line, and another using points. We label our lines using arrows and
-text labels, using the same syntax that gnuplot uses. We also have multiple
-axes, this time having three $x$-axes on the same plot. The output is shown in
-figure~\ref{fig_ex3}.
-
-\vspace{1cm}
-\noindent \textbf{PyXPlot Script:}
-
-\VerbatimInput{examples/example3}
-
-\newpage
-\section{Example 4: Something Completely Different}
-
-\label{powerpoint_example}
-
-\index{Microsoft Powerpoint!importing figures into}
-\index{presentations!importing figures into}
-
-In this example, we demonstrate something rather different that PyXPlot can
-do. There is a common problem of trying to incorporate \LaTeX ed equations into
-various multimedia/graphics packages: the postscript format which \LaTeX\
-produces is not supported by programs such as Microsoft Powerpoint. PyXPlot
-offers a very quick and simple solution to this problem.
-
-First of all, we set our terminal to produce png output. To overlay our output
-onto a Powerpoint slide, we will want it to have a transparent background, and
-so we also use the ``transparent'' terminal option (see Section~\ref{terminals}
-for a discussion of PyXPlot terminal options). Finally, if we're producing a
-Powerpoint presentation with light-coloured text on a dark background, we will
-want to invert the colours to have white text, and so use the ``invert''
-terminal option.
-
-\index{text command@\texttt{text} command}
-We can now produce plots which can readily be imported into Powerpoint. To
-produce \LaTeX ed equations, we use the multiplot environment's \texttt{text}
-command (see Section~\ref{text_command}).
-
-\index{refresh command@\texttt{refresh} command}
-Finally, as such a figure would not be very easy to incorporate into this User
-Manual, we produce a normal eps version of our equation, illustrating how to
-use the \texttt{refresh} command to produce multiple copies of the same figure
-in different graphic formats.
-
-The output is shown in figure~\ref{fig_ex4}.
-
-\vspace{1cm}
-\noindent \textbf{PyXPlot Script:}
-
-\VerbatimInput{examples/example4}
-
-\newpage
-\section{Example 5: Multiplot -- Linked Axes}
-
-\index{multiplot!linked axes} In this example, we illustrate how to link the
-axes of plots on a multiplot, so that they share a common scale, and also
-demonstrate how to set the colours of datasets using the \texttt{with
-colour}\index{colours!setting for datasets} plot modifier. In the top-right
-panel, we also make use of the multiplot environment to add a plot
-inset.\index{multiplot!inset plots} Finally, we render this plot using the
-\texttt{landscape}\index{landscape orientation} terminal setting, showing how
-to fit more plot onto our sheet of paper. The output is shown in
-figure~\ref{fig_ex5}.
-
-Notice how the linked axes autoscale intelligently. The right two plots both
-require larger vertical ranges than those plots to their lefts, to whose
-vertical axes they are linked. But once they are linked, the plots autoscale
-together, to ensure that they all have sufficient range for their data.
-
-\vspace{1cm}
-\noindent \textbf{PyXPlot Script:}
-
-\VerbatimInput{examples/example5}
-
-\newpage
-\section{Example 6: Bar Charts and Steps}
-
-\label{example6}
-\index{bar charts}
-\index{boxes plot style@\texttt{boxes} plot style}
-\index{steps plot style@\texttt{steps} plot style}
-\index{fsteps plot style@\texttt{fsteps} plot style}
-\index{histeps plot style@\texttt{histeps} plot style}
-\index{impulses plot style@\texttt{impulses} plot style}
-\index{set boxfrom command@\texttt{set boxfrom} command}
-
-In this example, we illustrate the \texttt{boxes}, \texttt{impulses} and
-\texttt{steps} plot styles, described in Section~\ref{barcharts}, which operate
-similarly to how they operate in gnuplot. Panels (a) and (b) illustrates the
-\texttt{impulses} plot style for a sine wave, using the \texttt{set boxfrom}
-command to define the point from which the lines originate. Panel (c)
-illustrates the \texttt{fsteps} plot style, (d) \texttt{steps}, (e)
-\texttt{histeps} and (f) \texttt{boxes}. The output is shown in
-figure~\ref{fig_ex6}.
-
-\vspace{1cm}
-\noindent \textbf{PyXPlot Script:}
-
-\VerbatimInput{examples/example6}
-
-\newpage
-\section{Example 7: Bar Charts -- Box Widths}
-
-\label{example7}
-\index{bar charts}
-\index{boxes plot style@\texttt{boxes} plot style}
-\index{wboxes plot style@\texttt{wboxes} plot style}
-\index{fillcolour modifier@\texttt{fillcolour} modifier}
-\index{colours!fillcolour}
-
-In this example, we demonstrate different ways of specifying the widths of bars
-on a bar chart. In panel (a), the widths are automatically determined from the
-data, changing bar midway between datapoints. In panel (b), the \texttt{wboxes}
-plot style is used, which reads the widths of the bars from a third column in
-the datafile. In panel (c), we demonstrate how the \texttt{set boxfrom} command
-can be applied to bar charts, as well as to impulses. And in panel (d) we
-illustrate how the \texttt{fillcolour} modifier can be used to produce coloured
-bars. The output is shown in figure~\ref{fig_ex7}.
-
-\vspace{1cm}
-\noindent \textbf{PyXPlot Script:}
-
-\VerbatimInput{examples/example7}
-
-\newpage
-\section{Example 8: Fitting Functions to Data}
-
-\index{function fitting}
-\index{fit command@\texttt{fit} command}
-\index{spline command@\texttt{spline} command}
-
-The \texttt{fit} command works in PyXPlot in essentially the same way as in
-gnuplot (see Section~\ref{fit_command}). In this example, we take a series of
-data points, and first fit parabolas through them. For the first fit, $f(x)$,
-we do not take the errorbars into account; in the second, $g(x)$, we do. Then,
-we use the \texttt{spline} command to fit a spline, $h(x)$, through the same
-data (see Section~\ref{spline_command}). Strong oscillation is seen in this
-example because of the angular nature of the data; it is not well-fit by a
-spline. The output is shown in figure~\ref{fig_ex8}.
-
-\vspace{1cm}
-\noindent \textbf{PyXPlot Script:}
-
-\VerbatimInput{examples/example8}
-
-\newpage
-\section{Example 9: Simple Examples of Function Splicing}
-
-Here, we demonstrate simple use of function splicing (see
-Section~\ref{splice}). In panel (a), we plot the function $\sin(x)$, but
-specify that we only want it to be drawn in the range $-2<x<7$. In panel (b),
-we show how to define a discontinuous function similar to a top-hat function,
-also demonstrating how to set movable boundaries between the spliced components
-of functions, in this case using the variable $a$ for this purpose.
-
-Panels (c) and (d) demonstrate a more complex example, involving the splicing
-of a two-dimensional function.
-
-\vspace{1cm}
-\noindent \textbf{PyXPlot Script:}
-
-\VerbatimInput{examples/example9}
-
-\newpage
-\section{Example 10: Removal of Unwanted Axes}
-\label{ex10}
-
-In this example, we use the magic axis labels \texttt{nolabels},
-\texttt{nolabelsticks} and \texttt{invisible}, which were described in
-Section~\ref{axis_removal}. In the lower-left plot, we show how to create a
-graph without mirrored $x$- and $y$-axes on the top and right sides of the
-plot. In the lower-right panel, we produce a plot with only $x$-axes visible,
-using them to produce a gallery showing the appearance resulting from the use
-of each of these magic labels. The top-left plot shows a simple sketch-graph
-with completely unlabelled axes. We also draw arrows over the top of the axes
-in this example, to give them arrowheads. Finally, in the top-right panel, we
-show one artistic application of plotting functions with no axes visible at
-all, creating a simple logo. The output is shown in figure~\ref{fig_ex10}.
-
-\vspace{1cm}
-\noindent \textbf{PyXPlot Script:}
-
-\VerbatimInput{examples/example10}
-
-\newpage
-\section{Example 11: The Arrows Plot Style}
-\label{ex11}
-
-Here, we show two possible applications of the arrows plot style (see
-Section~\ref{arrows_plot_style}).\index{arrows plot style@\texttt{arrows} plot
-style} In the left panel, we plot a map of fluid flow around a vortex core, the
-dotted circle showing the outline of the vortex core. The source for this is a
-datafile mapping fluid velocity as a function of position. In the right panel,
-we show a series of datapoints before and after some correction factor is
-applied to them, showing how the data are moved in the process. The output of
-this example is shown in figure~\ref{fig_ex11}.
-
-\vspace{1cm}
-\noindent \textbf{PyXPlot Script:}
-
-\VerbatimInput{examples/example11}
-
-\newpage
-\section{Output Produced by Examples}
-\label{gallery}
-
-\begin{figure}[!h]
-\centerline{\includegraphics[width=\textwidth]{examples/eps/example1.eps}}
-\caption{The output produced by example script~1, \textit{Plotting Functions -- A Simple First Plot}.}
-\label{fig_ex1}
-\end{figure}
-
-\begin{figure}[!h]
-\centerline{\includegraphics[width=\textwidth]{examples/eps/example2.eps}}
-\caption{The output produced by example script~2, \textit{Stacking Many Plots Together -- Multiplot}.}
-\label{fig_ex2}
-\end{figure}
-
-\begin{figure}[!h]
-\centerline{\includegraphics[width=\textwidth]{examples/eps/example3.eps}}
-\caption{The output produced by example script~3, \textit{Plotting A Datafile -- Using Multiple Axes}.}
-\label{fig_ex3}
-\end{figure}
-
-\begin{figure}
-\centerline{\includegraphics[width=5cm]{examples/eps/example4.eps}}
-\caption{The output produced by example script~4, \textit{Something Completely Different}.}
-\label{fig_ex4}
-\end{figure}
-
-\begin{figure}
-\centerline{\includegraphics[width=\textwidth]{examples/eps/example5.eps}}
-\caption{The output produced by example script~5, \textit{Multiplot -- Linked Axes}.}
-\label{fig_ex5}
-\end{figure}
-
-\begin{figure}
-\centerline{\includegraphics[width=\textwidth]{examples/eps/example6.eps}}
-\caption{The output produced by example script~6, \textit{Bar Charts and Steps}.}
-\label{fig_ex6}
-\end{figure}
-
-\begin{figure}
-\centerline{\includegraphics[width=\textwidth]{examples/eps/example7.eps}}
-\caption{The output produced by example script~7, \textit{Bar Charts -- Box Widths}.}
-\label{fig_ex7}
-\end{figure}
-
-\begin{figure}
-\centerline{\includegraphics[width=\textwidth]{examples/eps/example8.eps}}
-\caption{The output produced by example script~8, \textit{Fitting Functions to Data}.}
-\label{fig_ex8}
-\end{figure}
-
-\begin{figure}
-\centerline{\includegraphics[width=\textwidth]{examples/eps/example9.eps}}
-\caption{The output produced by example script~9, \textit{Simple Examples of Function Splicing}.}
-\label{fig_ex9}
-\end{figure}
-
-\begin{figure}
-\centerline{\includegraphics[width=\textwidth]{examples/eps/example10.eps}}
-\caption{The output produced by example script~10, \textit{Removal of Unwanted Axes}.}
-\label{fig_ex10}
-\end{figure}
-
-\begin{figure}
-\centerline{\includegraphics[width=\textwidth]{examples/eps/example11.eps}}
-\caption{The output produced by example script~11, \textit{The Arrows Plot Style}.}
-\label{fig_ex11}
-\end{figure}
-
 \chapter{The \texttt{fit} Command: Mathematical Details}
 \label{fit_math}
 \index{fit command@\texttt{fit} command}
@@ -5856,275 +5648,54 @@ $\mathbf{u}^0$ is independent of $\sigma_\mathrm{data}$.
 \chapter{ChangeLog}
 \index{ChangeLog}
 
-\noindent \textbf{2007 Jan 19: PyXPlot 0.6.2}
+\subsection*{2007 Feb xx: PyXPlot 0.6.3}
+
+\subsubsection*{Summary:}
+
+Second PyXPlot beta-release. The most significant change is the introduction of
+a new command-line parser, with greatly improved handling of complex
+expressions and much more meaningful syntax error messages. Multi-platform
+compatibility has also been massively improved, and dependencies loosened.  A
+small number of new commands have been added -- most notable among them are the
+{\tt jpeg} and {\tt eps} commands, for embedding images in multiplots.
+
+\subsubsection*{Details -- New and Extended Commands:}
+
 \begin{itemize}
-\item `enlarge' terminal option implemented.
-\item pdf terminal implemented.
-\item set preamble command implemented.
-\item LaTeX preambles bugfixed, so that the `$\backslash$usepackage' command can now be used.
-\item `X11\_persist' terminal bugfixed to work correctly from non-interactive sessions.
-\item Large number of minor bugfixes.
+\item {\tt jpeg}
+\item {\tt eps}
+\item {\tt set xtics} and {\tt set mxtics}
+\item {\tt text} and {\tt set label} commands extended to allow text rotation.
+\item {\tt set log} command extended to allow the use of logarithms with bases other than 10.
+\item {\tt set preamble}
+\item {\tt set term enlarge | noenlarge}
+\item {\tt set term pdf}
+\item {\tt set term x11\_persist}
 \end{itemize}
 
-\noindent \textbf{2006 Dec 27: PyXPlot 0.6.1}
-\begin{itemize} 
-\item Major bug-fixes to the set and unset commands.
-\item Command reference chapter added to User Manual.
-\item Command syntax references added to the help command system.
-\item `text' and `set label' commands extended to allow rotation of text through arbitrary angles.
-\item Semi-functional `jpeg' and `eps' commands added. Left undocumented because they're unstable and need a bit of work.
-\end{itemize}
+\subsubsection*{Details -- Eased System Requirements:}
 
-\noindent \textbf{2006 Nov 12: PyXPlot 0.6.0}
 \begin{itemize}
-\item New more-reliable command parser implemented, with improved syntax errors.
-\item delete\_arrow, delete\_text, undelete\_arrow, undelete\_text and move\_text commands removed from API. The move, delete and undelete commands now act on all kinds of multiplot object.
-\item set terminal command no longer recognised enhanced and noenhanced keywords. The postscript and eps terminal keywords should now be used in their place.
-\item Automatic ticking of axes overhauled, and the set xtics and set mxtics commands implemented for those who do not like the default ticking schemes.
-\item set log and set nolog command now allow axes to work with log bases other than 10.
-\item The select modifier after the plot, fit, replot and spline commands can now only be used once; to specify multiple select criteria, use the and logical operator.
-\item X11\_persist terminal implemented.
-\item Requirement on python 2.4 eased to python 2.3.
-\item Requirements on scipy and readline eased; PyXPlot will now work in reduced form without them.
-\item Requirements on dvips and gs are dropped; postscript handling now done by PyXPlot itself.
+\item Requirement on python 2.4 minimum eased to version 2.3 minimum.
+\item Requirements on scipy and readline eased; PyXPlot will now work in reduced form when they are absent, though they are still strongly recommended.
+\item dvips and ghostscript are no longer required.
 \end{itemize}
 
-\noindent \textbf{2006 Sep 09: PyXPlot 0.5.8}
+\subsubsection*{Details -- Removed Commands:}
+
+Due to a general refinement of PyXPlot's API, some of the less sensible pieces
+of syntax from Version~0.5 are no longer supported. The author apologises for
+any inconvenience caused.
+
 \begin{itemize}
-\item Many bugfixes to error trapping and reporting.
+\item The {\tt delete\_arrow}, {\tt delete\_text}, {\tt move\_text}, {\tt undelete\_arrow} and {\tt undelete\_text} commands have been removed from the PyXPlot API. The {\tt move}, {\tt delete} and {\tt undelete} commands should now be used to act upon all types of multiplot objects.
+\item The {\tt set terminal} command no longer accepts the {\tt enhanced} and {\tt noenhanced} modifiers. The {\tt postscript} and {\tt eps} terminals should be used instead.
+\item The {\tt select} modifier, used after the {\tt plot}, {\tt replot} {\tt fit} and {\tt spline} command can now only be used once; to specify multiple {\tt select} criteria, use the {\tt and} logical operator.
 \end{itemize}
 
-\noindent \textbf{2006 Aug 26: PyXPlot 0.5.7}
-\begin{itemize}
-\item set display command implemented.
-\item set keycolumns command implemented.
-\item CTRL-C behaviour changed; no longer quits PyXPlot.
-\item plot `*.dat' now arranges files alphabetically.
-\item Escaping of LaTeX $<$ and $>$ symbols fixed.
-\item Major bugfix to fit command's error estimation.
-\item Major bugfix to the positioning of legends in the ``outside'' and ``below'' positions to avoid overlapping with axes.
-\item help command text substantially revised.
-\end{itemize}
+\subsection*{2006 Sep 09: PyXPlot 0.5.8}
 
-\noindent \textbf{2006 Aug 18: PyXPlot 0.5.6}
-\begin{itemize}
-\item Ability to unset variables via ``a='' implemented.
-\item Handling on scipy error messages in the int\_dx and spline commands improved.
-\item Colour-highlighted terminal added.
-\item The inline help system made much more complete.
-\item select modifier implemented.
-\item set texthalign and set textvalign implemented.
-\item set xticdir command implemented.
-\item Support for CSV input datafiles implemented.
-\item pyxplot\_watch quiet mode added. Also, behaviour changed to allow the watching of files, even when they do not initially exist.
-\item Labels can now be placed on ``nolabels'', ``nolabelstics'' and ``invisible'' axes. Example 10 changed to demonstrate this.
-\item set log, when issued on its own, now applies to all axes, rather than throwing an error.
-\end{itemize}
-
-\noindent \textbf{2006 Jul 25: PyXPlot 0.5.5}
-\begin{itemize}
-\item pyxplot\_watch implemented.
-\item fit command now gives error estimates, as well as correlation matrices.
-\item Many new pointtypes added, including upper and lower limit symbols.
-\item Handling of SIGINT improved; now exits current command in interactive mode, and exits PyXPlot when running a script.
-\item Quote characters can now be escaped in LaTeX strings, to allow strings with both ' and " characters to be rendered.
-\item Installer no longer creates any files belonging to root in the user's homespace.
-\item show xlabel and show xrange implemented.
-\item Bug fix: cd command no longer crashes if target directory doesn't exist.
-\item Bug fix: some commands, e.g. plot, which previously didn't work when capitalised, now do.
-\item Major bug fix to int\_dx and diff\_dx functions.
-\end{itemize}
-
-\noindent \textbf{2006 Jul 3: PyXPlot 0.5.4}
-\begin{itemize}
-\item edit command implemented.
-\item Numerical integration and differentiation functions implemented.
-\item New makefile installer added.
-\item man page added.
-\item Brief tour of gnuplot syntax added to documentation.
-\item Many minor bug fixes.
-\end{itemize}
-
-\noindent \textbf{2006 Jun 27: PyXPlot 0.5.3}
-\begin{itemize}
-\item set bar and set palette implemented.
-\item Stacked barcharts implemented.
-\item Command history files and the save command implemented.
-\item Plotting of functions with errorbars implemented.
-\item Ability to define a LaTeX preamble implemented.
-\item Bug fix to smoothed splines, to ensure that smoothing is always applied to a sensible degree by default.
-\item Bug fix to the autoscaling of bar charts, histograms and errorbars, to ensure that their full extent is contained within the plot area.
-\item Bug fix to arrow plotting, to prevent PyX from crashing if arrows of zero lengths are plotting (they have no direction...)
-\end{itemize}
-
-\noindent \textbf{2006 Jun 14: PyXPlot 0.5.2}
-\begin{itemize}
-\item spline command, and csplines/acsplines plot styles implemented.
-\item Syntax plot[0:1], with no space, now allowed.
-\item Automatic names of datasets in legends no longer have full paths, but only the path in the form that the user specified it.
-\item Bug fix to the handling of LaTeX special characters in the automatic names of datasets, e.g. file paths containing underscores.
-\item Error messages now sent to stderr, rather than stdout.
-\item multiplot mode now plots items in the order that they are plotted; previously all arrows and text labels had been plotted in front of plots.
-\item set backup command implemented, for keeping backups of overwritten files.
-\item Bug fix, enabling the use of axis x5 without axis x3, and likewise for y.
-\item unset axis command implemented, for removing axes from plots.
-\item `invisible', `nolabels', and `nolabelsticks' axis title implemented, for producing axes without text labels.
-\item plot 'every' modifier re-implemented, to use the same syntax as gnuplot.
-\item fit command re-implemented to work with functions of $>$ 1 variable.
-\item plot with pointlines defined as alias for `linespoints'.
-\item plot using rows syntax implemented, for plotting horizontally-arranged datafiles.
-\item Bug fix to replot command in multiplot mode, to take account of any move commands applied to the last plot.
-\item Bug fix to errorbar pointsizes. pointsize modifier now produces sensible output with all errorbar plot styles.
-\item show command re-implemented to accept any word that the set command will.
-\end{itemize}
-
-\noindent \textbf{2006 Jun 2: PyXPlot 0.5.1}
-\begin{itemize}
-\item Pling and cd commands implemented; ` ` shell command substitution implemented.
-\item Arrows (both from set arrow and the arrow command) can now have linetypes and colours set.
-\item Colours can now be specified as either palette indices or PyX colour names in all contexts -- e.g. `plot with colour red'.
-\item Function plotting fixed to allow plotting of functions which are not valid across the whole range of the x-axis.
-\item Transparent terminals now have anti-aliasing disabled.
-\item Warnings now issued when too many columns are specified in plot command; duplicate errors filtered out in two-pass plotting.
-\item Function splicing implemented.
-\item Documentation: sections on barcharts, function splicing, and datafile globbing added.
-\end{itemize}
-
-\noindent \textbf{2006 May 27: PyXPlot 0.5.0}
-\begin{itemize}
-\item Name changed to PyXPlot.
-\item Change to distribution format: PyX Version 0.9 now ships with package.
-\item Safety installer added; checks for required packages.
-\item `errorrange' plot styles added; allow errorbars to be given as min/max values, rather than as a standard deviation.
-\item `boxes', `wboxes', `steps', `fsteps', `histeps' and `impulses' plot styles implemented -- allow the production of histograms and bar charts.
-\item plot with fillcolour implemented, to allow coloured bar charts.
-\item Handling of broken datafiles sanitised: now warns for each broken line.
-\item gridlines on multiple axes, e.g. `set grid x1x2x3' now allowed.
-\item Major bugfix to the way autoscaling works: linked axes share information and scale intelligently between plots.
-\item --help and --version commandline options implemented.
-\item `using' specifiers for datafiles can now include expressions, such as \$(2+x).
-\item eps terminal fixed to produce encapsulated postscript.
-\item datafile names now glob, so that plot `*' will plot many datafiles.
-\item Documentation: examples 6,7 and 8 added.
-\end{itemize}
-
-\noindent \textbf{2006 May 18: GnuPlot+ 0.4.3}
-\begin{itemize}
-\item text and arrow commands now accept expressions rather than just floats for positional coordinates.
-\item clear command major bug-fixed.
-\item `plot with' clause bugfixed; state variable was not resetting.
-\item Automatical key titles for datafile datasets made more informative.
-\item Autoscaling of multiple axes bugfixed.
-\item Autoscaling of inverted axes fixed.
-\item set grid command fixed to only produce x/y gridlines when requested.
-\item X11\_singlewindow changed to use \texttt{gv --watch}.
-\item landscape terminal postscript header detection bugfixed.
-\item noenhanced terminal changed to produce proper postscript.
-\item Plotting of single column datafiles without using specifier fixed.
-\end{itemize}
-
-\noindent \textbf{2006 May 4: GnuPlot+ 0.4.2}
-\begin{itemize}
-\item Autoscaling redesigned, no longer uses PyX for this.
-\item Numerical expression handling fixed in set title, set origin and set label.
-\item Handling of children fixed, to prevent zombies from lingering around.
-\item arrow command implemented.
-\item set textcolour, set axescolour, set gridmajcolour, set gridmincolour and set fontsize implemented.
-\item Colour palette can now be set in configuration file.
-\item Ranges for axes other then x1/y1 can now be set in the plot command.
-\item Postscript noenhanced can now produce plots almost as big as an A4 sheet.
-\item Plotting of one column datafiles, against datapoint number, implemented.
-\item Negative errorbars error trapped.
-\item Comment lines now allowed in command files.
-\end{itemize}
-
-\noindent \textbf{2006 May 1: GnuPlot+ 0.4.1}
-\begin{itemize}
-\item Documentation converted from ASCII to LaTeX.
-\item ChangeLog added.
-\item Configuration files now supported.
-\item Prevention of temporary files in /tmp overwriting pre-existing files.
-\item set term enhanced / noenhanced / landscape / portrait / png / gif / jpeg / transparent / solid / invert / noinvert implemented.
-\item set dpi implemented, to allow user to choose quality of gif/jpg/png output.
-\item 'set grid' command now allows user to specify which axes grid attaches to (extended API).
-\item Support introduced for plotting gzipped datafiles. Filenames ending in `.gz' are assumed to be gzipped.
-\item load command implemented.
-\item move command implemented.
-\item Long lines can now be split using `\' linesplit character at the end of a line. Any whitespace at the beginning of the next is omitted.
-\item text / delete\_text / undelete\_text / move\_text commands implemented.
-\item refresh command implemented. (extended API)
-\item point types, line styles, and colours now start at 1, for gnuplot compatibility.
-\item default terminal changed to postscript for non-interactive sessions.
-\end{itemize}
-
-\noindent \textbf{2006 Apr 27: GnuPlot+ 0.4.0}
-\begin{itemize}
-\item Bug fix: now looks for input scripts in the user's cwd, not in /tmp.
-\item `set logscale' is now valid syntax (as in gnuplot), as well as `set log'.
-\item multiplot implemented, including linked axes, though with some brokenness
-if linked axes are allowed to autoscale.
-\item `dots' plotting style implemented.
-\item Bug fix: can now include a plot `with' clause after an `axes' clause;
-could not previously without an error message arising.
-\item Pointstyles now increment between plotted datasets, even in a colour
-terminal where the colours also increment.
-\item garbage collection of .eps files from the X11 terminal added. Previously
-they were left to fester in /tmp.
-\item pointlinewidth added as a plot style, specifying the linewidth to be used
-in plotting points. `set plw' and `set lw' both added (extended API).
-\item delete, clear and undelete commands added to the multiplot environment.
-\item unset command implemented.
-\item set notitle implemented.
-\end{itemize}
-
-\noindent \textbf{2006 Apr 14: GnuPlot+ 0.3.2}
-\begin{itemize}
-\item The autoscaling of logarithmic axes made more trust-worthy: error checks
-to ensure that they do not try to cover negative ordinates.
-\item Error checks put in place to prevent empty keys being plotted, which made
-PyX crash previously. Now can plot empty graphs happily.
-\item Datasets with blank titles removed from the key, to allow users to plot
-some datasets to be omitted from the key. This is not possible in gnuplot.
-\item Bug fix to prevent PyX's texrunner from crashing irreparably upon
-receiving bad LaTeX. Now uses a spanner to attempt to return it to working
-order for the next plot.
-\item Bug fix to the autoscaling of axes with no range of data -- previous did
-not work for negative ordinates. Now displays an axes with a range of +/-
-1.0 around the data.
-\end{itemize}
-
-\noindent \textbf{2006 Apr 12: GnuPlot+ 0.3.1}
-\begin{itemize}
-\item Plotting of functions fixed: plot command will now plot any algebraic
-expression, not just functions of the form f(x).
-\item Space added after command prompt.
-\end{itemize}
-
-\noindent \textbf{2006 Apr 12: GnuPlot+ 0.3.0}
-\begin{itemize}
-\item X11\_singlewindow and X11\_multiwindow terminals implemented, as distinct
-from just standard X11.
-\item Key positioning allowed to be xcentre, ycentre, below and outside, as
-well as in the corners of the plot. Key allowed to be offseted in position.
-\item Datasets colours can be set via `plot with colour $<$n$>$'
-\item Datasets are split when there is a blank line in the datafile; lines are
-not joined up between the two segments.
-\item set size implemented; can now change aspect ratio of plots.
-\item working directory of GnuPlot+ changed to /tmp, so that LaTeX's temporary
-files are stored there rather than in the user's cwd.
-\end{itemize}
-
-\noindent \textbf{2006 Mar 30: GnuPlot+ 0.2.0}
-\begin{itemize}
-\item Standard GnuPlot dual axes improved upon, allowing users to add x3, x4
-axes, etc, up to any number of axes that may be desired.
-\item Autocomplete mechanism for commandline substantially cleaned up and
-debugged.
-\item Bug fixes to the plotting of arrows/labels. Now appear \textit{above} gridlines,
-not below.
-\end{itemize}
-
-\noindent \textbf{2006 Feb 26: GnuPlot+ 0.1.0}
+First beta-release.
 
 \printindex
 \end{document}

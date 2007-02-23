@@ -35,7 +35,7 @@ MANDIR=${USRDIR}/man/man1
 
 # Version information.
 
-VERSION=0.6.2.4
+VERSION=0.6.3
 DATE=xx/02/2007
 
 default: setup
@@ -92,7 +92,7 @@ install:
 	rm -f ${BINDIR}/pyxplot_watch
 	ln -s ${SRCDIR}/pyxplot_watch ${BINDIR}/pyxplot_watch
 	install -m644 doc/pyxplot.tex doc/pyxplot.pdf ${DOCDIR}
-	install -m644 doc/examples/example* ${DOCDIR}/examples
+	install -m644 doc/examples/ex_* ${DOCDIR}/examples
 	install -m644 doc/examples/eps/* ${DOCDIR}/examples/eps
 	install -m644 pyxplot.1       ${MANDIR}/pyxplot.1
 	install -m644 pyxplot_watch.1 ${MANDIR}/pyxplot_watch.1
