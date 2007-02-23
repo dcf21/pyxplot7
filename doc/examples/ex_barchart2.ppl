@@ -1,0 +1,77 @@
+# EX_BARCHART2.PPL
+#
+# The code in this file is part of PyXPlot
+# <http://www.pyxplot.org.uk>
+#
+# Copyright (C) 2006-7 Dominic Ford <coders@pyxplot.org.uk>
+#
+# $Id$
+#
+# PyXPlot is free software; you can redistribute it and/or modify it under the
+# terms of the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any later
+# version.
+#
+# You should have received a copy of the GNU General Public License along with
+# PyXPlot; if not, write to the Free Software Foundation, Inc., 51 Franklin
+# Street, Fifth Floor, Boston, MA  02110-1301, USA
+
+# ----------------------------------------------------------------------------
+
+# This script produces a figure for the PyXPlot Users' Guide
+
+# Call common initialisation script
+reset
+load "examples/fig_init.ppl"
+set term colour
+
+# Set output destination
+set output "examples/eps/ex_barchart2.eps"
+
+# Main body of figure script
+set multiplot
+set nodisplay
+width=5.4
+gold_ratio = 1/((1+sqrt(5))/2)
+
+set width width
+set xrange [0.1:10.4]
+set yrange [0:1.1]
+set nokey
+
+# Plot 0 (bottom left)
+set xlabel 'x'
+set ylabel 'y'
+set label 1 '(a)' 8.2,0.9
+plot 'examples/ex_barchart2.dat' with boxes
+
+# Plot 1 (bottom right)
+set origin 1*width, 0*width*gold_ratio
+set xlabel 'x'
+set ylabel 'linkaxis 0'
+set label 1 '(b)' 8.2,0.9
+plot 'examples/ex_barchart2.dat' with wboxes
+
+# Plot 2 (top left)
+set origin 0*width, 1*width*gold_ratio
+set xlabel 'linkaxis 0'
+set ylabel 'y'
+set boxwidth 0.4
+set label 1 '(c)' 8.2,0.9
+plot 'examples/ex_barchart2.dat' with boxes fc 2
+
+# Plot 3 (top right)
+set origin 1*width, 1*width*gold_ratio
+set xlabel 'linkaxis 1'
+set ylabel 'linkaxis 2'
+set boxwidth 0.0
+set boxfrom 0.5
+set samples 40
+set label 1 '(d)' 8.2,0.9
+plot sin(x)*sin(x) with boxes fc 3 c 1, \
+     cos(x)*cos(x) with boxes fc 2 c 1 
+
+# Now that we are finished preparing multiplot,
+# turn display on
+set display
+refresh
