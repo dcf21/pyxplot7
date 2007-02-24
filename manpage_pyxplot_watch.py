@@ -46,6 +46,11 @@ for watching PyXPlot command script files, and executing them whenever they are
 modified. It is should be followed on the commandline by a list of command
 scripts which are to be watched.  Full documentation can be found in:
 %s
+.SH COMMAND LINE OPTIONS
+  -v, --verbose: Verbose mode; output full activity log to terminal
+  -q, --quiet  : Quiet mode; only output PyXPlot error messages to terminal
+  -h, --help   : Display this help
+  -V, --version: Display version number
 .SH AUTHOR
 %s.
 .SH CREDITS

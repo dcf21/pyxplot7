@@ -32,12 +32,13 @@ DATE    = gp_version.DATE
 
 version_string = r"""PyXPlot Watch """+VERSION
 
-help_string = r"""Usage: pyxplot_watch <options> <filelist>
+help_string = r"""PyXPlot Watch """+VERSION+"""
+
+Usage: pyxplot_watch <options> <filelist>
   -v, --verbose: Verbose mode; output full activity log to terminal
   -q, --quiet  : Quiet mode; only output PyXPlot error messages to terminal
   -h, --help   : Display this help
-  -V, --version: Display version number
-PyXPlot Watch """+VERSION
+  -V, --version: Display version number"""
 
 watch_files = [] # List of files that we are watching
 

@@ -101,8 +101,8 @@ Set options from gnuplot which PyXPlot DOES NOT recognise:
 'decimalsign', 'dgrid3d', 'dummy', 'encoding', 'format', 'hidden3d',
 'historysize', 'isosamples', 'locale', '[blrt]margin', 'mapping', 'mouse',
 'offsets', 'parametric', 'pm3d', 'polar', 'print', '[rtuv]range', 'style',
-'surface', 'tics', 'ticscale', 'ticslevel', 'timestamp', 'timefmt', 'view',
-'[xyz]{2}data', '[xyz]{2}[md]tics', '{[xyz]{2}}zeroaxis', 'zero'
+'surface', 'ticscale', 'ticslevel', 'timestamp', 'timefmt', 'view',
+'[xyz]{2}data', '{[xyz]{2}}zeroaxis', 'zero'
 """
 
 unset_noword = r"""

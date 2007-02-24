@@ -2555,25 +2555,28 @@ $\sin(x)$:
 plot int_dt(sin(t),0,x)
 \end{verbatim} 
 
-The function \texttt{diff\_dx()} takes two parameters and an optional third --
-firstly the expression to be differentiated, then the point at which the
-differential should be evaluated, and then an optional parameter, $\epsilon$.
-The following example would evaluate the differential of the function $\cos(x)$
-with respect to $x$ at $x=1.0$:
+The function \texttt{diff\_dx()} takes two obligatory parameters plus two
+further optional parameters. The first is the expression to be differentiated,
+followed by the point at which the differential should be evaluated, following
+by optional parameters $\epsilon_1$ and $\epsilon_2$, which are described
+below.  The following example would evaluate the differential of the function
+$\cos(x)$ with respect to $x$ at $x=1.0$:
 
 \begin{verbatim}
 print diff_dx(cos(x), 1.0)
 \end{verbatim}
 
-Differentials are evaluated by a simple differencing algorithm, and the
-parameter $\epsilon$ controls the spacing with which to perform the
-differencing operation:
+Differentials are evaluated by a simple differencing algorithm, and a parameter
+$\epsilon$ controls the spacing with which to perform the differencing
+operation:
 
 \begin{displaymath}
 \left.\frac{\mathrm{d}f}{\mathrm{d}x}\right|_{x=x_0} \approx \frac{f(x_0+\epsilon/2) - f(x_0-\epsilon/2)}{\epsilon}
 \end{displaymath}
 
-\noindent By default, $\epsilon = 10^{-6}$.
+\noindent where $\epsilon = \epsilon_1 + x \epsilon_2$. By default, $\epsilon_1
+= \epsilon_2 = 10^{-6}$, which is appropriate for the differentiation of most
+well-behaved functions.
 
 Advanced users may be interested to know that integration is performed using
 the \texttt{quad} function of the \texttt{integrate} package of the
@@ -2669,7 +2672,7 @@ prefixed to the beginning of all \LaTeX\ text items, before the
 \texttt{\textbackslash begin\{document\}} statement. It can be used to define
 custom \LaTeX\ macros, or to include packages using the \texttt{\textbackslash
 includepackage\{\}} command.  The preamble can be changed using the {\tt set
-preabmle} command.
+preamble} command.\index{set preamble command@\texttt{set preamble} command}
 \end{itemize}
 
 \section{An Example Configuration File}
@@ -3260,9 +3263,9 @@ f(x) = a*x+b
 fit f(x) 'datafile' index 1 using 2:3 via a,b
 \end{verbatim}
 
-The coefficients to be varied are listed after the keyword `{\tt via}'; the
-keywords `{\tt index}', `{\tt every}' and `{\tt using}' have the same meanings as in
-the {\tt plot} command.
+\noindent The coefficients to be varied are listed after the keyword `{\tt
+via}'; the keywords `{\tt index}', `{\tt every}' and `{\tt using}' have the
+same meanings as in the {\tt plot} command.
 
 This is useful for producing best-fit lines and also has applications for
 estimating the gradients of datasets.  The syntax is essentially identical to
@@ -3328,8 +3331,8 @@ contents had been typed into the current terminal. For example:
 load 'foo'
 \end{verbatim}
 
-would have the same effect as typing the contents of the file foo into the
-present session.
+\noindent would have the same effect as typing the contents of the file foo
+into the present session.
 
 Wildcards can be used in the load command, in which case \textit{all}
 commandfiles matching the given wildcard are executed, for example:
@@ -3354,9 +3357,10 @@ it would have been displayed on the terminal at that time. For example:
 move 23 to 8,8
 \end{verbatim}
   
-If 23 were a plot, this would move it to position 8,8 (measured in
-centimetres). The end result would be the same as if the command {\tt set origin
-8,8} had been called before plotting plot number 23.
+\noindent This would move multiplot item 23 to position 8,8 (measured in
+centimetres). If this item were a plot, the end result would be the same as if
+the command {\tt set origin 8,8} had been called before it had originally been
+plotted.
 
 \section{!}\index{! command@! command}
 
@@ -3372,15 +3376,15 @@ pling (!) characters, for example:
 !mkdir foo
 \end{verbatim}
 
-As an alternative, back-quotes (`) can be used to substitute the output of a
-shell command into a PyXPlot command, for example:
+\noindent As an alternative, back-quotes (`) can be used to substitute the
+output of a shell command into a PyXPlot command, for example:
 
 \begin{verbatim}
 set xlabel `echo "'" ; ls ; echo "'"`
 \end{verbatim}
 
-Note that back-quotes cannot be used inside quote characters, and so the
-following would \textit{not} work:
+\noindent Note that back-quotes cannot be used inside quote characters, and so
+the following would \textit{not} work:
 
 \begin{verbatim}
 set xlabel '`ls`'
@@ -3592,8 +3596,7 @@ for the {\tt plot} command.  For example:
 replot sin(x) axes x2y1 with linespoints
 \end{verbatim}
 
-will add a plot of the function $\sin(x)$ to the current plot.
-
+\noindent will add a plot of the function $\sin(x)$ to the current plot.
 
 \section{reset}\index{reset command@\texttt{reset} command}
 
@@ -3636,11 +3639,12 @@ PyXPlot.  For example:
 set pointsize 2
 \end{verbatim}
 
-would sets the default point size to 2. The basic syntax always follows that
-above: the {\tt set} command should be followed by some keyword specifying which
-setting it is which should be set. If a further parameter is needed to specify
-what value to set this setting to, it should follow this keyword. Settings
-which work in an on/off fashion tend to take a syntax along the lines of:
+\noindent would sets the default point size to 2. The basic syntax always
+follows that above: the {\tt set} command should be followed by some keyword
+specifying which setting it is which should be set. If a further parameter is
+needed to specify what value to set this setting to, it should follow this
+keyword. Settings which work in an on/off fashion tend to take a syntax along
+the lines of:
 
 \begin{tabular}{ll}
 {\tt set key} & Set option ON \\
@@ -4201,7 +4205,7 @@ plot sin(x) with lines linewidth 5.0
 \subsection{logscale}\index{set logscale command@\texttt{set logscale} command}
 
 \begin{verbatim}
-set logscale [<axis> ... ]
+set logscale [<axis> ... ] <base>
 \end{verbatim}
 
 The `{\tt logscale}' setting causes an axis to be laid out with logarithmically,
@@ -4243,7 +4247,9 @@ set nolog x1 y2
 \begin{verbatim}
 unset log x1y2
 \end{verbatim}
-   
+
+Optionally, a base may be specified at the end of the {\tt set logscale}
+command, to produce axes labelled in logarithms to arbitrary bases.
 
 \subsection{multiplot}\index{set multiplot command@\texttt{set multiplot} command}
 
@@ -4261,16 +4267,13 @@ set multiplot
 be plotted together and displayed side-by-side. See Section~\ref{multiplot} for
 a full discussion of multiplot mode.
 
-
 \subsection{mxtics}\index{set mxtics command@\texttt{set mxtics} command}
 
 See {\tt set xtics}.
-   
 
 \subsection{mytics}\index{set mytics command@\texttt{set mytics} command}
 
 See {\tt set xtics}.
-   
 
 \subsection{noarrow}\index{set noarrow command@\texttt{set noarrow} command}
 
@@ -4291,9 +4294,9 @@ plot. Alternatively, individual arrows can be removed using the syntax:
 set noarrow 2
 \end{verbatim}
 
-where the tag `{\tt 2}' here is the identification number given to the arrow to be
-removed when it was initially set using the {\tt set arrow} command.
-
+\noindent where the tag `{\tt 2}' here is the identification number given to
+the arrow to be removed when it was initially set using the {\tt set arrow}
+command.
 
 \subsection{noaxis}\index{set noaxis command@\texttt{set noaxis} command}
 
@@ -4354,16 +4357,17 @@ Issuing the command:
 set nolabel
 \end{verbatim}
 
-removes all text labels, as set using the {\tt set label} command, from the
-current plot. Alternatively, individual labels can be removed using the syntax:
+\noindent removes all text labels, as set using the {\tt set label} command,
+from the current plot. Alternatively, individual labels can be removed using
+the syntax:
 
 \begin{verbatim}
 set nolabel 2
 \end{verbatim}
 
-where the tag `{\tt 2}' here is the identification number given to the label to be 
-removed when it was initially set using the {\tt set label} command.
-
+\noindent where the tag `{\tt 2}' here is the identification number given to
+the label to be removed when it was initially set using the {\tt set label}
+command.
 
 \subsection{nolinestyle}\index{set nolinestyle command@\texttt{set nolinestyle} command}
 
@@ -4672,8 +4676,8 @@ set style data points
 set style function lines linestyle 1
 \end{verbatim}
 
-would cause datafiles to be plotted by default using points and functions using
-lines with the first defined linestyle.
+\noindent would cause datafiles to be plotted by default using points and
+functions using lines with the first defined linestyle.
  
 \subsection{terminal}\index{set terminal command@\texttt{set terminal} command}
 
@@ -4932,8 +4936,8 @@ above it.  For example, the command:
 set title 'foo'
 \end{verbatim}
 
-would cause a title `foo' to be displayed above a graph. The easiest way to
-remove a title, having set one, is via:
+\noindent would cause a title `foo' to be displayed above a graph. The easiest
+way to remove a title, having set one, is via:
 
 \begin{verbatim}
 set title ''
@@ -5007,17 +5011,15 @@ replacing the $x$ with a $y$.  Hence:
 set y23range [-5:5]
 \end{verbatim}
 
-sets the range of the 23rd $y$-axis to be between -5 and 5.
-
-The following command:
+\noindent sets the range of the 23rd $y$-axis to be between -5 and 5.  The
+following command:
 
 \begin{verbatim}
 set xrange [:10]
 \end{verbatim}
 
-would set the $x$-axis to have an upper limit of 10, but an
+\noindent would set the $x$-axis to have an upper limit of 10, but an
 automatically-scaling lower-limit.
-
 
 \subsection{xticdir}\index{set xticdir command@\texttt{set xticdir} command}
 
