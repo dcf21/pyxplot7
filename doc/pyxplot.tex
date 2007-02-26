@@ -36,7 +36,7 @@
 \end{center}
 \vspace*{0.5cm}
 \begin{center}
-{\LARGE \bf A Commandline Plotting Package, \\ \vspace{2mm} with Interface similar to that of Gnuplot, \\ \vspace{2mm} which produces \\ \vspace{2mm} Publication-Quality Output. \\}
+{\LARGE \bf A Command-line Plotting Package, \\ \vspace{2mm} with Interface similar to that of Gnuplot, \\ \vspace{2mm} which produces \\ \vspace{2mm} Publication-Quality Output. \\}
 \end{center}
 \vspace*{0.5cm}
 \begin{center}
@@ -67,11 +67,11 @@
 
 \section{Overview}
 
-PyXPlot is a commandline graphing package, which, for ease of use, has an
+PyXPlot is a command-line graphing package, which, for ease of use, has an
 interface based heavily upon that of gnuplot -- perhaps UNIX's most widely-used
 plotting package. Despite the shared interface, however, PyXPlot is intended to
 significantly improve upon the quality of gnuplot's output, producing
-publication-quality figures. The commandline interface has also been extended,
+publication-quality figures. The command-line interface has also been extended,
 providing a wealth of new features, and short-cuts for some operations which
 were felt to be excessively cumbersome in the original.
 
@@ -91,7 +91,7 @@ extended -- to name but a few of the enhancements. A number of examples of the
 results of which PyXPlot is capable can be seen on the project
 website\footnote{\url{http://www.pyxplot.org.uk/}}.
 
-As well as the ease of use and flexibility of gnuplot's commandline interface
+As well as the ease of use and flexibility of gnuplot's command-line interface
 -- it can be used either interactively, read a list of commands from a file, or
 receive instructions through a UNIX pipe from another process -- I believe it
 to bring another distinct advantage. It insists upon data being written to a
@@ -232,7 +232,7 @@ pyxplot
 Before proceeding any further, the author would like to express his gratitude
 to those people who have contributed to PyXPlot -- first and foremost, to
 J\"org Lehmann and Andr\'e Wobst, for writing the PyX graphics library for
-python, upon which this software is heavily built. Thanks must also go to Ross
+Python, upon which this software is heavily built. Thanks must also go to Ross
 Church for his many useful comments and suggestions during its development.
 
 \section{Legal Blurb}
@@ -262,14 +262,14 @@ the web which will greatly supplement what is provided below.
 \section{Getting Started}
 
 The simplest way to start PyXPlot is simply to type ``\texttt{pyxplot}'' at a
-shell prompt to start an interactive session. A PyXPlot commandline prompt will
+shell prompt to start an interactive session. A PyXPlot command-line prompt will
 appear, into which commands can be typed. PyXPlot can be exited either by
 typing ``\texttt{exit}'', ``\texttt{quit}'', or by pressing CTRL-D.\index{exit
 command@\texttt{exit} command}\index{quit command@\texttt{quit} command}
 
 Alternatively, a list of commands to be executed may be stored in a command
 script, and executed by passing the filename of the command script to PyXPlot
-on the shell commandline, for example:\index{command line syntax}
+on the shell command line, for example:\index{command line syntax}
 
 \begin{verbatim}
 pyxplot foo
@@ -277,7 +277,7 @@ pyxplot foo
 
 \noindent In this case, PyXPlot would exit immediately after finishing
 executing the commands from the file \texttt{foo}. Several filenames may be
-passed on the commandline, to be executed in sequence:
+passed on the command line, to be executed in sequence:
 
 \begin{verbatim}
 pyxplot foo1 foo2 foo3
@@ -293,7 +293,7 @@ pyxplot *.plot
 
 It is possible to use PyXPlot both interactively, and from command scripts, in
 the same session. One way to do this is to pass the magic filename `--' on the
-commandline:
+command line:
 
 \begin{verbatim}
 pyxplot foo1 - foo2
@@ -440,9 +440,9 @@ example string above, one would type:
 set xlabel "J\\"org's Data"
 \end{verbatim}
 
-Two backslashes are used; the first is a PyXPlot escape character, used so that
-the " character is not interpretted as delimiting the string. The second is the
-\LaTeX\ escape character used to produce the umlaut.  \index{escape
+Two backslashes are used.  The first backslash is the \LaTeX\ escape character
+used to produce the umlaut; the second is a PyXPlot escape character, used so
+that the " character is not interpretted as delimiting the string. \index{escape
 characters}\index{quote characters}\index{special characters}
 
 Having set labels and titles, they may be removed thus:
@@ -471,8 +471,8 @@ command} restores all configurable parameters to their default states.
 As has already been seen above, some mathematical functions such as $\sin(x)$ are
 pre-defined within PyXPlot. A list of frequently-used functions which are
 predefined in PyXPlot is given in Table~\ref{functions_table}\footnote{Users
-with some programming experience may be interested to know that all of the
-functions in the core and math modules of python are recognised.}. A list of
+with some experience in Python may be interested to know that all of the
+functions in the core and math modules are recognised.}. A list of
 operators recognised by PyXPlot is given in Table~\ref{operators_table}.
 
 \begin{table}
@@ -618,7 +618,7 @@ blank lines. The first datablock is numbered 0, the next 1, and so on.
 When two or more blank lines are found together, the datafile is divided up
 into ``index blocks''. Each index block may be made up of a series of data
 blocks. To clarify this, a labelled example datafile is shown in
-figure~\ref{sample_datafile}.
+Figure~\ref{sample_datafile}.
 
 \begin{figure}
 \begin{tabular}{p{2.2cm}l}
@@ -640,7 +640,7 @@ figure~\ref{sample_datafile}.
                    & $<$etc$>$ \\
 \hline
 \end{tabular}
-\caption{An Example PyXPlot Datafile -- the datafile is shown in the two left-hand columns, and commands are shown to the right.}
+\caption{An example PyXPlot datafile -- the datafile is shown in the two left-hand columns, and commands are shown to the right.}
 \label{sample_datafile}
 \end{figure}
 
@@ -698,7 +698,7 @@ in Section~\ref{select_modifier}.
 By default, when PyXPlot is used interactively, all plots are displayed on the
 screen. It is also possible to produce postscript output, to be read into other
 programs or embedded into \LaTeX\ documents, as well as a variety of other
-graphic formats. The \texttt{set terminal} command\index{set terminal
+graphical formats. The \texttt{set terminal} command\index{set terminal
 command@\texttt{set terminal} command}\footnote{gnuplot users should note that
 the syntax of the \texttt{set terminal} command in PyXPlot is rather different;
 see Section~\ref{set_terminal2}.} is used to specify the output format that is
@@ -774,7 +774,7 @@ are added to the last plot.
 
 \section{Data Styles}
 
-By default, data from files is plotted with points, and functions are plotted
+By default, data from files are plotted with points, and functions are plotted
 with lines. However, either kinds of data can be plotted in a variety of ways.
 To plot a function with points, for example, the following syntax is
 used\footnote{Note that when a plot command contains both
@@ -828,7 +828,7 @@ modifier@\texttt{linetype} modifier}\label{pointtype_modifier}, which can be
 abbreviated to ``\texttt{pt}'' and ``\texttt{lt}'' respectively, can also be
 placed after the \texttt{with} modifier. Each should be followed by an integer.
 The former specifies what shape of points should be used to plot the dataset,
-and the latter, whether a line should be continuous, dotted, dash-dotted, etc.
+and the latter whether a line should be continuous, dotted, dash-dotted, etc.
 Different integers correspond to different styles.
 
 The default plotting style referred to above can also be changed.  For example:
@@ -1030,7 +1030,7 @@ supported by this version include:
 \item Placing arrows and textual labels on plots.
 \item Putting grids on plots (colour can be set, but not linestyle).
 \item Setting plot aspect ratios with \texttt{set size ratio} or \texttt{set size square}.
-\item Multiplot (which is very significantly improved over gnuplot; see Section~\ref{multiplot})
+\item Multiplot (which is very significantly improved over gnuplot; see Section~\ref{multiplot}).
 \item Setting major/minor tics with the \texttt{set xtics} and \texttt{set mxtics} commands.
 \end{itemize}
 
@@ -1054,7 +1054,7 @@ tutorials which are to be found on the web before proceeding.
 
 \section{The Commandline Environment}
 
-PyXPlot uses the Gnu Readline commandline environment, which means that the up
+PyXPlot uses the GNU Readline command-line environment, which means that the up
 and down arrow keys can be used to repeat previously executed commands. Each
 user's command history is stored in his homespace in a history file called
 `\texttt{.pyxplot\_history}', allowing PyXPlot to remember command histories
@@ -1066,11 +1066,11 @@ this has the following syntax:
 save 'output_filename'
 \end{verbatim}
 
-From the shell commandline, the PyXPlot accepts the following switches which
+From the shell command line, the PyXPlot accepts the following switches which
 modify its behaviour:\index{command line syntax}
 
 \begin{longtable}{p{3.5cm}p{8.5cm}}
-\texttt{-h --help} & Display a short help message listing the available commandline switches.\\
+\texttt{-h --help} & Display a short help message listing the available command-line switches.\\
 \texttt{-v --version} & Display the current version number of PyXPlot.\\
 \texttt{-q --quiet} & Turn off the display of the welcome message on startup. \\
 \texttt{-V --verbose} & Display the welcome message on startup, as happens by default. \\
@@ -1189,20 +1189,20 @@ set terminal { X11_singlewindow | X11_multiwindow | X11_persist |
 \texttt{solid} & Modifier for the gif and png terminals; opposite to the above. \textbf{[default]}\\
 \texttt{enlarge} & Enlarge or shrink contents to fit the current paper
 size.\index{enlarging output}\\
-\texttt{noenlarge} & Do not enlarge output; opposite to the above \textbf{[default]}\\
+\texttt{noenlarge} & Do not enlarge output; opposite to the above. \textbf{[default]}\\
 \end{longtable}
 \label{terminals}
 
 The default terminal is normally \texttt{x11\_singlewindow}, matching
 approximately the behaviour of gnuplot. However, there is an exception to this.
-When PyXPlot is used non-interactively -- i.e. one or more command scripts is
-specified on the commandline, and PyXPlot exits as soon as it finishes
+When PyXPlot is used non-interactively -- i.e. one or more command scripts are
+specified on the command line, and PyXPlot exits as soon as it finishes
 executing them -- the \texttt{x11\_singlewindow} is not a very sensible
 terminal to use. Any plot window would close as soon as PyXPlot exited. The
 default terminal in this case changes to \texttt{postscript}.
 
 One exception to this is when the special `--' filename is specified in a list
-of command scripts on the commandline, to produce an interactive terminal
+of command scripts on the command line, to produce an interactive terminal
 between running a series of scripts. In this case, PyXPlot detects that the
 session will be interactive, and defaults to the usual
 \texttt{x11\_singlewindow} terminal.
@@ -1215,7 +1215,7 @@ terminal.
 
 The \texttt{gif}, \texttt{png} and \texttt{jpg} terminals result in some loss
 of quality, since the plot has to be sampled into a bitmapped graphic format.
-By default, this sampling is performed at 300 dpi, though it may be changed
+By default, this sampling is performed at 300 dpi, though this may be changed
 using the command \texttt{set dpi <value>}. Alternatively, it may be changed
 using the \texttt{DPI} option in the \texttt{settings} section of a
 configuration file (see Section~\ref{configuration}).\index{set dpi
@@ -1225,10 +1225,10 @@ output}\index{image resolution}
 \subsection{Paper Sizes}
 
 By default, when the postscript terminal produces printable, i.e. not
-encapsulated, output, the papersize for this output is read from your system
+encapsulated, output, the paper size for this output is read from your system
 locale settings. It may be changed, however, with the \texttt{set
 papersize}\index{set papersize command@\texttt{set papersize} command} command,
-which may be followed either by the name of a recognised papersize, or by the
+which may be followed either by the name of a recognised paper size, or by the
 dimensions of a user-defined size, specified as a \texttt{height},
 \texttt{width} pair, both being measured in millimetres. For example:
 
@@ -1335,7 +1335,7 @@ plot sin(x) axes x3y1
 set axis x3
 \end{verbatim}
 
-\noindent In the top statement, a further $x$ axis, called $x3$ is implicitly
+\noindent In the top statement, a further $x$ axis, called $x3$, is implicitly
 created by giving it a label. In the next, the \texttt{axes} modifier is used
 to tell the \texttt{plot} command to plot data against the $x3$-axis, which
 also implicitly created such an axis if it doesn't already exist. In the third,
@@ -1360,7 +1360,7 @@ rule applies for $y$-axes, to the left and to the right.}
 As discussed in the previous chapter, the ranges of axes can be set either
 using the \texttt{set xrange} command\index{set xrange command@\texttt{set
 xrange} command}, or within the \texttt{plot} command. The following two
-statements would set an equivalent range for the $x3$-axis:
+statements would set equivalent ranges for the $x3$-axis:
 
 \begin{verbatim}
 set x3range [-2:2]
@@ -1418,8 +1418,7 @@ set xlabel 'nolabels:Time'
 \noindent would produce an $x$-axis with no numeric labels, but a label of
 `Time'.
 
-Several examples of effects which can be achieved with these commands can be
-found in Example~10 (see Section~\ref{ex10}).  In the unlikely event of wanting
+In the unlikely event of wanting
 to label a normal axis with one of these magic words\index{axes!reserved
 labels}\index{magic axis labels}, this may be achieved by prefixing the magic
 word with a space. There is one further magic axis label, \texttt{linkaxis},
@@ -1483,7 +1482,7 @@ the $x3$-axis:
 set x3tics 2
 \end{verbatim}
 
-The following example would restore the automatic placement of tics along the
+The following example would restore the automatic placement of ticks along the
 $x4$-axis, placing those ticks facing outwards from the graph:
 
 \begin{verbatim}
@@ -1566,7 +1565,7 @@ An example of a plot with a two-column legend is given in Figure~\ref{fig:ex_leg
 \label{fig:ex_legends}
 \end{figure}
 
-\subsection{The \texttt{linestyle} keyword}
+\subsection{The \texttt{linestyle} Keyword}
 
 At times, the string of style keywords following the \texttt{with} modifier in
 \texttt{plot} commands can grow rather unwieldily long. For clarity, frequently
@@ -1622,7 +1621,7 @@ Section~\ref{colour_names}.
 
 plot linewidths\index{linewidths!setting for datasets} & --- & For an unknown
 reason, gnuplot doesn't allow \texttt{set linewidth 2} as valid syntax. This
-setting is allowed to be made in PyXPlot. Furthermore, \texttt{set
+setting is permitted in PyXPlot. Furthermore, \texttt{set
 pointlinewidth 2} will set the linewidth to be used when drawing data
 \textit{points}. A similar effect can be achieved via:
 
@@ -1818,7 +1817,7 @@ For clarity, a complete list of errorbar styles is given below:
 \end{tabular}
 \\
 
-datafile wildcards\index{globbing}\index{wildcards}\index{datafiles!globbing} & --- & PyXPlot allows the wildcards `*' and `?' to be used both in the filenames of datafiles following the \texttt{plot} command, and also when specifying command files on the commandline and with the \texttt{load} command. For example, the following would plot all datafiles in the current directory with a `.dat' suffix, using the same plot options:
+datafile wildcards\index{globbing}\index{wildcards}\index{datafiles!globbing} & --- & PyXPlot allows the wildcards `*' and `?' to be used both in the filenames of datafiles following the \texttt{plot} command, and also when specifying command files on the command line and with the \texttt{load} command. For example, the following would plot all datafiles in the current directory with a `.dat' suffix, using the same plot options:
 \\ & &
 \begin{verbatim}
 plot '*.dat' with linewidth 2
@@ -1840,7 +1839,7 @@ set backup
 set nobackup
 \end{verbatim}
 \\ & &
-When this switch is turned on, pre-existing files will be renamed with a tilda at the end of their filenames, rather than being overwritten. \\
+When this switch is turned on, pre-existing files will be renamed with a tilde at the end of their filenames, rather than being overwritten. \\
 
 \end{longtable}
 
@@ -1954,7 +1953,7 @@ fontsize} command} The fontsize of these text labels can globally be set using
 the \texttt{set fontsize x} command. This applies not only to the \texttt{set
 label} command, but also to plot titles, axis labels, keys, etc. The value
 given should be an integer in the range $-4 \leq x \leq 5$. The default is
-zero, which corresponds to \LaTeX's \texttt{normalsize}; -4 corresponds to
+zero, which corresponds to \LaTeX's \texttt{normalsize}; $-4$ corresponds to
 \texttt{tiny} and 5 to \texttt{Huge}.
 
 \index{text!colour}\index{colours!text}\index{set textcolour
@@ -2153,10 +2152,6 @@ an axis; the second, $m$, indicates whether to borrow the scale of axis $x1$,
 $x2$, $x3$, etc. By default, $m=1$. The linking will fail, and a warning
 result, if an attempt is made to link to an axis which doesn't exist.
 
-The specimen plots in Section~\ref{gallery} show numerous examples of the use
-of linked axes.
-
-
 \subsection{Text Labels, Arrows and Images}
 
 \label{text_command}\index{text command@\texttt{text} command} In addition to
@@ -2194,8 +2189,8 @@ and \texttt{move} commands.
 
 It should be noted that the \texttt{text} command can also be used outside of
 the multiplot environment, to render a single piece of short text instead of a
-graph. This has limited applications, but one is illustrated in
-Section~\ref{powerpoint_example}.
+graph. One obvious application is to produce equations rendered as graphical
+files for inclusion in talks.
 
 \label{arrows} \index{arrow command@\texttt{arrow} command} Arrows may also be
 placed on multiplot pages, independently of any plots, using the \texttt{arrow}
@@ -2266,9 +2261,6 @@ set display
 refresh
 \end{verbatim}
 
-The reader will observe that frequent use of this is made in the examples of
-Chapter~\ref{examples}.
-
 \section{Barcharts and Histograms}
 \label{barcharts}\index{bar charts}
 \index{steps plot style@\texttt{steps} plot style}
@@ -2322,10 +2314,10 @@ $x$- and $y$-coordinates of each bar, and the width in the third column.
 Panel~(b) of Figure~\ref{fig:ex_barchart2} shows an example of this plot style
 in use.
 
-By default, the bars all originate from the line $y=0$, as is normally wanted
-for a histogram. However, should it be desired for the bars to start from a
-different vertical point, that may be achieved with the \texttt{set boxfrom}
-command, for example:
+By default, the bars all originate from the line $y=0$, as is normal for a
+histogram. However, should it be desired for the bars to start from a different
+vertical point, that may be achieved with the \texttt{set boxfrom} command, for
+example:
 
 \begin{verbatim} 
 set boxfrom 5
@@ -2333,7 +2325,7 @@ set boxfrom 5
 
 \noindent All of the bars would then originate from the line $y=5$. Panel~(f)
 of Figure~\ref{fig:ex_barchart1} shows the kind of effect that is achieved; for
-comparison, panel (b) of the same figure shows the same bar chart with the
+comparison, panel~(b) of the same figure shows the same bar chart with the
 boxes starting from their default position at $y=0$.
 
 \begin{figure}
@@ -2401,7 +2393,7 @@ steps occur at the horizontal midpoints between the datapoints.
 \index{splicing functions}
 
 In PyXPlot, as in gnuplot, user-defined functions may be declared on the
-commandline:
+command line:
 
 \begin{verbatim}
 f(x) = x*sin(x)
@@ -2443,7 +2435,7 @@ plot f(x)
 \end{figure}
 
 \label{splice} \noindent The output of this particular example can be seen in
-Figure~\ref{fig:ex_funcspline1}. A similar effect could also have been achieved
+Figure~\ref{fig:ex_funcsplice1}. A similar effect could also have been achieved
 with the \texttt{select} keyword; see Section~\ref{select_modifier}.
 
 It is possible to make multiple declarations of the same function, over
@@ -2488,21 +2480,24 @@ plot [0:8] f(x)
 \label{spline_command}
 \index{best fit lines}
 
-Gnuplot allows data to be interpolated using its \texttt{csplines} plot style,
-for example:\index{csplines plot style@\texttt{csplines} plot
-style}\index{acsplines plot style@\texttt{acsplines} plot style}
-
-\begin{verbatim}
-plot 'datafile' with smooth csplines
-plot 'datafile' with smooth acsplines
-\end{verbatim}
-
-\noindent where the upper statement fits a spline through all of the
-datapoints, and the lower applies some smoothing to the data first. This syntax
-is supported in PyXPlot but deprecated.  A similar effect can be achieved with
-the new, more powerful, \texttt{spline} command\index{spline
-command@\texttt{spline} command}. This has a syntax similar to that of the
-\texttt{fit} command, for example:
+% The following is largely wrong, and hence commented out
+%Gnuplot allows data to be interpolated using its \texttt{csplines} plot style,
+%for example:\index{csplines plot style@\texttt{csplines} plot
+%style}\index{acsplines plot style@\texttt{acsplines} plot style}
+%
+%\begin{verbatim}
+%plot 'datafile' with smooth csplines
+%plot 'datafile' with smooth acsplines
+%\end{verbatim}
+%
+%\noindent where the upper statement fits a spline through all of the
+%datapoints, and the lower applies some smoothing to the data first. This syntax
+%is supported in PyXPlot but deprecated.  A similar effect can be achieved with
+%the new, more powerful, \texttt{spline} command\index{spline
+%command@\texttt{spline} command}. This has a syntax similar to that of the
+%\texttt{fit} command, for example:
+The \texttt{spline} command\index{spline command@\texttt{spline} command} fits a
+spline through data from a file.  For example:
 
 \begin{verbatim}
 spline f() 'datafile' index 1 using 2:3
@@ -2534,7 +2529,7 @@ spline f() 'datafile1' smooth 1.0
 the higher the value, the more smoothing is applied. The default behaviour is
 not to smooth at all (equivalent to \texttt{smooth 0.0}); a value of $1.0$
 corresponds to the default amount of smoothing applied in the
-\texttt{acsplines} plot style.
+gnuplot \texttt{acsplines} plot style.
 
 \section{Numerical Integration and Differentiation}
 
@@ -2590,7 +2585,7 @@ them whenever they are modified. This may be useful when developing a command
 script, if one wants to make small modifications to it, and see the results in
 a semi-live fashion. This tool is invoked by calling the
 \texttt{pyxplot\_watch}\index{pyxplot\_watch}\index{watching scripts} command
-from a shell prompt. The commandline syntax of \texttt{pyxplot\_watch} is
+from a shell prompt. The command-line syntax of \texttt{pyxplot\_watch} is
 similar to that of PyXPlot itself, for example:
 
 \begin{verbatim}
@@ -2599,7 +2594,7 @@ pyxplot_watch script
 
 \noindent would set \texttt{pyxplot\_watch} to watch the command script file
 \texttt{script}. One difference, however, is that if multiple script files are
-specified on the commandline, they are watched and executing independently,
+specified on the command line, they are watched and executed independently,
 \textit{not} sequentially, as PyXPlot itself would do. Wildcard characters can
 also be used to set \texttt{pyxplot\_watch} to watch multiple
 files.\footnote{Note that \texttt{pyxplot\_watch *.script} and
@@ -2831,7 +2826,7 @@ with a list of possible values for each:
 
                    \textbf{Analogous set command:} \texttt{set fontsize}\index{set fontsize command@\texttt{set fontsize} command}
 
-                   Sets the fontsize of text, varying between \LaTeX's \texttt{tiny} (-4) and \texttt{Huge} (5).
+                   Sets the fontsize of text, varying between \LaTeX's \texttt{tiny} ($-4$) and \texttt{Huge} (5).
                    \\
 \texttt{FUNCSTYLE} & \textbf{Possible values:} Any plot style.
 
@@ -3039,31 +3034,31 @@ with a list of possible values for each:
 \begin{longtable}{p{3.4cm}p{9cm}}
 \texttt{COLOUR} & \textbf{Possible values:} ON / OFF
 
-                  \textbf{Analogous commandline switches:} \texttt{-c}, \texttt{--colour}, \texttt{-m}, \texttt{--monochrome}
+                  \textbf{Analogous command-line switches:} \texttt{-c}, \texttt{--colour}, \texttt{-m}, \texttt{--monochrome}
 
                   Sets whether colour highlighting should be used in the interactive terminal. If turned on, output is displayed in green, warning messages in amber, and error messages in red; these colours are configurable, as described below. Note that not all UNIX terminals support the use of colour.
                    \\
 \texttt{COLOUR\_ERR} & \textbf{Possible values:} Any recognised terminal colour.
 
-                  \textbf{Analogous commandline switches:} None.
+                  \textbf{Analogous command-line switches:} None.
 
                   Sets the colour in which error messages are displayed when colour highlighting is used. Note that the list of recognised colour names differs from that used in PyXPlot; a list is given at the end of this section.
                    \\
 \texttt{COLOUR\_REP} & \textbf{Possible values:} Any recognised terminal colour.
 
-                  \textbf{Analogous commandline switches:} None.
+                  \textbf{Analogous command-line switches:} None.
 
                   As above, but sets the colour in which PyXPlot displays its non-error-related output.
                    \\
 \texttt{COLOUR\_WRN} & \textbf{Possible values:} Any recognised terminal colour.
 
-                  \textbf{Analogous commandline switches:} None.
+                  \textbf{Analogous command-line switches:} None.
 
                   As above, but sets the colour in which PyXPlot displays its warning messages.
                    \\
 \texttt{SPLASH} & \textbf{Possible values:} ON / OFF
 
-                  \textbf{Analogous commandline switches:} \texttt{-q}, \texttt{--quiet}, \texttt{-V}, \texttt{--verbose}
+                  \textbf{Analogous command-line switches:} \texttt{-q}, \texttt{--quiet}, \texttt{-V}, \texttt{--verbose}
 
                   Sets whether the standard welcome message is displayed upon startup.
                    \\
@@ -3084,14 +3079,14 @@ The following further colours provide a scale of shades of grey from dark to lig
 \index{colours!shades of grey}
 grey05, grey10, grey15, grey20, grey25, grey30, grey35, grey40, grey45, grey50, grey55, grey60, grey65, grey70, grey75, grey80, grey85, grey90, grey95.
 
-The US mis-spelling of grey (``gray'') is also accepted.
+The common mis-spelling of grey, ``gray'', is also accepted.
 
 For a colour chart of these colours, the reader is referred to Appendix B of the \textit{PyX Reference Manual}.\footnote{\url{http://pyx.sourceforge.net/manual/colorname.html}}
 
 \chapter{Command Reference}
 
-This chapter contains a list of all the commands that PyXPlot understands,
-listed by alphabetical order.
+This chapter contains an alphabetically ordered list of all the commands that
+PyXPlot understands.
 
 \section{arrow}\index{arrow command@\texttt{arrow} command}
 
@@ -3239,7 +3234,7 @@ exit
 
 The {\tt exit} command can be used to quit PyXPlot. If multiple command files,
 or a mixture of command files and interactive sessions, are specified on the
-commandline, then PyXPlot moves onto the next commandline item after receiving
+command line, then PyXPlot moves onto the next command-line item after receiving
 the {\tt exit} command.
 
 PyXPlot may also be quit be pressing CTRL-D or via the {\tt quit} command. In
@@ -3540,7 +3535,7 @@ quit
 
 The {\tt quit} command can be used to exit PyXPlot. If multiple command files,
 or a mixture of command files and interactive sessions, are specified on the
-commandline, then PyXPlot moves onto the next commandline item after receiving
+command line, then PyXPlot moves onto the next command-line item after receiving
 the {\tt exit} command.
 
 PyXPlot may also be quit be pressing CTRL-D or via the {\tt exit} command. In
@@ -5650,7 +5645,7 @@ $\mathbf{u}^0$ is independent of $\sigma_\mathrm{data}$.
 \chapter{ChangeLog}
 \index{ChangeLog}
 
-\subsection*{2007 Feb xx: PyXPlot 0.6.3}
+\subsection*{2007 Feb 26: PyXPlot 0.6.3}
 
 \subsubsection*{Summary:}
 
@@ -5658,8 +5653,8 @@ Second PyXPlot beta-release. The most significant change is the introduction of
 a new command-line parser, with greatly improved handling of complex
 expressions and much more meaningful syntax error messages. Multi-platform
 compatibility has also been massively improved, and dependencies loosened.  A
-small number of new commands have been added -- most notable among them are the
-{\tt jpeg} and {\tt eps} commands, for embedding images in multiplots.
+small number of new commands have been added; most notable among them are the
+{\tt jpeg} and {\tt eps} commands, which embed images in multiplots.
 
 \subsubsection*{Details -- New and Extended Commands:}
 
@@ -5678,7 +5673,7 @@ small number of new commands have been added -- most notable among them are the
 \subsubsection*{Details -- Eased System Requirements:}
 
 \begin{itemize}
-\item Requirement on python 2.4 minimum eased to version 2.3 minimum.
+\item Requirement on Python 2.4 minimum eased to version 2.3 minimum.
 \item Requirements on scipy and readline eased; PyXPlot will now work in reduced form when they are absent, though they are still strongly recommended.
 \item dvips and ghostscript are no longer required.
 \end{itemize}
