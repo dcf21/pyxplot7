@@ -1,3 +1,7 @@
+2007 Feb 26: PyXPlot 0.6.3
+	- Manual updated
+	- Some minor bugfixes
+
 2007 Jan 19: PyXPlot 0.6.2
 	- 'enlarge' terminal option implemented.
 	- pdf terminal implemented.

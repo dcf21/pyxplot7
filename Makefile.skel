@@ -36,7 +36,7 @@ MANDIR=${USRDIR}/man/man1
 # Version information.
 
 VERSION=0.6.3
-DATE=xx/02/2007
+DATE=26/02/2007
 
 default: setup
 
@@ -44,7 +44,7 @@ clean:
 	${MAKE_COMMAND} -C doc PYXPLOT=../src/__init__.py clean
 	rm -f src/*.pyc
 	rm -f src/__init__.py src/pyxplot_watch src/gp_version.py src/gp_version_install.py
-	rm -f pyxplot.1
+	rm -f pyxplot.1 pyxplot_watch.1
 	rm -f pyxplot
 	rm -Rf src/pyx
 
