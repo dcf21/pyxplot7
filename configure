@@ -102,11 +102,19 @@ whichout_ggv=`which ggv 2> /dev/null`
 if [ "`echo $whichout_gv | sed 's/\([a-z]*\).*/\1/'`" = "no" ] ; then whichout_gv="" ; fi
 if [ "`echo $whichout_ggv | sed 's/\([a-z]*\).*/\1/'`" = "no" ] ; then whichout_ggv="" ; fi
 if [ "$whichout_gv" != "" ] ; then
- echo "YES (gv)"
- echo "GV_COMMAND=${whichout_gv}" >> Makefile
+ echo $ECHO_N "YES (gv"
+ echo "GV_COMMAND=${whichout_gv}" >> Makefile 
+ if [ "`gv --v 2> /dev/null`" = "" ]; then 
+  echo ", single hyphen options)" 
+  echo "GV_OPT=-" >> Makefile
+ else
+  echo ", double hyphen options)" 
+  echo "GV_OPT=--" >> Makefile
+ fi
 elif [ "$whichout_ggv" != "" ] ; then
- echo "YES (ggv)"
+ echo "YES (ggv, don't forget to set \"watch file\" in the viewer preferences!)"
  echo "GV_COMMAND=${whichout_ggv}" >> Makefile
+ echo "GV_OPT=--" >> Makefile
 else
  echo "GV_COMMAND=/bin/false" >> Makefile
  echo "NO"

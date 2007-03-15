@@ -59,11 +59,13 @@ setup:
 	echo "SRCDIR='`pwd`/src/'"         >> src/gp_version.py
 	echo "DOCDIR='`pwd`/doc/'"         >> src/gp_version.py
 	echo "GHOSTVIEW='${GV_COMMAND}'"   >> src/gp_version.py
+	echo "GHOSTVIEW_OPT='${GV_OPT}'"   >> src/gp_version.py
 	echo "VERSION='${VERSION}'"        >  src/gp_version_install.py
 	echo "DATE='${DATE}'"              >> src/gp_version_install.py
 	echo "SRCDIR='${SRCDIR}'"          >> src/gp_version_install.py
 	echo "DOCDIR='${DOCDIR}'"          >> src/gp_version_install.py
 	echo "GHOSTVIEW='${GV_COMMAND}'"   >> src/gp_version_install.py
+	echo "GHOSTVIEW_OPT='${GV_OPT}'"   >> src/gp_version_install.py
 	rm -rf src/pyx
 	gzip -dc PyX-0.9.tar.gz | tar xf -
 	mv -f PyX-0.9/pyx src

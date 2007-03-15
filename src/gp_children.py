@@ -158,7 +158,7 @@ def csa_fork_gv(fname, gv_list):
   return fork
  else:
   os.dup2(gv_errorfile.fileno(), sys.stderr.fileno()) # Stop ghostview from spamming terminal
-  os.execlp(gp_version.GHOSTVIEW, gp_version.GHOSTVIEW, '--watch', "%s"%fname)
+  os.execlp(gp_version.GHOSTVIEW, gp_version.GHOSTVIEW, gp_version.GHOSTVIEW_OPT+'watch', "%s"%fname)
   os._exit(0)
 
 def csa_massacre_children():
