@@ -1,3 +1,6 @@
+2007 Mar 15: PyXPlot 0.6.3.1
+   - Minor bugfix so that gv will work with -watch.
+
 2007 Feb 26: PyXPlot 0.6.3
 	- Manual updated
 	- Some minor bugfixes
