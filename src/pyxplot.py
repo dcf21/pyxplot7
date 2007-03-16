@@ -30,6 +30,7 @@ import gp_text
 import gp_help
 import gp_version
 import gp_spline
+import gp_histogram
 from gp_autocomplete import *
 import gp_parser
 import gp_error
@@ -125,6 +126,8 @@ def directive_show(dictlist):
       if autocomplete(word, "settings", 1) or autocomplete(word, "axescolour",1): outstring += "Axes colour:   %s\n"%gp_settings.settings['AXESCOLOUR']
       if autocomplete(word, "settings", 1) or autocomplete(word, "backup", 1):    outstring += "File backups:  %s\n"%gp_settings.settings['BACKUP']
       if autocomplete(word, "settings", 1) or autocomplete(word, "bar",1):        outstring += "Bar width:     %f (the size of the strokes at the end of errorbars, set with 'set bar')\n"%gp_settings.settings['BAR']
+      if autocomplete(word, "settings", 1) or autocomplete(word, "binorigin",1):  outstring += "Bin origin:    %f (the x-origin of a histogram bin)\n"%gp_settings.settings['BINORIGIN']
+      if autocomplete(word, "settings", 1) or autocomplete(word, "binwidth",1):   outstring += "Bin width:     %f (the width of a histogram bin)\n"%gp_settings.settings['BINWIDTH']
       if autocomplete(word, "settings", 1) or autocomplete(word, "boxwidth",1):   outstring += "Boxwidth:      %s (the default width of bars on barcharts and histograms; a negative value means automatic widths)\n"%gp_settings.settings['BOXWIDTH']
       if autocomplete(word, "settings", 1) or autocomplete(word, "boxfrom",1):    outstring += "BoxFrom:       %s (the vertical point from which the bars of barcharts and histograms emanate)\n"%gp_settings.settings['BOXFROM']
       if autocomplete(word, "settings", 1) or autocomplete(word, "display", 1)  : outstring += "Display:       %s\n"%gp_settings.settings['DISPLAY']
@@ -360,6 +363,18 @@ def directive_set_unset(userinput):
 
   elif (userinput['directive'] == "unset") and (userinput['set_option'] == "bar"): # unset bar
      gp_settings.settings['BAR'] = gp_settings.settings_default['BAR']
+
+  elif (userinput['directive'] == "set") and (userinput['set_option'] == "binorigin"): # set bar
+     gp_settings.settings['BINORIGIN'] = float(userinput['bin_origin'])
+
+  elif (userinput['directive'] == "unset") and (userinput['set_option'] == "binorigin"): # unset bar
+     gp_settings.settings['BINORIGIN'] = gp_settings.settings_default['BINORIGIN']
+
+  elif (userinput['directive'] == "set") and (userinput['set_option'] == "binwidth"): # set bar
+     gp_settings.settings['BINWIDTH'] = float(userinput['bin_width'])
+
+  elif (userinput['directive'] == "unset") and (userinput['set_option'] == "binwidth"): # unset bar
+     gp_settings.settings['BINWIDTH'] = gp_settings.settings_default['BINWIDTH']
 
   elif (userinput['directive'] == "set") and (userinput['set_option'] == "boxfrom"): # set boxfrom
      gp_settings.settings['BOXFROM'] = userinput['box_from']
@@ -965,6 +980,12 @@ def directive(line, toplevel=True, interactive=False):
   elif (command['directive'] == "spline"):       # spline
     try:
      gp_spline.directive_spline(command,gp_settings.variables,gp_settings.functions)
+    except KeyboardInterrupt: raise
+    except:
+     gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
+  elif (command['directive'] == "histogram"):    # histogram
+    try:
+     gp_histogram.directive_histogram(command,gp_settings.variables,gp_settings.functions,gp_settings.settings)
     except KeyboardInterrupt: raise
     except:
      gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")

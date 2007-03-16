@@ -278,6 +278,8 @@ settings_default = {
                     'AUTOASPECT'     :config_lookup_opt  ('settings','AUTOASPECT'     ,'ON'              ,onoff     ) , # Use PyX default aspect ratio
                     'BACKUP'         :config_lookup_opt  ('settings','BACKUP'         ,'OFF'             ,onoff     ) ,
                     'BAR'            :config_lookup_float('settings','BAR'            ,1.0                          ) ,
+                    'BINORIGIN'      :config_lookup_float('settings','BINORIGIN'      ,0.0                          ) ,
+                    'BINWIDTH'       :config_lookup_float('settings','BINWIDTH'       ,1.0                          ) ,
                     'BOXFROM'        :config_lookup_float('settings','BOXFROM'        ,0.0                          ) ,
                     'BOXWIDTH'       :config_lookup_float('settings','BOXWIDTH'       ,0.0                          ) ,
                     'COLOUR'         :config_lookup_opt  ('settings','COLOUR'         ,'ON'              ,onoff     ) ,

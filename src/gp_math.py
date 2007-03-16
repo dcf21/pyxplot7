@@ -117,3 +117,4 @@ def factorise(x):
  return factors
 
 sort_on_first_list_item = lambda a,b: int(sgn(a[0]-b[0]))
+sort_on_second_list_item = lambda a,b: int(sgn(a[1]-b[1]))
