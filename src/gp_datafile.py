@@ -48,20 +48,7 @@ def gp_dataread(datafile, index, usingrowcol, using_list, select_criterion, ever
   vars_local = vars.copy()
 
   # Parse every list
-  if (len(every_list) < 1) or ('every_item' not in every_list[0]): linestep   = 0
-  else                                                           : linestep   = every_list[0]['every_item']
-  if (len(every_list) < 2) or ('every_item' not in every_list[1]): blockstep  = 0
-  else                                                           : blockstep  = every_list[1]['every_item']
-  if (len(every_list) < 3) or ('every_item' not in every_list[2]): linefirst  = None
-  else                                                           : linefirst  = every_list[2]['every_item']
-  if (len(every_list) < 4) or ('every_item' not in every_list[3]): blockfirst = None
-  else                                                           : blockfirst = every_list[3]['every_item']
-  if (len(every_list) < 5) or ('every_item' not in every_list[4]): linelast   = None
-  else                                                           : linelast   = every_list[4]['every_item']
-  if (len(every_list) < 6) or ('every_item' not in every_list[5]): blocklast  = None
-  else                                                           : blocklast  = every_list[5]['every_item']
-  if (len(every_list) > 6):
-    if (verb_errors): gp_warning("Warning: More than six items specified in every modifier -- additional items will be ignored.")
+  [linestep,blockstep,linefirst,blockfirst,linelast,blocklast] = parse_every(every_list, verb_errors)
 
   # Open input datafile
   if (re.search(r"\.gz$",datafile) != None): # If filename ends in .gz, open it with gunzip
@@ -136,9 +123,10 @@ def gp_dataread(datafile, index, usingrowcol, using_list, select_criterion, ever
 
   if (usingrowcol == "row"):
    outgrid  = [] # The new version of totalgrid, which we're going to build
-   maxwidth = 0
    for blockgrid in totalgrid: # One data block at a time
+     maxwidth = 0
      outblockgrid = []
+     print len(blockgrid)
      for i in range(len(blockgrid)): # Work out maximum width of datafile, to see how many lines will be in eventual datafile
        if (len(blockgrid[i][0]) > maxwidth): maxwidth = len(blockgrid[i][0])
      line_stepcount = 0
@@ -147,9 +135,9 @@ def gp_dataread(datafile, index, usingrowcol, using_list, select_criterion, ever
          linerow = []
          datarow = []
          for j in range(len(blockgrid)):
-           if (len(blockgrid[j][0]) <= i): # We've read off the end of a short line; pad it with zeros
+           if (len(blockgrid[j][0]) <= i): # We've read off the end of a short line; pad it with ''
              linerow.append(-1)
-             datarow.append("0.0")
+             datarow.append('')
            else:
              linerow.append(blockgrid[j][0][i]) # These are the line numbers of the datafile from which values were fetched; used in error reporting
              datarow.append(blockgrid[j][2][i]) # These are the actual data values, still in strings for the moment
@@ -348,3 +336,22 @@ def grid_using_convert(totalgrid, description, parsedata, lineunit, using_list, 
   outgrid[0] = [len(allgrid),columns,allgrid]
   return outgrid
 
+# PARSE_EVERY: Parse an "every" modifier, returning the linestep, blockstep...
+
+def parse_every (every_list, verb_errors):
+  # Parse every list
+  if (len(every_list) < 1) or ('every_item' not in every_list[0]): linestep   = 0
+  else                                                           : linestep   = every_list[0]['every_item']
+  if (len(every_list) < 2) or ('every_item' not in every_list[1]): blockstep  = 0
+  else                                                           : blockstep  = every_list[1]['every_item']
+  if (len(every_list) < 3) or ('every_item' not in every_list[2]): linefirst  = None
+  else                                                           : linefirst  = every_list[2]['every_item']
+  if (len(every_list) < 4) or ('every_item' not in every_list[3]): blockfirst = None
+  else                                                           : blockfirst = every_list[3]['every_item']
+  if (len(every_list) < 5) or ('every_item' not in every_list[4]): linelast   = None
+  else                                                           : linelast   = every_list[4]['every_item']
+  if (len(every_list) < 6) or ('every_item' not in every_list[5]): blocklast  = None
+  else                                                           : blocklast  = every_list[5]['every_item']
+  if (len(every_list) > 6):
+    if (verb_errors): gp_warning("Warning: More than six items specified in every modifier -- additional items will be ignored.")
+  return [linestep,blockstep,linefirst,blockfirst,linelast,blocklast]
