@@ -126,7 +126,6 @@ def gp_dataread(datafile, index, usingrowcol, using_list, select_criterion, ever
    for blockgrid in totalgrid: # One data block at a time
      maxwidth = 0
      outblockgrid = []
-     print len(blockgrid)
      for i in range(len(blockgrid)): # Work out maximum width of datafile, to see how many lines will be in eventual datafile
        if (len(blockgrid[i][0]) > maxwidth): maxwidth = len(blockgrid[i][0])
      line_stepcount = 0
@@ -202,8 +201,6 @@ def gp_dataread2(datafile, index, usingrowcol, using_list, select_criterion, eve
 
   # Work out what data we need from the file
   data_required = {'rows':{}, 'cols':{}}
-  print using_list
-  print data_used
   if (usingrowcol == "row"):
    # For each row that we need, create a dictionary in the database to hold it
    # Structure of the dataset element is [ line number [x1, x2, ...] ] [ line number [x1, x2, ... ] ]  
@@ -243,7 +240,6 @@ def gp_dataread2(datafile, index, usingrowcol, using_list, select_criterion, eve
       block_count += 1
       Nblocks += 1
       if (rows > 0):           # Make a new discontinuous line; we have a new block of data
-       print "New block!"
        for col in data_required['cols']:
         data_required['cols'][col].append([])
        # If no matching row has been found for any given row in this block then we insert a dud row
@@ -265,7 +261,6 @@ def gp_dataread2(datafile, index, usingrowcol, using_list, select_criterion, eve
 
     # This is the line number within the current block
     line_count += 1
-    print "line count %d"%line_count
 
     # Separate line into a series of data values
     data_list = []
@@ -279,7 +274,6 @@ def gp_dataread2(datafile, index, usingrowcol, using_list, select_criterion, eve
      if (row == line_count):
       if (row != 1): 
        single_row_datafile = False
-       print "Not scdf: %d"%row
       # Check each data point against the every statement
       filtered_data_list = []
       for i in range(len(data_list)):
@@ -291,14 +285,14 @@ def gp_dataread2(datafile, index, usingrowcol, using_list, select_criterion, eve
 
     # Or a requested column
     # First check against criteria from "every" statement
-    if (check_every(block_count, line_count, every_dict)):
+    if (check_every(block_count, line_count-1, every_dict)):
      if len(data_list)>1: single_column_datafile = False
      for col in data_required['cols']:
       myblock = len(data_required['cols'][col]) - 1 # Data block to write to
       if (col <= len(data_list)):
        data_required['cols'][col][myblock].append([fileline, data_list[col-1]])
       else:
-       data_required['cols'][col][myblock].append([fileline, None])
+       data_required['cols'][col][myblock].append([fileline, ''])
 
     rows += 1
    # Check that the last set of rows was complete
@@ -325,14 +319,12 @@ def gp_dataread2(datafile, index, usingrowcol, using_list, select_criterion, eve
     # In this case we want to just plot the first column against the data item counter.
     using_list = ['1']
     parse_using (using_list, data_used, vars_local, funcs, verb_errors, error_str)
-    del data_required['cols']['2']
+    del data_required['cols'][2]
+    columns_using = 1
    elif (single_row_datafile and usingrowcol == "row"):
-    print "Single row data file!"
     # Ditto but for the first row
-    print using_list
     using_list = ['1']
     parse_using (using_list, data_used, vars_local, funcs, verb_errors, error_str)
-    print data_required
     del data_required['rows'][2]
     columns_using = 1
 
@@ -427,18 +419,41 @@ def gp_dataread2(datafile, index, usingrowcol, using_list, select_criterion, eve
          vars_local['_gp_param'+str(col)] = float(point)
       if invalid_datapoint: continue
 
-      #XXX continue
+      # Check whether this data point satisfies select() criteria
+      if (select_criterion != ""):
+       error_str = "Warning: Could not evaluate select criterion at line %d of data file %s."%(data_required['cols'][col][i][j][0],datafile)
+       value = gp_eval.gp_eval(select_criterion, vars_local, funcs, verbose=False)
+       if (value == 0.0): 
+        invalid_datapoint = True # gp_eval applies float() to result and turns False into 0.0
+        # XXX Insert stuff dealing with continuity of lines pruned with select here XXX
+        continue
+ 
+      # Evaluate the using statement
+      if (columns_using == 1):
+       data_item.append(data_counter)
+      data_counter += 1
+      error_str = "Warning: Could not parse data at line %d of data file %s."%(data_required['cols'][col][i][j][0],datafile)
+      errcount += evaluate_using(data_item, using_list, vars_local, funcs, style, firsterror, verb_errors)
+      if (verb_errors and (errcount > ERRORS_MAX)):
+       gp_warning("Warning: Not displaying any more errors for this datafile.") ; verb_errors = False
 
-     except: raise
+     except KeyboardInterrupt: raise
+     except:
+      if (verb_errors):
+       if (sys.exc_info()[0] != exceptions.ValueError): gp_warning("%s %s (%s)"%(error_str,sys.exc_info()[1],sys.exc_info()[0]))
+       else                                           : gp_warning("%s"%error_str)
+      errcount += 1
+      if (verb_errors and (errcount > ERRORS_MAX)): gp_warning("Warning: Not displaying any more errors for this datafile.") ; verb_errors = False
+     else:
+      # For arrow linestyles, we break up each datapoint into a line between two points
+      if (style[0:6] == "arrows"): outgrid.append([2,columns,[data_item,data_item[2:4]+data_item[0:2]+data_item[4:]]]) # arrow linestyles
+      else                       : outblockgrid.append(data_item)
+      allgrid.append(data_item)
+    if (len(outblockgrid) > 0): outgrid.append([len(outblockgrid),columns,outblockgrid])
 
-
-   # Currently do fuck all
-   i=1
-     
   outgrid[0] = [len(allgrid),columns,allgrid]
 
   # Testing...
-  print data_required
   print outgrid
   return outgrid
 
@@ -689,22 +704,16 @@ def parse_select (select_criterion, data_used, vars_local, funcs):
   return select_criterion
 
 def check_every (block, line, every_dict):
-  print every_dict['blockfirst'], block
   if (block < every_dict['blockfirst']): 
    return False
-  print "a"
   if (every_dict['blocklast'] != None and block > every_dict['blocklast']):
    return False
-  print "b"
   if (line < every_dict['linefirst']):
    return False
-  print "c"
   if (every_dict['linelast'] != None and line > every_dict['linelast']):
    return False
-  print "d"
   if (every_dict['blockstep'] > 1 and (block-every_dict['blockfirst'])%every_dict['blockstep'] != 0):
    return False
-  print "e"
   if (every_dict['linestep'] > 1 and (line-every_dict['linefirst'])%every_dict['linestep'] != 0):
    return False
   return True
