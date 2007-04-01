@@ -202,6 +202,7 @@ def directive_fit(command, vars, funcs):
   # We have now read all of our commandline parameters, and are ready to start fitting
   try:
     (rows,columns,datagrid) = gp_datafile.gp_dataread(datafile, index, usingrowcol, using, select_criteria, every, vars, funcs, "points", firsterror=no_arguments+1)[0]
+    
     datagrid_cpy = []
     for datapoint in datagrid:
      if False not in [(i>=columns) or (((ranges[i][0] == None) or (datapoint[i]>ranges[i][0])) and ((ranges[i][1] == None) or (datapoint[i]<ranges[i][1]))) for i in range(len(ranges)) ]:
@@ -211,6 +212,10 @@ def directive_fit(command, vars, funcs):
   except:
     gp_error("Error reading input datafile:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
     return # Error
+
+  if (rows == 0):
+   gp_error("Error: fit command provided with empty data file")
+   return # Error
 
   if   (columns <  (no_arguments+1)):
     gp_error("Error: fit command needs %d columns of input data to fit a %d-parameter function."%(no_arguments+1,no_arguments))

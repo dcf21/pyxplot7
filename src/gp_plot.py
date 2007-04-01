@@ -1115,12 +1115,12 @@ def plot_datafile(multiplot_number,g,axes,settings,linestyles,plotwords,vars,fun
      title_this = title_string_texify(title_this)
 
     try:
-      datafile_totalgrid = gp_datafile.gp_dataread(datafile, index, usingrowcol, using, select_criteria, every, vars, funcs, plotwords['style'], verb_errors=verb_errors)
+     datafile_totalgrid = gp_datafile.gp_dataread(datafile, index, usingrowcol, using, select_criteria, every, vars, funcs, plotwords['style'], verb_errors=verb_errors)
     except KeyboardInterrupt: raise
     except:
       if (verb_errors): gp_error("Error reading input datafile '%s'."%datafile)
       raise
-  
+
     if (len(datafile_totalgrid) < 2): raise IOError, "No datapoints found in file '%s'."%datafile
   
     for data_section in range(1,len(datafile_totalgrid)): # Loop over data sections within index, plotting each as a separate line 
@@ -1265,41 +1265,7 @@ def plot_function(multiplot_number,g,axes,settings,linestyles,plotwords,vars,fun
   else:                                              xrast = gp_math.linrast(minimum, maximum, settings['SAMPLES'])
 
   # Now evaluate functions
-  datagrid   = []
-  local_vars = vars.copy()
-
-  for x in xrast:
-   local_vars[xname] = x
-   datapoint = [x]
-   for item in functions:
-    try:    val = gp_eval.gp_eval(item,local_vars,funcs,verbose=False)
-    except KeyboardInterrupt: raise
-    except: pass
-    else:   datapoint.append(val)
-   if (len(datapoint) == (len(functions)+1)):
-    datagrid.append([[x for i in range(len(functions)+1)], x, datapoint])
-
-  if (len(datagrid) == 0): # Nowhere was function evaluatable
-   for item in functions:
-    try:
-     val = gp_eval.gp_eval(item,local_vars,funcs,verbose=False)
-    except KeyboardInterrupt: raise
-    except:
-     if verb_errors: gp_error("Error evaluating expression '%s':"%item)
-     raise
-   gp_error("Error: PyXPlot has just evaluated an unevaluable function. Please report as a bug.")
-   return # shouldn't ever execute this line of code!
-
-  if verb_errors:
-    local_vars[xname] = datagrid[-1][1] # Check for any warning messages
-    for item in functions: val = gp_eval.gp_eval(item,local_vars,funcs,verbose=True)
-
-  # Parse supplied using statement
-  if (using == ''):
-    for i in range(len(functions)+1):
-      using += str(i+1)
-      if (i != len(functions)): using += ":"
-  totalgrid = gp_datafile.grid_using_convert([datagrid], "for function '%s'"%function_str, "evaluate data","at x=", using, select_criteria, vars, funcs, plotwords['style'], verb_errors=verb_errors, errcount=0)
+  totalgrid = gp_datafile.gp_function_datagrid(xrast, functions, xname, usingrowcol, using, select_criteria, every, vars, funcs, plotwords['style'], verb_errors=verb_errors)
 
   # Plot dataset
   for data_section in range(1,len(totalgrid)): # Loop over data sections within index, plotting each as a separate line 

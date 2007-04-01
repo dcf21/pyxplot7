@@ -35,123 +35,97 @@ else: SCIPY_ABSENT = False
 ERRORS_MAX = 4
 
 # GP_DATAREAD(): Read a data file, selecting only every nth item from index m, using ....
+# This is now just a wrapper for make_datagrid
 
 def gp_dataread(datafile, index, usingrowcol, using_list, select_criterion, every_list, vars, funcs, style, verb_errors=True, firsterror=None):
-  rows       = 0
-  if (using_list == ''): using_list = gp_settings.datastyleinfo[style][0].split(":")
-  using_list = using_list[:]
-  for i in range(len(using_list)): using_list[i] = using_list[i].strip()
-  columns    = len(using_list)
-  if (columns == 1): columns=2
-  datagrid   = []
-  totalgrid  = [] # List of [file linenumber, line number for spare x-axis, list of data strings]s for all of the blocks that we're going to plot
-  vars_local = vars.copy()
-
-  # Parse the "every" list
-  [linestep,blockstep,linefirst,blockfirst,linelast,blocklast] = parse_every(every_list, verb_errors)
-
   # Open input datafile
   if (re.search(r"\.gz$",datafile) != None): # If filename ends in .gz, open it with gunzip
    f         = gzip.open(os.path.join(gp_settings.cwd, os.path.expanduser(datafile)),"r")
   else:
    f         = open(os.path.join(gp_settings.cwd, os.path.expanduser(datafile)),"r")
-  index_no   = 0
-  index_datacount = 0
-  line_count = 0
-  line_stepcount = 0
-  block_count = 0
-  block_stepcount = 0
-  prev_blank = 10 # Skip opening blank lines
 
-  fileline = 0
-  try:
-   for line in f: # Iterate here, don't readlines() !
-    fileline = fileline + 1
-    line_clean = line.strip()
-    if (len(line_clean) == 0): # Ignore blank lines
-      prev_blank = prev_blank + 1
-      block_count += 1
-      if (rows > 0):           # Make a new discontinuous line; we have a new block of data
-       if ((block_stepcount < 1) and ((blockfirst == None) or (block_count >= blockfirst)) and ((blocklast == None) or (block_count <= blocklast))):
-         totalgrid.append(datagrid)
-         block_stepcount = blockstep-1
-       else:
-         block_stepcount -= 1
-       line_count = 0
-       line_stepcount = 0
-       rows = 0
-       datagrid = []
-      if (prev_blank == 2): # Two blank lines means a new index
-       index_no = index_no + 1
-       index_datacount = 0
-       block_count = 0
-       block_stepcount = 0
-       if ((index >= 0) and (index_no > index)): break # No more data
-      continue
-    if (line_clean[0] == '#'): continue # Ignore comment lines, too
-    prev_blank = 0 # Reset blank lines counter
-
-    if ((index >= 0) and (index_no != index)): continue # Still waiting for our index
-
-    # Use only every nth datapoint, between first and last lines specified in "every" modifier
-    if ((usingrowcol == "row") or 
-        ((line_stepcount < 1) and ((linefirst == None) or (line_count >= linefirst)) and ((linelast == None) or (line_count <= linelast)))  ):
-      # Separate line into a series of data values
-      data_list = []
-      for csv_item in line_clean.split(','): # First separate on commas (CSV files)
-        csv_items = csv_item.split() # Then on whitespace
-        if (csv_items==[]): data_list.extend(['']) # ,, means a blank data item
-        else              : data_list.extend(csv_items)
-      datagrid.append([[fileline for i in range(len(data_list))], index_datacount, data_list])
-      rows = rows + 1
-      line_stepcount = linestep - 1
-    else:
-      line_stepcount -= 1 # Count down counter until we take next point
-    line_count     += 1
-    index_datacount += 1
-  except KeyboardInterrupt: raise
-  except:
-   if (verb_errors): gp_warning("Error encountered whilst reading datafile '%s'."%datafile)
-   gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
-   return [[0,0,[]]]
+   datagrid = make_datagrid(iterate_file(f), "of file %s"%datafile, "line ", index, usingrowcol, using_list, select_criterion, every_list, vars, funcs, style, verb_errors, firsterror=None)
 
   f.close()
-  if (rows > 0): totalgrid.append(datagrid)
+  return datagrid
 
-  # If we have usingrowcol set to "row", we now need to rotate our provisional datagrid
-  # We also filter lines (columns in the actual datafile, before rotation) as specified in the "every" modifier
+# GP_FUNCTION_DATAGRID(): Evaluate a (set of) function(s), producing a grid of values
+# This mostly wraps make_datagrid with a bit of cleverness
+def gp_function_datagrid(xrast, functions, xname, usingrowcol, using_list, select_criterion, every_list, vars, funcs, style, verb_errors=True, firsterror=None):
+  # Now evaluate functions
+  datagrid   = []
+  local_vars = vars.copy()
 
-  if (usingrowcol == "row"):
-   outgrid  = [] # The new version of totalgrid, which we're going to build
-   for blockgrid in totalgrid: # One data block at a time
-     maxwidth = 0
-     outblockgrid = []
-     for i in range(len(blockgrid)): # Work out maximum width of datafile, to see how many lines will be in eventual datafile
-       if (len(blockgrid[i][0]) > maxwidth): maxwidth = len(blockgrid[i][0])
-     line_stepcount = 0
-     for i in range(maxwidth): # Now fetch these lines one by one
-       if ((line_stepcount < 1) and ((linefirst == None) or (i >= linefirst)) and ((linelast == None) or (i <= linelast))):
-         linerow = []
-         datarow = []
-         for j in range(len(blockgrid)):
-           if (len(blockgrid[j][0]) <= i): # We've read off the end of a short line; pad it with ''
-             linerow.append(-1)
-             datarow.append('')
-           else:
-             linerow.append(blockgrid[j][0][i]) # These are the line numbers of the datafile from which values were fetched; used in error reporting
-             datarow.append(blockgrid[j][2][i]) # These are the actual data values, still in strings for the moment
-         outblockgrid.append([linerow, i, datarow])
-         line_stepcount = linestep - 1
-       else:
-         line_stepcount -= 1 # Count down counter until we take next point
-     outgrid.append(outblockgrid)
-   totalgrid = outgrid # Done... so ditch the old grid and replace with the new rotated version
+  # Construct a description string
+  if (len(functions)==1):
+   description = "in function %s"%functions[0]
+  else:
+   description = "in functions %s"%', '.join(functions)
 
-  return grid_using_convert(totalgrid, "in datafile '%s'"%datafile, "parse data", "on line ", using_list, select_criterion, vars, funcs, style, firsterror, verb_errors)
+  datagrid = make_datagrid(iterate_function(xrast, functions, xname, local_vars, funcs), description, "x=", 0, usingrowcol, using_list, select_criterion, every_list, local_vars, funcs, style, verb_errors, firsterror)
 
-# GP_DATAREAD2(): Obtain the grid of required data from a datafile -- version 2.
+  if (len(datagrid) == 0): # Nowhere was function evaluatable
+   for item in functions:
+    try:
+     val = gp_eval.gp_eval(item,local_vars,funcs,verbose=False)
+    except KeyboardInterrupt: raise
+    except:
+     if verb_errors: gp_error("Error evaluating expression '%s':"%item)
+     raise
+   gp_error("Error: PyXPlot has just evaluated an unevaluable function. Please report as a bug.")
+   return # shouldn't ever execute this line of code!
 
-def gp_dataread2(datafile, index, usingrowcol, using_list, select_criterion, every_list, vars, funcs, style, verb_errors=True, firsterror=None):
+  return datagrid
+
+  # WTF did this do?  It doesn't make sense to me.
+  #if verb_errors:
+  #  local_vars[xname] = datagrid[-1][1] # Check for any warning messages
+  #  for item in functions: val = gp_eval.gp_eval(item,local_vars,funcs,verbose=True)
+
+# ITERATE_FUNCTION(): Given a function description iterate it over a supplied raster
+def iterate_function(xrast, functions, xname, local_vars, funcs):
+  for x in xrast:
+   local_vars[xname] = x
+   datapoint = [x]
+   for item in functions:
+    try:    val = gp_eval.gp_eval(item,local_vars,funcs,verbose=False)
+    except KeyboardInterrupt: raise
+    # except: pass
+    except: datapoint.append('')
+    else:   datapoint.append(val)
+   #if (len(datapoint) == (len(functions)+1)):
+   # datagrid.append([[x for i in range(len(functions)+1)], x, datapoint])
+   yield [datapoint, 1]
+
+  ## Parse supplied using statement
+  #if (using == ''):
+  #  for i in range(len(functions)+1):
+  #    using += str(i+1)
+  #    if (i != len(functions)): using += ":"
+  #totalgrid = gp_datafile.grid_using_convert([datagrid], "for function '%s'"%function_str, "evaluate data","at x=", using, select_criteria, vars, funcs, plotwords['style'], verb_errors=verb_errors, errcount=0)
+
+# ITERATE_FILE(): iterate over a file, returning the lines as lists of floats
+def iterate_file(f):
+   Nchomped = 0 # The number of lines we've chomped up since we last returned something
+   for line in f:
+    Nchomped += 1
+    if (line[0] == '#'): continue # Ignore comment lines completely
+    line_clean = line.strip()
+    # Separate line into a series of data values
+    data_list = []
+    for csv_item in line_clean.split(','): # First separate on commas (CSV files)
+     csv_items = csv_item.split() # Then on whitespace
+     # if (csv_items==[]): data_list.extend(['']) # ,, means a blank data item
+     # else              : data_list.extend(csv_items)
+     data_list.extend(csv_items)
+    yield [[float(x) for x in data_list], Nchomped]
+    Nchomped = 0
+
+# MAKE_DATAGRID(): Make a big grid of data to be plotted given an iterator that
+# produces lines of data.  The function used to form most of gp_dataread
+
+def make_datagrid(iterator, description, lineunit, index, usingrowcol, using_list, select_criterion, every_list, vars, funcs, style, verb_errors=True, firsterror=None):
+  index_no   = 0
   rows       = 0
   single_column_datafile = True
   single_row_datafile = True
@@ -187,7 +161,7 @@ def gp_dataread2(datafile, index, usingrowcol, using_list, select_criterion, eve
   try:
    # Parse using list
    error_str = 'Internal error while parsing using expressions'
-   parse_using (using_list, data_used, vars_local, funcs, verb_errors, error_str)
+   parse_using (using_list, data_used, vars_local, funcs, verb_errors)
 
    # Parse select criterion
    error_str = "Internal error while parsing select criterion -- offending expression was '%s'."%select_criterion
@@ -220,12 +194,6 @@ def gp_dataread2(datafile, index, usingrowcol, using_list, select_criterion, eve
 
   # Step 2 -- Get the required data from the file
   
-  # Open input datafile
-  if (re.search(r"\.gz$",datafile) != None): # If filename ends in .gz, open it with gunzip
-   f         = gzip.open(os.path.join(gp_settings.cwd, os.path.expanduser(datafile)),"r")
-  else:
-   f         = open(os.path.join(gp_settings.cwd, os.path.expanduser(datafile)),"r")
-  index_no   = 0
   line_count = 0
   block_count = 0 # This counts blocks within an index block
   Nblocks = 0     # Count total number of blocks
@@ -233,11 +201,11 @@ def gp_dataread2(datafile, index, usingrowcol, using_list, select_criterion, eve
 
   fileline = 0
   try:
-   for line in f: # Iterate here, don't readlines() !
-    fileline += 1
-    line_clean = line.strip()
+   for line in iterator: # Iterate here, don't readlines() !
+    fileline += line[1]
+    data_list = line[0]
     # Check for a blank line; if found update block and index accounting as necessary
-    if (len(line_clean) == 0):
+    if (len(data_list) == 0):
       prev_blank += 1
       block_count += 1
       if (rows > 0): # Discontinuous line; we have a new block of data
@@ -261,20 +229,12 @@ def gp_dataread2(datafile, index, usingrowcol, using_list, select_criterion, eve
        block_count = 0
        if ((index >= 0) and (index_no > index)): break # No more data
       continue
-    if (line_clean[0] == '#'): continue # Ignore comment lines completely
     prev_blank = 0 # Reset blank lines counter
 
     if ((index >= 0) and (index_no != index)): continue # Still waiting for our index
 
     # This is the line number within the current block
     line_count += 1
-
-    # Separate line into a series of data values
-    data_list = []
-    for csv_item in line_clean.split(','): # First separate on commas (CSV files)
-     csv_items = csv_item.split() # Then on whitespace
-     if (csv_items==[]): data_list.extend(['']) # ,, means a blank data item
-     else              : data_list.extend(csv_items)
 
     # See if the data matches a requested row
     for row in data_required['rows']['data']:
@@ -313,11 +273,9 @@ def gp_dataread2(datafile, index, usingrowcol, using_list, select_criterion, eve
 
   except KeyboardInterrupt: raise
   except:
-   if (verb_errors): gp_warning("Error encountered whilst reading datafile '%s'."%datafile)
+   if (verb_errors): gp_warning("Error encountered whilst reading '%s'."%description)
    gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
    return [[0,0,[]]]
-
-  f.close()
 
   # Step 3 -- Get the set of data that we want from the data extracted from the file
   if (firsterror == None): firsterror = gp_settings.datastyleinfo[style][2]
@@ -329,13 +287,13 @@ def gp_dataread2(datafile, index, usingrowcol, using_list, select_criterion, eve
    if (single_column_datafile and usingrowcol == "col"):
     # In this case we want to just plot the first column against the data item counter.
     using_list = ['1']
-    parse_using (using_list, data_used, vars_local, funcs, verb_errors, error_str)
+    parse_using (using_list, data_used, vars_local, funcs, verb_errors)
     del data_required['cols']['data'][2]
     columns_using = 1
    elif (single_row_datafile and usingrowcol == "row"):
     # Ditto but for the first row
     using_list = ['1']
-    parse_using (using_list, data_used, vars_local, funcs, verb_errors, error_str)
+    parse_using (using_list, data_used, vars_local, funcs, verb_errors)
     del data_required['rows']['data'][2]
     columns_using = 1
 
@@ -369,15 +327,17 @@ def gp_dataread2(datafile, index, usingrowcol, using_list, select_criterion, eve
         vars_local['_gp_param'+str(rc)] = float(point)
      if invalid_datapoint: continue
 
-     # Find line number(s) associated with point
-     if (rowcol == 'cols'): # Then this is nice
+     if (lineunit != "line " and data_required[rowcol]['data'].has_key(1)):
+      linenumber = data_required[rowcol]['data'][1][i][j]  # Extract the x value of the point
+     # Find line number(s) associated with point if this is a data file
+     elif (rowcol == 'cols'): # Then this is nice
       linenumber = "%d"%data_required['cols']['lineNs'][i][j]
      else:
       linenumber = ''.join(["%d, "%data_required['rows']['lineNs'][i][k] for k in data_rcs])
 
      # Check whether this data point satisfies select() criteria
      if (select_criterion != ""):
-      error_str = "Warning: Could not evaluate select criterion at line %s of data file %s."%(linenumber, datafile)
+      error_str = "Warning: Could not evaluate select criterion at %s%s %s."%(lineunit, linenumber, description)
       value = gp_eval.gp_eval(select_criterion, vars_local, funcs, verbose=False)
       if (value == 0.0): 
        invalid_datapoint = True # gp_eval applies float() to result and turns False into 0.0
@@ -388,10 +348,10 @@ def gp_dataread2(datafile, index, usingrowcol, using_list, select_criterion, eve
      if (columns_using == 1):
       data_item.append(data_counter)
      data_counter += 1
-     error_str = "Warning: Could not parse data at line %s of data file %s."%(linenumber, datafile)
+     error_str = "Warning: Could not parse data at %s%s %s."%(lineunit, linenumber, description)
      errcount += evaluate_using(data_item, using_list, vars_local, funcs, style, firsterror, verb_errors)
      if (verb_errors and (errcount > ERRORS_MAX)):
-      gp_warning("Warning: Not displaying any more errors for this datafile.") 
+      gp_warning("Warning: Not displaying any more errors for %s."%description) 
       verb_errors = False
 
     except KeyboardInterrupt: raise
@@ -400,7 +360,7 @@ def gp_dataread2(datafile, index, usingrowcol, using_list, select_criterion, eve
       if (sys.exc_info()[0] != exceptions.ValueError): gp_warning("%s %s (%s)"%(error_str,sys.exc_info()[1],sys.exc_info()[0]))
       else                                           : gp_warning("%s"%error_str)
      errcount += 1
-     if (verb_errors and (errcount > ERRORS_MAX)): gp_warning("Warning: Not displaying any more errors for this datafile.") ; verb_errors = False
+     if (verb_errors and (errcount > ERRORS_MAX)): gp_warning("Warning: Not displaying any more errors for %s."%description) ; verb_errors = False
     else:
      # For arrow linestyles, we break up each datapoint into a line between two points
      if (style[0:6] == "arrows"): outgrid.append([2,columns,[data_item,data_item[2:4]+data_item[0:2]+data_item[4:]]]) # arrow linestyles
@@ -437,131 +397,6 @@ def evaluate_using(data_item, using_list, vars_local, funcs, style, firsterror, 
    data_item.append(value)
   return errcount
    
-
-# GRID_USING_CONVERT(): Takes a grid of data from a datafile, and applies 'using' modifier to it
-# to return the output data to plot on graph
-
-def grid_using_convert(totalgrid, description, parsedata, lineunit, using_list, select_criterion, vars, funcs, style, firsterror=None, verb_errors=False, errcount=0):
-  vars_local = vars.copy()
-  if (using_list == []): using_list = gp_settings.datastyleinfo[style][0].split(":")
-  using_list = using_list[:]
-  for i in range(len(using_list)): using_list[i] = using_list[i].strip()
-  columns    = len(using_list)
-  columns_using = columns
-  if (columns == 1): columns = 2
-  data_used  = {}
-  if (firsterror == None): firsterror = gp_settings.datastyleinfo[style][2]
-
-  try:
-   verb_errors = True
-   # Parse using list
-   error_str = 'Internal error while parsing using expressions'
-   parse_using (using_list, data_used, vars_local, funcs, verb_errors, error_str)
-
-   # Parse select criterion
-   error_str = "Internal error while parsing select criterion -- offending expression was '%s'."%select_criterion
-   select_criterion = parse_select (select_criterion, data_used, vars_local, funcs)
-
-  except KeyboardInterrupt: raise
-  except:
-   if (verb_errors): gp_error(error_str)
-   if (verb_errors): gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
-   return [[0,0,[]]]
-
-  # Check whether datafile contains only rows with one datapoint on them. If so, this is a one-column datafile, and we insert row numbers as x coordinate.
-  one_column_datafile = True
-  for blockgrid in totalgrid:
-   for [file_lineno, index_datacount, data_list] in blockgrid:
-    if (len(data_list) > 1):
-     one_column_datafile = False
-     break
-   if not one_column_datafile: break
-
-  # Now we're ready to reprocess the grid, and evaluate the given "using" expressions
-  # for each dataline
-  allgrid = []
-  outgrid = [[]]
-  for blockgrid in totalgrid:
-   outblockgrid = []
-   for [file_lineno, index_datacount, data_list] in blockgrid:
-    fileline = file_lineno[0]
-    try:
-      error_str = "Warning: Could not %s %s%s %s."%(parsedata,lineunit,file_lineno[0],description)
-      data_item  = []
-
-      # For this datapoint (row of values from datafile), evaluate each of our _gp_param expressions
-      # If we have only one datapoint, and are told to use 1:2, then the x-coordinate is the file line number
-      invalid_datapoint = False
-      if ((columns_using != 1) and one_column_datafile): # This deals with "using 1:2" when we have a one-column datafile
-       for varnum,dummy in data_used.iteritems():
-        error_str = "Warning: Could not %s %s%s %s."%(parsedata,lineunit,file_lineno[0],description)
-        if   (varnum == 1): vars_local['_gp_param'+str(varnum)] = index_datacount # Line number is number 1
-        elif (data_list[0] == ''): invalid_datapoint = True
-        elif (varnum == 2): vars_local['_gp_param'+str(varnum)] = float(data_list[0]) # Value of one and only value from datafile is number 2
-        else              : invalid_datapoint = True # Request for data value 3:4:5... etc
-      else:
-       for varnum,dummy in data_used.iteritems(): # This deals with all other datafiles (with more than one column of data in file)
-         if   (varnum == 0): vars_local['_gp_param0'] = index_datacount # column zero is line numbers
-         elif (varnum <= len(data_list)) and (data_list[varnum-1] != ''):
-           error_str = "Warning: Could not %s %s%s %s."%(parsedata,lineunit,file_lineno[varnum-1],description)
-           vars_local['_gp_param'+str(varnum)] = float(data_list[varnum-1])
-         else:
-           invalid_datapoint = True # Request for data value 3:4:5... etc
-      if invalid_datapoint: continue
-
-      error_str = "Warning: Could not %s %s%s %s."%(parsedata,lineunit,file_lineno[0],description)
-
-      # Check whether this datapoint satisfies selection criteria
-      if (select_criterion != ""):
-       value = gp_eval.gp_eval(select_criterion, vars_local, funcs, verbose=False)
-       if (value == 0.0): invalid_datapoint = True # gp_eval applies float() to result and turns False into 0.0
-      if invalid_datapoint: continue
-
-      # If only one column set in 'using', add x-coordinates from datapoint number within file index
-      # e.g. 'plot using 1'
-      if (columns_using == 1): data_item.append(index_datacount)
-
-      # Now that we have values for ($1), ($2), etc... we can actually evaluate the expressions passed to us in using statement
-      for i in range(len(using_list)):
-        value = gp_eval.gp_eval(using_list[i], vars_local, funcs, verbose=False)
-        if (not SCIPY_ABSENT) and (not scipy.isfinite(value)): raise ValueError
-        if (style[-5:] != "range"):
-         if ((i >= firsterror) and (value < 0.0)): # Check for negative error bars
-          value = 0.0
-          if (verb_errors): gp_warning("Warning: Negative errorbar detected %s%s %s."%(lineunit,fileline,description)) ; errcount+=1
-        else: # This gets executed for all kinds of error ranges ; make sure that error ranges are sensible
-         if (i == 2) and (value > data_item[0]):
-          value = data_item[0]
-          if (verb_errors): gp_warning("Warning: x lower limit > x value %s%s %s."%(lineunit,fileline,description)) ; errcount+=1
-         if (i == 3) and (value < data_item[0]):
-          value = data_item[0]
-          if (verb_errors): gp_warning("Warning: x upper limit < x value %s%s %s."%(lineunit,fileline,description)) ; errcount+=1
-         if (i == 4) and (value > data_item[1]):
-          value = data_item[1]
-          if (verb_errors): gp_warning("Warning: y lower limit > x value %s%s %s."%(lineunit,fileline,description)) ; errcount+=1
-         if (i == 5) and (value < data_item[1]):
-          value = data_item[1]
-          if (verb_errors): gp_warning("Warning: y upper limit < y value %s%s %s."%(lineunit,fileline,description)) ; errcount+=1
-        data_item.append(value)
-        if (verb_errors and (errcount > ERRORS_MAX)):
-         gp_warning("Warning: Not displaying any more errors for this datafile.") ; verb_errors = False
-    except KeyboardInterrupt: raise
-    except:
-     if (verb_errors):
-      if (sys.exc_info()[0] != exceptions.ValueError): gp_warning("%s %s (%s)"%(error_str,sys.exc_info()[1],sys.exc_info()[0]))
-      else                                           : gp_warning("%s"%error_str)
-     errcount += 1
-     if (verb_errors and (errcount > ERRORS_MAX)): gp_warning("Warning: Not displaying any more errors for this datafile.") ; verb_errors = False
-    else:
-     # For arrow linestyles, we break up each datapoint into a line between two points
-     if (style[0:6] == "arrows"): outgrid.append([2,columns,[data_item,data_item[2:4]+data_item[0:2]+data_item[4:]]]) # arrow linestyles
-     else                       : outblockgrid.append(data_item)
-     allgrid.append(data_item)
-   if (len(outblockgrid) > 0): outgrid.append([len(outblockgrid),columns,outblockgrid])
-
-  outgrid[0] = [len(allgrid),columns,allgrid]
-  return outgrid
-
 # PARSE_EVERY: Parse an "every" modifier, returning the linestep, blockstep...
 
 def parse_every (every_list, verb_errors):
@@ -584,7 +419,7 @@ def parse_every (every_list, verb_errors):
 
 # PARSE_USING: Parse a "using" modifier, modifying to provide references to the relevent local variables
 
-def parse_using (using_list, data_used, vars_local, funcs, verb_errors, error_str):
+def parse_using (using_list, data_used, vars_local, funcs, verb_errors):
   for i in range(len(using_list)):
    error_str = "Internal error while parsing using expressions -- offending expression was '%s'."%using_list[i]
    # Match "23" on its own, and turn that into hidden variable _gp_param23
@@ -672,5 +507,3 @@ def check_every (block, line, every_dict):
    return False
   return True
 
-
- 

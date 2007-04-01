@@ -79,7 +79,7 @@ def directive_spline(command, vars, funcs):
 
   # using
   if 'using_list:' in command: using = [item['using_item'] for item in command['using_list:']]
-  else                       : using = ['1','2']
+  else                       : using = []
 
   # We have now read all of our commandline parameters, and are ready to start spline fitting
   try:
@@ -87,6 +87,10 @@ def directive_spline(command, vars, funcs):
   except KeyboardInterrupt: raise
   except:
    gp_error("Error reading input datafile:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
+   return # Error
+
+  if (rows == 0):
+   gp_error("Error: empty data file %s provided to the spline command"%datafile)
    return # Error
 
   try:
