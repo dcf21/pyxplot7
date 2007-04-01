@@ -349,7 +349,7 @@ def make_datagrid(iterator, description, lineunit, index, usingrowcol, using_lis
       data_item.append(data_counter)
      data_counter += 1
      error_str = "Warning: Could not parse data at %s%s %s."%(lineunit, linenumber, description)
-     errcount += evaluate_using(data_item, using_list, vars_local, funcs, style, firsterror, verb_errors)
+     errcount += evaluate_using(data_item, using_list, vars_local, funcs, style, firsterror, verb_errors, lineunit, linenumber, description)
      if (verb_errors and (errcount > ERRORS_MAX)):
       gp_warning("Warning: Not displaying any more errors for %s."%description) 
       verb_errors = False
@@ -372,7 +372,7 @@ def make_datagrid(iterator, description, lineunit, index, usingrowcol, using_lis
   return outgrid
 
 # EVALUATE_USING(): Evaluates the using() statement for a single data point
-def evaluate_using(data_item, using_list, vars_local, funcs, style, firsterror, verb_errors):
+def evaluate_using(data_item, using_list, vars_local, funcs, style, firsterror, verb_errors, lineunit, fileline, description):
   errcount = 0
   for k in range(len(using_list)):
    value = gp_eval.gp_eval(using_list[k], vars_local, funcs, verbose=False)

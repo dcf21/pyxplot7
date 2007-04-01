@@ -31,6 +31,7 @@ import gp_help
 import gp_version
 import gp_spline
 import gp_histogram
+import gp_tabulate
 from gp_autocomplete import *
 import gp_parser
 import gp_error
@@ -989,6 +990,13 @@ def directive(line, toplevel=True, interactive=False):
     except KeyboardInterrupt: raise
     except:
      gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
+  elif (command['directive'] == "tabulate"):    # tabulate
+    try:
+     gp_tabulate.directive_tabulate(command,gp_settings.variables,gp_settings.functions,gp_settings.settings)
+    except KeyboardInterrupt: raise
+    except:
+     gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
+
   elif (command['directive'] == "plot"):         # plot
     gp_plot.directive_plot(command,gp_settings.linestyles,gp_settings.variables,gp_settings.functions,gp_settings.settings,
                            gp_settings.axes,gp_settings.labels,gp_settings.arrows,0,interactive)
