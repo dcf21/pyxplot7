@@ -200,21 +200,23 @@ def gp_dataread2(datafile, index, usingrowcol, using_list, select_criterion, eve
    return [[0,0,[]]]
 
   # Work out what data we need from the file
-  data_required = {'rows':{}, 'cols':{}}
+  data_required = {'rows':{'data':{}, 'lineNs':[{}]},
+                   'cols':{'data':{}, 'lineNs':[[]]}}
+  # OK, listen up.  The data structure now looks like this:
+  # 'data' -> dictionary of col/row numbers, -> list of blocks -> list of points
+  # 'lineNs' -> list of blocks -> (rows) dictionary of row # / line # pairs
+  #                               (cols) list of blocks -> list of line #s
+  # The point of doing it like this is that we can do rows and cols in the same loop
+  rowcol = "%ss"%usingrowcol
   if (usingrowcol == "row"):
+   # Rename for convenience
    # For each row that we need, create a dictionary in the database to hold it
-   # Structure of the dataset element is [ line number [x1, x2, ...] ] [ line number [x1, x2, ... ] ]  
-   #                                     ^ block       ^ row of data   ^ new block   ^ row of data
-   # Rows are simple, because each row only has one line number
    for row,dummy in data_used.iteritems():
-    data_required['rows'][row] = []
+    data_required['rows']['data'][row] = []
   else: # At some point more complex things like grids can be inserted here
    # For each column that we need, create a dictionary in the database to hold it
-   # Structure of the dataset element is [        [ line number, x] [l.n., x], ... ]  [ [l.n., x] [l.n., x] ]  ... ]
-   #                                     ^ block  ^ data item       ^ data item       ^ new block
-   # Columns are nasty.  Each data point can come from a seperate file line, so needs its own line number
    for col,dummy in data_used.iteritems():
-    data_required['cols'][col] = [[]] # Include a blank list to put the first block of data into
+    data_required['cols']['data'][col] = [[]] # Include a blank list to put the first block of data into
 
   # Step 2 -- Get the required data from the file
   
@@ -238,14 +240,19 @@ def gp_dataread2(datafile, index, usingrowcol, using_list, select_criterion, eve
     if (len(line_clean) == 0):
       prev_blank += 1
       block_count += 1
-      Nblocks += 1
-      if (rows > 0):           # Make a new discontinuous line; we have a new block of data
-       for col in data_required['cols']:
-        data_required['cols'][col].append([])
+      if (rows > 0): # Discontinuous line; we have a new block of data
+       Nblocks += 1
+       for col in data_required['cols']['data']:
+        data_required['cols']['data'][col].append([])
        # If no matching row has been found for any given row in this block then we insert a dud row
-       for row in data_required['rows']:
-        if len(data_required['rows'][row]) < Nblocks:
-         data_required['rows'][row].append([-1, []])
+       # XXX Think about line numbers XXX
+       for row in data_required['rows']['data']:
+        if len(data_required['rows']['data'][row]) < Nblocks:
+         data_required['rows']['data'][row].append([])
+       if (rowcol == 'cols'):
+        data_required['cols']['lineNs'].append([])
+       else:
+        data_required['rows']['lineNs'].append({})
 
        line_count = 0
        rows = 0
@@ -270,7 +277,7 @@ def gp_dataread2(datafile, index, usingrowcol, using_list, select_criterion, eve
      else              : data_list.extend(csv_items)
 
     # See if the data matches a requested row
-    for row in data_required['rows']:
+    for row in data_required['rows']['data']:
      if (row == line_count):
       if (row != 1): 
        single_row_datafile = False
@@ -280,25 +287,29 @@ def gp_dataread2(datafile, index, usingrowcol, using_list, select_criterion, eve
        if (check_every(block_count, i, every_dict)):
         filtered_data_list.append(data_list[i])
       # Note that if filtered_data_list is blank at this point we correctly append a blank list
-      data_required['rows'][row].append([fileline, filtered_data_list])
+      data_required['rows']['data'][row].append(filtered_data_list)
+      data_required['rows']['lineNs'][Nblocks][row] = fileline
       continue # no row can match more than one row number
 
     # Or a requested column
     # First check against criteria from "every" statement
-    if (check_every(block_count, line_count-1, every_dict)):
-     if len(data_list)>1: single_column_datafile = False
-     for col in data_required['cols']:
-      myblock = len(data_required['cols'][col]) - 1 # Data block to write to
-      if (col <= len(data_list)):
-       data_required['cols'][col][myblock].append([fileline, data_list[col-1]])
-      else:
-       data_required['cols'][col][myblock].append([fileline, ''])
+    if (usingrowcol == 'col'):
+     if (check_every(block_count, line_count-1, every_dict)):
+      if len(data_list)>1: single_column_datafile = False
+      for col in data_required['cols']['data']:
+       myblock = len(data_required['cols']['data'][col]) - 1 # Data block to write to
+       if (col <= len(data_list)):
+        data_required['cols']['data'][col][myblock].append(data_list[col-1])
+       else:
+        data_required['cols']['data'][col][myblock].append('')
+      data_required['cols']['lineNs'][myblock].append(fileline)
 
     rows += 1
    # Check that the last set of rows was complete
-   for row in data_required['rows']:
-    if len(data_required['rows'][row]) < Nblocks+1:
-     data_required['rows'][row].append([-1, []])
+   for row in data_required['rows']['data']:
+    if len(data_required['rows']['data'][row]) < Nblocks+1:
+     data_required['rows']['data'][row].append([])
+     data_required['rows']['lineNs'][Nblocks][row] = -1
 
   except KeyboardInterrupt: raise
   except:
@@ -319,142 +330,85 @@ def gp_dataread2(datafile, index, usingrowcol, using_list, select_criterion, eve
     # In this case we want to just plot the first column against the data item counter.
     using_list = ['1']
     parse_using (using_list, data_used, vars_local, funcs, verb_errors, error_str)
-    del data_required['cols'][2]
+    del data_required['cols']['data'][2]
     columns_using = 1
    elif (single_row_datafile and usingrowcol == "row"):
     # Ditto but for the first row
     using_list = ['1']
     parse_using (using_list, data_used, vars_local, funcs, verb_errors, error_str)
-    del data_required['rows'][2]
+    del data_required['rows']['data'][2]
     columns_using = 1
 
-  # At the moment we treat rows and columns separately; this might be improved later to be more general
-  if (usingrowcol == "row"):
-   # Pick the first row as an example for iterating over etc.
-   data_rows = data_required['rows'].keys()
-   a_row = data_rows[0]
-   # Number of blocks and rows
-   Nblocks = len(data_required['rows'][a_row])
-   Nrows = len(data_required['rows'])
-   for i in range(Nblocks):
-    data_counter = 0
-    outblockgrid = []
-    # Find # points as min # cols in block (all rows with fewer points are junked)
-    Npoints = len(data_required['rows'][a_row][i][1]) # The row of data
-    for row in data_rows:
-     Npoints = min(Npoints, len(data_required['rows'][row][i][1]))
-    # Iterate over the points in this block
-    for j in range(Npoints):
-     try: # To evaluate this data point
-      data_item = []
-      invalid_datapoint = False
-      for row in data_rows: # For each point we cycle over all the rows
-       if (row == 0):
-        vars_local['_gp_param0'] = data_counter
-       else:
-        point = data_required['rows'][row][i][1][j]
-        if point == '':  # Lack of a data point
-         invalid_datapoint = True
-         continue
-        else:
-         vars_local['_gp_param'+str(row)] = float(point)
-      if invalid_datapoint: continue
- 
-      # Check whether this data point satisfies select() criteria
-      if (select_criterion != ""):
-       error_str = "Warning: Could not evaluate select criterion at line %d of data file %s."%(data_required['rows'][row][i][0],datafile)
-       value = gp_eval.gp_eval(select_criterion, vars_local, funcs, verbose=False)
-       if (value == 0.0): 
-        invalid_datapoint = True # gp_eval applies float() to result and turns False into 0.0
-        # XXX Insert stuff dealing with continuity of lines pruned with select here XXX
+  # rc == row or column 
+  data_rcs = data_required[rowcol]['data'].keys()
+  # Pick the first rc as an example for iterating over etc.
+  a_rc = data_rcs[0]
+  Nblocks = len(data_required[rowcol]['data'][a_rc])
+  Nrcs = len(data_required['rows'])
+  for i in range(Nblocks):
+   data_counter = 0
+   outblockgrid = []
+   # Find # points as min # cols in block
+   Npoints = len(data_required[rowcol]['data'][a_rc][i]) # The rc of data
+   for rc in data_rcs:
+    Npoints = min(Npoints, len(data_required[rowcol]['data'][rc][i]))
+   # Iterate over the points in this block
+   for j in range(Npoints):
+    try: # To evaluate this data point
+     data_item = []
+     invalid_datapoint = False
+     for rc in data_rcs: # For each point we cycle over all the rows
+      if (rc == 0):
+       vars_local['_gp_param0'] = data_counter
+      else:
+       point = data_required[rowcol]['data'][rc][i][j]
+       if point == '':  # Lack of a data point
+        invalid_datapoint = True
         continue
- 
-      # Evaluate the using statement
-      if (columns_using == 1):
-       data_item.append(data_counter)
-      data_counter += 1
-      error_str = "Warning: Could not parse data at line %d of data file %s."%(data_required['rows'][row][i][0],datafile)
-      errcount += evaluate_using(data_item, using_list, vars_local, funcs, style, firsterror, verb_errors)
-      if (verb_errors and (errcount > ERRORS_MAX)):
-       gp_warning("Warning: Not displaying any more errors for this datafile.") ; verb_errors = False
-
-     except KeyboardInterrupt: raise
-     except:
-      if (verb_errors):
-       if (sys.exc_info()[0] != exceptions.ValueError): gp_warning("%s %s (%s)"%(error_str,sys.exc_info()[1],sys.exc_info()[0]))
-       else                                           : gp_warning("%s"%error_str)
-      errcount += 1
-      if (verb_errors and (errcount > ERRORS_MAX)): gp_warning("Warning: Not displaying any more errors for this datafile.") ; verb_errors = False
-     else:
-      # For arrow linestyles, we break up each datapoint into a line between two points
-      if (style[0:6] == "arrows"): outgrid.append([2,columns,[data_item,data_item[2:4]+data_item[0:2]+data_item[4:]]]) # arrow linestyles
-      else                       : outblockgrid.append(data_item)
-      allgrid.append(data_item)
-    if (len(outblockgrid) > 0): outgrid.append([len(outblockgrid),columns,outblockgrid])
-
-  else: # Columns not rows!
-   # Structure of the dataset element is [        [ line number, x] [l.n., x], ... ]  [ [l.n., x] [l.n., x] ]  ... ]
-   data_cols = data_required['cols'].keys()
-   a_col = data_cols[0]
-   Nblocks = len(data_required['cols'][a_col])
-   Ncols = len(data_required['cols'])
-   # Iterate over blocks
-   for i in range(Nblocks):
-    data_counter = 0
-    outblockgrid = []
-    # Iterate over points in the block
-    for j in range(len(data_required['cols'][a_col][i])):
-     try: # To evaluate the data point
-      data_item = []
-      invalid_datapoint = False
-      for col in data_cols:
-       if (col == 0):
-        vars_local['_gp_param0'] = data_counter
        else:
-        point = data_required['cols'][col][i][j][1]
-        if (point == ''): # Lack of a data point
-         invalid_datapoint = True
-         continue
-        else:
-         vars_local['_gp_param'+str(col)] = float(point)
-      if invalid_datapoint: continue
+        vars_local['_gp_param'+str(rc)] = float(point)
+     if invalid_datapoint: continue
 
-      # Check whether this data point satisfies select() criteria
-      if (select_criterion != ""):
-       error_str = "Warning: Could not evaluate select criterion at line %d of data file %s."%(data_required['cols'][col][i][j][0],datafile)
-       value = gp_eval.gp_eval(select_criterion, vars_local, funcs, verbose=False)
-       if (value == 0.0): 
-        invalid_datapoint = True # gp_eval applies float() to result and turns False into 0.0
-        # XXX Insert stuff dealing with continuity of lines pruned with select here XXX
-        continue
- 
-      # Evaluate the using statement
-      if (columns_using == 1):
-       data_item.append(data_counter)
-      data_counter += 1
-      error_str = "Warning: Could not parse data at line %d of data file %s."%(data_required['cols'][col][i][j][0],datafile)
-      errcount += evaluate_using(data_item, using_list, vars_local, funcs, style, firsterror, verb_errors)
-      if (verb_errors and (errcount > ERRORS_MAX)):
-       gp_warning("Warning: Not displaying any more errors for this datafile.") ; verb_errors = False
-
-     except KeyboardInterrupt: raise
-     except:
-      if (verb_errors):
-       if (sys.exc_info()[0] != exceptions.ValueError): gp_warning("%s %s (%s)"%(error_str,sys.exc_info()[1],sys.exc_info()[0]))
-       else                                           : gp_warning("%s"%error_str)
-      errcount += 1
-      if (verb_errors and (errcount > ERRORS_MAX)): gp_warning("Warning: Not displaying any more errors for this datafile.") ; verb_errors = False
+     # Find line number(s) associated with point
+     if (rowcol == 'cols'): # Then this is nice
+      linenumber = "%d"%data_required['cols']['lineNs'][i][j]
      else:
-      # For arrow linestyles, we break up each datapoint into a line between two points
-      if (style[0:6] == "arrows"): outgrid.append([2,columns,[data_item,data_item[2:4]+data_item[0:2]+data_item[4:]]]) # arrow linestyles
-      else                       : outblockgrid.append(data_item)
-      allgrid.append(data_item)
-    if (len(outblockgrid) > 0): outgrid.append([len(outblockgrid),columns,outblockgrid])
+      linenumber = ''.join(["%d, "%data_required['rows']['lineNs'][i][k] for k in data_rcs])
+
+     # Check whether this data point satisfies select() criteria
+     if (select_criterion != ""):
+      error_str = "Warning: Could not evaluate select criterion at line %s of data file %s."%(linenumber, datafile)
+      value = gp_eval.gp_eval(select_criterion, vars_local, funcs, verbose=False)
+      if (value == 0.0): 
+       invalid_datapoint = True # gp_eval applies float() to result and turns False into 0.0
+       # XXX Insert stuff dealing with continuity of lines pruned with select here XXX
+       continue
+
+     # Evaluate the using statement
+     if (columns_using == 1):
+      data_item.append(data_counter)
+     data_counter += 1
+     error_str = "Warning: Could not parse data at line %s of data file %s."%(linenumber, datafile)
+     errcount += evaluate_using(data_item, using_list, vars_local, funcs, style, firsterror, verb_errors)
+     if (verb_errors and (errcount > ERRORS_MAX)):
+      gp_warning("Warning: Not displaying any more errors for this datafile.") 
+      verb_errors = False
+
+    except KeyboardInterrupt: raise
+    except:
+     if (verb_errors):
+      if (sys.exc_info()[0] != exceptions.ValueError): gp_warning("%s %s (%s)"%(error_str,sys.exc_info()[1],sys.exc_info()[0]))
+      else                                           : gp_warning("%s"%error_str)
+     errcount += 1
+     if (verb_errors and (errcount > ERRORS_MAX)): gp_warning("Warning: Not displaying any more errors for this datafile.") ; verb_errors = False
+    else:
+     # For arrow linestyles, we break up each datapoint into a line between two points
+     if (style[0:6] == "arrows"): outgrid.append([2,columns,[data_item,data_item[2:4]+data_item[0:2]+data_item[4:]]]) # arrow linestyles
+     else                       : outblockgrid.append(data_item)
+     allgrid.append(data_item)
+   if (len(outblockgrid) > 0): outgrid.append([len(outblockgrid),columns,outblockgrid])
 
   outgrid[0] = [len(allgrid),columns,allgrid]
-
-  # Testing...
-  print outgrid
   return outgrid
 
 # EVALUATE_USING(): Evaluates the using() statement for a single data point
