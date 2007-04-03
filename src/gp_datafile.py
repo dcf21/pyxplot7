@@ -64,7 +64,7 @@ def gp_function_datagrid(xrast, functions, xname, usingrowcol, using_list, selec
 
   datagrid = make_datagrid(iterate_function(xrast, functions, xname, local_vars, funcs), description, "x=", 0, usingrowcol, using_list, select_criterion, every_list, local_vars, funcs, style, verb_errors, firsterror)
 
-  if (len(datagrid) == 0): # Nowhere was function evaluatable
+  if (len(datagrid) == 1): # Nowhere was function evaluatable
    for item in functions:
     try:
      val = gp_eval.gp_eval(item,local_vars,funcs,verbose=False)

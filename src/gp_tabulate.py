@@ -20,17 +20,10 @@
 
 # Implementation of tabulate command
 
-import gp_children
-import gp_eval
 import gp_datafile
 import gp_settings
-import gp_spline
-from gp_autocomplete import *
-from gp_error import *
 import gp_math
 import gp_version
-import gp_postscript
-import gp_ticker
 
 import os
 import sys
@@ -39,7 +32,6 @@ import glob
 import operator
 import exceptions
 import re
-from pyx import *
 
 
 # Counters used to cycle plot styles
