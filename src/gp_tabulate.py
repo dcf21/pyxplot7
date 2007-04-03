@@ -69,7 +69,8 @@ def directive_tabulate(command,vars,funcs,settings):
   #         This is achieved with a dry-run of the plotting process.
   any_autoscaling_axes = 0
   for direction in 'x', 'y':
-   axis = axes[direction][1]
+   number = 1
+   axis = axes[direction][number]
    axis['MIN_USED'] = axis['MIN']
    axis['MAX_USED'] = axis['MAX']
    axis['AXIS']     = None
@@ -77,9 +78,11 @@ def directive_tabulate(command,vars,funcs,settings):
    if (axis['LOG'] == "ON"):
     if (axis['MIN_USED'] != None) and (axis['MIN_USED'] <= 0.0):
      axis['MIN_USED'] = None
+     axis['MIN'] = None
      gp_warning("Warning: Log axis %s%d set with range minimum < 0 -- this is impossible, so autoscaling instead."%(direction,number))
     if (axis['MAX_USED'] != None) and (axis['MAX_USED'] <= 0.0):
      axis['MAX_USED'] = None
+     axis['MAX'] = None
      gp_warning("Warning: Log axis %s%d set with range maximum < 0 -- this is impossible, so autoscaling instead."%(direction,number))
 
    if ((axis['MIN_USED'] == None) or (axis['MIN_USED'] == None)):
@@ -131,12 +134,12 @@ def directive_tabulate(command,vars,funcs,settings):
     if (axes['x'][1]['LOG'] == 'ON'): axes['x'][1]['MAX'] = axes['x'][1]['MIN'] * 100
     else                                             : axes['x'][1]['MAX'] = axes['x'][1]['MIN'] + 20
 
-    # Obtain a raster
-    if (axes['x'][1]['LOG'] == 'ON'): xrast = gp_math.lograst(axes['x'][1]['MIN'], axes['x'][1]['MAX'], settings['SAMPLES'])
-    else:                                              xrast = gp_math.linrast(axes['x'][1]['MIN'], axes['x'][1]['MAX'], settings['SAMPLES'])
+   # Obtain a raster
+   if (axes['x'][1]['LOG'] == 'ON'): xrast = gp_math.lograst(axes['x'][1]['MIN'], axes['x'][1]['MAX'], settings['SAMPLES'])
+   else:                                              xrast = gp_math.linrast(axes['x'][1]['MIN'], axes['x'][1]['MAX'], settings['SAMPLES'])
    
-    # Obtain the data grid
-    datagrid = gp_datafile.gp_function_datagrid(xrast, functions, 'x', usingrowcol, using, select_criteria, every, vars, funcs, 'points', True, None)
+   # Obtain the data grid
+   datagrid = gp_datafile.gp_function_datagrid(xrast, functions, 'x', usingrowcol, using, select_criteria, every, vars, funcs, 'points', True, None)
 
   
   # Filter the data that we've got
@@ -173,9 +176,34 @@ def output_table (datagrid, settings):
   # Write a header
   f.write("# Datafile produced by by PyXPlot\n")
 
+  # Produce an optimal format string using much jiggery-pokery
+  cols = datagrid[0][1]
+  allints  = [True for i in range(cols)]
+  allsmall = [True for i in range(cols)]
   for [rows, cols, block] in datagrid:
    for line in block:
-    str = ' '.join(["%s"%x for x in line])
+    for i in range(cols):
+     if (line[i] != float(int(line[i]))):
+      allints[i] = False
+     if (abs(line[i]) >= 1000 or (abs(line[i]) < .0999999 and line[i] != 0.)):
+      allsmall[i] = False
+  formats = []
+  for i in range(cols):
+   if (allints[i]):
+    formats.append("%10d")
+   elif (allsmall[i]):
+    formats.append("%11f")
+   else:
+    formats.append("%15e")
+
+  # Actually write the data file
+  for [rows, cols, block] in datagrid:
+   for line in block:
+    strs = []
+    for i in range(len(line)):
+     format = formats[i]
+     strs.append(formats[i]%line[i])
+    str = ' '.join(strs)
     f.write("%s\n"%str)
 
   f.close()
