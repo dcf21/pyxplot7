@@ -32,7 +32,7 @@ try: import scipy
 except: SCIPY_ABSENT = True
 else: SCIPY_ABSENT = False
 
-ERRORS_MAX = 40000
+ERRORS_MAX = 4
 
 # GP_DATAREAD(): Read a data file, selecting only every nth item from index m, using ....
 # This is now just a wrapper for make_datagrid
