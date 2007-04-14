@@ -72,7 +72,7 @@ def directive_histogram(command, vars, funcs, settings):
 
   # We have now read all of our commandline parameters, and are ready to get the data
   try:
-   (rows,columns,datagrid) = gp_datafile.gp_dataread(datafile, index, usingrowcol, using, select_criteria, every, vars, funcs, "points")[0]
+   (rows,columns,datagrid) = gp_datafile.gp_dataread(datafile, index, usingrowcol, using, select_criteria, True, every, vars, funcs, "points")[0]
   except KeyboardInterrupt: raise
   except:
    gp_error("Error reading input datafile:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
@@ -196,4 +196,8 @@ def histcount(bins, datagrid, binrange):
      counts[i]+=1
      break
   counts[0] = 0
+
+  # Divide by width of bins to obtain an histogram
+  for i in range(1,len(bins)):
+   counts[i] /= float(bins[i]-bins[i-1])
   return counts

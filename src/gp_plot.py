@@ -1078,6 +1078,9 @@ def plot_datafile(multiplot_number,g,axes,settings,linestyles,plotwords,vars,fun
   # select
   if 'select_criterion' in plotwords: select_criteria = plotwords['select_criterion']
   else                              : select_criteria = ''
+  select_cont = True
+  if (('select_cont' in plotwords) and (plotwords['select_cont'][0] == 'd')):
+   select_cont = False
 
   # Using rows or columns
   if   'use_rows'    in plotwords: usingrowcol = "row"
@@ -1115,7 +1118,7 @@ def plot_datafile(multiplot_number,g,axes,settings,linestyles,plotwords,vars,fun
      title_this = title_string_texify(title_this)
 
     try:
-     datafile_totalgrid = gp_datafile.gp_dataread(datafile, index, usingrowcol, using, select_criteria, every, vars, funcs, plotwords['style'], verb_errors=verb_errors)
+     datafile_totalgrid = gp_datafile.gp_dataread(datafile, index, usingrowcol, using, select_criteria, select_cont, every, vars, funcs, plotwords['style'], verb_errors=verb_errors)
     except KeyboardInterrupt: raise
     except:
       if (verb_errors): gp_error("Error reading input datafile '%s'."%datafile)
@@ -1211,6 +1214,9 @@ def plot_function(multiplot_number,g,axes,settings,linestyles,plotwords,vars,fun
   # select
   if 'select_criterion' in plotwords: select_criteria = plotwords['select_criterion']
   else                              : select_criteria = ''
+  select_cont = True
+  if (('select_cont' in plotwords) and (plotwords['select_cont'][0] == 'd')):
+   select_cont = False
 
   # Using rows or columns
   if   'use_rows'    in plotwords: usingrowcol = "row"
@@ -1265,7 +1271,7 @@ def plot_function(multiplot_number,g,axes,settings,linestyles,plotwords,vars,fun
   else:                                              xrast = gp_math.linrast(minimum, maximum, settings['SAMPLES'])
 
   # Now evaluate functions
-  totalgrid = gp_datafile.gp_function_datagrid(xrast, functions, xname, usingrowcol, using, select_criteria, every, vars, funcs, plotwords['style'], verb_errors=verb_errors)
+  totalgrid = gp_datafile.gp_function_datagrid(xrast, functions, xname, usingrowcol, using, select_criteria, select_cont, every, vars, funcs, plotwords['style'], verb_errors=verb_errors)
 
   # Plot dataset
   for data_section in range(1,len(totalgrid)): # Loop over data sections within index, plotting each as a separate line 

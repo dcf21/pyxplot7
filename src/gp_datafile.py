@@ -32,26 +32,26 @@ try: import scipy
 except: SCIPY_ABSENT = True
 else: SCIPY_ABSENT = False
 
-ERRORS_MAX = 4
+ERRORS_MAX = 40000
 
 # GP_DATAREAD(): Read a data file, selecting only every nth item from index m, using ....
 # This is now just a wrapper for make_datagrid
 
-def gp_dataread(datafile, index, usingrowcol, using_list, select_criterion, every_list, vars, funcs, style, verb_errors=True, firsterror=None):
+def gp_dataread(datafile, index, usingrowcol, using_list, select_criterion, select_cont, every_list, vars, funcs, style, verb_errors=True, firsterror=None):
   # Open input datafile
   if (re.search(r"\.gz$",datafile) != None): # If filename ends in .gz, open it with gunzip
    f         = gzip.open(os.path.join(gp_settings.cwd, os.path.expanduser(datafile)),"r")
   else:
    f         = open(os.path.join(gp_settings.cwd, os.path.expanduser(datafile)),"r")
 
-   datagrid = make_datagrid(iterate_file(f), "of file %s"%datafile, "line ", index, usingrowcol, using_list, select_criterion, every_list, vars, funcs, style, verb_errors, firsterror=None)
+   datagrid = make_datagrid(iterate_file(f), "of file %s"%datafile, "line ", index, usingrowcol, using_list, select_criterion, select_cont, every_list, vars, funcs, style, verb_errors, firsterror=None)
 
   f.close()
   return datagrid
 
 # GP_FUNCTION_DATAGRID(): Evaluate a (set of) function(s), producing a grid of values
 # This mostly wraps make_datagrid with a bit of cleverness
-def gp_function_datagrid(xrast, functions, xname, usingrowcol, using_list, select_criterion, every_list, vars, funcs, style, verb_errors=True, firsterror=None):
+def gp_function_datagrid(xrast, functions, xname, usingrowcol, using_list, select_criterion, select_cont, every_list, vars, funcs, style, verb_errors=True, firsterror=None):
   # Now evaluate functions
   datagrid   = []
   local_vars = vars.copy()
@@ -62,7 +62,7 @@ def gp_function_datagrid(xrast, functions, xname, usingrowcol, using_list, selec
   else:
    description = "in functions %s"%', '.join(functions)
 
-  datagrid = make_datagrid(iterate_function(xrast, functions, xname, local_vars, funcs), description, "x=", 0, usingrowcol, using_list, select_criterion, every_list, local_vars, funcs, style, verb_errors, firsterror)
+  datagrid = make_datagrid(iterate_function(xrast, functions, xname, local_vars, funcs), description, "x=", 0, usingrowcol, using_list, select_criterion, select_cont, every_list, local_vars, funcs, style, verb_errors, firsterror)
 
   if (len(datagrid) == 1): # Nowhere was function evaluatable
    for item in functions:
@@ -72,6 +72,13 @@ def gp_function_datagrid(xrast, functions, xname, usingrowcol, using_list, selec
     except:
      if verb_errors: gp_error("Error evaluating expression '%s':"%item)
      raise
+   # Alternatively, the problem may have been with the select criterion
+   try:
+    val = gp_eval.gp_eval(select_criterion, local_vars, funcs,verbose=False)
+   except KeyboardInterrupt: raise
+   except:
+    if verb_errors: gp_error("Error evaluating select criterion '%s':"%select_criterion)
+    raise
    gp_error("Error: PyXPlot has just evaluated an unevaluable function. Please report as a bug.")
    return # shouldn't ever execute this line of code!
 
@@ -124,7 +131,7 @@ def iterate_file(f):
 # MAKE_DATAGRID(): Make a big grid of data to be plotted given an iterator that
 # produces lines of data.  The function used to form most of gp_dataread
 
-def make_datagrid(iterator, description, lineunit, index, usingrowcol, using_list, select_criterion, every_list, vars, funcs, style, verb_errors=True, firsterror=None):
+def make_datagrid(iterator, description, lineunit, index, usingrowcol, using_list, select_criterion, select_cont, every_list, vars, funcs, style, verb_errors=True, firsterror=None):
   index_no   = 0
   rows       = 0
   single_column_datafile = True
@@ -278,6 +285,7 @@ def make_datagrid(iterator, description, lineunit, index, usingrowcol, using_lis
    return [[0,0,[]]]
 
   # Step 3 -- Get the set of data that we want from the data extracted from the file
+
   if (firsterror == None): firsterror = gp_settings.datastyleinfo[style][2]
   allgrid = []
   outgrid = [[]]
@@ -341,7 +349,10 @@ def make_datagrid(iterator, description, lineunit, index, usingrowcol, using_lis
       value = gp_eval.gp_eval(select_criterion, vars_local, funcs, verbose=False)
       if (value == 0.0): 
        invalid_datapoint = True # gp_eval applies float() to result and turns False into 0.0
-       # XXX Insert stuff dealing with continuity of lines pruned with select here XXX
+       if (select_cont == False): # Break line by creating new block here
+        if (len(outblockgrid) > 0):
+         outgrid.append([len(outblockgrid), columns, outblockgrid])
+         outblockgrid = []
        continue
 
      # Evaluate the using statement

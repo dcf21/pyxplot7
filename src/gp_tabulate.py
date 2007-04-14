@@ -24,6 +24,7 @@ import gp_datafile
 import gp_settings
 import gp_math
 import gp_version
+from gp_error import *
 
 import os
 import sys
@@ -99,6 +100,9 @@ def directive_tabulate(command,vars,funcs,settings):
   # select
   if 'select_criterion' in command: select_criteria = command['select_criterion']
   else                            : select_criteria = ''
+  select_cont = True
+  if (('select_cont' in command) and (command['select_cont'][0] == 'd')):
+   select_cont = False
 
   # Using rows or columns
   if   'use_rows'    in command: usingrowcol = "row"
@@ -112,7 +116,7 @@ def directive_tabulate(command,vars,funcs,settings):
 
   if 'filename' in command:
    # Obtain file data straight away
-   datagrid = gp_datafile.gp_dataread(datafile, index, usingrowcol, using, select_criteria, every, vars, funcs, "points", True, None)
+   datagrid = gp_datafile.gp_dataread(datafile, index, usingrowcol, using, select_criteria, select_cont, every, vars, funcs, "points", True, None)
   else: # Deal with tabulating functions
    # Automatic range choices
    if (axes['x'][1]['MIN'] == None):
@@ -131,14 +135,19 @@ def directive_tabulate(command,vars,funcs,settings):
    else:                                              xrast = gp_math.linrast(axes['x'][1]['MIN'], axes['x'][1]['MAX'], settings['SAMPLES'])
    
    # Obtain the data grid
-   datagrid = gp_datafile.gp_function_datagrid(xrast, functions, 'x', usingrowcol, using, select_criteria, every, vars, funcs, 'points', True, None)
+   datagrid = gp_datafile.gp_function_datagrid(xrast, functions, 'x', usingrowcol, using, select_criteria, select_cont, every, vars, funcs, 'points', True, None)
 
   
   # Filter the data that we've got
   datagrid = filter_dataset(datagrid, axes)
 
+  if (len(datagrid) == 0):
+   gp_warning("Warning: No data to tabulate!")
+   return
+
   # Print the data out
   output_table(datagrid, settings)
+  return
 
 # FILTER_DATASET(): Filter data against the ranges supplied
 
@@ -175,7 +184,7 @@ def output_table (datagrid, settings):
   for [rows, cols, block] in datagrid:
    for line in block:
     for i in range(cols):
-     if (line[i] != float(int(line[i]))):
+     if (line[i] != float(int(line[i])) or (abs(line[i])>1000)):
       allints[i] = False
      if (abs(line[i]) >= 1000 or (abs(line[i]) < .0999999 and line[i] != 0.)):
       allsmall[i] = False
@@ -194,7 +203,10 @@ def output_table (datagrid, settings):
     strs = []
     for i in range(len(line)):
      format = formats[i]
-     strs.append(formats[i]%line[i])
+     if (format[-1] == 'd'):
+      strs.append(formats[i]%int(line[i]))
+     else: 
+      strs.append(formats[i]%line[i])
     str = ' '.join(strs)
     f.write("%s\n"%str)
 

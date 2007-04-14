@@ -201,7 +201,7 @@ def directive_fit(command, vars, funcs):
   
   # We have now read all of our commandline parameters, and are ready to start fitting
   try:
-    (rows,columns,datagrid) = gp_datafile.gp_dataread(datafile, index, usingrowcol, using, select_criteria, every, vars, funcs, "points", firsterror=no_arguments+1)[0]
+    (rows,columns,datagrid) = gp_datafile.gp_dataread(datafile, index, usingrowcol, using, select_criteria, True, every, vars, funcs, "points", firsterror=no_arguments+1)[0]
     
     datagrid_cpy = []
     for datapoint in datagrid:
