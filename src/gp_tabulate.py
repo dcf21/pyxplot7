@@ -116,7 +116,7 @@ def directive_tabulate(command,vars,funcs,settings):
 
   if 'filename' in command:
    # Obtain file data straight away
-   datagrid = gp_datafile.gp_dataread(datafile, index, usingrowcol, using, select_criteria, select_cont, every, vars, funcs, "points", True, None)
+   datagrid = gp_datafile.gp_dataread(datafile, index, usingrowcol, using, select_criteria, select_cont, every, vars, funcs, "tabulate", True, None)
   else: # Deal with tabulating functions
    # Automatic range choices
    if (axes['x'][1]['MIN'] == None):
@@ -135,7 +135,7 @@ def directive_tabulate(command,vars,funcs,settings):
    else:                                              xrast = gp_math.linrast(axes['x'][1]['MIN'], axes['x'][1]['MAX'], settings['SAMPLES'])
    
    # Obtain the data grid
-   datagrid = gp_datafile.gp_function_datagrid(xrast, functions, 'x', usingrowcol, using, select_criteria, select_cont, every, vars, funcs, 'points', True, None)
+   datagrid = gp_datafile.gp_function_datagrid(xrast, functions, 'x', usingrowcol, using, select_criteria, select_cont, every, vars, funcs, 'tabulate', True, None)
 
   
   # Filter the data that we've got
