@@ -389,7 +389,7 @@ def evaluate_using(data_item, using_list, vars_local, funcs, style, firsterror, 
    value = gp_eval.gp_eval(using_list[k], vars_local, funcs, verbose=False)
    if (not SCIPY_ABSENT) and (not scipy.isfinite(value)): raise ValueError
    if (style[-5:] != "range"):
-    if ((k >= firsterror) and (value < 0.0)): # Check for negative error bars
+    if ((firsterror != None) and (k >= firsterror) and (value < 0.0)): # Check for negative error bars
      value = 0.0
      if (verb_errors): gp_warning("Warning: Negative errorbar detected %s%s %s."%(lineunit,fileline,description)) ; errcount+=1
    else: # This gets executed for all kinds of error ranges ; make sure that error ranges are sensible

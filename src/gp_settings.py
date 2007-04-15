@@ -235,7 +235,7 @@ datastyleinfo = {'points'         : ['1:2',         2,2],
                  'arrows_twohead' : ['1:2:3:4',     4,5],
                  'csplines'       : ['1:2',         2,2],
                  'acsplines'      : ['1:2',         2,2],
-                 'tabulate'       : ['1:2',         2,9999]
+                 'tabulate'       : ['1:2',         2,None]  # tabulate does not consider error bars
                  }
 
 # Recognised positions for plot keys
