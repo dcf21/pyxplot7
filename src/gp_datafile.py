@@ -518,3 +518,122 @@ def check_every (block, line, every_dict):
    return False
   return True
 
+# GP_MAKE_DATA_MATRIX(): Take datagrid[] in x,y,z form and turn it into a rectangular matrix on a
+# regular grid, suitable for plotting as a colour map.  Either just sort data already on a regular
+# grid or do some funky form of {inter,extra}polation.
+def gp_make_data_matrix (datagrid, xraster, yraster, interpolation):
+  # Deal with the case where the data already claims to be on a regular grid
+  if (interpolation == None):
+   matrix = sort_data_into_matrix (datagrid, xraster, yraster)
+   return matrix
+  
+  # Now deal with interpolation
+  if (interpolation == 'sph'):
+   datagrid = gp_interpolate_grid(datagrid, xraster, yraster)
+   matrix = sort_data_into_matrix (datagrid, [], [])
+   return matrix
+
+  gp_error("Error: Unknown data matrix interpolation method %s\n"%intperolation)
+  return []
+
+# SORT_DATA_INTO_MATRIX(): Take a regularly spaced datagrid[] in x,y,z form and turn it into a rectangular matrix
+def sort_data_into_matrix (datagrid, xraster, yraser):
+  datagrid.sort()
+  N = len(datagrid)
+
+  # Form the rasters.  They should always start off blank
+  assert(xraster == [])
+  assert(yraster == [])
+  # First form the y raster
+  x = datagrid[0][0]
+  i = 0
+  while (datagrid[i][0] == x):
+   yraster.append(datagrid[i][1])
+   i += 1
+  # Then the x raster
+  x = None
+  for i in range(N):
+   if (x != datagrid[i][0]):
+    x = datagrid[i][0]
+    xraster.append(x)
+  # Note that we don't actually check that the data grid is regular and rectangular
+  # If you pass us a stupid grid you get what you deserve
+  # Do this basic check because it's easy
+  Nx = len(xraster)
+  Ny = len(yraster)
+  if (Nx*Ny != N):
+   gp_error('Error: Data grid is not a regular, rectangular grid')
+   return []
+
+  # Assemble the matrix
+  matrix = []
+  k = 0
+  for i in range(Nx):
+   matrix.append([])
+   for j in range(Ny):
+    matrix[-1].append(datagrid[2][k])
+    k += 1
+  return matrix
+
+
+# GP_INTERPOLATE_GRID(): Interpolate from a set of points with values onto an
+# arbitrary rectangular space
+
+def gp_interpolate_grid(datagrid, xrast, yrast):
+
+  Npoints = len(datagrid)
+  valcols = range(2,len(datagrid[0])) # Columns in which there is a value to interpolate
+  NPtarg = int(.5*sqrt(Npoints))
+  area = abs((xrast[-1]-xrast[0])*(yrast[-1]-yrast[0]))
+  hinit = sqrt(area/(pi*NPtarg))
+  hlist = [] # Smoothing lengths
+
+  # First assign smoothing lengths to each particle
+  # We choose that the number of neighbours is sqrt(number of points)
+  # Only do a few iterations on each point to avoid infinite loopage
+  for point in datagrid:
+   h = hinit
+   neighbours = find_neighbours(point, hinit, datagrid)
+   i = 0
+   while (len(neighbours) != NPtarg and i<10):
+    h *= sqrt(NPtarg/float(len(neighbours)))
+    neighbours = find_neighbours(point, h, datagrid)
+    i += 1
+   hlist.append(h)
+
+  print len(hlist)
+
+  # Now cycle over all the points in the raster and evaluate the function there
+  outgrid = []
+  for x in xrast:
+   for y in yrast:
+    p = [x, y] + [0 for i in valcols]
+    # Cycle over all the data points, interpolating
+    j = 0
+    wsum = 0.
+    for point in datagrid:
+     h = hlist[j]
+     rsq = (x-point[0])**2 + (y-point[1])**2
+     if (rsq > h**2): 
+      w = 0
+     else:
+      v = sqrt(rsq)/h
+      if (v < 1.): w = (1. - (3./2.)*v**2 + 3./4.*v**3)/(pi*h**3)
+      else:        w = .25*(2-v)**3/(pi*h**3)
+     for i in valcols: p[i] += point[i] * w
+     j += 1
+     wsum += w
+    if (wsum != 0.): 
+     for i in valcols: p[i] /= wsum
+    outgrid.append(p)
+  return outgrid
+  
+# FIND_NEIGHBOURS(): Find all the points within h of a specified position    
+def find_neighbours(point, h, datagrid):
+  neighbours = []
+  hsq = h*h
+  for p in datagrid:
+   rsq = (point[0]-p[0])**2 + (point[1]-p[1])**2
+   if (rsq<=hsq):
+    neighbours.append(point)
+  return neighbours
