@@ -350,14 +350,12 @@ def make_datagrid(iterator, description, lineunit, index, usingrowcol, using_lis
 
      # Check whether this data point satisfies select() criteria
      if (select_criterion != ""):
-      error_str = "Warning: Could not evaluate select criterion at %s%s %s."%(lineunit, linenumber, description)
       value = gp_eval.gp_eval(select_criterion, vars_local, funcs, verbose=False)
       if (value == 0.0): 
        invalid_datapoint = True # gp_eval applies float() to result and turns False into 0.0
-       if (select_cont == False): # Break line by creating new block here
-        if (len(outblockgrid) > 0):
-         outgrid.append([len(outblockgrid), columns, outblockgrid])
-         outblockgrid = []
+       if ((select_cont == False)and(len(outblockgrid) > 0)): # Break line by creating new block here
+        outgrid.append([len(outblockgrid), columns, outblockgrid])
+        outblockgrid = []
        continue
 
      # Evaluate the using statement
