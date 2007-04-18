@@ -67,9 +67,11 @@ def gp_function_datagrid(xrast, functions, xname, usingrowcol, using_list, selec
   datagrid = make_datagrid(iterate_function(xrast, functions, xname, local_vars, funcs), description, "x=", 0, usingrowcol, using_list, select_criterion, select_cont, every_list, local_vars, funcs, style, verb_errors, firsterror)
 
   if (len(datagrid) == 1): # Nowhere was function evaluatable
+   very_local_vars = vars.copy()
+   very_local_vars['x'] = xrast[0]
    for item in functions:
     try:
-     val = gp_eval.gp_eval(item,local_vars,funcs,verbose=False)
+     val = gp_eval.gp_eval(item,very_local_vars,funcs,verbose=False)
     except KeyboardInterrupt: raise
     except:
      if verb_errors: gp_error("Error evaluating expression '%s':"%item)
