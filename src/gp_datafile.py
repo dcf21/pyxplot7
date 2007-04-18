@@ -22,6 +22,8 @@ import gp_eval
 import gp_settings
 from gp_error import *
 
+from math import sqrt, pi
+
 import os
 import sys
 import re
@@ -90,7 +92,8 @@ def gp_function_datagrid(xrast, functions, xname, usingrowcol, using_list, selec
   #  for item in functions: val = gp_eval.gp_eval(item,local_vars,funcs,verbose=True)
 
 # ITERATE_FUNCTION(): Given a function description iterate it over a supplied raster
-def iterate_function(xrast, functions, xname, local_vars, funcs):
+def iterate_function(xrast, functions, xname, vars, funcs):
+  local_vars = vars.copy()
   for x in xrast:
    local_vars[xname] = x
    datapoint = [x]
