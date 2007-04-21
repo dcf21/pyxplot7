@@ -208,7 +208,10 @@ def epssetname(filename, title):
    test = re.match(r"%%Title: ",line)
    if (test != None):
     outfile.write("%%%%Title: %s\n"%title)
-    continue
+    break
+   outfile.write(line)
+  # Then write the rest of the file out
+  for line in infile:
    outfile.write(line)
 
   infile.close()
