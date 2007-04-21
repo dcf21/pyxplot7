@@ -33,6 +33,7 @@ import glob
 import operator
 import exceptions
 import re
+import datetime
 
 
 # Counters used to cycle plot styles
@@ -113,6 +114,10 @@ def directive_tabulate(command,vars,funcs,settings):
   if 'using_list:' in command: using = [item['using_item'] for item in command['using_list:']]
   else                       : using = []
 
+  # format string
+  if 'format' in command: format = command['format']
+  else                  : format = ''
+
 
   if 'filename' in command:
    # Obtain file data straight away
@@ -146,7 +151,7 @@ def directive_tabulate(command,vars,funcs,settings):
    return
 
   # Print the data out
-  output_table(datagrid, settings)
+  output_table(datagrid, settings, format)
   return
 
 # FILTER_DATASET(): Filter data against the ranges supplied
@@ -166,49 +171,76 @@ def filter_dataset (datagrid, axes):
 
 # OUTPUT_TABLE(): Write the table of numbers produced out to a file
 
-def output_table (datagrid, settings):
+def output_table (datagrid, settings, format):
   # Get the filename
   fname_out = os.path.expanduser(settings['OUTPUT'])
   if (fname_out == ""): fname_out = "pyxplot.dat"
-  out_fname = os.path.join(gp_settings.cwd, os.path.expanduser(fname_out))
+  outfile = os.path.join(gp_settings.cwd, os.path.expanduser(fname_out))
 
-  f = open(out_fname, 'a')
+  # Dance the backup dance
+  if( settings['BACKUP']=="ON") and os.path.exists(outfile):
+   i=0
+   while os.path.exists("%s~%d"%(outfile,i)): i+=1
+   os.rename(outfile,"%s~%d"%(outfile,i))
+
+  f = open(outfile, 'a')
 
   # Write a header
-  f.write("# Datafile produced by by PyXPlot\n")
+  datestring = '%s'%datetime.datetime.now()
+  test = re.match(r'^([0-9-]*) ([0-9:]*)\.[0-9]*$', datestring)
+  f.write("# Datafile produced by by PyXPlot %s on %s at %s\n"%(gp_version.VERSION,test.group(1),test.group(2)))
 
-  # Produce an optimal format string using much jiggery-pokery
+  # Produce a format string.
   cols = datagrid[0][1]
-  allints  = [True for i in range(cols)]
-  allsmall = [True for i in range(cols)]
-  for [rows, cols, block] in datagrid:
-   for line in block:
-    for i in range(cols):
-     if (line[i] != float(int(line[i])) or (abs(line[i])>1000)):
-      allints[i] = False
-     if (abs(line[i]) >= 1000 or (abs(line[i]) < .0999999 and line[i] != 0.)):
-      allsmall[i] = False
   formats = []
-  for i in range(cols):
-   if (allints[i]):
-    formats.append("%10d")
-   elif (allsmall[i]):
-    formats.append("%11f")
-   else:
-    formats.append("%15e")
+  formatprefix = ''
+  # Test for a user-supplied string
+  if (format != ''):
+   # Check that this is a format string and extract an optional prefix
+   test = re.search(r'^([^%]*)%', format)
+   if (test == None):
+    gp_error("Error: Bad format string %s"%format)
+    return []
+   formatprefix = test.group(1)
+   # Extract the format substrings from it
+   formatitems = re.findall(r'%[^%]*', format)
+   Nformatitems = len(formatitems)
+   formats = [formatitems[i%Nformatitems] for i in range(cols)]
+  else:
+  # Produce an optimal format string using much jiggery-pokery
+   allints  = [True for i in range(cols)]
+   allsmall = [True for i in range(cols)]
+   for [rows, cols, block] in datagrid:
+    for line in block:
+     for i in range(cols):
+      if (line[i] != float(int(line[i])) or (abs(line[i])>1000)):
+       allints[i] = False
+      if (abs(line[i]) >= 1000 or (abs(line[i]) < .0999999 and line[i] != 0.)):
+       allsmall[i] = False
+   for i in range(cols):
+    if (allints[i]):
+     formats.append("%10d")
+    elif (allsmall[i]):
+     formats.append("%11f")
+    else:
+     formats.append("%15e")
 
   # Actually write the data file
-  for [rows, cols, block] in datagrid:
-   for line in block:
-    strs = []
-    for i in range(len(line)):
-     format = formats[i]
-     if (format[-1] == 'd'):
-      strs.append(formats[i]%int(line[i]))
-     else: 
-      strs.append(formats[i]%line[i])
-    str = ' '.join(strs)
-    f.write("%s\n"%str)
+  try:
+   for [rows, cols, block] in datagrid:
+    for line in block:
+     strs = [formatprefix]
+     for i in range(len(line)):
+      format = formats[i]
+      if (format[-1] == 'd'):
+       strs.append(formats[i]%int(line[i]))
+      else: 
+       strs.append(formats[i]%line[i])
+     str = ' '.join(strs)
+     f.write("%s\n"%str)
+  except:
+   gp_error("Error whilst writing tabulated file")
+   raise
 
   f.close()
   return
