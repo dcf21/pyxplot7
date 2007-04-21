@@ -214,7 +214,7 @@ def make_datagrid(iterator, description, lineunit, index, usingrowcol, using_lis
   fileline = 0
   try:
    for line in iterator: # Iterate here, don't readlines() !
-    fileline += line[1]
+    fileline += line[1] # Number of file lines chomped; always 1 for a function
     data_list = line[0]
     # Check for a blank line; if found update block and index accounting as necessary
     if (len(data_list) == 0):
@@ -541,7 +541,7 @@ def gp_make_data_matrix (datagrid, xraster, yraster, interpolation):
   return []
 
 # SORT_DATA_INTO_MATRIX(): Take a regularly spaced datagrid[] in x,y,z form and turn it into a rectangular matrix
-def sort_data_into_matrix (datagrid, xraster, yraser):
+def sort_data_into_matrix (datagrid, xraster, yraster):
   datagrid.sort()
   N = len(datagrid)
 
@@ -575,7 +575,7 @@ def sort_data_into_matrix (datagrid, xraster, yraser):
   for i in range(Nx):
    matrix.append([])
    for j in range(Ny):
-    matrix[-1].append(datagrid[2][k])
+    matrix[-1].append(datagrid[k][2])
     k += 1
   return matrix
 
