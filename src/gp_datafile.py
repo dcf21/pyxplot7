@@ -54,7 +54,6 @@ def gp_dataread(datafile, index, usingrowcol, using_list, select_criterion, sele
 # GP_FUNCTION_DATAGRID(): Evaluate a (set of) function(s), producing a grid of values
 # This mostly wraps make_datagrid with a bit of cleverness
 def gp_function_datagrid(xrast, functions, xname, usingrowcol, using_list, select_criterion, select_cont, every_list, vars, funcs, style, verb_errors=True, firsterror=None):
-  # Now evaluate functions
   datagrid   = []
   local_vars = vars.copy()
 
@@ -64,34 +63,29 @@ def gp_function_datagrid(xrast, functions, xname, usingrowcol, using_list, selec
   else:
    description = "in functions %s"%', '.join(functions)
 
+  # Obtain the set of functions
   datagrid = make_datagrid(iterate_function(xrast, functions, xname, local_vars, funcs), description, "x=", 0, usingrowcol, using_list, select_criterion, select_cont, every_list, local_vars, funcs, style, verb_errors, firsterror)
 
-  if (len(datagrid) == 1): # Nowhere was function evaluatable
-   very_local_vars = vars.copy()
-   very_local_vars['x'] = xrast[0]
+  # If function evaluation produced no data we check for unevaluable functions.
+  # Alternatively there may have been a bad select criterion (in which case the
+  # user will already have warnings) or an overly restrictive select criterion
+  # (in which case it's their fault anyway and might even be what they wanted).
+  if (len(datagrid) == 1): 
+   local_vars[xname] = xrast[0]
    for item in functions:
     try:
-     val = gp_eval.gp_eval(item,very_local_vars,funcs,verbose=False)
+     val = gp_eval.gp_eval(item,local_vars,funcs,verbose=False)
     except KeyboardInterrupt: raise
     except:
      if verb_errors: gp_error("Error evaluating expression '%s':"%item)
      raise
-   # Alternatively, the problem may have been with the select criterion
-   try:
-    val = gp_eval.gp_eval(select_criterion, local_vars, funcs,verbose=False)
-   except KeyboardInterrupt: raise
-   except:
-    if verb_errors: gp_error("Error evaluating select criterion '%s':"%select_criterion)
-    raise
-   gp_error("Error: PyXPlot has just evaluated an unevaluable function. Please report as a bug.")
-   return # shouldn't ever execute this line of code!
-
+   # If there *was* no select criterion then there is a bug here
+   if (select_criterion == ''):
+    gp_error("Error: PyXPlot has just evaluated an unevaluable function. Please report as a bug.")
+   elif (verb_errors):
+    gp_warning("Warning: Evaluation of %s with select criterion %s produced no data!"%(description[3:],select_criterion))
+    
   return datagrid
-
-  # WTF did this do?  It doesn't make sense to me.
-  #if verb_errors:
-  #  local_vars[xname] = datagrid[-1][1] # Check for any warning messages
-  #  for item in functions: val = gp_eval.gp_eval(item,local_vars,funcs,verbose=True)
 
 # ITERATE_FUNCTION(): Given a function description iterate it over a supplied raster
 def iterate_function(xrast, functions, xname, vars, funcs):
