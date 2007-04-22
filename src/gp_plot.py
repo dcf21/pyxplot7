@@ -196,9 +196,9 @@ def directive_jpeg(command,linestyles,vars,funcs,settings,interactive):
 
  filename = command['filename']
  if 'x'        in command: x = command['x']
- else                    : x = 0.0
+ else                    : x = settings['ORIGINX']
  if 'y'        in command: y = command['y']
- else                    : y = 0.0
+ else                    : y = settings['ORIGINY']
  if 'rotation' in command: rotation = command['rotation']
  else                    : rotation = 0.0
  if 'width'    in command: width  = command['width']
@@ -241,9 +241,9 @@ def directive_eps(command,linestyles,vars,funcs,settings,interactive):
 
  filename = command['filename']
  if 'x'        in command: x = command['x']
- else                    : x = 0.0
+ else                    : x = settings['ORIGINX']
  if 'y'        in command: y = command['y']
- else                    : y = 0.0
+ else                    : y = settings['ORIGINY']
  if 'rotation' in command: rotation = command['rotation']
  else                    : rotation = 0.0
  if 'width'    in command: width  = command['width']
