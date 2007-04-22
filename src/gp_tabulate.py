@@ -118,6 +118,17 @@ def directive_tabulate(command,vars,funcs,settings):
   if 'format' in command: format = command['format']
   else                  : format = ''
 
+  # Matrix output (for colourmaps, principally)
+  if 'matrix' in command: 
+   matrix = True
+   if 'matrix_smooth' in command: # Get matrix smoothing method, treating special cases
+    if   command['matrix_smooth'] == 'none'  : smooth = None
+    elif command['matrix_smooth'] == 'smooth': smooth = 'sph'
+    else                                     : smooth = command['matrix_smooth']
+   else:
+    smooth = 'sph' # Default value
+  else:
+   matrix = False
 
   if 'filename' in command:
    # Obtain file data straight away
@@ -141,7 +152,6 @@ def directive_tabulate(command,vars,funcs,settings):
    
    # Obtain the data grid
    datagrid = gp_datafile.gp_function_datagrid(xrast, functions, 'x', usingrowcol, using, select_criteria, select_cont, every, vars, funcs, 'tabulate', True, None)
-
   
   # Filter the data that we've got
   datagrid = filter_dataset(datagrid, axes)
@@ -150,15 +160,26 @@ def directive_tabulate(command,vars,funcs,settings):
    gp_warning("Warning: No data to tabulate!")
    return
 
+  # Convert into a matrix if so desired
+  if (matrix):
+   # Currently haven't worked out how to handle smoothing
+   assert(smooth==None)
+   xraster = []
+   yraster = []
+   matrix = gp_datafile.gp_make_data_matrix(datagrid[0][2], xraster, yraster, smooth)
+   rows = len(matrix)
+   cols = len(matrix[0])
+   datagrid = [[], [rows, cols, matrix]]
+
   # Print the data out
-  output_table(datagrid, settings, format)
+  output_table(datagrid[1:], settings, format)
   return
 
 # FILTER_DATASET(): Filter data against the ranges supplied
 
 def filter_dataset (datagrid, axes):
  newgrid = []
- for [rows, cols, block] in datagrid[1:]: # We do not want the initial grid with all the points in
+ for [rows, cols, block] in datagrid:
   newblock = []
   for line in block:
    x = line[0]
@@ -238,6 +259,7 @@ def output_table (datagrid, settings, format):
        strs.append(formats[i]%line[i])
      str = ' '.join(strs)
      f.write("%s\n"%str)
+    f.write("\n")
   except:
    gp_error("Error whilst writing tabulated file")
    raise
