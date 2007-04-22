@@ -18,6 +18,17 @@
 
 # ----------------------------------------------------------------------------
 
+# The language used in this file is generally refered to as RE++.  The atoms of the syntax are described somewhat haphazardly below.
+#
+# elephant@3:badger                Match "elephant", abbreviated to >= 3 letters, and place in "badger"
+# elephant@n                       No space after "elephant", which must be quoted in full
+# { ... }                          Optionally match ...
+# < ...a... | ...b... >            Match exactly one of ...a... and ...b...
+# ( ...a... ~ ...b... )            Match ...a..., ...b... etc. in any order either 1 or 0 times each
+# %q:variable                      Match a quoted string ('...' or "...") and place it in variable
+# %S:variable                      Match an unquoted string and place it in variable 
+# %f:variable                      Match a float and place it in variable 
+
 # List of commands recognised by PyXPlot
 
 commands = r"""
@@ -107,7 +118,7 @@ set@2:directive width@1:set_option:size = %f:width
 set@2:directive:set_error = { %s:set_option } %r:restofline
 show@2:directive = [ %s:setting ]:setting_list
 spline@3:directive = [ \[@n { { %f:min } < :@n | to@n > { %f:max } } \]@n ]:range_list %v:fit_function \()@2 < %q:filename | %S:filename > ( every@1 [ { %d:every_item } ]:every_list: ~ index@1 %f:index ~ select@1 %E:select_criterion { < continuous@1:select_cont | discontinuous@1:select_cont > } ~ smooth@1 %f:smooth ~ using@1 { < rows@1:use_rows | columns@1:use_columns > } [ %E:using_item ]:using_list: )
-tabulate@2:directive = [ \[@n { { %f:min } < :@n | to@n > { %f:max } } \]@n ]:range_list < %q:filename | [ %e:expression ]:expression_list: > ( every@1 [ { %d:every_item } ]:every_list: ~ index@1 %f:index ~ select@1 %E:select_criterion { < continuous@1:select_cont | discontinuous@1:select_cont > } ~ using@1 { < rows@1:use_rows | columns@1:use_columns > } [ %E:using_item ]:using_list: ) { with@1 (format@1 %q:format ) }
+tabulate@2:directive = [ \[@n { { %f:min } < :@n | to@n > { %f:max } } \]@n ]:range_list < %q:filename | [ %e:expression ]:expression_list: > ( every@1 [ { %d:every_item } ]:every_list: ~ index@1 %f:index ~ select@1 %E:select_criterion { < continuous@1:select_cont | discontinuous@1:select_cont > } ~ using@1 { < rows@1:use_rows | columns@1:use_columns > } [ %E:using_item ]:using_list: ) { with@1 ( format@1 %q:format ~ matrix@1:matrix { < smooth@1:matrix_smooth | sph@1:matrix_smooth | none@1:matrix_smooth > } ) }
 text@3:directive = %q:string ( at@1 %f:x ,@n %f:y ~ rotate@1 %f:rotation )
 undelete@3:directive = [ %d:number ]:undeleteno,
 unset@3:directive %a:axis label@1:set_option:xlabel =
