@@ -117,7 +117,7 @@ def directive_histogram(command, vars, funcs, settings):
 
   # Bin the data up
   counts = histcount(bins, datagrid, binrange)
-
+  
   # Turn the binned data into a function
   make_histogram_function(funcname, bins, counts, funcs)
 
@@ -140,7 +140,7 @@ def make_histogram_function(funcname, bins, counts, funcs):
   for i in range(1,len(bins)):
    if (counts[i] == 0): 
     continue
-   line = "%s(x) [%f:%f] = %d"%(funcname,bins[i-1],bins[i],counts[i])
+   line = "%s(x) [%f:%f] = %f"%(funcname,bins[i-1],bins[i],counts[i])
    gp_eval.gp_function_declare(line, funcs)
    
   return
@@ -199,5 +199,5 @@ def histcount(bins, datagrid, binrange):
 
   # Divide by width of bins to obtain an histogram
   for i in range(1,len(bins)):
-   counts[i] /= float(bins[i]-bins[i-1])
+   counts[i] = float(counts[i]) / float(bins[i]-bins[i-1])
   return counts
