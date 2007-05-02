@@ -68,7 +68,7 @@ def directive_spline(command, vars, funcs):
   if 'select_criterion' in command: select_criteria = command['select_criterion']
   else                            : select_criteria = ''
   select_cont = True
-  if (('select_cont' in plotwords) and (plotwords['select_cont'][0] == 'd')):
+  if (('select_cont' in command) and (command['select_cont'][0] == 'd')):
    select_cont = False
 
   # smooth
