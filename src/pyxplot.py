@@ -1149,7 +1149,7 @@ def Interactive():   # Interactive PyXPlot terminal
           else                    : prompt = ".......> "
           input_cmd = raw_input(prompt)
           try: directive(input_cmd, interactive=True)
-          except KeyboardInterrupt: gp_report("Received SIGINT. Terminating command.")
+          except KeyboardInterrupt: gp_warning("Received SIGINT. Terminating command.")
         except KeyboardInterrupt: gp_report("") # CTRL-C at command-prompt just gives a new command prompt
       else:
         linenumber=linenumber+1
