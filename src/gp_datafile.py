@@ -97,7 +97,7 @@ def iterate_function(xrast, functions, xname, vars, funcs):
     try:    val = gp_eval.gp_eval(item,local_vars,funcs,verbose=False)
     except KeyboardInterrupt: raise
     # except: pass
-    except: datapoint.append('')
+    except: datapoint.append('Function evaluation failure') # Note that this is a magic value to trigger a subsequent error
     else:   datapoint.append(val)
    #if (len(datapoint) == (len(functions)+1)):
    # datagrid.append([[x for i in range(len(functions)+1)], x, datapoint])
@@ -124,7 +124,8 @@ def iterate_file(f):
      # if (csv_items==[]): data_list.extend(['']) # ,, means a blank data item
      # else              : data_list.extend(csv_items)
      data_list.extend(csv_items)
-    yield [[float(x) for x in data_list], Nchomped]
+    # yield [[float(x) for x in data_list], Nchomped]  # Don't want to float yet
+    yield [data_list, Nchomped]
     Nchomped = 0
 
 # MAKE_DATAGRID(): Make a big grid of data to be plotted given an iterator that
@@ -319,29 +320,40 @@ def make_datagrid(iterator, description, lineunit, index, usingrowcol, using_lis
     Npoints = min(Npoints, len(data_required[rowcol]['data'][rc][i]))
    # Iterate over the points in this block
    for j in range(Npoints):
-    try: # To evaluate this data point
-     data_item = []
-     invalid_datapoint = False
-     for rc in data_rcs: # For each point we cycle over all the rows
-      if (rc == 0):
-       vars_local['_gp_param0'] = data_counter
-      else:
-       point = data_required[rowcol]['data'][rc][i][j]
-       if point == '':  # Lack of a data point
-        invalid_datapoint = True
-        continue
-       else:
-        vars_local['_gp_param'+str(rc)] = float(point)
-     if invalid_datapoint: continue
+    # try: # To evaluate this data point
+    data_item = []
+    invalid_datapoint = False
 
-     if (lineunit != "line " and data_required[rowcol]['data'].has_key(1)):
-      linenumber = data_required[rowcol]['data'][1][i][j]  # Extract the x value of the point
-     # Find line number(s) associated with point if this is a data file
-     elif (rowcol == 'cols'): # Then this is nice
-      linenumber = "%d"%data_required['cols']['lineNs'][i][j]
+    # Get line number / x co-ordinate / whatever for error message purposes
+    if (lineunit != "line " and data_required[rowcol]['data'].has_key(1)):
+     linenumber = data_required[rowcol]['data'][1][i][j]  # Extract the x value of the point
+    # Find line number(s) associated with point if this is a data file
+    elif (rowcol == 'cols'): # Then this is nice
+     linenumber = "%d"%data_required['cols']['lineNs'][i][j]
+    else:
+     linenumber = ''.join(["%d, "%data_required['rows']['lineNs'][i][k] for k in data_rcs])
+
+    for rc in data_rcs: # For each point we cycle over all the rows / columns
+     if (rc == 0):
+      vars_local['_gp_param0'] = data_counter
      else:
-      linenumber = ''.join(["%d, "%data_required['rows']['lineNs'][i][k] for k in data_rcs])
+      point = data_required[rowcol]['data'][rc][i][j]
+      if point == '':  # Lack of a data point; silently ignore
+       invalid_datapoint = True
+       break
+      else:
+       try:
+        vars_local['_gp_param'+str(rc)] = float(point)
+       except:
+        invalid_datapoint = True
+        if (verb_errors): 
+         gp_warning("Warning: Could not evaluate data at %s%s %s."%(lineunit, linenumber, description))
+         errcount += 1
+         if (errcount > ERRORS_MAX): gp_warning("Warning: Not displaying any more errors for %s."%description) ; verb_errors = False
+        break
+    if invalid_datapoint: continue
 
+    try: # To evaluate this data point
      # Check whether this data point satisfies select() criteria
      if (select_criterion != ""):
       error_str = "Warning: Could not evaluate select criterion at %s%s %s."%(lineunit, linenumber, description)
