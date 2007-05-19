@@ -600,16 +600,14 @@ def multiplot_plot(linestyles,vars,funcs,settings):
       [deleted,x,y,rotation,width,height,filename,multiplot_number] = [ this_plotdesc[x] for x in ['deleted','x_pos','y_pos','rotation','width','height','filename','number'] ]
       if (deleted != 'ON'):
        try:
-        filename = os.path.join(gp_settings.cwd, os.path.expanduser(filename)) # Add path to user's cwd to input directory
-        fn_glob  = glob.glob(filename)
+        fn_glob  = glob.glob(os.path.join(gp_settings.cwd, os.path.expanduser(filename))) # Add path to user's cwd to input directory and glob
         assert len(fn_glob)>0,"FILE_NOT_FOUND"
-        filename = fn_glob[0]
-        multiplot_canvas.insert(bitmap.bitmap(xpos=x,ypos=y,width=width,height=height,image=bitmap.jpegimage(filename),compressmode=None), [trafo.rotate(rotation,x,y)])
+        multiplot_canvas.insert(bitmap.bitmap(xpos=x,ypos=y,width=width,height=height,image=bitmap.jpegimage(fn_glob[0]),compressmode=None), [trafo.rotate(rotation,x,y)])
        except KeyboardInterrupt: raise
        except:
         gp_error("Error printing jpeg image%s:"%plotname)
         if (sys.exc_info()[0] == exceptions.AttributeError): gp_error("Error: No width or height dimensions for the image were specified. Moreover, the image does not contain any internal indication of physical scale. PyXPlot does not know how to scale this image -- try specifying each 'width' or 'height' on the commandline.")
-        elif (sys.exc_info()[0] == exceptions.AssertionError) and (str(sys.exc_info()[1]) == "FILE_NOT_FOUND"): gp_error("Error: jpeg image file not found")
+        elif (sys.exc_info()[0] == exceptions.AssertionError) and (str(sys.exc_info()[1]) == "FILE_NOT_FOUND"): gp_error("Error: jpeg image file '%s' not found"%filename)
         else                                               : gp_error("Error: Problem encountered whilst decoding jpeg file. Is this really a jpeg image?")
         unsuccessful_plot_operations[multiplot_number] = 'ON'
 
@@ -617,15 +615,13 @@ def multiplot_plot(linestyles,vars,funcs,settings):
       [deleted,x,y,rotation,width,height,filename,multiplot_number] = [ this_plotdesc[x] for x in ['deleted','x_pos','y_pos','rotation','width','height','filename','number'] ]
       if (deleted != 'ON'):
        try:
-        filename = os.path.join(gp_settings.cwd, os.path.expanduser(filename)) # Add path to user's cwd to input directory
-        fn_glob  = glob.glob(filename)
+        fn_glob  = glob.glob(os.path.join(gp_settings.cwd, os.path.expanduser(filename))) # Add path to user's cwd to input directory and glob
         assert len(fn_glob)>0,"FILE_NOT_FOUND"
-        filename = fn_glob[0]
-        multiplot_canvas.insert(epsfile.epsfile(x=x,y=y,width=width,height=height,filename=filename), [trafo.rotate(rotation,x,y)])
+        multiplot_canvas.insert(epsfile.epsfile(x=x,y=y,width=width,height=height,filename=fn_glob[0]), [trafo.rotate(rotation,x,y)])
        except KeyboardInterrupt: raise
        except:
         gp_error("Error printing eps image%s:"%plotname)
-        if (sys.exc_info()[0] == exceptions.AssertionError) and (str(sys.exc_info()[1]) == "FILE_NOT_FOUND"): gp_error("Error: eps graphic file not found")
+        if (sys.exc_info()[0] == exceptions.AssertionError) and (str(sys.exc_info()[1]) == "FILE_NOT_FOUND"): gp_error("Error: eps graphic file '%s' not found"%filename)
         else: gp_error("Error: Problem encountered whilst decoding eps file. Is this really an eps graphic?")
         unsuccessful_plot_operations[multiplot_number] = 'ON'
  
