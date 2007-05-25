@@ -43,6 +43,10 @@ def gp_eval(expression, vars, funcs, verbose=True, iteration=1):
   try:
     # Quick escape route if we're just evaluating a variable name
     if expression in vars: return vars[expression]
+    # And also for really simple numbers
+    try: evalexp = float(expression)
+    except: pass
+    else: return evalexp
 
     # Evaluate any integral functions
     while 1:
