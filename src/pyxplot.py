@@ -850,6 +850,14 @@ def directive_set_unset(userinput):
      gp_error("Internal Error in PyXPlot set command. Please report as a PyXPlot bug with the following text:")
      gp_error("Unhandled user input was: %s"%userinput)
 
+# Directive history
+
+def directive_history(userinput):
+  Nhist = readline.get_current_history_length()
+  for i in range(Nhist):
+   item = readline.get_history_item(i)
+   print item
+
 # Main Directive Processor
 
 line_combiner = ""
@@ -945,6 +953,8 @@ def directive(line, toplevel=True, interactive=False):
     gp_report(gp_settings.cwd)
   elif (command['directive'] == "help"):         # help / ?
     gp_help.directive_help(command, interactive)
+  elif (command['directive'] == "history"):
+    directive_history(command)
   elif (command['directive'] == "load"):         # load
     main_loop([command['filename']])
   elif (command['directive'] == "save"):         # save

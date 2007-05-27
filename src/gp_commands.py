@@ -41,6 +41,7 @@ eps@2:directive = < %q:filename | %S:filename > ( at@2 %f:x ,@n %f:y ~ rotate@1 
 exit@2:directive:quit =
 fit@3:directive = [ \[@n { { %f:min } < :@n | to@n > { %f:max } } \]@n ]:range_list %v:fit_function \(@n [ %v:inputvar ]:operands, \)@n < %q:filename | %S:filename > ( every@1 [ { %d:every_item } ]:every_list: ~ index@1 %f:index ~ select@1 %E:select_criterion { < continuous@1:select_cont | discontinuous@1:select_cont > } ~ using@1 { < rows@1:use_rows | columns@1:use_columns > } [ %E:using_item ]:using_list: ) via@1 [ %v:fit_variable ]:fit_variables,
 help@2:directive = %r:topic 
+history@6:directive =
 histogram@2:directive = [ \[@n { { %f:min } < :@n | to@n > { %f:max } } \]@n ]:range_list %v:hist_function \()@2 < %q:filename | %S:filename > ( every@1 [ { %d:every_item } ]:every_list: ~ index@1 %f:index ~ select@1 %E:select_criterion { < continuous@1:select_cont | discontinuous@1:select_cont > } ~ using@1 { < rows@1:use_rows | columns@1:use_columns > } [ %E:using_item ]:using_list: ~ binwidth@4 %f:binwidth ~ binorigin@4 %f:binorigin ~ bins@n \(@n [ %f:x ]:bin_list, \)@n )
 < jpeg@1:directive | jpg@2:directive:jpeg > = < %q:filename | %S:filename > ( at@2 %f:x ,@n %f:y ~ rotate@1 %f:rotation ~ width@1 %f:width ~ height@1 %f:height )
 load@2:directive = < %q:filename | %S:filename >
