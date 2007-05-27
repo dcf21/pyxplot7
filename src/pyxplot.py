@@ -853,7 +853,15 @@ def directive_set_unset(userinput):
 # Directive history
 
 def directive_history(userinput):
-  Nhist = readline.get_current_history_length()
+  # Work out how many lines to write
+  if ('histlines' in userinput):
+   Nhist = userinput['histlines']
+   if (Nhist < 1):
+    gp_error("You can't have fewer than 1 lines of your history!")
+    return
+   Nhist = min(Nhist, readline.get_current_history_length())
+  else:
+   Nhist = readline.get_current_history_length()
   for i in range(Nhist):
    item = readline.get_history_item(i)
    print item
