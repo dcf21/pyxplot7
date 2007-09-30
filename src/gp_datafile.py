@@ -37,7 +37,7 @@ else: SCIPY_ABSENT = False
 ERRORS_MAX = 4
 
 # GP_DATAREAD(): Read a data file, selecting only every nth item from index m, using ....
-# This is now just a wrapper for make_datagrid
+#                This is just a wrapper for make_datagrid
 
 def gp_dataread(datafile, index, usingrowcol, using_list, select_criterion, select_cont, every_list, vars, funcs, style, verb_errors=True, firsterror=None):
   # Open input datafile
@@ -403,6 +403,13 @@ def evaluate_using(data_item, using_list, vars_local, funcs, style, firsterror, 
     if ((firsterror != None) and (k >= firsterror) and (value < 0.0)): # Check for negative error bars
      value = 0.0
      if (verb_errors): gp_warning("Warning: Negative errorbar detected %s%s %s."%(lineunit,fileline,description)) ; errcount+=1
+   elif (style[0] == "y"): # yerrorbar styles... first quoted error is y-error
+     if (k == 2) and (value > data_item[1]):
+      value = data_item[1]
+      if (verb_errors): gp_warning("Warning: y lower limit > x value %s%s %s."%(lineunit,fileline,description)) ; errcount+=1
+     if (k == 3) and (value < data_item[1]):
+      value = data_item[1]
+      if (verb_errors): gp_warning("Warning: y upper limit < x value %s%s %s."%(lineunit,fileline,description)) ; errcount+=1
    else: # This gets executed for all kinds of error ranges ; make sure that error ranges are sensible
     if (k == 2) and (value > data_item[0]):
      value = data_item[0]

@@ -1577,7 +1577,12 @@ def plot_dataset(multiplot_number,g,axes,axis_x,axis_y,plotwords,settings,title,
           plotwords['linetype'] = linecount
           linecount = linecount + 1
       stylelist.append(graph.style.errorbar(size=0.1*plotwords['pointsize']*settings['BAR'], errorbarattrs=[gp_settings.linestyle_list[(plotwords['linetype']-1)%len(gp_settings.linestyle_list)], lw, colour]))
-      stylelist.append(graph.style.symbol(size=0.1*plotwords['pointsize'], symbol=graph.style.symbol.plus, symbolattrs=[colour,lw]))
+      if (plotwords['pointtype'] < 0): stylelist.append(graph.style.symbol(size=0.1*plotwords['pointsize'], symbol=graph.style.symbol.plus, symbolattrs=[colour,lw]))
+      else:
+         for symboldata in gp_settings.symbol_list[(plotwords['pointtype']-1)%len(gp_settings.symbol_list)]:
+          if symboldata[1]: fillattr = [deco.filled([colour])]
+          else            : fillattr = []
+          stylelist.append(graph.style.symbol(size=0.1*plotwords['pointsize'], symbol=symboldata[0], symbolattrs=[colour,plw]+fillattr))
       if   (stylestr == 'xerrorbars'  ): dx = 3
       elif (stylestr == 'yerrorbars'  ): dy = 3
       elif (stylestr == 'xyerrorbars' ): dx = 3 ; dy = 4

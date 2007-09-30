@@ -96,8 +96,8 @@ def fit_residual(x, yerr=None, yerr_subs=1.0):
 #       i,j = The desired component of the Hessian matrix.
 
 def hessian_get(x_bestfit, yerr, yerr_subs, i, j):
-  epsilon_i = max(1e-50, abs(x_bestfit[i]*1e-6)) # Stepsize to use in numerical differentiation
-  epsilon_j = max(1e-50, abs(x_bestfit[j]*1e-6))
+  epsilon_i = max(1e-50, abs(x_bestfit[i]*1e-2)) # Stepsize to use in numerical differentiation
+  epsilon_j = max(1e-50, abs(x_bestfit[j]*1e-2))
   x_local   = x_bestfit.copy()
   d2L       = 0.0
 
