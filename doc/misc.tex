@@ -1,0 +1,107 @@
+\chapter{Other features}
+
+This Chapter describes a few additional features of PyXPlot.
+
+\section{The Commandline Environment}
+
+PyXPlot uses the GNU Readline command-line environment, which means that the up
+and down arrow keys can be used to repeat previously executed commands. Each
+user's command history is stored in his homespace in a history file called
+`\texttt{.pyxplot\_history}', allowing PyXPlot to remember command histories
+between sessions. Additionally, a \texttt{save} command is provided, allowing
+the user to save his command history from the present session to a text file;
+this has the following syntax:
+
+\begin{verbatim}
+save 'output_filename'
+\end{verbatim}
+
+From the shell command line, the PyXPlot accepts the following switches which
+modify its behaviour:\index{command line syntax}
+
+\begin{longtable}{p{3.5cm}p{8.5cm}}
+\texttt{-h --help} & Display a short help message listing the available command-line switches.\\
+\texttt{-v --version} & Display the current version number of PyXPlot.\\
+\texttt{-q --quiet} & Turn off the display of the welcome message on startup. \\
+\texttt{-V --verbose} & Display the welcome message on startup, as happens by default. \\
+\texttt{-c --colour} & Use colour highlighting\footnote{This will only function on terminals which support colour output.} to display output in green, warning messages in amber, and error messages in red.\footnote{The author apologies to those members of the population who are red/green colourblind, but draws their attention to the following sentence.} These colours can be changed in the \texttt{terminal} section of the configuration file; see Section~\ref{configuration} for more details. \\
+\texttt{-m --monochrome} & Do not use colour highlighting, as happens by default. \\
+\end{longtable}
+
+\section{Tabulating Functions and Slicing Data Files}
+
+PyXPlot includes a command that can be used to tabulate datafiles, that is, to
+produce a text file containing the values of the function at a set of points.
+For example, to produce a data file called {\tt sine.dat} with the principal
+values of the sine function:
+
+\begin{verbatim}
+set output 'sine.dat'
+tabulate [-pi:pi] sin(x)
+\end{verbatim}
+
+Multiple functions may be tabulated into the same file with the {\tt using}
+modifier:
+
+\begin{verbatim}
+tabulate [0:2*pi] sin(x):cos(x):tan(x) u 1:2:3:4
+\end{verbatim}
+
+The {\tt samples} setting can be used to control the number of points that are
+inserted into the data file.  If the $x$-axis is set to be logrithmic then the
+points at which the functions are evaluated are spaced logrithmically.
+
+The {\tt tabulate} command can also be used to select portions of data files.
+For example, to print the third, sixth and nineth columns of the datafile {\tt
+plot.1}, but only when the arcsine of the value in the fourth column is
+positive:
+
+\begin{verbatim}
+set output 'filtered.dat'
+tabulate 'plot.1' u 3:6:9 select (asin($4)>0)
+\end{verbatim}
+
+\noindent The {\tt select}, {\tt using} and {\tt every} modifiers operate in the
+same manner as with the {\tt plot} command.  The format statement used to print
+the output file is chosen automatically with integers and small numbers treated
+differently.  If desired, however, a format statement may be specified using the
+{\tt with format} specifier; it should be a standard python format string.  If
+there are not enough columns available in the supplied format statement it will
+be repeated for each line of the data file.
+
+\section{Script Watching: pyxplot\_watch}
+
+PyXPlot includes a simple tool for watching command script files, and executing
+them whenever they are modified. This may be useful when developing a command
+script, if one wants to make small modifications to it, and see the results in
+a semi-live fashion. This tool is invoked by calling the
+\texttt{pyxplot\_watch}\index{pyxplot\_watch}\index{watching scripts} command
+from a shell prompt. The command-line syntax of \texttt{pyxplot\_watch} is
+similar to that of PyXPlot itself, for example:
+
+\begin{verbatim}
+pyxplot_watch script
+\end{verbatim}
+
+\noindent would set \texttt{pyxplot\_watch} to watch the command script file
+\texttt{script}. One difference, however, is that if multiple script files are
+specified on the command line, they are watched and executed independently,
+\textit{not} sequentially, as PyXPlot itself would do. Wildcard characters can
+also be used to set \texttt{pyxplot\_watch} to watch multiple
+files.\footnote{Note that \texttt{pyxplot\_watch *.script} and
+\texttt{pyxplot\_watch $\backslash$*.script} will behave differently in most
+UNIX shells.  In the first case, the wildcard is expanded by your shell, and a
+list of files passed to \texttt{pyxplot\_watch}. Any files matching the
+wildcard, created after running \texttt{pyxplot\_watch}, will not be picked up.
+In the latter case, the wildcard is expanded by \texttt{pyxplot\_watch} itself,
+which \textit{will} pick up any newly created files.}
+
+This is especially useful when combined with GhostView's watch facility. For
+example, suppose that a script \texttt{foo} produces postscript output
+\texttt{foo.ps}. The following two commands could be used to give a live view
+of the result of executing this script:
+
+\begin{verbatim}
+gv --watch foo.ps &
+pyxplot_watch foo
+\end{verbatim}

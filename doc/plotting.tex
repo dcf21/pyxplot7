@@ -1,0 +1,565 @@
+\chapter{Plotting}
+\section{Chosing which data to plot}
+\label{select_modifier} 
+As well as the \texttt{index}, \texttt{using} and \texttt{every} keywords which
+allow users to plot subsets of data from datafiles, PyXPlot also has a further
+modifier, \index{select keyword@\texttt{select} keyword}. This can be used to
+plot only those datapoints in a datafile which specify some given criterion. For
+example:
+
+\begin{verbatim}
+plot 'datafile' select ($8>5)
+plot sin(x) select (($1>0) and ($2>0))
+\end{verbatim}
+
+In the second example, two select criteria are given, combined with the logical
+and operator\footnote{See Table~\ref{operators_table} for a list of all
+operators recognised by PyXPlot.}. The select modifier has many applications,
+including plotting two-dimensional slices from three-dimensional datasets, and
+selecting certain subsets of datapoints from a datafile for plotting.
+
+Logical operators such as \texttt{and}, \texttt{or} and \texttt{not} can be
+used, as seen in the second example above; indeed, any expression which is valid
+Python can be used.
+
+\section{Plot styles}
+
+The following basic plotting styles are supported by PyXPlot:
+\begin{itemize}
+\item dots -- places a small dot at each datum
+\item points -- places a marker symbol at each datum
+\item lines -- connects the data with lines
+\item linespoints -- a combination of both lines and points
+\item impulses -- draws a line from the $x$-axis up to each datum
+\end{itemize}
+
+When using the \texttt{points}, \texttt{linespoints} and \texttt{dots} plotting
+styles the size of the plotted points or dots can be varied with the
+\texttt{pointsize} modifier. For example, to display big dots, use:
+
+\begin{verbatim}
+plot sin(x) with dots pointsize 10
+\end{verbatim}
+
+The width of lines can similarly be controlled with the
+\texttt{linewidth}\index{linewidth modifier@\texttt{linewidth} modifier}.
+Similarly, the width of lines used to draw point symbols can be controlled with
+the \texttt{pointlinewidth}\index{pointlinewidth
+modifier@\texttt{pointlinewidth} modifier}.  For example:
+
+\begin{verbatim}
+plot sin(x) with points pointlinewidth 2
+\end{verbatim}
+
+\noindent
+Furthermore, \texttt{set pointlinewidth 2} will set the default linewidth to be
+used when drawing data points.  In both cases, the abbreviation \texttt{plw} is
+valid. 
+
+PyXPlot can plot datapoints using the
+standard upper- and lower-limit symbols.\index{lower-limit
+datapoints}\index{upper-limit datapoints} No special syntax is required for
+this; these symbols are pointtypes\footnote{The \texttt{pointtype} modifier was
+introduced in Section~\ref{pointtype_modifier}.} 12 and 13 respectively,
+obtained as follows:
+
+\begin{verbatim}
+plot 'upperlimits' with points pointtype 12
+plot 'lowerlimits' with points pointtype 13
+\end{verbatim}
+
+\subsection{\texttt{arrows} plot style}
+\label{arrows_plot_style} 
+
+The \index{arrows plot style@\texttt{arrows} plot style}
+takes four columns of data, $x_1$, $y_1$, $x_2$, $y_2$, and for each data point
+draws an arrow from the point $(x_1,y_1)$ to $(x_2,y_2)$.  Three different kinds
+of arrows can be drawn: ones with normal arrow heads, ones with no arrow heads,
+which just appear as lines, and ones with arrow heads on both ends. The syntax
+is:
+
+\begin{verbatim}
+plot 'datafile' with arrows_head
+plot 'datafile' with arrows_nohead
+plot 'datafile' with arrows_twohead
+\end{verbatim}
+
+The syntax `\texttt{with arrows}' is a shorthand for `\texttt{with arrows\_head}'.
+
+
+\subsection{Plotting with error bars}
+
+\index{errorbars}\label{errorbars}
+In gnuplot, when one used
+errorbars, one could either specify the size of the errorbar, or the min/max
+range of the errorbar. Both of these usages shared a common syntax, and
+gnuplot's behaviour depended upon the number of data columns provided:
+
+\begin{verbatim}
+plot 'datafile' with yerrorbars
+\end{verbatim}
+
+\noindent Given a datafile with three columns, this would take the third column
+to indicate the size of the $y$-errorbar, and given a four-column datafile, it
+would take the third and fourth columns to indicate the min/max range to be
+marked out by the errorbar.
+
+To avoid confusion, a different syntax is adopted in PyXPlot. The syntax:
+
+\begin{verbatim}
+plot 'datafile' with yerrorbars
+\end{verbatim}
+
+\noindent now always assumes the third column of the datafile to indicate the
+size of the errorbar, regardless of whether a fourth is present. The syntax:
+
+\begin{verbatim}
+plot 'datafile' with yerrorrange
+\end{verbatim}
+
+\noindent always assumes the third and fourth columns to indicate the min/max
+range of the errorbar.
+
+\vspace{0.5cm}
+For clarity, a complete list of errorbar styles is given below:
+
+\begin{tabular}{p{2.5cm}p{5.5cm}}
+\texttt{yerrorbars} & Vertical errorbars; size drawn from the third data-column. \\
+\texttt{xerrorbars} & Horizontal errorbars; size drawn from the third data-column. \\
+\texttt{xyerrorbars} & Horizontal and vertical errorbars; sizes drawn from the third and fourth data-columns respectively.\\
+\texttt{errorbars} & Shorthand for \texttt{yerrorbars}. \\
+\end{tabular}
+
+\begin{tabular}{p{2.5cm}p{5.5cm}}
+\texttt{yerrorrange} & Vertical errorbars; minimum drawn from the third data-column, maximum from the fourth.\\
+\texttt{xerrorrange} & Horizontal errorbars; minimum drawn from the third data-column, maximum from the fourth.\\
+\texttt{xyerrorrange} & Horizontal and vertical errorbars; horizontal minimum drawn from the third data-column, and maximum from the fourth; vertical minimum drawn from the fifth, and maximum from the sixth.\\
+\texttt{errorrange} & Shorthand for \texttt{yerrorrange}. \\
+\end{tabular}
+
+In gnuplot, when a function (as opposed to a datafile) is plotted, only those
+plot styles which accept two columns of data can be used -- for example,
+\texttt{lines} or \texttt{points}. It is not possible to plot a function with
+errorbars, for example. In PyXPlot, by contrast, this is possible using the
+following syntax:
+
+\begin{verbatim}
+plot f(x):g(x) with yerrorbars
+\end{verbatim}
+
+Two functions are supplied, separated by a colon; plotting proceeds as if a
+datafile had been supplied, containing values of $x$ in column 1, values of
+$f(x)$ in column 2, and values of $g(x)$ in column 3. This may be useful, for
+example, if $g(x)$ measures the intrinsic uncertainty in $f(x)$. The
+\texttt{using} modifier may also be used:
+
+\begin{verbatim}
+plot f(x):g(x) using 2:3
+\end{verbatim}
+
+Here, $g(x)$ would be plotted on the $y$-axis, against $f(x)$ on the $x$-axis.
+It should be noted, however, that the range of values of $x$ used would still
+correspond to the range of the plot's horizontal axis. If the above were to be
+attempted with an autoscaling horizontal axis, the result might be rather
+unexpected -- PyXPlot would find itself autoscaling the $x$-axis range to the
+spread of values of $f(x)$, but find that this itself changed depending upon
+the range of the $x$-axis.
+
+\section{Horizontally arranged datafiles}
+
+\index{horizontal
+datafiles}\index{datafiles!horizontal}\index{using rows modifier@\texttt{using
+rows} modifier}\index{using columns modifier@\texttt{using columns}
+modifier}\label{horizontal_datafiles} 
+The command syntax for plotting
+columns of datafiles against one another was previously described in
+Section~\ref{plot_datafiles}.  In an extension of gnuplot's interface, it is
+also possible to plot \textit{rows} of data against one another in
+horizontally-arranged datafiles.  For this, the keyword `\texttt{rows}' is
+placed after the \texttt{using} modifier:\index{rows keyword@\texttt{rows} keyword}
+
+\begin{verbatim}
+plot 'datafile' index 1 using rows 1:2
+\end{verbatim}
+
+The syntax `\texttt{using columns}' is also accepted, to specify the default
+behaviour of plotting columns against one another:\index{columns keyword@\texttt{columns} keyword}
+
+\begin{verbatim}
+plot 'datafile' index 1 using columns 1:2
+\end{verbatim}
+
+When plotting horizontally-arranged datafiles, the meanings of the
+\texttt{index} and \texttt{every} modifiers (see Section~\ref{plot_datafiles})
+are altered slightly. The former continues to refer to vertical blocks of data
+separated by two blank lines.  Blocks, as referenced in the \texttt{every}
+modifier, continue to be vertical blocks of datapoints, separated by single
+blank lines. The row numbers passed to the \texttt{using} modifier are counted
+from the top of the current block.
+
+However, the line-numbers specified in the \texttt{every} modifier -- i.e.
+variables $a$, $c$ and $e$ in the system above -- now refer to horizontal
+columns, rather than lines. For example:
+
+\begin{verbatim}
+plot 'datafile' using rows 1:2 every 2::3::9
+\end{verbatim}
+
+\noindent would plot the data in row 2 against that in row 1, using only the
+values in every other column, between columns 3 and 9.
+
+
+\section{Barcharts and Histograms}
+\label{barcharts}\index{bar charts}
+\index{steps plot style@\texttt{steps} plot style}
+\index{fsteps plot style@\texttt{fsteps} plot style}
+\index{histeps plot style@\texttt{histeps} plot style}
+\index{impulses plot style@\texttt{impulses} plot style}
+\index{set boxfrom command@\texttt{set boxfrom} command}
+
+\subsection{Basic Operation}
+
+As in gnuplot, bar charts and histograms can be produced using the
+\texttt{boxes}\index{boxes plot style@\texttt{boxes} plot style} plot style:
+
+\begin{verbatim} 
+plot 'datafile' with boxes
+\end{verbatim}
+
+\noindent Horizontally, the interfaces between the bars are, by default, at the
+midpoints along the $x$-axis between the specified datapoints (see, for
+example, Panel~(a) of Figure~\ref{fig:ex_barchart2}).  Alternatively, the
+widths of the bars may be set using the \texttt{set boxwidth} command. In this
+case, all of the bars will be centred upon their specified $x$-coordinates, and
+have total widths equalling that specified in the \texttt{set
+boxwidth}\index{set boxwidth command@\texttt{set boxwidth} command} command.
+Consequently, there may be gaps between them, or they may overlap, as seen in
+Panel~(c) of Figure~\ref{fig:ex_barchart2}.
+
+\begin{figure}
+\begin{center}
+\includegraphics{examples/eps/ex_barchart2.eps}
+\end{center}
+\caption{A gallery of different bar chart styles which PyXPlot can produce. See the text for more details.}
+\label{fig:ex_barchart2}
+\end{figure}
+
+Having set a fixed box width, the default automatic width mode may be restored
+either with the \texttt{unset boxwidth} command, or by setting the boxwidth to
+a negative width.
+
+As a third alternative, it is also possible to specify different widths for
+each bar manually, in a column of the input datafile. For this, the
+\texttt{wboxes}\index{wboxes plot style@\texttt{wboxes} plot style} plot style
+should be used:
+
+\begin{verbatim} 
+plot 'datafile' using 1:2:3 with wboxes
+\end{verbatim}
+
+\noindent This plot style expects three columns of data to be specified: the
+$x$- and $y$-coordinates of each bar, and the width in the third column.
+Panel~(b) of Figure~\ref{fig:ex_barchart2} shows an example of this plot style
+in use.
+
+By default, the bars all originate from the line $y=0$, as is normal for a
+histogram. However, should it be desired for the bars to start from a different
+vertical point, that may be achieved with the \texttt{set boxfrom} command, for
+example:
+
+\begin{verbatim} 
+set boxfrom 5
+\end{verbatim}
+
+\noindent All of the bars would then originate from the line $y=5$. Panel~(f)
+of Figure~\ref{fig:ex_barchart1} shows the kind of effect that is achieved; for
+comparison, panel~(b) of the same figure shows the same bar chart with the
+boxes starting from their default position at $y=0$.
+
+\begin{figure}
+\begin{center}
+\includegraphics{examples/eps/ex_barchart1.eps}
+\end{center}
+\caption{A second gallery of different bar chart styles which PyXPlot can produce. See the text for more details.}
+\label{fig:ex_barchart1}
+\end{figure}
+
+The bars may be filled using the \texttt{with fillcolour}\index{fillcolour
+modifier@\texttt{fillcolour} modifier} modifier, followed by the name of a
+colour:
+
+\begin{verbatim} 
+plot 'datafile' with boxes fillcolour blue
+plot 'datafile' with boxes fc 4
+\end{verbatim}
+
+\noindent Panels~(c) and (d) of Figure~\ref{fig:ex_barchart2} demonstrate the
+use of filled bars.
+
+Finally, the \texttt{impulses} plot style, as in gnuplot, produces bars of zero
+width; see Panel~(e) of Figure~\ref{fig:ex_barchart1} for an example.
+
+\subsection{Stacked Bar Charts}
+
+If several datapoints are supplied at a common $x$-coordinate to the
+\texttt{boxes} or \texttt{wboxes} plot styles, then the bars are stacked one
+above another into a stacked barchart. Consider the following datafile:
+
+\begin{verbatim} 
+1 1
+2 2
+2 3
+3 4
+\end{verbatim}
+
+The second bar at $x=2$ would be placed on top of the first, spanning the range
+$2<y<5$, and having the same width as the first. If plot colours are being
+automatically selected from the palette, then a different palette colour is
+used to plot the upper bar.
+
+\subsection{Steps}
+
+As an alternative to solid boxes, a graph may also be plotted with ``steps'';
+see Panels~(a), (c) and (d) of Figure~\ref{fig:ex_barchart1} for examples. As
+is illustrated by these panels, three flavours of steps are available (exactly
+as in gnuplot):
+
+\begin{verbatim}
+plot 'datafile' with steps 
+plot 'datafile' with fsteps 
+plot 'datafile' with histeps
+\end{verbatim}
+
+When using the \texttt{steps} plot style, the datapoints specify the right-most
+edges of each step. By contrast, they specify the left-most edges of the steps
+when using the \texttt{fsteps} plot style. The \texttt{histeps} plot style
+works rather like the \texttt{boxes} plot style; the interfaces between the
+steps occur at the horizontal midpoints between the datapoints.
+
+
+
+
+\section{Multi-plotting}
+\label{multiplot}
+\index{multiplot}
+
+Gnuplot has a plotting mode called ``multiplot'' which allows many graphs to be
+plotted together, and display side-by-side. The basic syntax of this mode is
+reproduced in PyXPlot, but is hugely extended.
+
+The mode is entered by the command ``\texttt{set multiplot}''. This can be compared
+to taking a blank sheet of paper on which to place plots. Plots are then placed
+on that sheet of paper, as usual, with the \texttt{plot} command. The position
+of each plot is set using the \texttt{set origin} command, which takes a
+comma-separated $x,y$ coordinate pair, measured in centimetres. The following,
+for example, would plot a graph of $\sin(x)$ to the left of a plot of
+$\cos(x)$:\index{set origin command@\texttt{set origin} command}
+
+\begin{verbatim} 
+set multiplot
+plot sin(x)
+set origin 10,0
+plot cos(x)
+\end{verbatim}
+
+The multiplot page may subsequently be cleared with the \texttt{clear} command,
+and multiplot mode may be left using the ``\texttt{set nomultiplot}''
+command.\index{clear command@\texttt{clear} command}
+
+\subsection{Deleting, Moving and Changing Plots}
+
+Each time a plot is placed on the multiplot page in PyXPlot, it is allocated a
+reference number, which is output to the terminal. Reference numbers count up
+from zero each time the multiplot page is cleared. A number of commands exist
+for modifying plots after they have been placed on the page, selecting them by
+making reference to their reference numbers.
+
+Plots may be removed from the page with the \texttt{delete} command, and
+restored with the \texttt{undelete} command:\index{delete
+command@\texttt{delete} command}\index{undelete command@\texttt{undelete}
+command}
+
+\begin{verbatim} 
+delete <number>
+undelete <number>
+\end{verbatim}
+
+The reference numbers of deleted plots are not reused until the page is
+cleared, as they may always be restored with the \texttt{undelete} command;
+plots which have been deleted simply do not appear.
+
+Plots may also be moved with the \texttt{move} command. For example, the
+following would move plot 23 to position (8,8) measured in centimetres:
+
+\begin{verbatim} 
+move 23 to 8,8
+\end{verbatim}
+
+In multiplot mode, the \texttt{replot} command can be used to modify the last
+plot added to the page. For example, the following would change the title of
+the latest plot to ``foo'', and add a plot of $\cos(x)$ to it:
+
+\begin{verbatim} 
+set title 'foo'
+replot cos(x)
+\end{verbatim}
+
+Additionally, it is possible to modify any plot on the page, by first selecting
+it with the \texttt{edit} command. Subsequently, the \texttt{replot} will act
+upon the selected plot. The following example would produce two plots, and then
+change the colour of the text on the first:
+
+\begin{verbatim} 
+set multiplot
+plot sin(x)
+set origin 10,0
+plot cos(x)
+edit 0        # Select the first plot ...
+set textcolour red
+replot        # ... and replot it.
+\end{verbatim}
+
+The \texttt{edit} command can also be used to view the settings which are
+applied to any plot on the multiplot page -- after executing ``edit 0'', the
+\texttt{show} command will show the settings applied to plot zero.
+
+When a new plot is added to the page, \texttt{replot} always switches to act
+upon this most recent plot.
+
+\index{refresh command@\texttt{refresh} command}\index{replotting}
+\index{replot command@\texttt{replot} command} The \texttt{refresh} command is
+rather similar to the \texttt{replot} command, but produces an exact copy of
+the latest display. This can be useful, for example, after changing the
+terminal type, to produce a second copy of a multiplot page in a different
+format. But the crucial difference between this command and \texttt{replot} is
+that it doesn't replot anything. Indeed, there could be only textual items and
+arrows on the present multiplot page, and no graphs \textit{to} replot.
+
+\subsection{Linked Axes}
+
+The axes of plots can be linked together, in such a way that they always share
+a common scale. This can be useful when placing plots next to one another,
+firstly, of course, if it is of intrinsic interest to ensure that they are on a
+common scale, but also because the two plots then do not both need their own
+axis labels, and space can be saved by one sharing the labels from the other.
+In PyXPlot, an axis which borrows its scale and labels from another is called a
+``linked axis''.
+
+Such axes are declared by setting the label of the linked axis to a magic
+string such as ``\texttt{linkaxis 0}''\label{linked_axes}\index{axes!reserved
+labels}\index{magic axis labels}. This magic label would set the axis to borrow
+its scale from an axis from plot zero. The general syntax is
+``\texttt{linkaxis} $n$ $m$'', where $n$ and $m$ are two integers, separated by
+a comma or whitespace. The first, $n$, indicates the plot from which to borrow
+an axis; the second, $m$, indicates whether to borrow the scale of axis $x1$,
+$x2$, $x3$, etc. By default, $m=1$. The linking will fail, and a warning
+result, if an attempt is made to link to an axis which doesn't exist.
+
+\subsection{Text Labels, Arrows and Images}
+
+\label{text_command}\index{text command@\texttt{text} command} In addition to
+placing plots on the multiplot page, text labels may also be inserted
+independently of any plots, using the \texttt{text} command. This has the
+following syntax:
+
+\begin{verbatim} 
+text 'This is some text' at x,y
+\end{verbatim}
+
+In this case, the string ``This is some text'' would be rendered at position
+$(x,y)$ on the multiplot. As with the \texttt{set label} command, a rotation
+angle may optionally be specified to rotate text labels through any given
+angle, measured in degrees counter-clockwise, for example:
+
+\begin{verbatim} 
+text 'This is some text' at x,y rotate r
+\end{verbatim}
+
+The commands \texttt{set textcolour}, \texttt{set
+texthalign} and \texttt{set textvalign}, which have already been described in
+the context in the \texttt{set label} command, can also be used to set the
+colour and alignment of text produced with the \texttt{text} command.\index{set
+textcolour command@\texttt{set textcolour} command}\index{set texthalign
+command@\texttt{set texthalign} command}\index{set textvalign
+command@\texttt{set textvalign} command}. A useful application of this is to
+produce centred headings at the top of multiplots.
+
+As with plots, each text item has a unique identification number, and can be
+moved around, deleted or undeleted with the \texttt{delete}, \texttt{undelete}
+and \texttt{move} commands.
+\index{delete command@\texttt{delete} command}
+\index{undelete command@\texttt{undelete} command}
+
+It should be noted that the \texttt{text} command can also be used outside of
+the multiplot environment, to render a single piece of short text instead of a
+graph. One obvious application is to produce equations rendered as graphical
+files for inclusion in talks.
+
+\label{arrows} \index{arrow command@\texttt{arrow} command} Arrows may also be
+placed on multiplot pages, independently of any plots, using the \texttt{arrow}
+command, which has syntax:
+
+\begin{verbatim} 
+arrow from x,y to x,y
+\end{verbatim}
+
+As above, arrows receive unique identification numbers, and can be deleted and
+undeleted.
+
+The \texttt{arrow} command may be followed by the `\texttt{with}' keyword to
+specify to style of the arrow. The style keywords which are accepted are
+identical to those accepted by the \texttt{set arrow} command (see
+Section~\ref{set_arrow}). For example:
+
+\begin{verbatim} 
+arrow from x1,y1 to x2,y2 \
+with twohead colour red
+\end{verbatim}
+
+\index{jpeg command@\texttt{jpeg} command} Bitmap images in jpeg form may be
+placed on the multiplot using the {\tt jpeg} command.  This has syntax:
+
+\begin{verbatim}
+jpeg 'filename' at x,y width w
+\end{verbatim}
+
+As an alternative to the {\tt width} modifier the height of the image can be
+specified, using the analogous {\tt height} modifier.  An optional angle can
+also be specified using the {\tt rotate} modifier; this causes the included
+image to be rotated counter-clockwise by a specified angle (in degrees).
+
+\index{eps command@\texttt{eps} command} Vector graphic images in eps format may
+be placed on to a multiplot using the {\tt eps} command, which has a syntax
+analogous to the {\tt jpeg} command.  However neither height nor width need be
+specified; in this case the image will be included at its native size.  For
+example:
+
+\begin{verbatim}
+eps 'filename' at 3,2 rotate 5
+\end{verbatim}
+
+\noindent will place the eps file with its bottom-left corner at position
+$(3,2)$ cm from the origin, rotated counter-clockwise through 5 degrees.
+
+\subsection{Speed Issues}
+\label{set_display}
+
+By default, whenever an item is added to a multiplot, or an existing item moved
+or replotted, the whole multiplot is replotted to show the change. This can be
+a time consuming process on large and complex multiplots. For this reason, the
+\texttt{set nodisplay}\index{set display command@\texttt{set display} command}
+command is provided, which stops PyXPlot from producing any output. The
+\texttt{set display} command can subsequently be issued to return to normal
+behaviour.
+
+This can be especially useful in scripts which produce large multiplots. There
+is no point in producing output at each step in the construction of a large
+multiplot, and so a great speed increase can be achieved by wrapping the script
+with:
+
+\begin{verbatim} 
+set nodisplay
+[...prepare large multiplot...]
+set display
+refresh
+\end{verbatim}

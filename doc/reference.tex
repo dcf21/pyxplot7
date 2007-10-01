@@ -1,0 +1,2197 @@
+\chapter{Command Reference}
+
+This chapter contains an alphabetically ordered list of all the commands that
+PyXPlot understands.
+
+\section{arrow}\index{arrow command@\texttt{arrow} command}
+
+\begin{verbatim}
+arrow [from] <x>, <y> [to] <x>, <y> [with <option> ... ]
+\end{verbatim}
+
+Arrows may be placed on multiplot pages independently of any plots using the
+{\tt arrow} command, which has syntax:
+
+\begin{verbatim}
+arrow from x,y to x,y
+\end{verbatim}
+
+The arrow command may be followed by the `{\tt with}' keyword to specify to
+style of the arrow. The style keywords which are accepted are `{\tt nohead}',
+`{\tt head}' (default) or `{\tt twohead}', in addition to keywords such as `{\tt
+colour}', `{\tt linewidth}' or `{\tt linetype}', which have the same syntax and
+meaning as they do in the plot command. An example would be:
+
+\begin{verbatim}
+arrow from x,y to x,y with twohead linetype 2 colour blue
+\end{verbatim}
+
+Arrows receive unique identification numbers which count sequentially from one,
+and which are output to the terminal after the arrow command is called. By
+reference to these numbers, they can later be deleted and undeleted with the
+{\tt delete} and {\tt undelete} commands respectively. For example:
+
+\begin{verbatim}
+delete 2
+\end{verbatim}
+
+\section{cd}\index{cd command@\texttt{cd} command}
+
+\begin{verbatim}
+cd <directory>
+\end{verbatim}
+
+PyXPlot's {\tt cd} command is very similar to the shell cd command; it can be used to
+change the current working directory. For example:
+
+\begin{verbatim}
+cd foo
+\end{verbatim}
+
+
+\section{clear}\index{clear command@\texttt{clear} command}
+
+\begin{verbatim}
+clear
+\end{verbatim}
+
+In multiplot mode the {\tt clear} command removes all current plots, arrows and
+text objects from the working page. In single plot mode it is not especially
+useful; it removes the current plot to leave a blank page.
+
+The {\tt clear} command should not be followed by any parameters.
+
+
+\section{delete}\index{delete command@\texttt{delete} command}
+
+\begin{verbatim}
+delete <plot number>, ...
+\end{verbatim}
+
+The {\tt delete} command is part of the multiplot environment; it removes
+plots, arrows or text items from a multiplot page. The desired items should be
+identified using a comma-separated list of their reference numbers, which count
+sequentially from zero for the first item created on a multiplot page, and are
+displayed on the terminal when items are created.  For example:
+
+\begin{verbatim}
+delete 1,2,3
+\end{verbatim}
+
+\noindent removes item numbers 1, 2 and 3.
+
+Having been deleted, multiplot items can be restored using the {\tt undelete}
+command.
+
+\section{edit}\index{edit command@\texttt{edit} command}
+
+\begin{verbatim}
+edit <plot number>
+\end{verbatim}
+
+The {\tt edit} command is part of the multiplot environment; it allows one to
+modify the properties of any plot on a multiplot. The desired plot should be
+identified using the reference number which it was given when it was created
+using the {\tt plot} command; it would have been displayed on the terminal at
+that time. For example, consider the following command sequence:
+
+\begin{verbatim}
+edit 1
+set textcolour red
+replot
+\end{verbatim}
+
+Here, the {\tt edit} command sets the following {\tt set textcolour} command to
+affect the plot with reference number 1 -- the first plot which would have been
+placed on the multiplot. The {\tt set textcolour red} command then affects this
+plot, although does not take effect until the {\tt replot} command is called.
+
+The {\tt edit} command also has the effect of resetting all of PyXPlot's plot
+settings to those used to produce the chosen plot, and so in conjunction with
+the {\tt show} command, can be used to inspect as well as modify the settings of
+any plot on a multiplot page. For example:
+
+\begin{verbatim}
+edit 1
+show textcolour
+\end{verbatim}
+
+\noindent would show the text colour used in plot 1.
+
+Having issued the {\tt edit} command, no further command needs to be issued to
+return to a state of adding plots to a multiplot rather than editing the
+existing plots; simply call the {\tt plot} command rather than the {\tt replot}
+command to do this.
+
+
+\section{eps}\index{eps command@\texttt{eps} command}
+
+\begin{verbatim}
+eps '<filename>' [at <x>, <y>] [rotate <angle>] [width <width>]
+                 [height <height>]
+\end{verbatim}
+
+The {\tt eps} command places an eps format file into the current plot.  The
+{\tt at} modifier can be used to specify the position of the bottom-left corner
+of the file, otherwise it is placed at the origin.  If the {\tt rotate} modifier
+is used the image is rotated by the specified angle counter-clockwise.  Either
+the {\tt width} or {\tt height} can be specified, followed by the width or
+height respectively in cm that the resulting image should be; otherwise the
+native file width will be used.  The {\tt eps} command is perhaps most useful in
+multiplot mode, where included files can be combined with plots, text labels,
+etc.
+
+\section{exit}\index{exit command@\texttt{exit} command}
+
+\begin{verbatim}
+exit
+\end{verbatim}
+
+The {\tt exit} command can be used to quit PyXPlot. If multiple command files,
+or a mixture of command files and interactive sessions, are specified on the
+command line, then PyXPlot moves onto the next command-line item after receiving
+the {\tt exit} command.
+
+PyXPlot may also be quit be pressing CTRL-D or via the {\tt quit} command. In
+interactive mode, CTRL-C terminates the current command, if one is running.
+When running a script, CTRL-C terminates execution of it.
+
+
+\section{fit}\index{fit command@\texttt{fit} command}
+
+\begin{verbatim}
+fit [<range specifier> ...] <function> '<datafile>'
+    [index <index specifier>] [using <using specifier>]
+    via <variable>[, <variable>, ...]
+\end{verbatim}
+
+The {\tt fit} command may be used to fit functional forms to data points in
+datafiles. A simple example might be:
+
+\begin{verbatim}
+f(x) = a*x+b
+fit f(x) 'datafile' index 1 using 2:3 via a,b
+\end{verbatim}
+
+\noindent The coefficients to be varied are listed after the keyword `{\tt
+via}'; the keywords `{\tt index}', `{\tt every}' and `{\tt using}' have the
+same meanings as in the {\tt plot} command.
+
+This is useful for producing best-fit lines and also has applications for
+estimating the gradients of datasets.  The syntax is essentially identical to
+the used by gnuplot, though a few points are worth noting, which are outlined
+in Section~\ref{fit_command}.
+
+\section{help}\index{help command@\texttt{help} command}
+
+\begin{verbatim}
+help [<topic> [<sub-topic> ... ] ]
+\end{verbatim}
+
+The {\tt help} command provides an easily-navigable source of information which
+is supplementary to that in this manual.  To obtain information on any
+particular topic, type {\tt help} followed by the name of the topic. For
+example:
+
+\begin{verbatim}
+help commands
+\end{verbatim}
+
+\noindent provides information on PyXPlot's commands. Some topics have subtopics; these
+are listed at the end of each help page. To view them, add further words to the
+end of your help request -- an example might be:
+
+\begin{verbatim}
+help commands help
+\end{verbatim}
+
+Information is arranged with general information about PyXPlot under the heading
+{\tt about}, and information about PyXPlot's commands under {\tt commands}.
+Information about the format that input datafiles should take can be found
+under {\tt datafile}.  Other categories are self-explanatory.
+
+To exit any help page, press the `{\tt q}' key.
+
+\section{histogram}\index{histogram command@\texttt{histogrram} command}
+
+\begin{verbatim}
+histogram [range specification] <function name> '<datafile>' 
+     [using <using specifier>] [select <select specifier>]
+     [index <index specifier>] [every <every specifier>]
+     [binwidth <bin width>] [binorigin <bin origin>]
+     [bins (x1, x2, ...)]
+\end{verbatim}
+
+The {\tt histogram} command takes a datafile and counts the number of points in
+various bins, producing a function the area under which is equal to the number
+of points for each bin.  The width and starting position of the bins can be
+specified using the {\tt binwidth} and {\tt binorigin} modifiers, or a
+user-supplied set of bins can be used with the {\tt bins} modifier.  For
+example:
+
+\begin{verbatim}
+histogram f() 'badgers.dat' u 2 binwidth 2
+\end{verbatim}
+
+\noindent bins the data in the second column of the {\tt badgers.dat} file into
+bins of width 2.
+
+\section{jpeg}\index{jpeg command@\texttt{jpeg} command}
+
+\begin{verbatim}
+jpeg '<filename>' [at <x>, <y>] [rotate <angle>] [width <width>]
+                  [height <height>]
+\end{verbatim}
+
+The {\tt jpeg} command places a jpeg format bitmap image into the current plot.
+The {\tt at} modifier can be used to specify the position of the bottom-left
+corner of the image, otherwise it is placed at the origin.  If the {\tt rotate}
+modifier is used the image is rotated by the specified angle counter-clockwise.
+Either the {\tt width} or {\tt height} modifier should be specified, followed by
+the width or height respectively in cm that the resulting image should be.  The
+{\tt jpeg} command is perhaps most useful in multiplot mode, where images can be
+combined with plots, text labels, etc.
+
+\section{load}\index{load command@\texttt{load} command}
+
+\begin{verbatim}
+load '<filename>'
+\end{verbatim}
+
+The {\tt load} command executes a PyXPlot command script file, just as if its
+contents had been typed into the current terminal. For example:
+
+\begin{verbatim}
+load 'foo'
+\end{verbatim}
+
+\noindent would have the same effect as typing the contents of the file foo
+into the present session.
+
+Wildcards can be used in the load command, in which case \textit{all}
+commandfiles matching the given wildcard are executed, for example:
+
+\begin{verbatim}
+load '*.script'
+\end{verbatim}
+
+
+\section{move}\index{move command@\texttt{move} command}
+
+\begin{verbatim}
+move <plot number> to <x>, <y>
+\end{verbatim}
+
+The {\tt move} command is part of the multiplot environment; it can be used to
+move items around on a multiplot page. The desired item to be moved should be
+identified using the reference number which it was given when it was created;
+it would have been displayed on the terminal at that time. For example:
+
+\begin{verbatim}
+move 23 to 8,8
+\end{verbatim}
+  
+\noindent This would move multiplot item 23 to position 8,8 (measured in
+centimetres). If this item were a plot, the end result would be the same as if
+the command {\tt set origin 8,8} had been called before it had originally been
+plotted.
+
+\section{!}\index{! command@! command}
+
+\begin{verbatim}
+! <shell command>
+<command> `<shell command>` ...
+\end{verbatim}
+
+Shell commands can be executed from within PyXPlot by pre-fixing them with
+pling (!) characters, for example:
+
+\begin{verbatim}
+!mkdir foo
+\end{verbatim}
+
+\noindent As an alternative, back-quotes (`) can be used to substitute the
+output of a shell command into a PyXPlot command, for example:
+
+\begin{verbatim}
+set xlabel `echo "'" ; ls ; echo "'"`
+\end{verbatim}
+
+\noindent Note that back-quotes cannot be used inside quote characters, and so
+the following would \textit{not} work:
+
+\begin{verbatim}
+set xlabel '`ls`'
+\end{verbatim}
+
+
+\section{plot}\index{plot command@\texttt{plot} command}
+
+\begin{verbatim}
+plot [<range specifier> ...] ('<filename>'|<function>)
+     [using <using specifier>] [axes <axis specifier>]
+     [select <select specifier>]
+     [index <index specifier>]
+     [every <every specifier>]
+     [with <style> [<style modifier> ... ] ]
+\end{verbatim}
+
+The {\tt plot} command is the main workhorse command of PyXPlot, which is used
+to produce all plots. For example to plot the sine function:
+
+\begin{verbatim}
+plot sin(x)
+\end{verbatim}
+
+Ranges for the axes of a graph can be specified by placing them in
+square-brackets before the name of the function to be plotted. Leaving a set of
+brackets empty specifies that an axis will be automatically scaled, as happens
+by default. An example of this syntax would be:
+
+\begin{verbatim}
+plot [-pi:pi] sin(x)
+\end{verbatim}
+
+\noindent which would plot the function $\sin(x)$ across some default range of
+values on the $x$-axis.
+
+Datafiles may also be plotted as well as functions, in which case the filename
+of the datafile to be plotted should be enclosing in apostrophes. An example of
+this syntax would be:
+
+\begin{verbatim}
+plot 'datafile' with points
+\end{verbatim}
+
+\noindent which would plot the file called `{\tt datafile}'.  Section
+\ref{plot_datafiles} should be studied for further details of the format that is
+expected of input datafiles, and how PyXPlot may be directed to plot only
+certain portions of datafiles.
+
+In plots which have multiple parallel axes -- for example, an $x$-axis along its
+lower edge and an $x2$-axis along its upper edge -- the pair of axes against
+which data should be plotted should be specified using the modifier {\tt axes}
+following the name of the function or datafile to be plotted, for example:
+
+\begin{verbatim}
+plot sin(x) axes x2y1
+\end{verbatim}
+
+The style in which data should be plotted may be specified following the
+modifier {\tt with}, with the following syntax:
+
+\begin{verbatim}
+plot sin(x) with points
+\end{verbatim}
+
+The following plot styles are recognised: {\tt lines}, {\tt points}, {\tt
+linespoints}, {\tt dots}, {\tt boxes}, {\tt wboxes}, {\tt impulses}, {\tt
+steps}, {\tt histeps}, {\tt fsteps}, {\tt xerrorbars}, {\tt yerrorbars}, {\tt
+xyerrorbars}, {\tt xerrorrange}, {\tt yerrorrange}, {\tt xyerrorrange},
+\newline\noindent % WHY IS THIS NECESSARY?
+{\tt arrows\_head}, {\tt arrows\_nohead}, {\tt arrows\_twohead}, {\tt
+csplines}, {\tt acsplines}.
+
+In addition, {\tt lp} and {\tt pl} are recognised as abbreviations
+for {\tt linespoints}; {\tt errorbars} is recognised as an abbreviation for {\tt
+yerrorbars}; {\tt errorrange} is recognised as an abbreviation for {\tt
+yerrorrange}; and {\tt arrows\_twoway} is recognised as an alternative for {\tt
+arrows\_twohead}.
+
+As well as plot styles, the {\tt with} modifier can also be followed by the
+following keywords:
+
+\begin{description}
+\item[{\tt linetype}] -- specifies the linetype (e.g. dotted) used by the lines plot style. 
+\item[{\tt linewidth}] -- specifies the width of line, in pt, used by the lines plot style.
+\item[{\tt pointsize}] -- specifies the size of datapoints, relative to the
+default size, used by the points plot style. 
+\item[{\tt pointlinewidth}] -- as above, but specifies the linewidth, in pt,
+used to render the crosses, circles, etc, used to mark datapoints. 
+\item[{\tt linestyle}] -- this can be used in conjunction with the {\tt set linestyle} command to save default plot styles. 
+\item[{\tt colour}] -- specifies the colour used to plot the dataset, either by
+one of the recognised colour names or by an integer,
+to use one from the current palette.  \item[{\tt fillcolour}] -- relavant to the
+{\tt boxes} and {\tt wboxes} plot
+styles, specifies a colour in which bar charts should be filled.
+\end{description}
+
+An example using several of these keywords would be:
+
+\begin{verbatim}
+plot sin(x) axes x2y1 with colour blue linetype 2 \
+                           linewidth 5
+\end{verbatim}
+
+Multiple datasets can be plotted on a single graph by listing them with commas
+separating them:
+
+\begin{verbatim}
+plot sin(x) with colour blue, cos(x) with linetype 2
+\end{verbatim}
+
+
+\section{print}\index{print command@\texttt{print} command}
+
+\begin{verbatim}
+print <expression>
+\end{verbatim}
+
+The {\tt print} command outputs the value of a mathematical expression to the
+terminal.  It is most often used to find the value of a variable, though it can
+also be used to produce formatted output from a PyXPlot script. For example:
+
+\begin{verbatim}
+print a
+\end{verbatim}
+
+\noindent would print the value of the variable $a$.
+
+
+\section{pwd}\index{pwd command@\texttt{pwd} command}
+
+\begin{verbatim}
+pwd
+\end{verbatim}
+
+The {\tt pwd} command prints the location of the current working directory.
+
+
+\section{?}\index{? command@\texttt{?} command}
+
+\begin{verbatim}
+? [<help option> ... ]
+\end{verbatim}
+
+The {\tt ?} symbol is a shortcut to the {\tt help} command.
+
+
+\section{quit}\index{quit command@\texttt{quit} command}
+
+\begin{verbatim}
+quit
+\end{verbatim}
+
+The {\tt quit} command can be used to exit PyXPlot. If multiple command files,
+or a mixture of command files and interactive sessions, are specified on the
+command line, then PyXPlot moves onto the next command-line item after receiving
+the {\tt exit} command.
+
+PyXPlot may also be quit be pressing CTRL-D or via the {\tt exit} command. In
+interactive mode, CTRL-C terminates the current command, if one is running.
+When running a script, CTRL-C terminates execution of it.
+
+
+\section{refresh}\index{refresh command@\texttt{refresh} command}
+
+\begin{verbatim}
+refresh
+\end{verbatim}
+
+The {\tt refresh} command produces an exact copy of the latest display. This can
+be useful, for example, after changing the terminal type, to produce a second
+copy of a plot in a different graphic format. It differs from the {\tt replot}
+command in that it doesn't replot anything; subsequent usages of the {\tt set}
+command since the previous {\tt plot} command have no affect on the output. The
+{\tt refresh} command is also especially useful in the multiplot environment; it
+can be used to produce second copies of multiplot pages where there need not
+necessarily even be any plots; there might perhaps only be textual items and
+arrows.
+
+
+\section{replot}\index{replot command@\texttt{replot} command}
+
+\begin{verbatim}
+replot [<plot number>]
+\end{verbatim}
+
+In single plot mode, the {\tt replot} command causes the most recent plot
+command to be re-run.  This can be useful to replot a datafile which has changed
+in the meantime, but also to change some aspect of a plot within PyXPlot itself.
+Usages of the {\tt set} command between the original {\tt plot} command and the
+calling of the {\tt replot} command are applied to the new plot. For example:
+
+\begin{verbatim}
+plot sin(x)
+set textcolour red
+replot
+\end{verbatim}
+
+In multiplot mode, the {\tt replot} command acts by default upon the last plot
+item which was added to the multiplot page, and causes that to be replotted. It
+is possible to change this behaviour by first calling the {\tt edit} command, in
+which case any given plot within a multiplot can be modified and replotted.
+
+Specifying a function or datafile after the {\tt replot} command causes that
+function or data file to be added to the plot. The syntax here is the same as
+for the {\tt plot} command.  For example:
+
+\begin{verbatim}
+replot sin(x) axes x2y1 with linespoints
+\end{verbatim}
+
+\noindent will add a plot of the function $\sin(x)$ to the current plot.
+
+\section{reset}\index{reset command@\texttt{reset} command}
+
+\begin{verbatim}
+reset
+\end{verbatim}
+
+The {\tt reset} command returns the values of all settings that have been
+changed with the {\tt set} command back to their default values.
+
+
+\section{save}\index{save command@\texttt{save} command}
+
+\begin{verbatim}
+save '<filename>'
+\end{verbatim}
+
+The {\tt save} command saves a list of all of the commands which have been
+executed in the current interactive PyXPlot session into a given file. The
+filename of the desired location for this file should be placed in quotes, for
+example:
+
+\begin{verbatim}
+save 'foo'
+\end{verbatim}
+
+\noindent would save a command history into the file named `{\tt foo}'.
+
+
+\section{set}\index{set command@\texttt{set} command}
+
+\begin{verbatim}
+set <option> <value>
+\end{verbatim}
+
+The {\tt set} command sets the value of various operational parameters within
+PyXPlot.  For example:
+
+\begin{verbatim}
+set pointsize 2
+\end{verbatim}
+
+\noindent would sets the default point size to 2. The basic syntax always
+follows that above: the {\tt set} command should be followed by some keyword
+specifying which setting it is which should be set. If a further parameter is
+needed to specify what value to set this setting to, it should follow this
+keyword. Settings which work in an on/off fashion tend to take a syntax along
+the lines of:
+
+\begin{tabular}{ll}
+{\tt set key} & Set option ON \\
+{\tt set nokey} & Set option OFF
+\end{tabular}
+
+More details of the functions of each individual setting can be found in the
+subsections below, which represents a complete list of the recognised setting
+keywords.
+
+The reader should also see the {\tt show} command, which can be used to display
+the current values of settings, and the {\tt unset} command, which returns
+settings to their default values. Section~\ref{config_files} describes how
+commonly used settings can be saved into a configuration file.
+
+\subsection{arrow}\index{set arrow command@\texttt{set arrow} command}
+
+\begin{verbatim}
+set arrow <arrow number> from [<co-ordinate>] <x>,
+          [<co-ordinate>] <y> to [<co-ordinate>] <x>,
+          [<co-ordinate>] <y> [with <modifier> ]
+\end{verbatim}
+
+\begin{verbatim}
+<co-ordinate> = ( first | second | screen | graph |
+                  axis<axisnumber>                  )
+\end{verbatim}
+
+The {\tt set arrow} command causes an arrow to be added to a plot. An example of
+its syntax would be:
+
+\begin{verbatim}
+set arrow 1 from 0,0 to 1,1
+\end{verbatim}
+
+\noindent which would cause an arrow to be drawn between the points 0,0 and 1,1, as
+measured on the $x$ and $y$ axes.  The tag `1' immediately following the {\tt
+arrow} keyword is an identification number, and allows the arrow to be removed
+later with the {\tt unset arrow} command.  By default the co-ordinates are
+measured relative to the first $x$- and $y$-axes, but can be specified in a range
+of coordinate systems. These are specified as follows:
+
+\begin{verbatim}
+set arrow 1 from first 0, second 0 to axis3 1, axis4 1
+\end{verbatim}
+
+As can be seen, the name of the desired coordinate system precedes the position
+value in that coordinate system. The coordinate system {\tt first}, the default,
+measures the graph using the $x$- and $y$-axes. {\tt second} uses the $x2$- and
+$y2$-axes.  {\tt screen} and {\tt graph} both measure in centimetres from the
+origin of the graph.  The syntax {\tt axisn} may also be
+used, to use the $n$ th $x$- or $y$-axis; for example, {\tt axis3} above.
+
+The {\tt set arrow} command can be followed by the keyword `{\tt with}', to
+specify the style of the arrow. For example, the specifiers `{\tt nohead}', `{\tt
+head}' and `{\tt twohead}', after the keyword `{\tt with}', can be used to make
+arrows with no arrow heads, normal arrow heads, or two arrow heads. `{\tt twoway}'
+is an alias for `{\tt twohead}'.  Normal line type modifiers can also be used
+here.  For example:
+
+\begin{verbatim}
+set arrow 2 from first 0, second 2.5 to axis3 0,
+             axis4 2.5 with colour blue nohead
+\end{verbatim}
+
+
+
+\subsection{autoscale}\index{set autoscale command@\texttt{set autoscale} command}
+
+\begin{verbatim}
+set autoscale <axis>[<axis>... ] 
+\end{verbatim}
+
+The {\tt autoscale} setting causes PyXPlot to choose the scaling for an axis
+automatically based on the data and/or functions to be plotted against it. As
+an example of the syntax:
+
+\begin{verbatim}
+set autoscale x1
+\end{verbatim}
+
+\noindent would cause the size of the first $x$-axis to be scaled to fit the
+data.  Multiple axes can be specified, viz.:
+
+\begin{verbatim}
+set autoscale x1y3
+\end{verbatim}
+
+
+\subsection{axescolour}\index{set axescolour command@\texttt{set axescolour} command}
+
+\begin{verbatim}
+set axescolour <colour>
+\end{verbatim}
+
+The {\tt axescolour} setting changes the colour of the plot's axes.  For example:
+
+\begin{verbatim}
+set axescolour blue
+\end{verbatim}
+
+\noindent changes the axes to be blue. Any of the recognised colour names listed in
+Section~\ref{colour_names} can be used.
+ 
+
+\subsection{axis}\index{set axis command@\texttt{set axis} command}
+
+\begin{verbatim}
+set axis <axis>, ...
+\end{verbatim}
+
+The command:
+
+\begin{verbatim}
+set axis x2
+\end{verbatim}
+
+\noindent may be used to add a second $x$-axis to a plot, with default settings. In
+general, there is no practical reason to use this command, as a second $x$-axis
+would implicitly be created anyway by any of the following statements:
+
+\begin{verbatim}
+set x2label 'foo' \\
+set x2ticdir outwards \\
+plot sin(x) axes x2y1
+\end{verbatim}
+
+Of more practical use is the `{\tt unset x2}' command, which is used to remove an
+axis once it has been added to a plot. After executing:
+
+\begin{verbatim}
+set x2label 'foo'
+\end{verbatim}
+
+\noindent for example, the only way to tell PyXPlot to subsequently produce a plot
+without a second $x$-axis would be to delete this axis with the following
+command:
+
+\begin{verbatim}
+unset axis x2
+\end{verbatim}
+
+Note that in this case, the {\tt unset x2label} command would be sufficent to
+remove the label `foo' placed on the new axis, but not sufficient to delete the
+new axis that the {\tt set x2label} command implicitly created. Multiple axes
+can be deleted in a single {\tt unset axis} statement, for example:
+
+\begin{verbatim}
+unset axis x2x4x5
+\end{verbatim}
+
+In the special cases of {\tt unset axis x1} or {\tt unset axis y1}, these axes
+cannot be deleted; a plot must have at least one $x$- and one $y$-axis. Instead,
+the {\tt unset axis} command restores these axes to their default
+configurations, removing any set titles or ranges that they might have been
+given.
+
+\subsection{backup}\index{set backup command@\texttt{set backup} command}
+
+\begin{verbatim}
+set backup
+\end{verbatim}
+
+The setting {\tt backup} changes PyXPlot's behaviour when it detects that a file
+which it is about to write is going to overwrite an existing file. Whereas by
+default the existing file would be overwritten by the new one, when the
+{\tt backup} setting is turned on, it is renamed, placing a tilde at the end of
+its filename. For example, suppose that a plot were to be written with filename
+`{\tt out.ps}', but such a file already existed.  With the backup setting turned on
+the existing file would be renamed `{\tt out.ps~}' to save it from being overwritten.
+
+The setting may be turned off via {\tt set nobackup}.
+
+
+\subsection{bar}\index{set bar command@\texttt{set bar} command}
+
+\begin{verbatim}
+set bar ( large | small | <barsize> )
+\end{verbatim}
+
+The {\tt bar} setting changes the size of the bar on the end of the errorbars,
+relative to the current pointsize.  For example:
+
+\begin{verbatim}
+set bar 2
+\end{verbatim}
+
+\noindent sets the bars to be twice the size of the points.  The options `{\tt large}' and
+`{\tt small}' are equivalent to 1 (the default) and 0 (no bar) respectively.
+
+\subsection{binorigin}\index{set binorigin command@\texttt{set binorigin} command}
+
+\begin{verbatim}
+set binorigin <bin origin>
+\end{verbatim}
+
+The {\tt binorigin} setting changes the position on the $x$ axis where
+the bins used by the histogram command originate from.
+
+\subsection{binwidth}\index{set binwidth command@\texttt{set binorigin} command}
+
+\begin{verbatim}
+set binwidth <bin width>
+\end{verbatim}
+
+The {\tt binwidth} setting changes the width of the bins used by the histogram
+command.
+
+\subsection{boxfrom}\index{set boxfrom command@\texttt{set boxfrom} command}
+
+\begin{verbatim}
+set boxfrom <value>
+\end{verbatim}
+
+The `{\tt boxfrom}' setting alters PyXPlot's behaviour when plotting bar charts.
+It changes the horizontal line (vertical point; $y$-axis value) from which the
+boxes of bar charts appear to emanate.  The default value is zero (i.e. boxes
+extend from the line of the $y$-axis). An example of its syntax would be:
+
+\begin{verbatim}
+set boxfrom 2
+\end{verbatim}
+
+\noindent which would make the boxes of a barchart emanate vertically from the line $y=2$.
+
+
+\subsection{boxwidth}\index{set boxwidth command@\texttt{set boxwidth} command}
+
+\begin{verbatim}
+set boxwidth <width>
+\end{verbatim}
+
+The `{\tt boxwidth}' setting alters PyXPlot's behaviour when plotting bar charts.
+It sets the default width of the boxes used, in graph $x$-axis units.  If the
+specified width is negative then, as happens by default, the boxes have
+automatically selected widths, such that the interfaces between them occur at
+the horizontal midpoints between their specified $x$-positions.  For example:
+
+\begin{verbatim}
+set boxwidth 2
+\end{verbatim}
+
+\noindent would set all boxes to be two units wide.
+
+\begin{verbatim}
+set boxwidth -2
+\end{verbatim}
+
+\noindent would set all of the bars to have differing widths, centred upon their
+specified $x$-positions, such that their interfaces occur at the horizontal
+midpoints between them.
+
+
+\subsection{data style}\index{set data style command@\texttt{set data style} command}
+
+See `{\tt set style data}'.
+
+\subsection{display}\index{set display command@\texttt{set display} command}
+
+\begin{verbatim}
+set [no]display
+\end{verbatim}
+
+By default, whenever an item is added to a multiplot, or an existing item moved
+or replotted, the whole multiplot is replotted to show the change. This can be
+a time consuming process on large and complex multiplots. For this reason, the
+`{\tt set nodisplay}' command is provided, which stops PyXPlot from producing any
+output. The `{\tt set display}' command can subsequently be issued to return to
+normal behaviour.
+
+This can be especially useful in scripts which produce large multiplots. There
+is no point in producing output at each step in the construction of a large
+multiplot, and so a great speed increase can be achieved by wrapping the script
+with:
+
+\begin{verbatim}
+set nodisplay 
+[...prepare large multiplot...] 
+set display 
+refresh
+\end{verbatim}
+
+
+\subsection{dpi}\index{set dpi command@\texttt{set dpi} command}
+
+\begin{verbatim}
+set dpi <value>
+\end{verbatim}
+
+When PyXPlot is set to produce bitmapped graphics output, using the {\tt gif},
+{\tt jpg} or {\tt png} terminals (see the `{\tt set terminal}' command), the `{\tt
+dpi}' setting changes how many dots per inch these graphics files are produced
+with. That is to say, it changes the image resolution of these file formats:
+
+\begin{verbatim}
+set dpi 100
+\end{verbatim}
+
+\noindent sets the output to a resolution of 100 dots per inch. Higher dpi
+values yield better quality images, but larger file sizes.
+
+\subsection{fontsize}\index{set fontsize command@\texttt{set fontsize} command}
+
+\begin{verbatim}
+set fontsize <value>
+\end{verbatim}
+
+The {\tt fontsize} setting changes the size of the fount\footnote{This is not a
+spelling mistake. `font', by contrast, \textit{would} be a spelling mistake. See the
+Oxford English Dictionary.} used to render all text labels which appear on a
+plot, including keys, axis labels, etc. The value specified should be an integer
+in the range -4 to 5, corresponding to \LaTeX's tiny (-4) and Huge (5) sizes,
+for example:
+
+\begin{verbatim}
+set fontsize 2
+\end{verbatim}
+
+The default value is zero, \LaTeX's normal fount size. As an alternative, fount
+sizes can be specified directly in the \LaTeX\ text of labels, for example:
+
+\begin{verbatim}
+set xlabel '\Large This is a BIG label'
+\end{verbatim}
+
+\subsection{function style}\index{set function style command@\texttt{set function style} command}
+
+See `{\tt set style function}'.
+
+\subsection{grid}\index{set grid command@\texttt{set grid} command}
+
+\begin{verbatim}
+set [no]grid <axis> ...
+\end{verbatim}
+
+The {\tt grid} setting controls whether a grid is placed behind a plot or not.
+Issuing the command:
+
+\begin{verbatim}
+set grid
+\end{verbatim}
+
+\noindent would cause a grid to be drawn with its gridlines connecting to the ticks of
+the default axes (usually the first $x$- and $y$-axes). Conversely, issuing:
+
+\begin{verbatim}
+unset grid
+\end{verbatim}
+
+\noindent would remove from the plot all gridlines associated with the ticks of any axes.
+One or more axes can be specified for the {\tt set grid} command; a grid will
+then be drawn to connect with the ticks of these axes. An example of this syntax
+would be:
+
+\begin{verbatim}
+set grid x1 y3
+\end{verbatim}
+
+\noindent which would cause gridlines to be drawn from ticks of the first $x$- and third
+$y$-axes.
+
+It is possible, though not always aesthetically very pleasing, to draw
+gridlines from multiple parallel axes, for example:
+
+\begin{verbatim}
+set grid x1x2x3
+\end{verbatim}
+
+
+\subsection{gridmajcolour}\index{set gridmajcolour command@\texttt{set gridmajcolour} command}
+
+\begin{verbatim}
+set gridmajcolour <colour>
+\end{verbatim}
+
+The `{\tt gridmajcolour}' setting changes the colour that is used to plot the
+gridlines (see the {\tt set grid} command) which are associated with the major
+ticks of axes (i.e. major gridlines). For example:
+
+\begin{verbatim}
+set gridmajcolour purple
+\end{verbatim}
+
+\noindent would cause the major grid lines to be drawn in purple. Any of the recognised
+colour names listed in Section~\ref{colour_names} can be used.
+
+See also the {\tt set gridmincolour} command.
+
+
+\subsection{gridmincolour}\index{set gridmincolour command@\texttt{set gridmincolour} command}
+
+\begin{verbatim}
+set gridmincolour <colour>
+\end{verbatim}
+
+The {\tt gridmincolour} setting changes the colour that is used to plot the
+gridlines (see the {\tt set grid} command) which are associated with the minor
+ticks of axes (i.e. minor gridlines). For example:
+
+\begin{verbatim}
+set gridmincolour purple
+\end{verbatim}
+
+\noindent would cause the minor grid lines to be drawn in purple. Any of the recognised
+colour names listed in Section~\ref{colour_names} can be used.
+
+\begin{verbatim}
+See also the set gridmajcolour command.
+\end{verbatim}
+
+
+\subsection{key}\index{set key command@\texttt{set key} command}
+
+\begin{verbatim}
+set key [ <position> ... ] [<xoffset>, <yoffset>]
+\end{verbatim}
+
+The setting `{\tt key}' determines whether a legend is placed on a plot, and if
+so, where it should be located on the plot. Issuing the command:
+
+\begin{verbatim}
+set key
+\end{verbatim}
+
+\noindent simply causes a legend to be added to the plot in its default position, usually
+the plot's upper-right corner. The converse action is achieved by:
+
+\begin{verbatim}
+set nokey
+\end{verbatim}
+
+\noindent or:
+
+\begin{verbatim}
+unset key
+\end{verbatim}
+
+\noindent both of which cause a plot to have no legend. A position for the key may also
+be specified after the {\tt set key} command, for example:
+
+\begin{verbatim}
+set key bottom left
+\end{verbatim}
+
+Recognised positions are `{\tt top}', `{\tt bottom}', `{\tt left}', `{\tt right}', `{\tt
+below}', `{\tt outside}', `{\tt xcentre}' and `{\tt ycentre}'. In addition, if none of
+these quite achieved the desired result, a positional offset may be specified
+after one of the position keywords above.  The first value is assumed to be an
+$x$-offset, and the second a $y$-offset, in units approximately equal to the
+size of the plot. For example:
+
+\begin{verbatim}
+set key bottom left 0.0 -0.5
+\end{verbatim}
+
+\noindent would display a key below the bottom left corner of the graph.
+
+
+\subsection{keycolumns}\index{set keycolumns command@\texttt{set keycolumns} command}
+
+\begin{verbatim}
+set keycolumns <value>
+\end{verbatim}
+
+The `{\tt keycolumns}' settings sets how many columns the legend of a plot should
+be arranged into. By default, all of the entries in the legends of plots are
+arranged in a single vertical list. However, for plots with very large number
+of datasets, it may be preferably to split this list into several columns. The
+{\tt set keycolumns} command can be followed by any positive integer, for
+example:
+
+\begin{verbatim}
+set keycolumns 3
+\end{verbatim}
+
+
+\subsection{label}\index{set label command@\texttt{set label} command}
+
+\begin{verbatim}
+set label <label number> '<text>' [<co-ordinate>] <x>,
+                                  [<co-ordinate>] <y>
+                                  [rotate <angle>]
+\end{verbatim}
+
+\begin{verbatim}
+<co-ordinate> = ( first | second | screen | graph |
+                  axis<axisnumber>                  )
+\end{verbatim}
+
+The {\tt set label} command can be used to place text labels onto a plot.  For
+example:
+
+\begin{verbatim}
+set label 1 'Hello' 0, 0
+\end{verbatim}
+
+\noindent would place the word `Hello' at plot co-ordinates (0,0), as measured on the $x$-
+and $y$-axes.  The tag `{\tt 1}' immediately following the `{\tt label}' keyword is an
+identification number, and allows the label to be removed later with the {\tt
+unset label} command.  By default the position coordinates of the label are
+measured relative to the first $x$- and $y$-axes, but can be specified in a
+range of coordinate systems. These are specified as follows:
+
+\begin{verbatim}
+set label 1 'Hello' first 0, second 0
+\end{verbatim}
+
+As can be seen, the name of the desired coordinate system precedes the position
+value in that coordinate system. Following gnuplot's nomenclature, the
+coordinate system {\tt first} the default, measures the graph using the $x$- and
+$y$-axes. {\tt second} uses the $x2$- and $y2$-axes.  {\tt screen} and {\tt
+graph} both measure in centimetres from the origin of the graph.  The syntax
+{\tt axisn} may also be used, to use the $n$ th $x$- or $y$-axis; for example,
+{\tt axis3}:
+
+\begin{verbatim}
+set label 1 'Hello' axis3 1, axis4 1
+\end{verbatim}
+
+A rotation angle may optionally be specified after the keyword `{\tt rotate}'
+to produce text rotated to any arbitrary angle, measured in degrees
+counter-clockwise. The following example would produce upward-running text:
+
+\begin{verbatim}
+set label 1 'Hello' 1.2, 2.5 rotate 90
+\end{verbatim}
+
+
+\subsection{linestyle}\index{set linestyle command@\texttt{set linestyle} command}
+
+\begin{verbatim}
+set linestyle <style number> <style specifier> ...
+\end{verbatim}
+
+At times, the string of style keywords following the `{\tt with}' modifier in plot
+commands can grow rather unwieldily long. For clarity, frequently used plot
+styles can be stored as {\tt linestyles}; this is true of styles involving
+points as well as lines. The syntax for setting a linestyle is:
+
+\begin{verbatim}
+set linestyle 2 points pointtype 3
+\end{verbatim}
+
+\noindent where the `{\tt 2}' is the identification number of the linestyle. In a subsequent
+plot statement, this linestyle can be recalled as follows:
+
+\begin{verbatim}
+plot sin(x) with linestyle 2
+\end{verbatim}
+
+
+\subsection{linewidth}\index{set linewidth command@\texttt{set linewidth} command}
+
+\begin{verbatim}
+set linewidth <value>
+\end{verbatim}
+
+Sets the default linewidth, in units of pt, of the lines used to plot datasets
+onto graphs with the `{\tt lines}' plot style (see the {\tt plot} command for
+details of plot styles), for example in the following statement:
+
+\begin{verbatim}
+plot sin(x) with lines
+\end{verbatim}
+
+The linewidths of individual datasets can be set as follows; the {\tt set
+linewidth} setting only affects plot statements where no linewidth is manually
+specified:
+
+\begin{verbatim}
+plot sin(x) with lines linewidth 5.0
+\end{verbatim}
+
+
+\subsection{logscale}\index{set logscale command@\texttt{set logscale} command}
+
+\begin{verbatim}
+set logscale [<axis> ... ] <base>
+\end{verbatim}
+
+The `{\tt logscale}' setting causes an axis to be laid out with logarithmically,
+rather than linearly, spaced intervals.  For example, issuing the command:
+
+\begin{verbatim}
+set log
+\end{verbatim}
+
+\noindent would cause all of the axes of a plot to be scaled logarithmically. Alternatively
+only one, or a selection of axes, can be set to scale logarithmically as
+follows:
+
+\begin{verbatim}
+set log x1 y2
+\end{verbatim}
+
+This would cause the first $x$- and second $y$-axes to be scaled logarithmically.
+Linear scaling can be restored to all axes via:
+
+\begin{verbatim}
+set nolog
+\end{verbatim}
+
+\noindent or:
+
+\begin{verbatim}
+unset log
+\end{verbatim}
+
+\noindent and to only one, or a selection of axes, via:
+
+\begin{verbatim}
+set nolog x1 y2
+\end{verbatim}
+
+\noindent or:
+
+\begin{verbatim}
+unset log x1y2
+\end{verbatim}
+
+Optionally, a base may be specified at the end of the {\tt set logscale}
+command, to produce axes labelled in logarithms to arbitrary bases.
+
+\subsection{multiplot}\index{set multiplot command@\texttt{set multiplot} command}
+
+\begin{verbatim}
+set multiplot
+\end{verbatim}
+
+Issuing the command:
+
+\begin{verbatim}
+set multiplot
+\end{verbatim}
+
+\noindent causes PyXPlot to enter multiplot mode, which allows many graphs to
+be plotted together and displayed side-by-side. See Section~\ref{multiplot} for
+a full discussion of multiplot mode.
+
+\subsection{mxtics}\index{set mxtics command@\texttt{set mxtics} command}
+
+See {\tt set xtics}.
+
+\subsection{mytics}\index{set mytics command@\texttt{set mytics} command}
+
+See {\tt set xtics}.
+
+\subsection{noarrow}\index{set noarrow command@\texttt{set noarrow} command}
+
+\begin{verbatim}
+set noarrow [<arrow number>]
+\end{verbatim}
+
+Issuing the command:
+
+\begin{verbatim}
+set noarrow
+\end{verbatim}
+
+\noindent removes all arrows, as set using the {\tt set arrow} command, from the current
+plot. Alternatively, individual arrows can be removed using the syntax:
+
+\begin{verbatim}
+set noarrow 2
+\end{verbatim}
+
+\noindent where the tag `{\tt 2}' here is the identification number given to
+the arrow to be removed when it was initially set using the {\tt set arrow}
+command.
+
+\subsection{noaxis}\index{set noaxis command@\texttt{set noaxis} command}
+
+\begin{verbatim}
+set noaxis <axis specification>, ...
+\end{verbatim}
+
+The {\tt set noaxis} command is equivalent to the {\tt unset axis} command. It
+should be followed by a comma-separated lists of axes, which are to be removed
+from the current axis configuration.
+
+
+\subsection{nobackup}\index{set nobackup command@\texttt{set nobackup} command}
+
+See {\tt backup}.
+
+
+\subsection{nodisplay}\index{set nodisplay command@\texttt{set nodisplay} command}
+
+See {\tt display}.
+
+
+\subsection{nogrid}\index{set nogrid command@\texttt{set nogrid} command}
+
+\begin{verbatim}
+set norgrid [<axis> ... ]
+\end{verbatim}
+
+Issuing the command {\tt set nogrid} removes gridlines from the current plot. On
+its own, the command removes all gridlines from the plot, but alternatively,
+those gridlines connected to the ticks of certain axes can selectively be
+removed.  The syntax for doing this is as follows:
+
+\begin{verbatim}
+set nogrid x1 y2
+\end{verbatim}
+
+
+\subsection{nokey}\index{set nokey command@\texttt{set nokey} command}
+
+\begin{verbatim}
+set nokey
+\end{verbatim}
+
+Issuing the command {\tt set nokey} causes plots to be generated with no legend.
+See the command {\tt set key} for more details.
+
+
+\subsection{nolabel}\index{set nolabel command@\texttt{set nolabel} command}
+
+\begin{verbatim}
+set nolabel [<label number> ... ]
+\end{verbatim}
+
+Issuing the command:
+
+\begin{verbatim}
+set nolabel
+\end{verbatim}
+
+\noindent removes all text labels, as set using the {\tt set label} command,
+from the current plot. Alternatively, individual labels can be removed using
+the syntax:
+
+\begin{verbatim}
+set nolabel 2
+\end{verbatim}
+
+\noindent where the tag `{\tt 2}' here is the identification number given to
+the label to be removed when it was initially set using the {\tt set label}
+command.
+
+\subsection{nolinestyle}\index{set nolinestyle command@\texttt{set nolinestyle} command}
+
+\begin{verbatim}
+set nolinestyle <style number>
+\end{verbatim}
+
+The {\tt nolinestyle} setting deletes a line style. For example, the command:
+
+\begin{verbatim}
+set nolinestyle 3
+\end{verbatim}
+
+\noindent would delete the third linestyle, if defined. See the command {\tt set
+linestyle} for more details.
+
+
+\subsection{nologscale}\index{set nologscale command@\texttt{set nologscale} command}
+
+\begin{verbatim}
+set nologscale [<axis> ... ]
+\end{verbatim}
+
+The {\tt logscale} setting causes an axis to be laid out with logarithmically,
+rather than linearly, spaced intervals. Conversely, the {\tt nologscale} setting
+is used to restore linear scaling. For example, issuing the command:
+
+\begin{verbatim}
+set nolog 
+\end{verbatim}
+
+\noindent would cause all of the axes of a plot to be scaled linearly. Alternatively only one,
+or a selection of axes, can be set to scale linearly as follows:
+
+\begin{verbatim}
+set nologscale x1 y2
+\end{verbatim}
+
+This would cause the first $x$- and second $y$-axes to be scaled linearly.
+
+
+\subsection{nomultiplot}\index{set nomultiplot command@\texttt{set nomultiplot} command}
+
+\begin{verbatim}
+set nomultiplot
+\end{verbatim}
+
+Issuing the command {\tt set nomultiplot} places PyXPlot into single plotting
+mode.  See above for a detailed discussion of PyXPlot's multiplot and
+single plot modes. Broadly speaking, single plot mode is used to produce single
+graphs on their own; multiplot mode is used to produce galleries of many plots
+side-by-side.
+
+
+\subsection{notitle}\index{set notitle command@\texttt{set notitle} command}
+
+\begin{verbatim}
+set notitle
+\end{verbatim}
+
+Issuing the command {\tt set notitle} will cause graphs to be produced with no
+title at the top.
+
+
+\subsection{noxtics}\index{set noxtics command@\texttt{set noxtics} command}
+
+\begin{verbatim}
+set no<axis sepcification>tics
+\end{verbatim}
+
+This command causes graphs to be produced with no tick marks along their $x$-axes.
+
+\subsection{noytics}\index{set noytics command@\texttt{set noytics} command}
+
+See {\tt set noxtics}.
+
+
+\subsection{origin}\index{set origin command@\texttt{set origin} command}
+
+\begin{verbatim}
+set origin <x>, <y>
+\end{verbatim}
+
+The `{\tt origin}' setting controls the default location of graphs on a multiplot.
+For example, the command:
+
+\begin{verbatim}
+set origin 3,5
+\end{verbatim}
+
+\noindent would cause the next graph to be plotted at position $(3,5)$ centimetres on the
+multiplot page. The {\tt set origin} command is of little use outside multiplot
+mode.
+
+
+\subsection{output}\index{set output command@\texttt{set output} command}
+
+\begin{verbatim}
+set output '<filename>'
+\end{verbatim}
+
+The {\tt output} setting controls the name of the file that is produced for
+non-interactive terminals ({\tt postscript}, {\tt eps}, {\tt jpeg}, {\tt gif}
+and {\tt png}).  For example:
+
+\begin{verbatim}
+set output 'myplot.eps'
+\end{verbatim}
+
+\noindent causes the output to be written to the file `{\tt myplot.eps}'.
+
+
+\subsection{palette}\index{set palette command@\texttt{set palette} command}
+
+\begin{verbatim}
+set palette <colour>, [<colour> ... ]
+\end{verbatim}
+
+PyXPlot has a palette of colours which it assigns sequentially to datasets when
+colours are not manually assigned. This is also the palette to which is
+referred if the user issues a command such as:
+
+\begin{verbatim}
+plot sin(x) with colour 5
+\end{verbatim}
+
+\noindent requesting the fifth colour from the palette. By default, this palette contains
+a range of distinctive colours, however the user can choose to substitute his
+own list of colours for these using the {\tt set palette} command. It should be
+followed by a comma-separated list of colour names, for example:
+
+\begin{verbatim}
+set palette red,green,blue
+\end{verbatim}
+
+If, after issuing this command, the following plot statement were to be
+executed:
+
+\begin{verbatim}
+plot sin(x), cos(x), tan(x), exp(x)
+\end{verbatim}
+
+\noindent the first function would be plotted in red, the second in green, and the third
+in blue. Upon reaching the fourth, the palette would cycle back to red.
+
+Any of the recognised colour names listed in Section~\ref{colour_names} can be used.
+
+\subsection{papersize}\index{set papersize command@\texttt{set papersize} command}
+
+\begin{verbatim}
+set papersize (size|<x>, <y>)
+\end{verbatim}
+
+The {\tt papersize} option sets the size of output produced by the postscript
+terminal. This can take the form of either a recognised papersize name -- a
+list of these is given below -- or a height, width pair of values, both measured
+in millimetres. For example:
+
+\begin{verbatim}
+set papersize a4
+set papersize letter
+set papersize 200,100
+\end{verbatim}
+
+A list of recognised papersizes can be found in Figure~\ref{paper_sizes}.
+
+\subsection{pointlinewidth}\index{set pointlinewidth command@\texttt{set pointlinewidth} command}
+
+\begin{verbatim}
+set pointlinewidth <value>
+\end{verbatim}
+
+The `{\tt pointlinewidth}' setting changes the width of the lines that are used to
+plot datapoints.  For instance:
+
+\begin{verbatim}
+set pointlinewidth 20
+\end{verbatim}
+
+\noindent would cause points to be plotted with lines 20 times the default thickness.
+
+Note that `{\tt pointlinewidth}' can be abbreviated as `{\tt plw}'.
+
+\subsection{pointsize}\index{set pointsize command@\texttt{set pointsize} command}
+
+\begin{verbatim}
+set pointsize <value>
+\end{verbatim}
+
+The `{\tt pointsize}' setting changes the size at which points are plotted
+relative to their default size. It should be followed by a single value, the
+relative size, which can be any positive number. For example:
+
+\begin{verbatim}
+set pointsize 1.5
+\end{verbatim}
+
+\noindent would cause points to be plotted 1.5 times the default size.
+
+\subsection{preamble}\index{set preamble command@\texttt{set preamble} command}
+
+The {\tt premble} setting changes the preamble that is prepended to each item of
+text rendered using \LaTeX{}.  This allows, for example, different packages to
+be loaded by default and user-defined macros to be set up.
+
+\subsection{samples}\index{set samples command@\texttt{set samples} command}
+
+The {\tt samples} setting determines the number of values along the $x$-axis at
+which functions are evaluated when they are plotted. For example:
+
+\begin{verbatim}
+set samples 100
+\end{verbatim}
+
+\noindent causes 100 points to be evaluated.  Increasing this value will cause functions
+to be plotted more smoothly, but also more slowly, and the resulting postscript
+files generated will be correspondingly larger.
+
+When functions are plotted with the {\tt points} plot style, this also affects
+the number of points plotted.
+
+
+\subsection{size}\index{set size command@\texttt{set size} command}
+
+\begin{verbatim}
+set size (<width>|ratio <ratio>|noratio|square)
+\end{verbatim}
+
+The setting {\tt size} is deprecated; use {\tt set width} instead.  It sets the
+width of the plot in centimetres. However, the command {\tt set size}, when
+followed by the keyword {\tt ratio}, is still used to set the aspect ratio of
+plots. See the `{\tt ratio}' setting below for details.
+
+\subsubsection{noratio}\index{set size command!noratio modifier@\texttt{noratio} modifier}
+
+\begin{verbatim}
+set size noratio
+\end{verbatim}
+
+Running:
+
+\begin{verbatim}
+set size noratio
+\end{verbatim}
+
+\noindent resets PyXPlot to produce plots with its default aspect ratio, which is the
+golden section. Other aspect ratios can be set with the {\tt set size ratio}
+command.
+
+
+\subsubsection{ratio}\index{set size command!ratio modifier@\texttt{ratio} modifier}
+
+\begin{verbatim}
+set size ratio <ratio>
+\end{verbatim}
+
+The command:
+
+\begin{verbatim}
+set size ratio x
+\end{verbatim}
+
+\noindent sets the aspect ratio of plots produced by PyXPlot.  The height of resulting
+plots will equal the plot width, as set by the {\tt set width} command,
+muliplied by this aspect ratio. The value $x$ in the above statement can be
+substituted with any positive value, for example:
+
+\begin{verbatim}
+set size ratio 2.0
+\end{verbatim}
+
+\noindent would cause PyXPlot to produce plots that are twice as high as they are wide.
+
+The default aspect ratio which PyXPlot uses is a golden ratio of
+$2/(1+\sqrt{5})$, which matches that of a sheet of A4 paper.
+
+
+\subsubsection{square}\index{set size command!square modifier@\texttt{square} modifier}
+
+\begin{verbatim}
+set size square
+\end{verbatim}
+
+The command:
+
+\begin{verbatim}
+set size square
+\end{verbatim}
+
+\noindent sets PyXPlot to produce square plots, i.e. with unit aspect ratio. Other aspect
+ratios can be set with the {\tt set size ratio} command.
+
+\subsection{style}\index{set style command@\texttt{set style} command}
+
+\begin{verbatim}
+set style { data | function } <style modifier> ...
+\end{verbatim}
+
+The {\tt set style data} command affects the default style that data from a file
+is plotted with.  Likewise the {\tt set style function} command changes the
+default style that functions are plotted with.  Any valid style modifier can be
+used.  For example:
+
+\begin{verbatim}
+set style data points
+set style function lines linestyle 1
+\end{verbatim}
+
+\noindent would cause datafiles to be plotted by default using points and
+functions using lines with the first defined linestyle.
+ 
+\subsection{terminal}\index{set terminal command@\texttt{set terminal} command}
+
+\begin{verbatim}
+set terminal <terminal type> [<option> ... ]
+\end{verbatim}
+
+Syntax:
+
+\begin{verbatim}
+set terminal { X11_singlewindow | X11_multiwindow | X11_persist | 
+               postscript | eps | pdf | gif | png | jpg } 
+             { colour | color | monochrome } 
+             { portrait | landscape } 
+             { invert | noinvert } 
+             { transparent | solid }
+             { enlarge | noenlarge }
+\end{verbatim}
+
+The {\tt set terminal} command controls the graphic format in which PyXPlot
+should output plots, for example setting whether it should output plots to files
+or display them in a window on the screen. Various options can also be set
+within many of the graphic formats which PyXPlot supports using this command.
+
+The following graphic formats are supported:  {\tt X11\_singlewindow},
+\newline\noindent % WHY IS THIS NECESSARY?
+{\tt X11\_multiwindow}, {\tt X11\_persist}, {\tt postscript}, {\tt eps}, {\tt
+pdf}, {\tt gif}, {\tt jpeg}, {\tt png}. To select one of these formats, simply
+type the name of the desired format after the {\tt set terminal} command. To
+obtain more details on each, see the subtopics below.
+
+The following settings, which can also be typed following the {\tt set terminal}
+command, are used to change the options within some of these graphic formats:
+{\tt colour}, {\tt monochrome}, {\tt enhanced}, {\tt noenhanced}, {\tt
+portrait}, {\tt landscape}, {\tt invert}, {\tt noinvert}, {\tt transparent},
+{\tt solid}, {\tt enlarge}, {\tt noenlarge}. Details of each of these can be
+found below.
+
+\subsubsection{colour}\index{set terminal command!colour modifier@\texttt{colour} modifier}
+
+The {\tt colour} terminal option causes plots to be produced in colour.
+
+\subsubsection{color}\index{set terminal command!color modifier@\texttt{color} modifier}
+
+The {\tt color} terminal option is provided for the convenience of users unable
+to spell {\tt colour}.
+
+\subsubsection{enlarge}\index{set terminal command!enlarge modifier@\texttt{enlarge} modifier}
+
+The {\tt enlarge} terminal option causes the complete plot to be enlarged or
+shrunk to fit the current paper size.
+
+\subsubsection{eps}\index{set terminal command!eps modifier@\texttt{eps} modifier}
+
+\begin{verbatim}
+set terminal eps [<option> ... ]
+\end{verbatim}
+
+Sends output to eps files.  The filename to which output is to be sent should be
+set using the {\tt set output} command; the default is `\texttt{pyxplot.eps}'.  This
+terminal produces encapsulated postscript suitable for including in, for
+example, \LaTeX documents.
+
+
+\subsubsection{gif}\index{set terminal command!gif modifier@\texttt{gif} modifier}
+
+\begin{verbatim}
+set terminal gif [<option> ... ]
+\end{verbatim}
+
+The {\tt gif} terminal renders output as gif files. The filename to which output
+is to be sent should be set using the {\tt set output} command; the default is
+{\tt pyxplot.gif}. The number of dots per inch used can be changed using the dpi
+option; the filename using {\tt set output}. Transparent gifs can be produced
+with the {\tt transparent} option. Also of relevance is the {\tt invert} option
+for producing gifs with inverted colours.
+
+
+\subsubsection{invert}\index{set terminal command!invert modifier@\texttt{invert} modifier}
+
+The {\tt invert} terminal option causes the bitmap terminals ({\tt gif}, {\tt
+jpeg}, {\tt png}) to produce output with inverted colours. Useful for producing
+plots for slideshows, where bright colours on a dark background may be desired.
+
+
+\subsubsection{jpeg}\index{set terminal command!jpeg modifier@\texttt{jpeg} modifier}
+
+\begin{verbatim}
+set terminal jpeg [<option> ... ]
+\end{verbatim}
+
+The {\tt jpeg} terminal renders output as jpeg files. The filename to which
+output is to be sent should be set using the {\tt set output} command; the
+default is {\tt pyxplot.jpg}.  The number of dots per inch used can be changed
+using the dpi option. Of relevance is the {\tt invert} option for producing
+jpegs with inverted colours.
+
+\subsubsection{landscape}\index{set terminal command!landscape modifier@\texttt{landscape} modifier}
+
+The {\tt landscape} terminal option causes PyXPlot's output to be displayed in
+rotated orientation.  Useful for printing as you get more on your sheet of
+paper that way around; probably less useful for plotting things on screen.
+
+\subsubsection{monochrome}\index{set terminal command!monochrome modifier@\texttt{monochrome} modifier}
+
+The {\tt monochrome} terminal option causes plots to be rendered in black and
+white; by default, different dash styles are used to differentiate between
+lines on plots with several datasets.
+
+\subsubsection{noenlarge}\index{set terminal command!noenlarge modifier@\texttt{noenlarge} modifier}
+
+The {\tt noenlarge} terminal option causes the output not to be scaled (the
+opposite of {\tt enlarge} above).
+
+\subsubsection{noinvert}\index{set terminal command!noinvert modifier@\texttt{noinvert} modifier}
+
+The {\tt noinvert} terminal option causes the bitmap terminals ({\tt gif}, {\tt
+jpeg}, {\tt png}) to produce normal output without inverted colours. The
+converse of {\tt inverse}.
+
+
+\subsubsection{pdf}\index{set terminal command!pdf modifier@\texttt{pdf}
+modifier}
+
+\begin{verbatim}
+set terminal pdf [<option> ... ]
+\end{verbatim}
+
+The {\tt pdf} terminal options causes pdf format output files to be produced.
+
+\subsubsection{png}\index{set terminal command!png modifier@\texttt{png} modifier}
+
+\begin{verbatim}
+set terminal png [<option> ... ]
+\end{verbatim}
+
+The {\tt png} terminal renders output as png files. The filename to which output
+is to be sent should be set using the {\tt set output} command; the default is
+{\tt pyxplot.png}. The number of dots per inch used can be changed using the dpi
+option; the filename using {\tt set output}. Transparent pngs can be produced
+with the {\tt transparent} option. Also of relevance is the {\tt invert} option
+for producing pngs with inverted colours.
+
+
+\subsubsection{portrait}\index{set terminal command!portrait modifier@\texttt{portrait} modifier}
+
+The {\tt portrait} terminal option causes PyXPlot's output to be displayed in
+upright (normal) orientation.
+ 
+
+\subsubsection{postscript}\index{set terminal command!postscript modifier@\texttt{postscript} modifier}
+
+\begin{verbatim}
+set terminal postscript [<option> ... ]
+\end{verbatim}
+
+Sends output to postscript files. The filename to which output is to be sent
+should be set using the {\tt set output} command; the default is {\tt
+pyxplot.ps}.  This terminal produces non-encapsulated postscript suitable for
+sending directly to a printer.
+
+\subsubsection{solid}\index{set terminal command!solid modifier@\texttt{solid} modifier}
+
+The solid option causes the {\tt gif} and {\tt png} terminals to produce output
+with a non-transparent background. The converse of {\tt transparent}.
+
+
+\subsubsection{transparent}\index{set terminal command!transparent modifier@\texttt{transparent} modifier}
+
+The {\tt transparent} terminal option causes the {\tt gif} and {\tt png}
+terminals to produce output with a transparent background.
+
+
+\subsubsection{X11\_multiwindow}\index{set terminal command!X11\_multiwindow modifier@\texttt{X11\_multiwindow} modifier}
+
+Displays plots on the screen (in X11 windows, using ghostview). Each time a new
+plot is generated it appears in a new window, and the old plots remain visible.
+As many plots as may be desired can be left on the desktop simultaneously.
+
+\subsubsection{X11\_persist}\index{set terminal command!X11\_persist
+modifier@\texttt{X11\_persist} modifier}
+
+Displays plots on the screen in X11 windows, using ghostview.  Each time a new
+plot is generated it appears in a new window, and the old plots remain visible.
+When PyXPlot is exited the windows remain in place until they are closed
+manually.
+
+\subsubsection{X11\_singlewindow}\index{set terminal command!X11\_singlewindow modifier@\texttt{X11\_singlewindow} modifier}
+
+Displays plots on the screen (in X11 windows, using ghostview). Each time a new
+plot is generated it replaces the old one, preventing the desktop from becoming
+flooded with old plots. This terminal is the default when running
+interactively.
+
+\subsection{textcolour}\index{set textcolour command@\texttt{set textcolour} command}
+
+\begin{verbatim}
+set textcolour <colour>
+\end{verbatim}
+
+The `{\tt textcolour}' setting changes the colour of all text displayed on a plot.
+For example:
+
+\begin{verbatim}
+set textcolour red
+\end{verbatim}
+
+\noindent causes all text labels, including the labels on graph axes and
+legends, etc. to be rendered in red. Any of the recognised colour names listed
+in Section~\ref{colour_names} can be used.
+
+\subsection{texthalign}\index{set texthalign command@\texttt{set texthalign} command}
+
+\begin{verbatim}
+set texthalign ( left | centre | right )
+\end{verbatim}
+
+The `{\tt texthalign}' setting controls how text labels, placed on plots using the
+{\tt set label} command, and upon multiplots using the {\tt text} command, are
+justified horizontally with respect to their specified positions. Three options
+are available:
+
+\begin{verbatim}
+set texthalign left
+set texthalign centre
+set texthalign right
+\end{verbatim}
+
+\subsection{textvalign}\index{set textvalign command@\texttt{set textvalign} command}
+
+\begin{verbatim}
+set textvalign ( bottom | center | top )
+\end{verbatim}
+
+The `{\tt textvalign}' setting controls how text labels, placed on plots using the
+{\tt set label} command, and upon multiplots using the {\tt text} command, are
+justified vertically with respect to their specified positions. Three options
+are available:
+
+\begin{verbatim}
+set textvalign bottom 
+set textvalign centre
+set textvalign top
+\end{verbatim}
+
+\subsection{title}\index{set title command@\texttt{set title} command}
+
+\begin{verbatim}
+set title '<title>'
+\end{verbatim}
+
+The `{\tt title}' setting can be used to set a title for a plot, to be displayed
+above it.  For example, the command:
+
+\begin{verbatim}
+set title 'foo'
+\end{verbatim}
+
+\noindent would cause a title `foo' to be displayed above a graph. The easiest
+way to remove a title, having set one, is via:
+
+\begin{verbatim}
+set title ''
+\end{verbatim}
+   
+\subsection{width}\index{set width command@\texttt{set width} command}
+
+\begin{verbatim}
+set width <value>
+\end{verbatim}
+
+The {\tt width} setting controls the size of a graph.  For example:
+
+\begin{verbatim}
+set width 10
+\end{verbatim}
+
+\noindent sets output to be 10 centimetres in width.  For the bitmap terminals ({\tt gif},
+{\tt jpg} and {\tt png}) this setting, in conjunction with the {\tt dpi}
+setting, controls the number of pixels across the final image.
+
+\subsection{xlabel}\index{set xlabel command@\texttt{set xlabel} command}
+
+\begin{verbatim}
+set xlabel '<text>'
+\end{verbatim}
+
+The {\tt xlabel} setting controls the label placed on its $x$-axis (abscissa).
+For example:
+
+\begin{verbatim}
+set xlabel '$x$'
+\end{verbatim}
+
+\noindent sets the label on the $x$-axis to `$x$'.  Labels can be placed on higher axes by
+inserting their number after the `\texttt{x}', for example:
+
+\begin{verbatim}
+set x10label 'foo'
+\end{verbatim}
+
+\noindent would label the tenth $x$ axis.
+
+Similarly, labels can be placed on $y$-axes as follows:
+
+\begin{verbatim}
+set ylabel '$y$' 
+set y2label 'foo'
+\end{verbatim}
+
+
+\subsection{xrange}\index{set xrange command@\texttt{set xrange} command}
+
+\begin{verbatim}
+set x[<axisnumber>]range '<text>'
+\end{verbatim}
+
+The {\tt xrange} setting controls the range of values along the $x$-axes of
+plots.  For function plots, this is also the domain across which the function
+will be evaluated.  For example:
+
+\begin{verbatim}
+set xrange [0:10]
+\end{verbatim}
+
+\noindent sets the first $x$ axis to be between 0 and 10.  Higher numbered axes may be
+referred to be inserting their number after the $x$; $y$-axes similarly be
+replacing the $x$ with a $y$.  Hence:
+
+\begin{verbatim}
+set y23range [-5:5]
+\end{verbatim}
+
+\noindent sets the range of the 23rd $y$-axis to be between -5 and 5.  The
+following command:
+
+\begin{verbatim}
+set xrange [:10]
+\end{verbatim}
+
+\noindent would set the $x$-axis to have an upper limit of 10, but an
+automatically-scaling lower-limit.
+
+\subsection{xticdir}\index{set xticdir command@\texttt{set xticdir} command}
+
+\begin{verbatim}
+set (x|y)[<axisnumber>]ticdir (inward|outward|both)
+\end{verbatim}
+
+The `{\tt xticdir}' setting can be used to set whether the ticks along the
+$x$-axis of a plot point inwards, towards the graph, as by default, or outwards,
+towards the numeric labels along the axis. They can also be set to point in both
+directions simultaneously. The syntax for this is as follows:
+
+\begin{verbatim}
+set xticdir inward 
+set xticdir outward 
+set xticdir both
+\end{verbatim}
+
+The same setting can also be made on higher numbered axes, by inserting their
+numbers after the `{\tt x}', for example:
+
+\begin{verbatim}
+set x10ticdir outward
+\end{verbatim}
+
+Similarly, the `{\tt x}' can be substituted with a `{\tt y}' to set the directions of ticks
+on vertical axes:
+
+\begin{verbatim}
+set yticdir inward
+set y10ticdir both
+\end{verbatim}
+
+\subsection{xtics}\index{set xtics command@\texttt{set xtics} command}
+
+\begin{verbatim}
+set [m]x[<axisnumber>]tics 
+         [axis|border|inward|outward|both] 
+         [auto 
+          | [<minimum>,] <increment[, <maximum>] 
+          | ( '<label>' <position> ... ) 
+         ] 
+\end{verbatim}
+
+The {\tt xtics} option specifies the positions of tick marks on the $x$-axis
+(similarly, {\tt ytics} acts on the $y$-axis).  One can specify:
+
+\begin{itemize}
+\item The axis to modify; if none is specified, then the command acts upon all axes.
+
+\item {\tt mxtics} to alter the placement of minor tic marks.
+
+\item The keywords {\tt inward}, {\tt outward} and {\tt both}, which alter the
+directions of the tics.  {\tt axis} is an alias for {\tt inward}, {\tt border}
+for {\tt outward}.
+
+\item The {\tt autofreq} keyword restores automatic placement of the tics
+
+\item If {\tt minimum}, {\tt increment}, {\tt maximum} are specified, then ticks
+are placed at evenly spaced intervals between the specified limits. In the case
+of logarithmic axes, increment is applied multiplicatively. 
+
+\item The final form allows ticks to be placed on an axis manually with
+individual labels.
+\end{itemize}
+   
+Two examples:
+
+\begin{verbatim}
+set xtics 2 1 5
+\end{verbatim}
+
+\noindent will set tick marks on the $x$-axis at positions 2, 3, 4 and 5.
+
+\begin{verbatim}
+set x2tics ("a" 2, "b" 3)
+\end{verbatim}
+
+\noindent will set tick marks on the second $x$-axis at positions 2 and 3 reading `a' and
+`b' respectively.
+
+
+\subsection{ylabel}\index{set ylabel command@\texttt{set ylabel} command}
+
+See {\tt xlabel}.
+
+
+\subsection{yrange}\index{set yrange command@\texttt{set yrange} command}
+
+See {\tt xrange}.
+   
+
+\subsection{yticdir}\index{set yticdir command@\texttt{set yticdir} command}
+
+See {\tt xticdir}.
+
+
+\subsection{ytics}\index{set ytics command@\texttt{set ytics} command}
+
+See {\tt xtics}.
+
+\section{show}\index{show command@\texttt{show} command}
+
+\begin{verbatim}
+show ( all | settings | axes | variables | functions |
+       <parameter> ...                                 )
+\end{verbatim}
+
+The {\tt show} command displays the values of PyXPlot's internal parameters. For
+example:
+
+\begin{verbatim}
+show pointsize
+\end{verbatim}
+
+\noindent will display the current default point size.
+
+Details of the various settings that can be shown can be found under the {\tt
+set} command; any keyword which can follow the {\tt set} command can also follow
+the {\tt show} command.
+
+In addition, {\tt show all} shows the configuration state of all aspects of
+PyXPlot. The command {\tt show settings} shows all of PyXPlot's settings, as
+distinct from variables, functions and axes. {\tt show axes} shows the
+configuration of all of PyXPlot's axes. {\tt show variables} lists all of the
+currently defined variables. And finally, {\tt show functions} lists all of the
+current user-defined functions.
+
+
+\section{spline}\index{spline command@\texttt{spline} command}
+
+\begin{verbatim}
+spline [<range specification>] <function name> '<filename>' 
+       [index <index specification>] [every <every specification>]
+       [using <using specification>]
+\end{verbatim}
+
+The {\tt spline} command fits a spline to a datafile. A special function is
+created that represents the spline fit and can be used in the same way as any
+other user-defined function. For example:
+
+\begin{verbatim}
+spline f() 'data.1'
+\end{verbatim}
+
+\noindent would create a function $f(x)$ that is a fit to the data in the file {\tt
+data.1}. By default, the {\tt spline} command uses the first two columns of a
+data file in a manner analogous to the plot command. The {\tt index}, {\tt
+every} and {\tt using} modifiers can be used in the same way as in the {\tt
+plot} command to select which parts of the datafile should be used; see the
+{\tt datafile} section for more details.
+
+Note that trying to generate splines of multi-valued functions will not, in
+general, produce useful results.
+
+\section{text}\index{text command@\texttt{text} command}
+
+\begin{verbatim}
+text '<text string>' [at <x>, <y>] [rotate <angle>]
+\end{verbatim}
+
+The {\tt text} command is primarily part of the multiplot environment; it can be
+used to add blocks of text to a multiplot. It can, however, also be used in
+single plot mode, in a way that is described below. As always in PyXPlot, the
+text is rendered using \LaTeX. An example would be:
+
+\begin{verbatim}
+text 'Hello world' at 0,2
+\end{verbatim}
+
+\noindent which would render the text `Hello world' at position $(0,2)$,
+measured in centimetres. The alignment of the text item with respect to this
+position can be set using the {\tt set texthalign} and {\tt set textvalign}
+commands.
+
+A rotation angle may optionally be specified after the keyword `{\tt rotate}'
+to produce text rotated to any arbitrary angle, measured in degrees
+counter-clockwise. The following example would produce upward-running text:
+
+\begin{verbatim}
+text 'Hello' at 1.5, 3.6 rotate 90
+\end{verbatim}
+
+Outside of multiplot mode, the text command can be used to produce images
+consisting simply of one single text item. This can be useful for importing
+\LaTeX ed equations as gif images into slideshow programs such as Microsoft
+Powerpoint which are incapable of producing such neat mathematical notation
+by themselves.
+
+\section{undelete}\index{undelete command@\texttt{undelete} command}
+
+\begin{verbatim}
+undelete <item number>, ...
+\end{verbatim}
+
+The {\tt undelete} command is part of the multiplot environment; it can be used
+to reverse the effect of deleting a multiplot item with the {\tt delete}
+command. The desired item to be undeleted should be identified using the
+reference number which it was given when it was created; it would have been
+displayed on the terminal at that time. For example:
+
+\begin{verbatim}
+undelete 1
+\end{verbatim}
+
+\noindent will cause the previously item numbered {\tt 1} to reappear.
+  
+\section{unset}\index{unset command@\texttt{unset} command}
+
+\begin{verbatim}
+unset <setting>
+\end{verbatim}
+
+The {\tt unset} command causes a setting that has been changed using the set
+command to be returned to its default value.  For example:
+
+\begin{verbatim}
+unset linewidth
+\end{verbatim}
+
+\noindent returns the linewidth to its default value.
+
+The list of keywords which can follow the {\tt unset} command are essentially
+the same as those which can follow the {\tt set} command.
