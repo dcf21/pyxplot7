@@ -20,6 +20,7 @@
 
 # The language used in this file is generally refered to as RE++.  The atoms of the syntax are described somewhat haphazardly below.
 #
+# =                                If a match fails after this point generate an error rather than continuing
 # elephant@3:badger                Match "elephant", abbreviated to >= 3 letters, and place in "badger"
 # elephant@n                       No space after "elephant", which must be quoted in full
 # { ... }                          Optionally match ...
