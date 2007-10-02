@@ -147,8 +147,8 @@ def make_datagrid(iterator, description, lineunit, index, usingrowcol, using_lis
   using_list = using_list[:]
   for i in range(len(using_list)): using_list[i] = using_list[i].strip()
   columns    = len(using_list)
-  columns_using = columns
-  if (columns == 1): columns=2
+  columns_using = columns # The number of columns of data specified in the "using" statement
+  if (columns == 1): columns=2 # The number of columns of data that we supply.  If the user has only specified a single column we give them the row index too.
   datagrid   = []
   totalgrid  = [] # List of [file linenumber, line number for spare x-axis, list of data strings]s for all of the blocks that we're going to plot
   vars_local = vars.copy()
