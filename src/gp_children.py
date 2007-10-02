@@ -158,6 +158,7 @@ def csa_fork_gv(fname, gv_list):
   return fork
  else:
   os.dup2(gv_errorfile.fileno(), sys.stderr.fileno()) # Stop ghostview from spamming terminal
+  os.setpgid(0,0) # Make into a process group leader so that it won't be killed by ctrl-c
   os.execlp(gp_version.GHOSTVIEW, gp_version.GHOSTVIEW, gp_version.GHOSTVIEW_OPT+'watch', "%s"%fname)
   os._exit(0)
 
