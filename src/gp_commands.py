@@ -18,18 +18,18 @@
 
 # ----------------------------------------------------------------------------
 
-# The language used in this file is generally refered to as RE++.  The atoms of the syntax are described somewhat haphazardly below.
+# The language used in this file is generally refered to as RE++.  The atoms of the syntax are summarised below.
 #
-# =                                If a match fails after this point generate an error rather than continuing
-# elephant@3:badger                Match "elephant", abbreviated to >= 3 letters, and place in "badger"
-# elephant@n                       No space after "elephant", which must be quoted in full
-# { ... }                          Optionally match ...
-# < ...a... | ...b... >            Match exactly one of ...a... and ...b...
-# ( ...a... ~ ...b... )            Match ...a..., ...b... etc. in any order either 1 or 0 times each
-# %q:variable                      Match a quoted string ('...' or "...") and place it in variable
-# %S:variable                      Match an unquoted string and place it in variable 
-# %f:variable                      Match a float and place it in variable 
-# %d:variable                      Match an integer and place it in variable
+# =                      If a match fails after this point generate an error rather than continuing
+# text@3:var             Match "text", abbreviated to >= 3 letters, and place in variable var
+# text@n                 No space after "text", which must be quoted in full
+# { ... }                Optionally match ...
+# < ...a... | ...b... >  Match exactly one of ...a... or ...b...
+# ( ...a... ~ ...b... )  Match ...a..., ...b..., etc., in any order, either 1 or 0 times each
+# %q:variable            Match a quoted string ('...' or "...") and place it in variable
+# %S:variable            Match an unquoted string and place it in variable 
+# %f:variable            Match a float and place it in variable 
+# %d:variable            Match an integer and place it in variable
 
 # List of commands recognised by PyXPlot
 
