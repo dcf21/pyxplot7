@@ -25,7 +25,7 @@ import stat
 import ConfigParser
 import pyx
 
-import gp_eval
+import gp_userspace
 import gp_postscript
 from gp_error import *
 
@@ -362,15 +362,12 @@ linestyles = {} # User-defined linestyles
 arrows     = {} # Arrows superposed on figure
 labels     = {} # Text labels
 
-variables  = {'pi':3.14159265358979} # User-defined variables
-functions  = {}                      # User-defined functions
-
 # NOW IMPORT FUNCTIONS FROM CONFIGURATION FILE
 
 try:
  for preconfigvar in config_files.items('functions'):
   try:
-    gp_eval.gp_function_declare(preconfigvar[0] + "=" + preconfigvar[1], functions)
+    gp_userspace.gp_function_declare(preconfigvar[0] + "=" + preconfigvar[1])
   except KeyboardInterrupt: raise
   except:
     gp_error("Error importing function %s from configuration file:"%(preconfigvar[0]))
@@ -385,7 +382,7 @@ except:
 try:
  for preconfigvar in config_files.items('variables'):
   try:
-    variables[preconfigvar[0]] = gp_eval.gp_eval(preconfigvar[1], variables, functions)
+    gp_userspace.gp_variable_set(preconfigvar[0], gp_eval.gp_eval(preconfigvar[1]))
   except KeyboardInterrupt: raise
   except:
     gp_warning("Warning: Expression '%s' for variable %s in configuration file could not be evaluated."%(preconfigvar[0],preconfigvar[1]))
@@ -457,7 +454,7 @@ tempdirnumber = 1
 file_paths=['foo']
 while (len(file_paths) != 0): # Take care not to overright a pre-existing file in /tmp
  tempdirnumber = tempdirnumber + 1
- tempdir = "/tmp/gp+_" + str(os.getpid()) + "_" + str(tempdirnumber)
+ tempdir = "/tmp/pyxplot_" + str(os.getpid()) + "_" + str(tempdirnumber)
  file_paths=glob.glob(tempdir)
 os.makedirs(tempdir,mode=0700)
 if ((not os.path.isdir(tempdir)) or (not (os.stat(tempdir)[stat.ST_UID] == os.getuid()))):

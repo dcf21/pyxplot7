@@ -44,7 +44,7 @@ using_use_warned = False
 
 # DIRECTIVE_TABULATE(): Handles the 'tabulate' command
 
-def directive_tabulate(command,vars,funcs,settings):
+def directive_tabulate(command,vars,settings):
   # Get the axes sorted out first
   axes = { 'x':{}, 'y':{}, 'z':{} } 
   for dir in ['x', 'y']:
@@ -132,7 +132,7 @@ def directive_tabulate(command,vars,funcs,settings):
 
   if 'filename' in command:
    # Obtain file data straight away
-   datagrid = gp_datafile.gp_dataread(datafile, index, usingrowcol, using, select_criteria, select_cont, every, vars, funcs, "tabulate", True, None)
+   datagrid = gp_datafile.gp_dataread(datafile, index, usingrowcol, using, select_criteria, select_cont, every, vars, "tabulate", True, None)
   else: # Deal with tabulating functions
    # Automatic range choices
    if (axes['x'][1]['MIN'] == None):
@@ -151,7 +151,7 @@ def directive_tabulate(command,vars,funcs,settings):
    else:                                              xrast = gp_math.linrast(axes['x'][1]['MIN'], axes['x'][1]['MAX'], settings['SAMPLES'])
    
    # Obtain the data grid
-   datagrid = gp_datafile.gp_function_datagrid(xrast, functions, 'x', usingrowcol, using, select_criteria, select_cont, every, vars, funcs, 'tabulate', True, None)
+   datagrid = gp_datafile.gp_function_datagrid(xrast, functions, 'x', usingrowcol, using, select_criteria, select_cont, every, vars, 'tabulate', True, None)
   
   # Filter the data that we've got
   datagrid = filter_dataset(datagrid, axes)

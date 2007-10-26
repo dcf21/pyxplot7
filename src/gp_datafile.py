@@ -39,21 +39,21 @@ ERRORS_MAX = 4
 # GP_DATAREAD(): Read a data file, selecting only every nth item from index m, using ....
 #                This is just a wrapper for make_datagrid
 
-def gp_dataread(datafile, index, usingrowcol, using_list, select_criterion, select_cont, every_list, vars, funcs, style, verb_errors=True, firsterror=None):
+def gp_dataread(datafile, index, usingrowcol, using_list, select_criterion, select_cont, every_list, vars, style, verb_errors=True, firsterror=None):
   # Open input datafile
   if (re.search(r"\.gz$",datafile) != None): # If filename ends in .gz, open it with gunzip
    f         = gzip.open(os.path.join(gp_settings.cwd, os.path.expanduser(datafile)),"r")
   else:
    f         = open(os.path.join(gp_settings.cwd, os.path.expanduser(datafile)),"r")
 
-   datagrid = make_datagrid(iterate_file(f), "of file %s"%datafile, "line ", index, usingrowcol, using_list, select_criterion, select_cont, every_list, vars, funcs, style, verb_errors, firsterror=None)
+   datagrid = make_datagrid(iterate_file(f), "of file %s"%datafile, "line ", index, usingrowcol, using_list, select_criterion, select_cont, every_list, vars, style, verb_errors, firsterror=None)
 
   f.close()
   return datagrid
 
 # GP_FUNCTION_DATAGRID(): Evaluate a (set of) function(s), producing a grid of values
 # This mostly wraps make_datagrid with a bit of cleverness
-def gp_function_datagrid(xrast, functions, xname, usingrowcol, using_list, select_criterion, select_cont, every_list, vars, funcs, style, verb_errors=True, firsterror=None):
+def gp_function_datagrid(xrast, functions, xname, usingrowcol, using_list, select_criterion, select_cont, every_list, vars, style, verb_errors=True, firsterror=None):
   datagrid   = []
   local_vars = vars.copy()
 
@@ -64,7 +64,7 @@ def gp_function_datagrid(xrast, functions, xname, usingrowcol, using_list, selec
    description = "in functions %s"%', '.join(functions)
 
   # Obtain the set of functions
-  datagrid = make_datagrid(iterate_function(xrast, functions, xname, local_vars, funcs), description, "x=", 0, usingrowcol, using_list, select_criterion, select_cont, every_list, local_vars, funcs, style, verb_errors, firsterror)
+  datagrid = make_datagrid(iterate_function(xrast, functions, xname, local_vars), description, "x=", 0, usingrowcol, using_list, select_criterion, select_cont, every_list, local_vars, style, verb_errors, firsterror)
 
   # If function evaluation produced no data we check for unevaluable functions.
   # Alternatively there may have been a bad select criterion (in which case the
@@ -74,7 +74,7 @@ def gp_function_datagrid(xrast, functions, xname, usingrowcol, using_list, selec
    local_vars[xname] = xrast[0]
    for item in functions:
     try:
-     val = gp_eval.gp_eval(item,local_vars,funcs,verbose=False)
+     val = gp_eval.gp_eval(item,local_vars,verbose=False)
     except KeyboardInterrupt: raise
     except:
      if verb_errors: gp_error("Error evaluating expression '%s':"%item)
@@ -89,13 +89,13 @@ def gp_function_datagrid(xrast, functions, xname, usingrowcol, using_list, selec
   return datagrid
 
 # ITERATE_FUNCTION(): Given a function description iterate it over a supplied raster
-def iterate_function(xrast, functions, xname, vars, funcs):
+def iterate_function(xrast, functions, xname, vars):
   local_vars = vars.copy()
   for x in xrast:
    local_vars[xname] = x
    datapoint = [x]
    for item in functions:
-    try:    val = gp_eval.gp_eval(item,local_vars,funcs,verbose=False)
+    try:    val = gp_eval.gp_eval(item,local_vars,verbose=False)
     except KeyboardInterrupt: raise
     # except: pass
     except: datapoint.append('Function evaluation failure') # Note that this is a magic value to trigger a subsequent error
@@ -132,7 +132,7 @@ def iterate_file(f):
 # MAKE_DATAGRID(): Make a big grid of data to be plotted given an iterator that
 # produces lines of data.  The function used to form most of gp_dataread
 
-def make_datagrid(iterator, description, lineunit, index, usingrowcol, using_list, select_criterion, select_cont, every_list, vars, funcs, style, verb_errors=True, firsterror=None):
+def make_datagrid(iterator, description, lineunit, index, usingrowcol, using_list, select_criterion, select_cont, every_list, vars, style, verb_errors=True, firsterror=None):
   index_no   = 0
   rows       = 0
   single_column_datafile = True
@@ -169,11 +169,11 @@ def make_datagrid(iterator, description, lineunit, index, usingrowcol, using_lis
   try:
    # Parse using list
    error_str = 'Internal error while parsing using expressions'
-   parse_using (using_list, data_used, vars_local, funcs, verb_errors)
+   parse_using (using_list, data_used, vars_local, verb_errors)
 
    # Parse select criterion
    error_str = "Internal error while parsing select criterion -- offending expression was '%s'."%select_criterion
-   select_criterion = parse_select (select_criterion, data_used, vars_local, funcs)
+   select_criterion = parse_select (select_criterion, data_used, vars_local)
 
   except KeyboardInterrupt: raise
   except:
@@ -296,13 +296,13 @@ def make_datagrid(iterator, description, lineunit, index, usingrowcol, using_lis
    if (single_column_datafile and usingrowcol == "col"):
     # In this case we want to just plot the first column against the data item counter.
     using_list = ['1']
-    parse_using (using_list, data_used, vars_local, funcs, verb_errors)
+    parse_using (using_list, data_used, vars_local, verb_errors)
     del data_required['cols']['data'][2]
     columns_using = 1
    elif (single_row_datafile and usingrowcol == "row"):
     # Ditto but for the first row
     using_list = ['1']
-    parse_using (using_list, data_used, vars_local, funcs, verb_errors)
+    parse_using (using_list, data_used, vars_local, verb_errors)
     del data_required['rows']['data'][2]
     columns_using = 1
 
@@ -358,7 +358,7 @@ def make_datagrid(iterator, description, lineunit, index, usingrowcol, using_lis
      # Check whether this data point satisfies select() criteria
      if (select_criterion != ""):
       error_str = "Warning: Could not evaluate select criterion at %s%s %s."%(lineunit, linenumber, description)
-      value = gp_eval.gp_eval(select_criterion, vars_local, funcs, verbose=False)
+      value = gp_eval.gp_eval(select_criterion, vars_local, verbose=False)
       if (value == 0.0): 
        invalid_datapoint = True # gp_eval applies float() to result and turns False into 0.0
        if ((select_cont == False)and(len(outblockgrid) > 0)): # Break line by creating new block here
@@ -371,7 +371,7 @@ def make_datagrid(iterator, description, lineunit, index, usingrowcol, using_lis
       data_item.append(data_counter)
      data_counter += 1
      error_str = "Warning: Could not parse data at %s%s %s."%(lineunit, linenumber, description)
-     errcount += evaluate_using(data_item, using_list, vars_local, funcs, style, firsterror, verb_errors, lineunit, linenumber, description)
+     errcount += evaluate_using(data_item, using_list, vars_local, style, firsterror, verb_errors, lineunit, linenumber, description)
      if (verb_errors and (errcount > ERRORS_MAX)):
       gp_warning("Warning: Not displaying any more errors for %s."%description) 
       verb_errors = False
@@ -394,10 +394,10 @@ def make_datagrid(iterator, description, lineunit, index, usingrowcol, using_lis
   return outgrid
 
 # EVALUATE_USING(): Evaluates the using() statement for a single data point
-def evaluate_using(data_item, using_list, vars_local, funcs, style, firsterror, verb_errors, lineunit, fileline, description):
+def evaluate_using(data_item, using_list, vars_local, style, firsterror, verb_errors, lineunit, fileline, description):
   errcount = 0
   for k in range(len(using_list)):
-   value = gp_eval.gp_eval(using_list[k], vars_local, funcs, verbose=False)
+   value = gp_eval.gp_eval(using_list[k], vars_local, verbose=False)
    if (not SCIPY_ABSENT) and (not scipy.isfinite(value)): raise ValueError
    if (style[-5:] != "range"):
     if ((firsterror != None) and (k >= firsterror) and (value < 0.0)): # Check for negative error bars
@@ -448,7 +448,7 @@ def parse_every (every_list, verb_errors):
 
 # PARSE_USING: Parse a "using" modifier, modifying to provide references to the relevent local variables
 
-def parse_using (using_list, data_used, vars_local, funcs, verb_errors):
+def parse_using (using_list, data_used, vars_local, verb_errors):
   for i in range(len(using_list)):
    error_str = "Internal error while parsing using expressions -- offending expression was '%s'."%using_list[i]
    # Match "23" on its own, and turn that into hidden variable _gp_param23
@@ -471,7 +471,7 @@ def parse_using (using_list, data_used, vars_local, funcs, verb_errors):
      while 1:
        test = re.search(r"\$([A-Za-z]\w*)",using_list[i])
        if (test != None):
-         number = int(gp_eval.gp_eval(test.group(1),vars_local, funcs))
+         number = int(gp_eval.gp_eval(test.group(1),vars_local))
          using_list[i] = using_list[i][:test.start()] + "_gp_param" + str(number) + using_list[i][test.end():]
          data_used[number]='used'
        else:
@@ -481,7 +481,7 @@ def parse_using (using_list, data_used, vars_local, funcs, verb_errors):
        test = re.search(r"\$\((.*)",using_list[i])
        if (test != None):
          brackets = gp_eval.gp_bracketmatch(test.group(1),0)
-         number = int(gp_eval.gp_eval(test.group(1)[:brackets[-1]],vars_local, funcs))
+         number = int(gp_eval.gp_eval(test.group(1)[:brackets[-1]],vars_local))
          using_list[i] = using_list[i][:test.start()] + "_gp_param" + str(number) + test.group(1)[brackets[-1]+1:]
          data_used[number]='used'
        else:
@@ -490,7 +490,7 @@ def parse_using (using_list, data_used, vars_local, funcs, verb_errors):
 
 # PARSE_SELECT: Parse a "select" modifier, modifying to provide references to the relevent local variables
 
-def parse_select (select_criterion, data_used, vars_local, funcs):
+def parse_select (select_criterion, data_used, vars_local):
   # Match $23, and turn that into hidden variable _gp_param_23
   while 1:
     test = re.search(r"\$([0-9][0-9]*)",select_criterion)
@@ -504,7 +504,7 @@ def parse_select (select_criterion, data_used, vars_local, funcs):
   while 1:
     test = re.search(r"\$([A-Za-z]\w*)",select_criterion)
     if (test != None):
-      number = int(gp_eval.gp_eval(test.group(1),vars_local, funcs))
+      number = int(gp_eval.gp_eval(test.group(1),vars_local))
       select_criterion = select_criterion[:test.start()] + "_gp_param" + str(number) + select_criterion[test.end():]
       data_used[number]='used'
     else:
@@ -514,7 +514,7 @@ def parse_select (select_criterion, data_used, vars_local, funcs):
     test = re.search(r"\$\((.*)",select_criterion)
     if (test != None):
       brackets = gp_eval.gp_bracketmatch(test.group(1),0)
-      number = int(gp_eval.gp_eval(test.group(1)[:brackets[-1]],vars_local, funcs))
+      number = int(gp_eval.gp_eval(test.group(1)[:brackets[-1]],vars_local))
       select_criterion = select_criterion[:test.start()] + "_gp_param" + str(number) + test.group(1)[brackets[-1]+1:]
       data_used[number]='used'
     else:

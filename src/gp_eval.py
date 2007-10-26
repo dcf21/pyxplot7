@@ -22,22 +22,12 @@
 
 import sys
 import re
-from math import *
-
-try: import scipy.integrate
-except: SCIPY_ABSENT = True
-else: SCIPY_ABSENT = False
 
 from gp_error import *
-import gp_spline
-
-# GP_EVAL_INTEGRAND(): Evaluates an integrand, passed to it from the scipy.integrate.quad function
-def gp_eval_integrand(x, expression, xname, vars, funcs, iteration):
-  vars[xname] = x
-  return gp_eval(expression, vars, funcs, False, iteration+1)
+import gp_userspace
 
 # GP_EVAL(): Evaluates an expression, substituting user defined variables and functions
-def gp_eval(expression, vars, funcs, verbose=True, iteration=1):
+def gp_eval(expression, vars, verbose=True, iteration=1):
   if (iteration > 20):
    raise OverflowError, "Iteration depth exceeded in function evaluation."
   try:
@@ -48,147 +38,13 @@ def gp_eval(expression, vars, funcs, verbose=True, iteration=1):
     except: pass
     else: return evalexp
 
-    # Evaluate any integral functions
-    while 1:
-      test = re.match(r"(.*(^|\W))int_d([A-Za-z]\w*)\((.*)$",expression)
-      if (test == None): break
-      assert not SCIPY_ABSENT, "The integration of functions requires the scipy module for python, which is not installed. Please install and try again."
-      func = test.group(3)
-      bracketmatch = gp_bracketmatch(expression, test.start(4)-1)
-      if (len(bracketmatch) == 0): raise SyntaxError, "Mismatched brackets for integral 'int_d%s'."%func
-      if (len(bracketmatch) != 3): raise SyntaxError, "Integral 'int_d%s' should take three parameters -- expression, min, max."%func
-      min = gp_eval(expression[ (bracketmatch[0]+1):bracketmatch[0+1] ], vars, funcs, False, iteration+1)
-      max = gp_eval(expression[ (bracketmatch[1]+1):bracketmatch[1+1] ], vars, funcs, False, iteration+1)
-      func_scope = vars.copy()
-      integration_result = scipy.integrate.quad(gp_eval_integrand, min, max, full_output=1, args=(expression[test.start(4):bracketmatch[0]],func,func_scope,funcs,iteration))
-      if verbose and (len(integration_result)>3):
-        gp_warning("Warning whilst integrating expression %s:\n%s"%(expression[test.start(4):bracketmatch[0]],integration_result[3]))
-      expression = test.group(1) + str(integration_result[0]) + expression[bracketmatch[len(bracketmatch)-1]+1:]
-
-    # Evaluate any differential function
-    while 1:
-      test = re.match(r"(.*(^|\W))diff_d([A-Za-z]\w*)\((.*)$",expression)
-      if (test == None): break
-      func = test.group(3)
-      bracketmatch = gp_bracketmatch(expression, test.start(4)-1)
-      if   (len(bracketmatch) == 0):
-        raise SyntaxError, "Mismatched brackets for differential 'diff_d%s'."%func
-      elif (len(bracketmatch) == 2):
-        epsilon1 = epsilon2 = 1e-6
-      elif (len(bracketmatch) == 3):
-        epsilon1 = gp_eval(expression[ (bracketmatch[1]+1):bracketmatch[1+1] ], vars, funcs, False, iteration+1)
-        epsilon2 = 1e-6
-      elif (len(bracketmatch) == 4):
-        epsilon1 = gp_eval(expression[ (bracketmatch[1]+1):bracketmatch[1+1] ], vars, funcs, False, iteration+1)
-        epsilon2 = gp_eval(expression[ (bracketmatch[2]+1):bracketmatch[2+1] ], vars, funcs, False, iteration+1)
-      else:
-        raise SyntaxError, "Differential 'diff_d%s' should take 2-4 parameters -- expression, point at which to differentiate, epsilon."%func
-      func_scope = vars.copy()
-      xval = gp_eval(expression[ (bracketmatch[0]+1):bracketmatch[0+1] ], vars, funcs, False, iteration+1)
-      epsilon = epsilon1 + xval * epsilon2
-      func_scope[func] = xval-epsilon/2.0 ; x1 = gp_eval(expression[ test.start(4):bracketmatch[0]], func_scope, funcs, False, iteration+1)
-      func_scope[func] = xval+epsilon/2.0 ; x2 = gp_eval(expression[ test.start(4):bracketmatch[0]], func_scope, funcs, False, iteration+1)
-      expression = test.group(1) + str((x2-x1)/epsilon) + expression[bracketmatch[len(bracketmatch)-1]+1:]
-
-    # Evaluate any functions
-    for func,fexp in funcs.iteritems():
-      while 1:
-        test = re.match(r"(.*(^|\W))%s\s*\((.*)$"%func,expression)
-        if (test == None): break
-        bracketmatch = gp_bracketmatch(expression, test.start(3)-1)
-        if (len(bracketmatch) == 0):            raise SyntaxError, "Mismatched brackets for function '%s'."%func
-        if (len(bracketmatch) != abs(fexp[0])): raise SyntaxError, "Function '%s' takes %d arguments; %d provided."%(func,abs(fexp[0]),len(bracketmatch))
-        args = []
-        bracketmatch.insert(0,test.start(3)-1)
-        for i in range(abs(fexp[0])):
-          args.append(gp_eval(expression[ (bracketmatch[i]+1):bracketmatch[i+1] ], vars, funcs, False, iteration+1))
-        if (fexp[0] < 0): # This is a spline
-          try:
-            value = gp_spline.spline_evaluate(args[0], fexp[1][0][1])
-            expression = test.group(1) + str(value) + expression[bracketmatch[len(bracketmatch)-1]+1:]
-          except KeyboardInterrupt: raise
-          except:
-            raise ValueError, "Error evaluating spline %s"%func
-        else:             # This is a function
-          funcdone = False
-          for defno in range(len(fexp[1])):
-            if not funcdone:
-              j = len(fexp[1]) - 1 - defno
-              func_scope = vars.copy()
-              inrange = True
-              for i in range(fexp[0]): func_scope[fexp[1][j][0][i]] = args[i]
-              for i in range(fexp[0]):
-                try:
-                 if (fexp[1][j][1][i][0] != None): minrange = gp_eval(fexp[1][j][1][i][0],func_scope,funcs,False,iteration+1)
-                 else                            : minrange = None
-                 if (fexp[1][j][1][i][1] != None): maxrange = gp_eval(fexp[1][j][1][i][1],func_scope,funcs,False,iteration+1)
-                 else                            : maxrange = None
-                except KeyboardInterrupt: raise
-                except:
-                 if (verbose):
-                  gp_error("Error evaluating range of function '%s'."%func)
-                  gp_error("(it may be necessary to delete it with 'f(x)=' and then redefine it)")
-                 raise
-                if ((minrange != None) and (args[i] < minrange)): inrange = False
-                if ((maxrange != None) and (args[i] > maxrange)): inrange = False
-              if inrange:
-                expression = test.group(1) + str(gp_eval(fexp[1][j][2],func_scope,funcs,False,iteration+1)) + expression[bracketmatch[len(bracketmatch)-1]+1:]
-                funcdone   = True
-          if not funcdone:
-            raise ValueError, "Attempt to evaluate function '%s' with arguments out of their specified ranges."%func
-
-    # All local functions substituted for; now evaluate what is left.
-    return float(eval(expression, globals(), vars))
+    return float(eval(expression, gp_userspace.function_namespace, vars))
   except KeyboardInterrupt: raise
   except:
    if (verbose):
     gp_error("Error evaluating expression %s"%expression)
     gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
    raise
-
-# GP_FUNCTION_DECLARE(): Declare a new function, possibly with a range
-def gp_function_declare(line, funcs):
- test = re.match(r'([A-Za-z]\w*)\(([^()]*)\)\s*([^=]*)=(.*)',line)
- if (test == None):
-  gp_error("Error: bad function definition '%s' could not be parsed."%line)
-  return
-
- name       = test.group(1) # The name of the function
- arguments  = gp_split(test.group(2),",") # A textual list of its arguments
- arguments2 = [] # A stripped and checked list of its arguments
- ranges     = gp_split(test.group(3),"[")[1:] # List of range strings
- ranges2    = [] # A stripped and checked list of range strings
- expression = test.group(4).strip()
-
- for argument in arguments:
-  test2 = re.match(r'^[A-Za-z]\w*$',argument.strip())
-  if (test2 == None): raise SyntaxError, "Error: Function has badly formed argument name '%s'."%argument
-  arguments2.append(argument.strip())
-
- for i in range(len(arguments)):
-  if (i >= len(ranges)):
-   ranges2.append([None, None]) # No range, if none specified
-  else:
-   rangestr = ranges[i].strip()
-   if (rangestr == "]"): # Case [] means all x
-    min = max = None
-   else:
-    test2 = re.match("([^:\]]*)((:)|( *to *))([^:\]]*)\]", rangestr)
-    if (test2 == None): raise SyntaxError, "Error: range of argument %d should take form [min:max] or [min to max], but instead has form '[%s'."%(i+1,rangestr)
-    min = test2.group(1).strip()
-    max = test2.group(5).strip()
-    if (len(min) == 0): min = None
-    if (len(max) == 0): max = None
-   ranges2.append([min,max])
-
- if   (len(expression) == 0)                                  :
-  try:
-   del funcs[name]
-  except KeyboardInterrupt: raise
-  except:
-   raise KeyError, "Attempt to delete a function '%s' which does not exist."%name
- elif ((name in funcs) and (funcs[name][0] == len(arguments))): funcs[name][1].append([arguments2,ranges2,expression])
- else                                                         : funcs[name] = [len(arguments), [[arguments2,ranges2,expression]]]
 
 # GP_BRACKETMATCH(): Find a matching closing bracket for an opening bracket
 

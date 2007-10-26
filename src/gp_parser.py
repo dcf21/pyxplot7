@@ -142,7 +142,7 @@ for def_txt in gp_commands.commands.splitlines(): # Loop over PyXPlot's commands
 # PARSE(): Top-level interface. Parses a commandline "line" from the user.
 # It expects that ; and `` have already been dealt with by pyxplot.py
 
-def parse(line, vars, funcs):
+def parse(line, vars):
   for command,vardict in commands: # Try each command in turn to see if it fits
     match   = False # Match doesn't necessarily mean a command fully fit; it means the command began to fit, so this was the right command
     linepos = 0 # Measures how far along the line we've got
@@ -150,7 +150,7 @@ def parse(line, vars, funcs):
     expecting = "" # String returned in syntax error saying "these options would have been valid at this point"
     algebra_linepos = None
     algebra_error = ""
-    [linepos, success, expecting, algebra_linepos, algebra_error, match, dict] = parse_descend(line, vars, funcs, linepos, expecting, algebra_linepos, algebra_error, command, match, dict)
+    [linepos, success, expecting, algebra_linepos, algebra_error, match, dict] = parse_descend(line, vars, linepos, expecting, algebra_linepos, algebra_error, command, match, dict)
     if not match: continue # This command didn't even begin to match
     if (not success) or (line[linepos:].strip() != ""): # This command matched, but there was a syntax error along the way
       if (algebra_linepos == None): errorstr = "Syntax Error -- "
@@ -179,7 +179,6 @@ def parse(line, vars, funcs):
 # PARSE_DESCEND(): We go through command definition structure, recursively descending into sub-structures
 #   line -- input line from user
 #   vars -- PyXPlot's user-defined variables; used for evaluating expressions
-#   funcs -- PyXPlot's user-defined functions; used for evaluating expressions
 #   linepos -- how far through line have we got with our parsing efforts so far?
 #   expecting -- used to build up a list of all possible match items which could be used for next word. Used for intelligent syntax errors.
 #   algebra_linepos -- if we encounter an error evaluating an expression, we store the position in the line of the error here.
@@ -188,7 +187,7 @@ def parse(line, vars, funcs):
 #   match -- we set this to true when we've got match to be sure this was the command that the user wanted, even if he made a syntax error.
 #   dict -- we populate this dictionary with settings from the user's input
 
-def parse_descend(line, vars, funcs, linepos, expecting, algebra_linepos, algebra_error, command, match, dict):
+def parse_descend(line, vars, linepos, expecting, algebra_linepos, algebra_error, command, match, dict):
   while (linepos<len(line)) and (line[linepos] in [' ', '\t', '\n']): linepos += 1 # Fast forward over whitespace between words
   success = True # Blank structures are fit by user input
 
@@ -243,7 +242,7 @@ def parse_descend(line, vars, funcs, linepos, expecting, algebra_linepos, algebr
             [posend, error] = gp_eval.gp_getexpression(line[linepos+test.start(2):], False)
             if (error == None):
               try:
-                axis_no = int(gp_eval.gp_eval(line[linepos+test.start(2):linepos+test.start(2)+posend], vars, funcs, verbose=False))
+                axis_no = int(gp_eval.gp_eval(line[linepos+test.start(2):linepos+test.start(2)+posend], vars, verbose=False))
                 assert axis_no>0 and axis_no<1025, "Axis numbers should be in the range 0 --> 1024."
                 match_string = test.group(1).lower() + "%d"%(axis_no)
                 linepos += test.start(2)+posend
@@ -270,7 +269,7 @@ def parse_descend(line, vars, funcs, linepos, expecting, algebra_linepos, algebr
             linepos += posend
           else:
             try:
-              value = gp_eval.gp_eval(line[linepos:linepos+posend], vars, funcs, verbose=False)
+              value = gp_eval.gp_eval(line[linepos:linepos+posend], vars, verbose=False)
               if   (command[0][1] == "%f"): match_string = float(value)
               elif (command[0][1] == "%d"): match_string = int(value)
               else                      : raise SyntaxError, "Should not be here!"
@@ -318,7 +317,7 @@ def parse_descend(line, vars, funcs, linepos, expecting, algebra_linepos, algebr
 
   elif (command[0][0] == "seq"): # Descending into a sequence of items which we've got to match one by one
     for i in range(1,len(command)):
-      [linepos, success, expecting, algebra_linepos, algebra_error, match, dict] = parse_descend(line, vars, funcs, linepos, expecting, algebra_linepos, algebra_error, command[i], match, dict)
+      [linepos, success, expecting, algebra_linepos, algebra_error, match, dict] = parse_descend(line, vars, linepos, expecting, algebra_linepos, algebra_error, command[i], match, dict)
       if not success: break
 
   elif (command[0][0] == "rep"): # Descending into a repeating item which we can match 0 or more times
@@ -329,11 +328,11 @@ def parse_descend(line, vars, funcs, linepos, expecting, algebra_linepos, algebr
       dict_baby = {}
       linepos_old = linepos
       if (command[0][1][-1] in [":",","]) and (not first):
-        [linepos, success, expecting, algebra_linepos, algebra_error, match, dict_baby] = parse_descend(line, vars, funcs, linepos, expecting, algebra_linepos, algebra_error, [["item",command[0][1][-1],"n",None,None]], match, dict_baby) # Match link character between repeats
+        [linepos, success, expecting, algebra_linepos, algebra_error, match, dict_baby] = parse_descend(line, vars, linepos, expecting, algebra_linepos, algebra_error, [["item",command[0][1][-1],"n",None,None]], match, dict_baby) # Match link character between repeats
       first = False
       if success:
         for i in range(1,len(command)):
-          [linepos, success, expecting, algebra_linepos, algebra_error, match, dict_baby] = parse_descend(line, vars, funcs, linepos, expecting, algebra_linepos, algebra_error, command[i], match, dict_baby) # Try to repeat
+          [linepos, success, expecting, algebra_linepos, algebra_error, match, dict_baby] = parse_descend(line, vars, linepos, expecting, algebra_linepos, algebra_error, command[i], match, dict_baby) # Try to repeat
           if not success:
             if (linepos == linepos_old): success = True # If we haven't actually processed any characters in trying to repeat, that's fine
             repeating = False # But we can't stop part-way through a repeat
@@ -347,7 +346,7 @@ def parse_descend(line, vars, funcs, linepos, expecting, algebra_linepos, algebr
   elif (command[0][0] == "opt"): # Descending into an optional item
     linepos_old = linepos
     for i in range(1,len(command)):
-      [linepos, success, expecting, algebra_linepos, algebra_error, match, dict] = parse_descend(line, vars, funcs, linepos, expecting, algebra_linepos, algebra_error, command[i], match, dict)
+      [linepos, success, expecting, algebra_linepos, algebra_error, match, dict] = parse_descend(line, vars, linepos, expecting, algebra_linepos, algebra_error, command[i], match, dict)
       if not success:
         if (linepos == linepos_old): success = True # If we fail, doesn't matter, this was optional. But we mustn't have matched ANYTHING
         break
@@ -359,7 +358,7 @@ def parse_descend(line, vars, funcs, linepos, expecting, algebra_linepos, algebr
       linepos_old = linepos
       for i in range(1,len(command)):
         if not i in excluded:
-          [linepos, success, expecting, algebra_linepos, algebra_error, match, dict] = parse_descend(line, vars, funcs, linepos, expecting, algebra_linepos, algebra_error, command[i], match, dict)
+          [linepos, success, expecting, algebra_linepos, algebra_error, match, dict] = parse_descend(line, vars, linepos, expecting, algebra_linepos, algebra_error, command[i], match, dict)
         else:
           success = False
         if success:
@@ -374,7 +373,7 @@ def parse_descend(line, vars, funcs, linepos, expecting, algebra_linepos, algebr
   elif (command[0][0] == "ora"): # Descending into a either / or item
     linepos_old = linepos
     for i in range(1,len(command)):
-      [linepos, success, expecting, algebra_linepos, algebra_error, match, dict] = parse_descend(line, vars, funcs, linepos, expecting, algebra_linepos, algebra_error, command[i], match, dict)
+      [linepos, success, expecting, algebra_linepos, algebra_error, match, dict] = parse_descend(line, vars, linepos, expecting, algebra_linepos, algebra_error, command[i], match, dict)
       if success: break
       if (linepos != linepos_old): break # An OR item began to match, but couldn't finish. This is a slight fudge. Basically, OR items must differ in first word.
   else:

@@ -35,7 +35,7 @@ else: SCIPY_ABSENT = False
 
 # DIRECTIVE_SPLINE(): Implements the "spline" directive
 
-def directive_spline(command, vars, funcs):
+def directive_spline(command, vars):
 
   assert not SCIPY_ABSENT, "The use of cubic splines requires the scipy module for python, which is not installed. Please install and try again."
 
@@ -86,7 +86,7 @@ def directive_spline(command, vars, funcs):
 
   # We have now read all of our commandline parameters, and are ready to start spline fitting
   try:
-   (rows,columns,datagrid) = gp_datafile.gp_dataread(datafile, index, usingrowcol, using, select_criteria, select_cont, every, vars, funcs, "points")[0]
+   (rows,columns,datagrid) = gp_datafile.gp_dataread(datafile, index, usingrowcol, using, select_criteria, select_cont, every, vars, "points")[0]
   except KeyboardInterrupt: raise
   except:
    gp_error("Error reading input datafile:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")

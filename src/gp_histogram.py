@@ -28,7 +28,7 @@ from math import *
 
 # DIRECTIVE_HISTOGRAM(): Implements the "histogram" directive
 
-def directive_histogram(command, vars, funcs, settings):
+def directive_histogram(command, vars, settings):
   
   # First we need to get our data, so we use gp_datafile
   # Ranges
@@ -72,7 +72,7 @@ def directive_histogram(command, vars, funcs, settings):
 
   # We have now read all of our commandline parameters, and are ready to get the data
   try:
-   (rows,columns,datagrid) = gp_datafile.gp_dataread(datafile, index, usingrowcol, using, select_criteria, True, every, vars, funcs, "points")[0]
+   (rows,columns,datagrid) = gp_datafile.gp_dataread(datafile, index, usingrowcol, using, select_criteria, True, every, vars, "points")[0]
   except KeyboardInterrupt: raise
   except:
    gp_error("Error reading input datafile:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
@@ -119,7 +119,7 @@ def directive_histogram(command, vars, funcs, settings):
   counts = histcount(bins, datagrid, binrange)
   
   # Turn the binned data into a function
-  make_histogram_function(funcname, bins, counts, funcs)
+  make_histogram_function(funcname, bins, counts)
 
   return
 
@@ -127,21 +127,21 @@ def directive_histogram(command, vars, funcs, settings):
 # To accomplish this we call the internal spliced function creation routine
 # Hic draconis
 
-def make_histogram_function(funcname, bins, counts, funcs):
+def make_histogram_function(funcname, bins, counts):
   # See if the function already exists and delete it if it does
-  if (funcname in funcs):
-   gp_eval.gp_function_declare("%s(x) = "%funcname, funcs)
+  if (funcname in gp_userspace.functions):
+   gp_userspace.gp_function_declare("%s(x) = "%funcname)
 
   # First set the function to be zero everywhere
   line = "%s(x) = 0."%funcname
-  gp_eval.gp_function_declare(line, funcs)
+  gp_eval.gp_function_declare(line)
 
   # Then iterate through each of the bins
   for i in range(1,len(bins)):
    if (counts[i] == 0): 
     continue
    line = "%s(x) [%f:%f] = %f"%(funcname,bins[i-1],bins[i],counts[i])
-   gp_eval.gp_function_declare(line, funcs)
+   gp_eval.gp_function_declare(line)
    
   return
 

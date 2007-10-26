@@ -114,7 +114,7 @@ def coord_transform(g, axes, systx, systy, x0, y0):
 
 # DIRECTIVE_TEXT(): Handles the 'text' command
 
-def directive_text(command,linestyles,vars,funcs,settings,interactive):
+def directive_text(command,linestyles,vars,settings,interactive):
  if (settings['MULTIPLOT'] != 'ON'): plotorder_clear()
 
  title = command['string']
@@ -142,7 +142,7 @@ def directive_text(command,linestyles,vars,funcs,settings,interactive):
 
  if (settings['DISPLAY'] == "ON"):
   try:
-   multiplot_plot(linestyles,vars,funcs,settings)
+   multiplot_plot(linestyles,vars,settings)
   except KeyboardInterrupt: raise
   except:
    gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
@@ -155,7 +155,7 @@ def directive_text(command,linestyles,vars,funcs,settings,interactive):
 
 # DIRECTIVE_ARROW(): Handles the 'arrow' command
 
-def directive_arrow(command,linestyles,vars,funcs,settings,interactive):
+def directive_arrow(command,linestyles,vars,settings,interactive):
  if (settings['MULTIPLOT'] != 'ON'): plotorder_clear()
  
  x0 = command['x1'] ; y0 = command['y1']
@@ -178,7 +178,7 @@ def directive_arrow(command,linestyles,vars,funcs,settings,interactive):
 
  if (settings['DISPLAY'] == "ON"):
   try:
-   multiplot_plot(linestyles,vars,funcs,settings)
+   multiplot_plot(linestyles,vars,settings)
   except KeyboardInterrupt: raise
   except:
    gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
@@ -191,7 +191,7 @@ def directive_arrow(command,linestyles,vars,funcs,settings,interactive):
 
 # DIRECTIVE_JPEG(): Handles the 'jpeg' command
 
-def directive_jpeg(command,linestyles,vars,funcs,settings,interactive):
+def directive_jpeg(command,linestyles,vars,settings,interactive):
  if (settings['MULTIPLOT'] != 'ON'): plotorder_clear()
 
  filename = command['filename']
@@ -223,7 +223,7 @@ def directive_jpeg(command,linestyles,vars,funcs,settings,interactive):
 
  if (settings['DISPLAY'] == "ON"):
   try:
-   multiplot_plot(linestyles,vars,funcs,settings)
+   multiplot_plot(linestyles,vars,settings)
   except KeyboardInterrupt: raise
   except:
    gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
@@ -236,7 +236,7 @@ def directive_jpeg(command,linestyles,vars,funcs,settings,interactive):
 
 # DIRECTIVE_EPS(): Handles the 'eps' command
 
-def directive_eps(command,linestyles,vars,funcs,settings,interactive):
+def directive_eps(command,linestyles,vars,settings,interactive):
  if (settings['MULTIPLOT'] != 'ON'): plotorder_clear()
 
  filename = command['filename']
@@ -268,7 +268,7 @@ def directive_eps(command,linestyles,vars,funcs,settings,interactive):
 
  if (settings['DISPLAY'] == "ON"):
   try:
-   multiplot_plot(linestyles,vars,funcs,settings)
+   multiplot_plot(linestyles,vars,settings)
   except KeyboardInterrupt: raise
   except:
    gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
@@ -281,7 +281,7 @@ def directive_eps(command,linestyles,vars,funcs,settings,interactive):
 
 # DIRECTIVE_PLOT(): Handles the 'plot' command
 
-def directive_plot(command,linestyles,vars,funcs,settings,axes,labels,arrows,replot_stat,interactive):
+def directive_plot(command,linestyles,vars,settings,axes,labels,arrows,replot_stat,interactive):
   global plotlist, axes_this, replot_focus
   global multiplot_plotdesc
 
@@ -363,7 +363,7 @@ def directive_plot(command,linestyles,vars,funcs,settings,axes,labels,arrows,rep
 
   if (settings['DISPLAY'] == "ON"):
    try:
-    multiplot_plot(linestyles,vars,funcs,settings)
+    multiplot_plot(linestyles,vars,settings)
    except KeyboardInterrupt: raise
    except:
     gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
@@ -375,7 +375,7 @@ def directive_plot(command,linestyles,vars,funcs,settings,axes,labels,arrows,rep
 
 # MULTIPLOT_PLOT(): The main plotting engine. Plots whatever is in the current list "multiplot_plotdesc"
 
-def multiplot_plot(linestyles,vars,funcs,settings):
+def multiplot_plot(linestyles,vars,settings):
   global plot_counter
   global successful_plot_operations, unsuccessful_plot_operations
 
@@ -422,7 +422,7 @@ def multiplot_plot(linestyles,vars,funcs,settings):
    # If we have some autoscaling axes on this plot, we need to check out the range of the data, otherwise not.
    if ((any_autoscaling_axes == 1) and (Mdeleted != 'ON')):
     g = None # We have no graph.... yet
-    plot_dataset_toplevel(multiplot_number,g,Mplotlist,Msettings,Maxes_this,linestyles,vars,funcs,False)
+    plot_dataset_toplevel(multiplot_number,g,Mplotlist,Msettings,Maxes_this,linestyles,vars,False)
 
   # Step 2: Propagate range information from linked axes to their parent axes.
   # Repeat twice, as if plots B and C both link to A, and plot B causes plot A's scale to change, we want to
@@ -486,7 +486,7 @@ def multiplot_plot(linestyles,vars,funcs,settings):
       g = plot_dataset_makeaxes_setupplot(multiplot_number, Msettings, Mkey, Maxes_this)
       if (Mdeleted != 'ON'): # Don't plot items which have been deleted -- we do make plot object above, to anchor axes which may be linked.
         if (g == None): continue                                                                            # Ooops... *That* didn't really work....
-        plot_dataset_toplevel(multiplot_number,g,Mplotlist,Msettings,Maxes_this,linestyles,vars,funcs,True) # Now do plotting proper.
+        plot_dataset_toplevel(multiplot_number,g,Mplotlist,Msettings,Maxes_this,linestyles,vars,True) # Now do plotting proper.
    
         # We now transfer graph onto our multiplot canvas, and draw arrows/labels on top of it as required
         multiplot_canvas.insert(g)
@@ -537,7 +537,7 @@ def multiplot_plot(linestyles,vars,funcs,settings):
           for dummy,(systx0,x0,systy0,y0,systx1,x1,systy1,y1,arrow_style) in Marrows.iteritems():
            [x0,y0] = coord_transform(g, Maxes_this, systx0, systy0, x0, y0)
            [x1,y1] = coord_transform(g, Maxes_this, systx1, systy1, x1, y1)
-           arrow_style = with_words_cleanup(arrow_style,{'linetype':1},Msettings,linestyles,vars,funcs,True)
+           arrow_style = with_words_cleanup(arrow_style,{'linetype':1},Msettings,linestyles,vars,True)
            if 'arrow_style' in arrow_style:
             if   arrow_style['arrow_style'] == "head"   : arrow_style_list = [deco.earrow]
             elif arrow_style['arrow_style'] == "nohead" : arrow_style_list = []
@@ -629,7 +629,7 @@ def multiplot_plot(linestyles,vars,funcs,settings):
       [x0,y0,x1,y1,arrow_style,Msettings,deleted,multiplot_number] = [ this_plotdesc[x] for x in ['x_pos','y_pos','x2_pos','y2_pos','style','settings','deleted','number'] ]
       try:
        if (deleted != 'ON'):
-        arrow_style = with_words_cleanup(arrow_style,{'linetype':1},Msettings,linestyles,vars,funcs,True)
+        arrow_style = with_words_cleanup(arrow_style,{'linetype':1},Msettings,linestyles,vars,True)
         if 'arrow_style' in arrow_style:
          if   arrow_style['arrow_style'] == "head"   : arrow_style_list = [deco.earrow]
          elif arrow_style['arrow_style'] == "nohead" : arrow_style_list = []
@@ -664,7 +664,7 @@ def multiplot_plot(linestyles,vars,funcs,settings):
   # Output plot
   try:
    plot_counter = plot_counter + 1
-   fname = "gp+_" + str(os.getpid()) + "_" + str(plot_counter) + ".eps"
+   fname = "pyxplot_" + str(os.getpid()) + "_" + str(plot_counter) + ".eps"
    multiplot_canvas.writeEPSfile(fname)
   except KeyboardInterrupt: raise
   except:
@@ -995,7 +995,7 @@ def plot_dataset_makeaxes_setupplot(multiplot_number, Msettings, Mkey, Maxes_thi
 
 # PLOT_DATASET_TOPLEVEL():
 
-def plot_dataset_toplevel(multiplot_number,g,Mplotlist,Msettings,Maxes_this,linestyles,vars,funcs,plotting):
+def plot_dataset_toplevel(multiplot_number,g,Mplotlist,Msettings,Maxes_this,linestyles,vars,plotting):
   global linecount, ptcount, colourcnt
 
   # Counts number of lines/pointsets plotted, so that we can cycle styles
@@ -1009,9 +1009,9 @@ def plot_dataset_toplevel(multiplot_number,g,Mplotlist,Msettings,Maxes_this,line
    for plotitem in Mplotlist:
      try:
       if 'filename' in plotitem:
-       plot_datafile(multiplot_number,g,Maxes_this,Msettings,linestyles,plotitem,vars,funcs,plotting,verb_errors)
+       plot_datafile(multiplot_number,g,Maxes_this,Msettings,linestyles,plotitem,vars,plotting,verb_errors)
       else:
-       plot_function(multiplot_number,g,Maxes_this,Msettings,linestyles,plotitem,vars,funcs,plotting,verb_errors)
+       plot_function(multiplot_number,g,Maxes_this,Msettings,linestyles,plotitem,vars,plotting,verb_errors)
      except KeyboardInterrupt: raise
      except:
       if (verb_errors): gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
@@ -1021,7 +1021,7 @@ def plot_dataset_toplevel(multiplot_number,g,Mplotlist,Msettings,Maxes_this,line
   for plotitem in Mplotlist:
    if 'filename' in plotitem:
     try:
-     plot_datafile(multiplot_number,g,Maxes_this,Msettings,linestyles,plotitem,vars,funcs,plotting,verb_errors)
+     plot_datafile(multiplot_number,g,Maxes_this,Msettings,linestyles,plotitem,vars,plotting,verb_errors)
     except KeyboardInterrupt: raise
     except: pass
 
@@ -1029,12 +1029,12 @@ def plot_dataset_toplevel(multiplot_number,g,Mplotlist,Msettings,Maxes_this,line
   for plotitem in Mplotlist:
    if 'filename' not in plotitem:
     try:
-     plot_function(multiplot_number,g,Maxes_this,Msettings,linestyles,plotitem,vars,funcs,plotting,verb_errors)
+     plot_function(multiplot_number,g,Maxes_this,Msettings,linestyles,plotitem,vars,plotting,verb_errors)
     except KeyboardInterrupt: raise
     except: pass
 
 # PLOT_DATAFILE(): Plot datapoints listed in datafile
-def plot_datafile(multiplot_number,g,axes,settings,linestyles,plotwords,vars,funcs,plotting,verb_errors):
+def plot_datafile(multiplot_number,g,axes,settings,linestyles,plotwords,vars,plotting,verb_errors):
   global last_datafile_filename
 
   # Input datafile filename
@@ -1088,7 +1088,7 @@ def plot_datafile(multiplot_number,g,axes,settings,linestyles,plotwords,vars,fun
   else                         : using = []
 
   # 'with' words cleanup
-  plotwords = with_words_cleanup(plotwords,settings['DATASTYLE'],settings,linestyles,vars,funcs,verb_errors)
+  plotwords = with_words_cleanup(plotwords,settings['DATASTYLE'],settings,linestyles,vars,verb_errors)
 
   if (len(datafile) == 0):
     datafile = last_datafile_filename # '' shorthand for last datafile we used
@@ -1114,7 +1114,7 @@ def plot_datafile(multiplot_number,g,axes,settings,linestyles,plotwords,vars,fun
      title_this = title_string_texify(title_this)
 
     try:
-     datafile_totalgrid = gp_datafile.gp_dataread(datafile, index, usingrowcol, using, select_criteria, select_cont, every, vars, funcs, plotwords['style'], verb_errors=verb_errors)
+     datafile_totalgrid = gp_datafile.gp_dataread(datafile, index, usingrowcol, using, select_criteria, select_cont, every, vars, plotwords['style'], verb_errors=verb_errors)
     except KeyboardInterrupt: raise
     except:
       if (verb_errors): gp_error("Error reading input datafile '%s'."%datafile)
@@ -1163,7 +1163,7 @@ def gwup_canmatch(globbit, userbit, gpos=0, upos=0):
   return False
 
 # PLOT_FUNCTION(): Plot a function
-def plot_function(multiplot_number,g,axes,settings,linestyles,plotwords,vars,funcs,plotting,verb_errors):
+def plot_function(multiplot_number,g,axes,settings,linestyles,plotwords,vars,plotting,verb_errors):
   global using_use_warned
 
   if plotwords['expression_list:'] == []: return
@@ -1229,7 +1229,7 @@ def plot_function(multiplot_number,g,axes,settings,linestyles,plotwords,vars,fun
    using = []
 
   # 'with' words cleanup
-  plotwords = with_words_cleanup(plotwords,settings['FUNCSTYLE'],settings,linestyles,vars,funcs,verb_errors)
+  plotwords = with_words_cleanup(plotwords,settings['FUNCSTYLE'],settings,linestyles,vars,verb_errors)
 
   # Generate autotitle if needed
   if (title == None):
@@ -1267,7 +1267,7 @@ def plot_function(multiplot_number,g,axes,settings,linestyles,plotwords,vars,fun
   else:                                              xrast = gp_math.linrast(minimum, maximum, settings['SAMPLES'])
 
   # Now evaluate functions
-  totalgrid = gp_datafile.gp_function_datagrid(xrast, functions, xname, usingrowcol, using, select_criteria, select_cont, every, vars, funcs, plotwords['style'], verb_errors=verb_errors)
+  totalgrid = gp_datafile.gp_function_datagrid(xrast, functions, xname, usingrowcol, using, select_criteria, select_cont, every, vars, plotwords['style'], verb_errors=verb_errors)
 
   # Plot dataset
   for data_section in range(1,len(totalgrid)): # Loop over data sections within index, plotting each as a separate line 
@@ -1280,7 +1280,7 @@ def plot_function(multiplot_number,g,axes,settings,linestyles,plotwords,vars,fun
 # Replacing colour numbers with colour names as necessary, and (ii)
 # substituting for any linestyles found.
 
-def with_words_cleanup(dict_in, style_default, settings, linestyles, vars, funcs, verb_errors):
+def with_words_cleanup(dict_in, style_default, settings, linestyles, vars, verb_errors):
  dict_out = dict_in.copy()
 
  for loop in [0, 1]: # A slightly unattractive way of doing a da capo aria in python...
@@ -1323,12 +1323,12 @@ def with_words_cleanup(dict_in, style_default, settings, linestyles, vars, funcs
    dict_out[item] = dict_out[item].capitalize()
   else:
    try: 
-    colnum = gp_eval.gp_eval(dict_out[item], gp_settings.variables, gp_settings.functions, verbose=False)
+    colnum = gp_eval.gp_eval(dict_out[item], vars, verbose=False)
     dict_out[item] = gp_settings.colour_list[(int(colnum)-1)%len(gp_settings.colour_list)]
    except KeyboardInterrupt: raise
    except:
     if verb_errors: gp_error("Expression '%s' was not recognised as a colour name, nor does it compute as a colour number:"%dict_out[item])
-    dummy = gp_eval.gp_eval(dict_out[item], gp_settings.variables, gp_settings.functions, verbose=False)
+    dummy = gp_eval.gp_eval(dict_out[item], vars, verbose=False)
 
  return dict_out # Return cleaned up 'with' words
 

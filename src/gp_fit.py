@@ -39,7 +39,6 @@ no_arguments  = 0
 len_vialist   = 0
 pass_vialist  = []
 pass_vars     = {}
-pass_funcs    = {}
 pass_dataset  = []
 x_bestfit     = []
 
@@ -60,7 +59,7 @@ yerrors = 0
 # found. Consequently, it is used in hessian_get() above.
 
 def fit_residual(x, yerr=None, yerr_subs=1.0):
-  global pass_function, no_arguments, pass_range, pass_vialist, pass_xname, pass_vars, pass_funcs, pass_dataset
+  global pass_function, no_arguments, pass_range, pass_vialist, pass_xname, pass_vars, pass_dataset
   global yerrors
 
   if (yerr == None): yerr = yerrors
@@ -76,7 +75,7 @@ def fit_residual(x, yerr=None, yerr_subs=1.0):
       eval_string += str(datapoint[i])
       if (i != (no_arguments-1)): eval_string += ","
     eval_string += ")"
-    residual    = datapoint[no_arguments] - gp_eval.gp_eval(eval_string,local_vars,pass_funcs)
+    residual    = datapoint[no_arguments] - gp_eval.gp_eval(eval_string,local_vars)
     if yerr:
       residual = residual / (sqrt(2)*datapoint[no_arguments+1]) # If yerr=True, divide each residual by (sqrt(2)*sigma)
     else:
@@ -146,8 +145,8 @@ def sigma_logP(sigma):
 
 # DIRECTIVE_FIT(): Implements the "fit" directive
 
-def directive_fit(command, vars, funcs):
-  global pass_function, no_arguments, len_vialist, pass_vialist, pass_vars, pass_funcs, pass_dataset
+def directive_fit(command, vars):
+  global pass_function, no_arguments, len_vialist, pass_vialist, pass_vars, pass_dataset
   global yerrors, x_bestfit
 
   assert not SCIPY_ABSENT, "The fit command requires the scipy module for python, which is not installed. Please install and try again."
@@ -165,8 +164,8 @@ def directive_fit(command, vars, funcs):
 
   # Function name
   pass_function = command['fit_function']
-  if not pass_function in funcs: gp_error("Error: fit command requested to fit function '%s'; no such function."%pass_function) ; return
-  no_arguments  = funcs[pass_function][0]
+  if not pass_function in gp_userspace.functions: gp_error("Error: fit command requested to fit function '%s'; no such function."%pass_function) ; return
+  no_arguments  = gp_userspace.functions[pass_function][0]
 
   # Read datafile filename
   datafile = command['filename']
@@ -201,7 +200,7 @@ def directive_fit(command, vars, funcs):
   
   # We have now read all of our commandline parameters, and are ready to start fitting
   try:
-    (rows,columns,datagrid) = gp_datafile.gp_dataread(datafile, index, usingrowcol, using, select_criteria, True, every, vars, funcs, "points", firsterror=no_arguments+1)[0]
+    (rows,columns,datagrid) = gp_datafile.gp_dataread(datafile, index, usingrowcol, using, select_criteria, True, every, vars, "points", firsterror=no_arguments+1)[0]
     
     datagrid_cpy = []
     for datapoint in datagrid:
@@ -229,7 +228,6 @@ def directive_fit(command, vars, funcs):
   pass_vialist = vialist
   len_vialist  = len(vialist)
   pass_vars    = vars.copy()
-  pass_funcs   = funcs
   pass_dataset = datagrid
 
   # Set up a list containing the values of all of the parameters that we're fitting

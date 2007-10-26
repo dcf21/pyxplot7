@@ -23,6 +23,7 @@ exitting = 0
 import gp_children
 import gp_settings
 import gp_eval
+import gp_userspace
 import gp_fit
 import gp_plot
 import gp_postscript
@@ -243,13 +244,13 @@ def directive_show(dictlist):
 
       if autocomplete(word, "variables",1) or (word=="vars"):
         outstring += "\nVariables:\n"
-        for x,y in gp_settings.variables.iteritems():
+        for x,y in gp_userspace.variables.iteritems():
           outstring += "%s = %s\n"%(x,y)
         outstring += "\n"
 
       if autocomplete(word, "functions",1) or (word=="funcs"):
         outstring += "\nUser-Defined Functions:\n"
-        for x,y in gp_settings.functions.iteritems():
+        for x,y in gp_userspace.functions.iteritems():
          for definition in y[1]:
           string = x+"("
           if (y[0] < 0):   # This is a spline
@@ -421,13 +422,13 @@ def directive_set_unset(userinput):
        gp_settings.settings[set_opt] = userinput['colour'].capitalize()
       else:
        try:
-        colnum = gp_eval.gp_eval(userinput['colour'], gp_settings.variables, gp_settings.functions, verbose=False)
+        colnum = gp_eval.gp_eval(userinput['colour'], gp_userspace.variables, verbose=False)
         gp_settings.settings[set_opt] = gp_settings.colour_list[(int(colnum)-1)%len(gp_settings.colour_list)]
        except KeyboardInterrupt: raise
        except:
         gp_error("Expression '%s' was not recognised as a colour name, nor does it compute as a colour number:"%userinput['colour'])
         try:
-         dummy = gp_eval.gp_eval(userinput['colour'], gp_settings.variables, gp_settings.functions, verbose=True)
+         dummy = gp_eval.gp_eval(userinput['colour'], gp_userspace.variables, verbose=True)
         except KeyboardInterrupt: raise
         except: pass
 
@@ -916,7 +917,7 @@ def directive(line, toplevel=True, interactive=False):
   if (len(linelist) < 1): return(2)
 
   # Pass command to parser
-  command = gp_parser.parse(line,gp_settings.variables,gp_settings.functions)
+  command = gp_parser.parse(line,gp_userspace.variables)
 
   if (command == None): return(1) # Syntax error
 
@@ -925,7 +926,7 @@ def directive(line, toplevel=True, interactive=False):
     if   (re.match(r'([A-Za-z]\w*)(\([^()]*\))([^=]*)=(.*)',line.strip()) != None): # f(x) = ...
      t =  re.match(r'([A-Za-z]\w*)(\([^()]*\))([^=]*)=(.*)',line.strip())
      try:
-      gp_eval.gp_function_declare(line.strip(), gp_settings.functions)
+      gp_userspace.gp_function_declare(line)
      except KeyboardInterrupt: raise
      except:
       gp_error("Error defining function %s:"%t.group(1))
@@ -934,9 +935,9 @@ def directive(line, toplevel=True, interactive=False):
       test = re.match(r'^([A-Za-z]\w*)\s*=(.*)',line)
       try:
         if (len(test.group(2).strip()) == 0):
-          del gp_settings.variables[test.group(1).strip()]
+          gp_userspace.gp_variable_del( test.group(1) )
         else:
-          gp_settings.variables[test.group(1).strip()] = gp_eval.gp_eval(test.group(2),gp_settings.variables,gp_settings.functions)
+          gp_userspace.gp_variable_set( test.group(1), gp_eval.gp_eval(test.group(2),gp_userspace.variables) )
       except KeyboardInterrupt: raise
       except: pass
     else:
@@ -992,43 +993,43 @@ def directive(line, toplevel=True, interactive=False):
     if (len(command['operands,'])>0):
      gp_warning("Syntax 'fit f(x)...' is supported by PyXPlot for gnuplot compatibility, but is deprecated. 'fit f() ...' is prefered.")
     try:
-     gp_fit.directive_fit(command,gp_settings.variables,gp_settings.functions)
+     gp_fit.directive_fit(command,gp_userspace.variables)
     except KeyboardInterrupt: raise
     except:
      gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
   elif (command['directive'] == "spline"):       # spline
     try:
-     gp_spline.directive_spline(command,gp_settings.variables,gp_settings.functions)
+     gp_spline.directive_spline(command,gp_userspace.variables)
     except KeyboardInterrupt: raise
     except:
      gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
   elif (command['directive'] == "histogram"):    # histogram
     try:
-     gp_histogram.directive_histogram(command,gp_settings.variables,gp_settings.functions,gp_settings.settings)
+     gp_histogram.directive_histogram(command,gp_userspace.variables,gp_settings.settings)
     except KeyboardInterrupt: raise
     except:
      gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
   elif (command['directive'] == "tabulate"):    # tabulate
     try:
-     gp_tabulate.directive_tabulate(command,gp_settings.variables,gp_settings.functions,gp_settings.settings)
+     gp_tabulate.directive_tabulate(command,gp_userspace.variables,gp_settings.settings)
     except KeyboardInterrupt: raise
     except:
      gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
 
   elif (command['directive'] == "plot"):         # plot
-    gp_plot.directive_plot(command,gp_settings.linestyles,gp_settings.variables,gp_settings.functions,gp_settings.settings,
+    gp_plot.directive_plot(command,gp_settings.linestyles,gp_userspace.variables,gp_settings.settings,
                            gp_settings.axes,gp_settings.labels,gp_settings.arrows,0,interactive)
   elif (command['directive'] == "replot"):       # replot
-    gp_plot.directive_plot(command,gp_settings.linestyles,gp_settings.variables,gp_settings.functions,gp_settings.settings,
+    gp_plot.directive_plot(command,gp_settings.linestyles,gp_userspace.variables,gp_settings.settings,
                            gp_settings.axes,gp_settings.labels,gp_settings.arrows,1,interactive)
   elif (command['directive'] == "text"):         # text
-    gp_plot.directive_text(command,gp_settings.linestyles,gp_settings.variables,gp_settings.functions,gp_settings.settings,interactive)
+    gp_plot.directive_text(command,gp_settings.linestyles,gp_userspace.variables,gp_settings.settings,interactive)
   elif (command['directive'] == "arrow"):        # arrow
-    gp_plot.directive_arrow(command,gp_settings.linestyles,gp_settings.variables,gp_settings.functions,gp_settings.settings,interactive)
+    gp_plot.directive_arrow(command,gp_settings.linestyles,gp_userspace.variables,gp_settings.settings,interactive)
   elif (command['directive'] == "jpeg"):         # jpeg
-    gp_plot.directive_jpeg(command,gp_settings.linestyles,gp_settings.variables,gp_settings.functions,gp_settings.settings,interactive)
+    gp_plot.directive_jpeg(command,gp_settings.linestyles,gp_userspace.variables,gp_settings.settings,interactive)
   elif (command['directive'] == "eps"):          # eps
-    gp_plot.directive_eps(command,gp_settings.linestyles,gp_settings.variables,gp_settings.functions,gp_settings.settings,interactive)
+    gp_plot.directive_eps(command,gp_settings.linestyles,gp_userspace.variables,gp_settings.settings,interactive)
   elif (command['directive'] == "clear"):        # clear
     gp_plot.plotorder_clear()
     gp_children.send_command_to_csa("A","")
@@ -1079,7 +1080,7 @@ def directive(line, toplevel=True, interactive=False):
        else: gp_plot.multiplot_plotdesc[deleteno]['deleted'] = 'ON' # Set delete flag on item
        try:
         if (gp_settings.settings['DISPLAY'] == "ON"):
-         gp_plot.multiplot_plot(gp_settings.linestyles,gp_settings.variables,gp_settings.functions,gp_settings.settings) # Refresh display
+         gp_plot.multiplot_plot(gp_settings.linestyles,gp_userspace.variables,gp_settings.settings) # Refresh display
        except KeyboardInterrupt: raise
        except:
         gp_error("Error: Problem encountered whilst refreshing display after delete operation.")
@@ -1098,7 +1099,7 @@ def directive(line, toplevel=True, interactive=False):
        else: gp_plot.multiplot_plotdesc[deleteno]['deleted'] = 'OFF' # Unset delete flag on a plot
        try:
         if (gp_settings.settings['DISPLAY'] == "ON"):
-         gp_plot.multiplot_plot(gp_settings.linestyles,gp_settings.variables,gp_settings.functions,gp_settings.settings) # Refresh display
+         gp_plot.multiplot_plot(gp_settings.linestyles,gp_userspace.variables,gp_settings.settings) # Refresh display
        except KeyboardInterrupt: raise
        except:
         gp_error("Error: Problem encountered whilst refreshing display after undelete operation.")
@@ -1120,7 +1121,7 @@ def directive(line, toplevel=True, interactive=False):
        gp_plot.multiplot_plotdesc[moveno]['y_pos'] = command['y']
       try:
        if (gp_settings.settings['DISPLAY'] == "ON"):
-        gp_plot.multiplot_plot(gp_settings.linestyles,gp_settings.variables,gp_settings.functions,gp_settings.settings) # Refresh display
+        gp_plot.multiplot_plot(gp_settings.linestyles,gp_userspace.variables,gp_settings.settings) # Refresh display
       except KeyboardInterrupt: raise
       except:
        gp_error("Error: Problem encountered whilst refreshing display after move operation.")
@@ -1129,7 +1130,7 @@ def directive(line, toplevel=True, interactive=False):
   elif (command['directive'] == "refresh"):      # refresh
     try:
       if (gp_settings.settings['DISPLAY'] == "ON"):
-        gp_plot.multiplot_plot(gp_settings.linestyles,gp_settings.variables,gp_settings.functions,gp_settings.settings) # Refresh display
+        gp_plot.multiplot_plot(gp_settings.linestyles,gp_userspace.variables,gp_settings.settings) # Refresh display
     except KeyboardInterrupt: raise
     except:
      gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
