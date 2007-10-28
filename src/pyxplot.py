@@ -937,13 +937,7 @@ def directive(line, toplevel=True, interactive=False):
       gp_error(gp_text.invalid%line) # invalid cmd
       return(1)
 
-  elif (command['directive'] == "var_set_numeric"):                   # x = number
-    try: gp_userspace.gp_variable_set(command['varname'], command['value'])
-    except KeyboardInterrupt: raise
-    except:
-      gp_error("Error defining variable %s:"%command['varname'])
-      gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
-  elif (command['directive'] == "var_set_string"):                    # x = string
+  elif (command['directive'] == "var_set"):                   # x = number/string
     try: gp_userspace.gp_variable_set(command['varname'], command['value'])
     except KeyboardInterrupt: raise
     except:
@@ -955,6 +949,9 @@ def directive(line, toplevel=True, interactive=False):
     except:
       gp_error("Error defining variable %s:"%command['varname'])
       gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
+  elif (command['directive'] == "exec"):         # exec
+    for exec_line in command['command'].split("\n"):
+      directive(exec_line)
   elif (command['directive'] == "quit"):         # exit / quit
     exitting = 1
     return(0)

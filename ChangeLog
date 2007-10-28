@@ -1,6 +1,7 @@
 2008 ??? ??: PyXPlot 0.7.0
+	- exec command command implemented.
 	- use of string variables introduced. pythonesque "%s"%string syntax
-	  implemented.
+	  implemented. perlesque regular expressions implemented.
 	- function evaluation routines overhauled and optimised.
 	- datafile reading routines optimised to drastically improve memory/cpu
 	  efficiency.
