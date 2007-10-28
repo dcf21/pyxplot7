@@ -232,6 +232,14 @@ def parse_descend(line, vars, linepos, expecting, algebra_linepos, algebra_error
           if (match_string != None): linepos = len(line) - len(aftermatch)
           else                     : success = False
         else: success = False
+      elif (command[0][1] == "%Q"): # %Q matches the name of a string variable, and outputs it as if a quoted string
+        test = re.match(r"\s*([A-Za-z]\w*)\s*(.*)", line[linepos:])
+        if (test != None):
+          match_string = test.group(1)
+          if match_string in vars: match_string=vars[match_string]
+          else                   : success = False
+          linepos += test.start(2)
+        else: success = False
       elif (command[0][1] == "%a"): # %a matches an axis name, e.g. "x1"
         test = re.match(r"""\s*(x|X|y|Y|z|Z)(.*)""", line[linepos:])
         if (test != None):
@@ -310,6 +318,7 @@ def parse_descend(line, vars, linepos, expecting, algebra_linepos, algebra_error
       elif (command[0][1] ==  "%S"      ): expecting += "string"+varname            # %S should have matched a string of characters (,s allowed)
       elif (command[0][1] ==  "%r"      ): expecting += "string"+varname            # %r should have matched the rest of the line. It should never fail...
       elif (command[0][1] ==  "%q"      ): expecting += "quoted string"+varname     # %q should have matched a quoted string
+      elif (command[0][1] ==  "%Q"      ): expecting += "variable name"+varname     # %Q should have matched a variable name (to turn into string)
       elif (command[0][1] ==  "%v"      ): expecting += "variable name"+varname     # %q should have matched a variable name
       else                               : expecting += '"'+command[0][1]+'"'       # anything else should have matched itself
 

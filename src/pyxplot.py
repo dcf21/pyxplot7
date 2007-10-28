@@ -251,27 +251,27 @@ def directive_show(dictlist):
       if autocomplete(word, "functions",1) or (word=="funcs"):
         outstring += "\nUser-Defined Functions:\n"
         for x,y in gp_userspace.functions.iteritems():
-         for definition in y[1]:
+         for definition in y['defn']:
           string = x+"("
-          if (y[0] < 0):   # This is a spline
-            outstring += string + "x) = spline fit to file %s.\n"%definition[0]
+          if (y['type']=='spline'):   # This is a spline
+            outstring += string + "x) = spline fit to file %s.\n"%definition['fname']
           else:              # This is a regular function
             ranges = " for "
-            for i in range(y[0]):
+            for i in range(y['no_args']):
              if (i != 0): string += ","
-             string += definition[0][i]
-             if   (i != 0) and (i != y[0]-1): ranges += ", "
-             elif (i != 0) and (i == y[0]-1): ranges += " and "
-             if (definition[1][i] == [None,None]): ranges += "all "+definition[0][i]
+             string += definition['args'][i]
+             if   (i != 0) and (i != y['no_args']-1): ranges += ", "
+             elif (i != 0) and (i == y['no_args']-1): ranges += " and "
+             if (definition['ranges'][i] == [None,None]): ranges += "all "+definition['args'][i]
              else:
               ranges += "("
-              if (definition[1][i][0] == None): ranges += "-inf"
-              else                            : ranges += definition[1][i][0]
-              ranges += " < "+definition[0][i]+" < "
-              if (definition[1][i][1] == None): ranges += "inf"
-              else                            : ranges += definition[1][i][1]
+              if (definition['ranges'][i][0] == None): ranges += "-inf"
+              else                                   : ranges += definition['ranges'][i][0]
+              ranges += " < "+definition['args'][i]+" < "
+              if (definition['ranges'][i][1] == None): ranges += "inf"
+              else                                   : ranges += definition['ranges'][i][1]
               ranges += ")"
-            outstring += string+") = "+definition[2]+"\n"
+            outstring += string+") = "+definition['expr']+"\n"
             outstring += ranges+"\n"
 
       if (len(outstring) == 0):
@@ -931,19 +931,14 @@ def directive(line, toplevel=True, interactive=False):
      except:
       gp_error("Error defining function %s:"%t.group(1))
       gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
-    elif (   re.match(r'^([A-Za-z]\w*)\s*=(.*)',line) != None):                     # x = ...
-      test = re.match(r'^([A-Za-z]\w*)\s*=(.*)',line)
-      try:
-        if (len(test.group(2).strip()) == 0):
-          gp_userspace.gp_variable_del( test.group(1) )
-        else:
-          gp_userspace.gp_variable_set( test.group(1), gp_eval.gp_eval(test.group(2),gp_userspace.variables) )
-      except KeyboardInterrupt: raise
-      except: pass
     else:
       gp_error(gp_text.invalid%line) # invalid cmd
       return(1)
 
+  elif (command['directive'] == "var_set_numeric"):                   # x = number
+    gp_userspace.gp_variable_set(command['varname'], command['value'])
+  elif (command['directive'] == "var_set_string"):                    # x = string
+    gp_userspace.gp_variable_set(command['varname'], command['value'])
   elif (command['directive'] == "quit"):         # exit / quit
     exitting = 1
     return(0)

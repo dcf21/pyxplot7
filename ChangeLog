@@ -1,3 +1,12 @@
+2008 ??? ??: PyXPlot 0.7.0
+	- use of string variables introduced. pythonesque "%s"%string syntax
+	  implemented.
+	- function evaluation routines overhauled and optimised.
+	- datafile reading routines optimised to drastically improve memory/cpu
+	  efficiency.
+	- histogram command implemented.
+	- tabulate command implemented.
+
 2007 Mar 15: PyXPlot 0.6.3.1
    - Minor bugfix so that gv will work with -watch.
 

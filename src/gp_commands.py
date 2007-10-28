@@ -51,7 +51,7 @@ move@3:directive = %d:moveno to@1 %f:x ,@n %f:y
 ?@n:directive:help = %r:topic 
 !@n:directive:pling = %r:cmd
 < plot@1:directive | replot@3:directive > = [ \[@n { { %f:min } < :@n | to@n > { %f:max } } \]@n ]:range_list [ < %q:filename | [ %e:expression ]:expression_list: > ( axes@1 %a:axis_x %a:axis_y ~ every@1 [ { %d:every_item } ]:every_list: ~ index@1 %f:index ~ select@1 %E:select_criterion { < continuous@1:select_cont | discontinuous@1:select_cont > } ~ < title@1 %q:title | notitle@3:notitle > ~ using@1 { < rows@1:use_rows | columns@1:use_columns > } [ %E:using_item ]:using_list: ) { with@1 ( < linetype@5 | lt@2 > %d:linetype ~ < linewidth@5 | lw@2 > %f:linewidth ~ < pointsize@7 | ps@2 > %f:pointsize ~ < pointtype@6 | pt@2 > %d:pointtype ~ < linestyle@6 | ls@2 > %d:linestyle ~ < pointlinewidth@6 | plw@3 > %f:pointlinewidth ~ < colour@1 | color@1 > %s:colour ~ < fillcolour@2 | fillcolor@2 | fc@2 > %s:fillcolour ~ < lines@1:style | points@1:style | lp@2:style:linespoints | linespoints@5:style | pl@2:style:linespoints | pointslines@5:style:linespoints | dots@1:style | boxes@1:style | wboxes@1:style | impulses@1:style | steps@1:style | fsteps@1:style | histeps@1:style | errorbars@1:style | xerrorbars@2:style | yerrorbars@2:style | xyerrorbars@3:style | errorrange@6:style | xerrorrange@7:style | yerrorrange@7:style | xyerrorrange@8:style | arrows@3:style:arrows_head | arrows_head@3:style | arrows_nohead@3:style | arrows_twoway@3:style | arrows_twohead@3:style | csplines@3:style | acsplines@3:style > ~ smooth@2:smooth ) } ]:plot_list, 
-print@2:directive = [ < %q:string | %f:expression > ]:print_list, 
+print@2:directive = [ < %q:string | %f:expression | %Q:string > ]:print_list, 
 pwd@2:directive =
 quit@1:directive =
 refresh@3:directive =
@@ -184,4 +184,6 @@ unset@3:directive textvalign@5:set_option =
 unset@3:directive title@2:set_option =
 unset@3:directive width@1:set_option =
 unset@3:directive:unset_error = { %s:set_option } %r:restofline
+{ < let@3 | set@3 > } %v:varname \=@n:directive:var_set_string  %q:value =
+{ < let@3 | set@3 > } %v:varname \=@n:directive:var_set_numeric = %f:value
 """

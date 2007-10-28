@@ -38,7 +38,8 @@ def gp_eval(expression, vars, verbose=True, iteration=1):
     except: pass
     else: return evalexp
 
-    return float(eval(expression, gp_userspace.function_namespace, vars))
+    gp_userspace.passed_to_funcwrap = {'vars':vars,'iter':iteration,'verbose':verbose}
+    return float(eval(expression, gp_userspace.function_namespace.copy(), vars))
   except KeyboardInterrupt: raise
   except:
    if (verbose):

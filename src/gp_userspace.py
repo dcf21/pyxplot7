@@ -26,7 +26,7 @@ except: SCIPY_ABSENT = True
 else: SCIPY_ABSENT = False
 
 import gp_spline
-from gp_eval import gp_split
+import gp_eval
 
 # Math functions which we allow user to use
 math_functions={"acos":math.acos,
@@ -68,13 +68,15 @@ def gp_function_declare(line):
  assert (test != None), "Error: bad function definition '%s' could not be parsed."%line
 
  name       = test.group(1) # The name of the function
- arguments  = gp_split(test.group(2),",") # A textual list of its arguments
+ arguments  = gp_eval.gp_split(test.group(2),",") # A textual list of its arguments
  arguments2 = [] # A stripped and checked list of its arguments
- ranges     = gp_split(test.group(3),"[")[1:] # List of range strings
+ ranges     = gp_eval.gp_split(test.group(3),"[")[1:] # List of range strings
  ranges2    = [] # A stripped and checked list of range strings
  expression = test.group(4).strip()
 
  assert name not in math_functions.keys(), "Cannot re-define a core mathematical function."
+ if name in variables:
+  del variables[name]
 
  exec("""expression_lambda = lambda *x: function_wrapper('%s',x)"""%name)
 
@@ -100,12 +102,9 @@ def gp_function_declare(line):
    ranges2.append([min,max])
 
  if   (len(expression) == 0)                                  :
-  try:
+  if name in functions:
    del functions[name]
    del function_namespace[name]
-  except KeyboardInterrupt: raise
-  except:
-   raise KeyError, "Attempt to delete a function '%s' which does not exist."%name
  else:
    function_namespace[name]=expression_lambda
    if not ((name in functions) and (functions[name]['no_args']==len(arguments)) and (functions[name]['type']=='function')):
@@ -116,12 +115,24 @@ def gp_function_declare(line):
 # GP_VARIABLE_SET(): Declare a new user-defined variable
 def gp_variable_set(name,value):
  name=name.strip()
+ assert name not in math_functions.keys(), "Cannot re-define a core mathematical function."
+ if name in functions:
+   del functions[name]
+   del function_namespace[name]
  variables[name]=value
 
 def gp_variable_del(name)      :
  name=name.strip()
- if name in variables.keys():
+ assert name not in math_functions.keys(), "Cannot re-define a core mathematical function."
+ if name in functions:
+  del functions[name]
+  del function_namespace[name]
+ if name in variables:
   del variables[name]
+
+# passed_to_funcwrap -- Passed from gp_eval; variables which are defined in the current scope, for function wrapper to access
+
+passed_to_funcwrap = {'vars':{},'iter':0,'verbose':False}
 
 # FUNCTION_WRAPPER(): Wrapper for user-defined function evaluation
 def function_wrapper(name, params):
@@ -137,25 +148,25 @@ def function_wrapper(name, params):
  else:             # This is a function
   for defno in range(len(fexp['defn'])):
    j = len(fexp['defn']) - 1 - defno
-   func_scope = vars.copy() # !!!!!!!!
+   func_scope = passed_to_funcwrap['vars'].copy()
    inrange = True
-   for i in range(fexp['no_args']): func_scope[fexp['defn'][j]['args'][i]] = param[i]
+   for i in range(fexp['no_args']): func_scope[fexp['defn'][j]['args'][i]] = params[i]
    for i in range(fexp['no_args']):
     if inrange:
      try:
-      if (fexp['defn'][j]['ranges'][i][0] != None): minrange = gp_eval(fexp['defn'][j]['ranges'][i][0],func_scope,False,iteration+1)
+      if (fexp['defn'][j]['ranges'][i][0] != None): minrange = gp_eval.gp_eval(fexp['defn'][j]['ranges'][i][0],func_scope,False,passed_to_funcwrap['iter']+1)
       else                                        : minrange = None
-      if (fexp['defn'][j]['ranges'][i][1] != None): maxrange = gp_eval(fexp['defn'][j]['ranges'][i][1],func_scope,False,iteration+1)
+      if (fexp['defn'][j]['ranges'][i][1] != None): maxrange = gp_eval.gp_eval(fexp['defn'][j]['ranges'][i][1],func_scope,False,passed_to_funcwrap['iter']+1)
       else                                        : maxrange = None
      except KeyboardInterrupt: raise
      except:
-      if (verbose):
+      if passed_to_funcwrap['verbose']:
        gp_error("Error evaluating range of function '%s'."%name)
        gp_error("(it may be necessary to delete it with 'f(x)=' and then redefine it)")
       raise
-     if ((minrange != None) and (args[i] < minrange)): inrange = False
-     if ((maxrange != None) and (args[i] > maxrange)): inrange = False
-   if inrange: return gp_eval(fexp['defn'][j]['expr'],func_scope,False,iteration+1)
+     if ((minrange != None) and (params[i] < minrange)): inrange = False
+     if ((maxrange != None) and (params[i] > maxrange)): inrange = False
+   if inrange: return gp_eval.gp_eval(fexp['defn'][j]['expr'],func_scope,False,passed_to_funcwrap['iter']+1)
   raise ValueError, "Attempt to evaluate function '%s' with arguments out of their specified ranges."%func
 
 # GP_EVAL_INTEGRAND(): Evaluates an integrand, passed to it from the scipy.integrate.quad function
