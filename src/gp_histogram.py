@@ -30,8 +30,7 @@ from math import *
 
 def directive_histogram(command, vars, settings):
   
-  # First we need to get our data, so we use gp_datafile
-  # Ranges
+  # Read ranges from RE++ input
   ranges = []
   for drange in command['range_list']:
    if 'min' in drange.keys(): range_min = drange['min']
@@ -78,15 +77,15 @@ def directive_histogram(command, vars, settings):
    gp_error("Error reading input datafile:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
    return # Error
 
-  # Sort data points into list
+  # Sort data points into a list in order of x-axis value
   datagrid.sort(gp_math.sort_on_second_list_item)
   xmin = datagrid[ 0][1]
   xmax = datagrid[-1][1]
 
   # Now we need to work out our bins
   # Precedence: 1. Set of bins listed on command line
-  #             2. Binwidth,origin listed on command line
-  #             (Unimplemented) 3. Set of bins set as a setting 
+  #             2. Binwidth,origin listed on command line (Unimplemented)
+  #             3. Set of bins set as a setting 
   #             4. Binwidth,origin set as a setting
 
   if ('bin_list,' in command):
@@ -94,62 +93,48 @@ def directive_histogram(command, vars, settings):
    for x in command['bin_list,']:
     bins.append(x['x'])
 
-  elif ('binwidth' in command or 'binorigin' in command):
+  else:
    if ('binwidth' in command)  : binwidth  = command['binwidth']
    else                        : binwidth  = settings['BINWIDTH']
    if ('binorigin' in command) : binorigin = command['binorigin']
    else                        : binorigin = settings['BINORIGIN']
    bins = get_bins(ranges, xmin, xmax, binwidth, binorigin)
   
-  # (Unimplemented) elif (settings['BINS'] != None):
-  else:
-   binwidth = settings['BINWIDTH']
-   binorigin = settings['BINORIGIN']
-   bins = get_bins(ranges, xmin, xmax, binwidth, binorigin)
-
   # Check for user-specified data ranges to consider
   binrange = [xmin, xmax]
   if (len(ranges) > 0):
-   if (ranges[0][0] != None):
-    binrange[0] = ranges[0][0]
-   if (ranges[0][1] != None):
-    binrange[1] = ranges[0][1]
+   if (ranges[0][0] != None): binrange[0] = ranges[0][0]
+   if (ranges[0][1] != None): binrange[1] = ranges[0][1]
 
-  # Bin the data up
-  counts = histcount(bins, datagrid, binrange)
-  
-  # Turn the binned data into a function
-  make_histogram_function(funcname, bins, counts)
-
+  counts = histcount(bins, datagrid, binrange)    # Bin the data up
+  make_histogram_function(datafile, funcname, bins, counts) # Turn the binned data into a function
   return
 
 # MAKE_HISTOGRAM_FUNCTION(): Turn binned up histogram data into a function
 # To accomplish this we call the internal spliced function creation routine
 # Hic draconis
 
-def make_histogram_function(funcname, bins, counts):
-  # See if the function already exists and delete it if it does
-  if (funcname in gp_userspace.functions):
-   gp_userspace.gp_function_declare("%s(x) = "%funcname)
+def make_histogram_function(filename, funcname, bins, counts):
+  # See if the function already exists as a variable and delete it if it does
+  assert name not in gp_userspace.math_functions.keys(), "Cannot re-define a core mathematical function."
+  if name in gp_userspace.variables: del gp_userspace.variables[name]
 
   # First set the function to be zero everywhere
-  line = "%s(x) = 0."%funcname
-  gp_eval.gp_function_declare(line)
+  gp_userspace.gp_function_declare("%s(x) = "%funcname)
+  gp_userspace.gp_function_declare("%s(x) = 0."%funcname)
 
   # Then iterate through each of the bins
   for i in range(1,len(bins)):
-   if (counts[i] == 0): 
-    continue
-   line = "%s(x) [%f:%f] = %f"%(funcname,bins[i-1],bins[i],counts[i])
-   gp_eval.gp_function_declare(line)
-   
+   if (counts[i] == 0): continue
+   gp_userspace.gp_function_declare( "%s(x) [%f:%f] = %f"%(funcname,bins[i-1],bins[i],counts[i]) )
+  gp_userspace.functions[funcname]['histogram']=True
+  gp_userspace.functions[funcname]['fname']=filename
   return
 
 # GET_BINS(): Get set of bins for histogram
 
 def get_bins(ranges, xmin, xmax, binwidth, binorigin):
-
-# If we have limits to where we're binning data from then there's no point in considering data outside it.
+  # If we have limits to where we're binning data from then there's no point in considering data outside it.
   if (len(ranges)==0):
    xbinmin = xmin
    xbinmax = xmax
@@ -171,16 +156,12 @@ def get_bins(ranges, xmin, xmax, binwidth, binorigin):
   xbinmax = ceil((xbinmax-binorigin)/binwidth)*binwidth + binorigin
   Nbins = (int)((xbinmax-xbinmin)/binwidth) + 1
 
-  bins = [i*binwidth+xbinmin for i in range(Nbins)]
-  
+  bins = [i*binwidth+xbinmin for i in range(Nbins)]  
   return bins
-  
 
-# HISTCOUNT(): Produce counts with which to plot a histogram, into the bins 
-# supplied in bins[]
-
-# Returns a list such that counts[i] is the number of items with 
-# bins[i-1]<x<bins[i]
+# HISTCOUNT(): Produce counts with which to plot a histogram, into the bins
+# supplied in bins[]. Returns a list such that counts[i] is the number of items
+# with bins[i-1]<x<bins[i]
 
 def histcount(bins, datagrid, binrange):
   counts = [0]*(len(bins))

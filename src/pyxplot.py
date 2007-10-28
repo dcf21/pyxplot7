@@ -253,9 +253,11 @@ def directive_show(dictlist):
         for x,y in gp_userspace.functions.iteritems():
          for definition in y['defn']:
           string = x+"("
-          if (y['type']=='spline'):   # This is a spline
+          if (y['type']=='spline'): # This is a spline
             outstring += string + "x) = spline fit to file %s.\n"%definition['fname']
-          else:              # This is a regular function
+          elif (y['histogram']):    # This is a histogram function
+            outstring += string + "x) = histogram of data in file %s.\n"%definition['fname']
+          else:                     # This is a regular function
             ranges = " for "
             for i in range(y['no_args']):
              if (i != 0): string += ","
@@ -936,9 +938,23 @@ def directive(line, toplevel=True, interactive=False):
       return(1)
 
   elif (command['directive'] == "var_set_numeric"):                   # x = number
-    gp_userspace.gp_variable_set(command['varname'], command['value'])
+    try: gp_userspace.gp_variable_set(command['varname'], command['value'])
+    except KeyboardInterrupt: raise
+    except:
+      gp_error("Error defining variable %s:"%command['varname'])
+      gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
   elif (command['directive'] == "var_set_string"):                    # x = string
-    gp_userspace.gp_variable_set(command['varname'], command['value'])
+    try: gp_userspace.gp_variable_set(command['varname'], command['value'])
+    except KeyboardInterrupt: raise
+    except:
+      gp_error("Error defining variable %s:"%command['varname'])
+      gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
+  elif (command['directive'] == "var_set_regex"):     # x =~ regular expression
+    try: gp_userspace.gp_variable_re(command['varname'], command['regex'])
+    except KeyboardInterrupt: raise
+    except:
+      gp_error("Error defining variable %s:"%command['varname'])
+      gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
   elif (command['directive'] == "quit"):         # exit / quit
     exitting = 1
     return(0)

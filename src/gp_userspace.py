@@ -62,6 +62,11 @@ variables  = {'pi':3.14159265358979}       # User-defined variables
 functions  = {}                            # Verbal description of user-defined functions
 function_namespace = math_functions.copy() # Python namespace for functions which we allow user to use
 
+# MAKE_FUNCTION_LAMBDA_WRAPPER():
+def make_function_lambda_wrapper(name):
+ exec("""expression_lambda = lambda *x: function_wrapper('%s',x)"""%name)
+ return expression_lambda
+
 # GP_FUNCTION_DECLARE(): Declare a new function, possibly with a range
 def gp_function_declare(line):
  test = re.match(r'([A-Za-z]\w*)\(([^()]*)\)\s*([^=]*)=(.*)',line.strip())
@@ -75,10 +80,9 @@ def gp_function_declare(line):
  expression = test.group(4).strip()
 
  assert name not in math_functions.keys(), "Cannot re-define a core mathematical function."
- if name in variables:
-  del variables[name]
+ if name in variables: del variables[name]
 
- exec("""expression_lambda = lambda *x: function_wrapper('%s',x)"""%name)
+ expression_lambda = make_function_lambda_wrapper(name)
 
  for argument in arguments:
   test2 = re.match(r'^[A-Za-z]\w*$',argument.strip())
@@ -108,7 +112,7 @@ def gp_function_declare(line):
  else:
    function_namespace[name]=expression_lambda
    if not ((name in functions) and (functions[name]['no_args']==len(arguments)) and (functions[name]['type']=='function')):
-     functions[name] = {'no_args':len(arguments), 'type':'function', 'defn':[]}
+     functions[name] = {'no_args':len(arguments), 'type':'function', 'histogram':False, 'filename':None, 'defn':[]}
    functions[name]['defn'].append({'args':arguments2,'ranges':ranges2,'expr':expression})
    print function_namespace
 
@@ -130,6 +134,17 @@ def gp_variable_del(name)      :
  if name in variables:
   del variables[name]
 
+# GP_VARIABLE_RE(): Apply a regular expression to a string variable
+def gp_variable_re(name,regex):
+ name=name.strip()
+ assert name in variables, "No such variable: %s"%name
+ assert len(regex)>0, "Expecting regular expression to follow."
+ split_char=regex[0]
+ words=regex.split(split_char)
+ assert len(words)==4, "Regular expression should have the form s/search/replace/flags."
+ assert words[3]=="", "Regular expression flags are not yet implemented."
+ variables[name] = re.sub(words[1],words[2],str(variables[name]))
+
 # passed_to_funcwrap -- Passed from gp_eval; variables which are defined in the current scope, for function wrapper to access
 
 passed_to_funcwrap = {'vars':{},'iter':0,'verbose':False}
@@ -140,8 +155,7 @@ def function_wrapper(name, params):
  if (len(params) != fexp['no_args']): raise SyntaxError, "Function '%s' takes %d arguments; %d provided."%(name,fexp['no_args'],len(params))
  if (fexp['type']=='spline'): # This is a spline
   try:
-   value = gp_spline.spline_evaluate(args[0], fexp['spline_obj'])
-   expression = test.group(1) + str(value) + expression[bracketmatch[len(bracketmatch)-1]+1:]
+   return gp_spline.spline_evaluate(params[0], fexp['splineobj'])
   except KeyboardInterrupt: raise
   except:
    raise ValueError, "Error evaluating spline %s"%name

@@ -18,7 +18,7 @@
 
 # ----------------------------------------------------------------------------
 
-import gp_eval
+import gp_userspace
 import gp_datafile
 import gp_math
 from gp_autocomplete import *
@@ -98,10 +98,15 @@ def directive_spline(command, vars):
 
   try:
    splineobj = make_spline_object(rows, columns, datagrid, smoothing, ranges)[2]
-   funcs[funcname] = [-1, [[datafile, splineobj]]]
   except KeyboardInterrupt: raise
   except:
    gp_error("Error processing input datafile:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
+
+  assert name not in gp_userspace.math_functions.keys(), "Cannot re-define a core mathematical function."
+  if name in gp_userspace.variables: del gp_userspace.variables[name]
+  gp_userspace.functions[funcname] = {'no_args':1, 'type':'spline', 'histogram':False, 'fname':datafile, 'splineobj':splineobj}
+  expression_lambda = gp_userspace.make_function_lambda_wrapper(funcname)
+  gp_userspace.function_namespace[funcname] = expression_lambda
   return # Done
 
 # MAKE_SPLINE_OBJECT(): Makes a scipy spline object

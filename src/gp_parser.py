@@ -228,9 +228,16 @@ def parse_descend(line, vars, linepos, expecting, algebra_linepos, algebra_error
         test = re.match(r"""\s*('|")(.*)""", line[linepos:])
         if (test != None):
           quote_type = test.group(1)
-          [match_string, aftermatch] = gp_eval.gp_getquotedstring(line[linepos+test.start(1):])
-          if (match_string != None): linepos = len(line) - len(aftermatch)
-          else                     : success = False
+          try:
+            [match_string, aftermatch, quote_errpos, algebra_error] = gp_eval.gp_getquotedstring(line[linepos+test.start(1):],vars)
+          except:
+            algebra_linepos = linepos
+            algebra_error   = "Error: %s (%s)"%(sys.exc_info()[1], sys.exc_info()[0])
+            success = False
+          else:
+            if quote_errpos!=None: algebra_linepos = linepos + test.start(1) + quote_errpos
+            if (match_string != None): linepos = len(line) - len(aftermatch)
+            else                     : success = False
         else: success = False
       elif (command[0][1] == "%Q"): # %Q matches the name of a string variable, and outputs it as if a quoted string
         test = re.match(r"\s*([A-Za-z]\w*)\s*(.*)", line[linepos:])

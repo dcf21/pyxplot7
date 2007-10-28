@@ -76,21 +76,33 @@ def gp_bracketmatch(expression, i):
 # The first character of the passed string is expected to be ('|"). Escaped
 # quote characters, \' and \" are unescaped and ignored in the output.
 
-def gp_getquotedstring(string):
+def gp_getquotedstring(string,vars):
   quotetype = string[0]
-  if (not quotetype in ["'", '"']): raise SyntaxError, "'Quoted' string does not start with quote character."
+  if (not quotetype in ["'", '"']): return [None,None,0,"'Quoted' string does not start with quote character."]
 
-  stringend = None
-  for i in range(1, len(string)):
+  stringlen = len(string)
+
+  stringend = None # Identify "...." part of string
+  for i in range(1, stringlen):
     if (string[i] == quotetype) and (string[i-1] != '\\'):
-     stringend = i
+     stringend = i+1
      break
-  if (stringend == None): return [None, None]
+  if (stringend == None): return [None, None, None, ""]
   text = string[1:i]
-  aftertext = string [i+1:]
   text = re.sub(r"\\'", "'", text)
   text = re.sub(r'\\"', '"', text)
-  return [text, aftertext]
+
+  while (stringend<stringlen-1) and (string[stringend]==" "): stringend+=1 # Fast-forward over trailing spaces
+  aftertext = string[stringend:]
+
+  if (not (stringend<stringlen-1)) or (string[stringend]!="%"): return [text,aftertext,0,""] # No % substitution operation following string
+  aftertext = string[stringend+1:]
+
+  brackets = gp_bracketmatch(aftertext,0)
+  if brackets==None: return [None,None,stringend,"Substitution operator % should be followed by a bracketed () list of items for substitution."]
+  text      = eval("""r\"\"\"%s\"\"\"%%(%s)"""%(text,aftertext[1:brackets[-1]]),gp_userspace.function_namespace.copy(),vars)
+  aftertext = aftertext[brackets[-1]+1:]
+  return [text, aftertext, None, ""]
 
 # GP_SPLIT(): An intelligent string splitter, which doesn't grab split
 # characters embedded in () or ""
