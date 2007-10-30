@@ -231,7 +231,7 @@ def parse_descend(line, vars, linepos, expecting, algebra_linepos, algebra_error
           try:
             [match_string, aftermatch, quote_errpos, algebra_error] = gp_eval.gp_getquotedstring(line[linepos+test.start(1):],vars)
           except:
-            algebra_linepos = linepos
+            algebra_linepos = linepos + test.start(1)
             algebra_error   = "Error: %s (%s)"%(sys.exc_info()[1], sys.exc_info()[0])
             success = False
           else:
@@ -242,10 +242,11 @@ def parse_descend(line, vars, linepos, expecting, algebra_linepos, algebra_error
       elif (command[0][1] == "%Q"): # %Q matches the name of a string variable, and outputs it as if a quoted string
         test = re.match(r"\s*([A-Za-z]\w*)\s*(.*)", line[linepos:])
         if (test != None):
-          match_string = test.group(1)
-          if match_string in vars: match_string=vars[match_string]
-          else                   : success = False
-          linepos += test.start(2)
+          varname = test.group(1)
+          if varname in vars:
+            match_string=vars[varname]
+            linepos += test.start(2)
+          else: success = False
         else: success = False
       elif (command[0][1] == "%a"): # %a matches an axis name, e.g. "x1"
         test = re.match(r"""\s*(x|X|y|Y|z|Z)(.*)""", line[linepos:])

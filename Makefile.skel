@@ -68,9 +68,9 @@ setup:
 	echo "GHOSTVIEW='${GV_COMMAND}'"   >> src/gp_version_install.py
 	echo "GHOSTVIEW_OPT='${GV_OPT}'"   >> src/gp_version_install.py
 	rm -rf src/pyx
-	gzip -dc PyX-0.9.tar.gz | tar xf -
-	mv -f PyX-0.9/pyx src
-	rm -rf PyX-0.9
+	gzip -dc PyX-0.10.tar.gz | tar xf -
+	mv -f PyX-0.10/pyx src
+	rm -rf PyX-0.10
 	chmod 755 src/__init__.py
 	${MAKE_COMMAND} -s -C doc PYXPLOT=../src/__init__.py
 	echo "exit" | src/__init__.py

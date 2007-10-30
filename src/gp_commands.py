@@ -186,5 +186,5 @@ unset@3:directive title@2:set_option =
 unset@3:directive width@1:set_option =
 unset@3:directive:unset_error = { %s:set_option } %r:restofline
 { < let@3 | set@3 > } %v:varname \=~@n:directive:var_set_regex  = s@n %r:regex
-{ < let@3 | set@3 > } %v:varname \=@n:directive:var_set = < %f:value | %Q:value | %q:value >
+{ < let@3 | set@3 > } %v:varname \=@n:directive:var_set = { < %f:value | %Q:value | %q:value > }
 """

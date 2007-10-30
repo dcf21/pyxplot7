@@ -938,7 +938,9 @@ def directive(line, toplevel=True, interactive=False):
       return(1)
 
   elif (command['directive'] == "var_set"):                   # x = number/string
-    try: gp_userspace.gp_variable_set(command['varname'], command['value'])
+    try:
+      if 'value' in command: gp_userspace.gp_variable_set(command['varname'], command['value'])
+      else:                  gp_userspace.gp_variable_del(command['varname'])
     except KeyboardInterrupt: raise
     except:
       gp_error("Error defining variable %s:"%command['varname'])
