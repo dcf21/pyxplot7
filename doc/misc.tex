@@ -28,6 +28,45 @@ modify its behaviour:\index{command line syntax}
 \texttt{-m --monochrome} & Do not use colour highlighting, as happens by default. \\
 \end{longtable}
 
+\section{Variables}
+
+PyXPlot recognises two types of variables; numeric variables and string
+variables.  The former can be assigned a value using any valid mathematical
+expression, for example
+
+\begin{verbatim}
+a = 5.2 * sqrt(64)
+\end{verbatim}
+
+would assign the value 41.6 to the variable ``a''.  Numerical variables can
+subsequently be used in mathematical expressions themselves, for example:
+
+\begin{verbatim}
+a=2*pi
+plot [0:1] sin(x) with lines
+\end{verbatim}
+
+String variables can be assigned to in an analogous manner by enclosing the
+string in quotation marks.  They can then be used wherever a string would be
+required, for example
+
+\begin{verbatim}
+plotname = "A very exciting graph"
+set title plotname
+\end{verbatim}
+
+String variables can also be modified using the search-and-replace string
+operator, =~.  This takes a regular expression in standard form and applies it
+to the relvent string.  For example:
+
+\begin{verbatim}
+twister="seven silver soda syphons"
+twister =~ s/s/th/
+print twister
+\end{verbatim}
+
+Doesn't do what you expect it to. XXX FIXME
+
 \section{Tabulating Functions and Slicing Data Files}
 
 PyXPlot includes a command that can be used to tabulate datafiles, that is, to
