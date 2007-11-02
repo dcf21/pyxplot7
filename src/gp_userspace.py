@@ -58,6 +58,11 @@ math_functions={"acos":math.acos,
 "tanh":math.tanh,
 }
 
+# Make wrappers for integral/differential functions
+for dummy in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ':
+ exec("""math_functions['diff_d%s'] = lambda *x: diff_dx_wrapper('%s',x)"""%(dummy,dummy))
+ exec("""math_functions['int_d%s'] = lambda *x: int_dx_wrapper('%s',x)"""%(dummy,dummy))
+
 variables  = {'pi':3.14159265358979}       # User-defined variables
 functions  = {}                            # Verbal description of user-defined functions
 function_namespace = math_functions.copy() # Python namespace for functions which we allow user to use
@@ -184,98 +189,37 @@ def function_wrapper(name, params):
   raise ValueError, "Attempt to evaluate function '%s' with arguments out of their specified ranges."%func
 
 # GP_EVAL_INTEGRAND(): Evaluates an integrand, passed to it from the scipy.integrate.quad function
-# def gp_eval_integrand(x, expression, xname, vars, iteration):
-#  vars[xname] = x
-#  return gp_eval(expression, vars, False, iteration+1)
-#
-#    # Evaluate any integral functions
-#    while 1:
-#      test = re.match(r"(.*(^|\W))int_d([A-Za-z]\w*)\((.*)$",expression)
-#      if (test == None): break
-#      assert not SCIPY_ABSENT, "The integration of functions requires the scipy module for python, which is not installed. Please install and try again."
-#      func = test.group(3)
-#      bracketmatch = gp_bracketmatch(expression, test.start(4)-1)
-#      if (len(bracketmatch) == 0): raise SyntaxError, "Mismatched brackets for integral 'int_d%s'."%func
-#      if (len(bracketmatch) != 3): raise SyntaxError, "Integral 'int_d%s' should take three parameters -- expression, min, max."%func
-#      min = gp_eval(expression[ (bracketmatch[0]+1):bracketmatch[0+1] ], vars, funcs, False, iteration+1)
-#      max = gp_eval(expression[ (bracketmatch[1]+1):bracketmatch[1+1] ], vars, funcs, False, iteration+1)
-#      func_scope = vars.copy()
-#      integration_result = scipy.integrate.quad(gp_eval_integrand, min, max, full_output=1, args=(expression[test.start(4):bracketmatch[0]],func,func_scope,funcs,iteration))
-#      if verbose and (len(integration_result)>3):
-#        gp_warning("Warning whilst integrating expression %s:\n%s"%(expression[test.start(4):bracketmatch[0]],integration_result[3]))
-#      expression = test.group(1) + str(integration_result[0]) + expression[bracketmatch[len(bracketmatch)-1]+1:]
-#
-#    # Evaluate any differential function
-#    while 1:
-#      test = re.match(r"(.*(^|\W))diff_d([A-Za-z]\w*)\((.*)$",expression)
-#      if (test == None): break
-#      func = test.group(3)
-#      bracketmatch = gp_bracketmatch(expression, test.start(4)-1)
-#      if   (len(bracketmatch) == 0):
-#        raise SyntaxError, "Mismatched brackets for differential 'diff_d%s'."%func
-#      elif (len(bracketmatch) == 2):
-#        epsilon1 = epsilon2 = 1e-6
-#      elif (len(bracketmatch) == 3):
-#        epsilon1 = gp_eval(expression[ (bracketmatch[1]+1):bracketmatch[1+1] ], vars, funcs, False, iteration+1)
-#        epsilon2 = 1e-6
-#      elif (len(bracketmatch) == 4):
-#        epsilon1 = gp_eval(expression[ (bracketmatch[1]+1):bracketmatch[1+1] ], vars, funcs, False, iteration+1)
-#        epsilon2 = gp_eval(expression[ (bracketmatch[2]+1):bracketmatch[2+1] ], vars, funcs, False, iteration+1)
-#      else:
-#        raise SyntaxError, "Differential 'diff_d%s' should take 2-4 parameters -- expression, point at which to differentiate, epsilon."%func
-#      func_scope = vars.copy()
-#      xval = gp_eval(expression[ (bracketmatch[0]+1):bracketmatch[0+1] ], vars, funcs, False, iteration+1)
-#      epsilon = epsilon1 + xval * epsilon2
-#      func_scope[func] = xval-epsilon/2.0 ; x1 = gp_eval(expression[ test.start(4):bracketmatch[0]], func_scope, funcs, False, iteration+1)
-#      func_scope[func] = xval+epsilon/2.0 ; x2 = gp_eval(expression[ test.start(4):bracketmatch[0]], func_scope, funcs, False, iteration+1)
-#      expression = test.group(1) + str((x2-x1)/epsilon) + expression[bracketmatch[len(bracketmatch)-1]+1:]
-#
-#
-#    # Evaluate any functions
-#    for func,fexp in funcs.iteritems():
-#      while 1:
-#        test = re.match(r"(.*(^|\W))%s\s*\((.*)$"%func,expression)
-#        if (test == None): break
-#        bracketmatch = gp_bracketmatch(expression, test.start(3)-1)
-#        if (len(bracketmatch) == 0):            raise SyntaxError, "Mismatched brackets for function '%s'."%func
-#        if (len(bracketmatch) != abs(fexp[0])): raise SyntaxError, "Function '%s' takes %d arguments; %d provided."%(func,abs(fexp[0]),len(bracketmatch))
-#        args = []
-#        bracketmatch.insert(0,test.start(3)-1)
-#        for i in range(abs(fexp[0])):
-#          args.append(gp_eval(expression[ (bracketmatch[i]+1):bracketmatch[i+1] ], vars, funcs, False, iteration+1))
-#        if (fexp[0] < 0): # This is a spline
-#          try:
-#            value = gp_spline.spline_evaluate(args[0], fexp[1][0][1])
-#            expression = test.group(1) + str(value) + expression[bracketmatch[len(bracketmatch)-1]+1:]
-#          except KeyboardInterrupt: raise
-#          except:
-#            raise ValueError, "Error evaluating spline %s"%func
-#        else:             # This is a function
-#          funcdone = False
-#          for defno in range(len(fexp[1])):
-#            if not funcdone:
-#              j = len(fexp[1]) - 1 - defno
-#              func_scope = vars.copy()
-#              inrange = True
-#              for i in range(fexp[0]): func_scope[fexp[1][j][0][i]] = args[i]
-#              for i in range(fexp[0]):
-#                try:
-#                 if (fexp[1][j][1][i][0] != None): minrange = gp_eval(fexp[1][j][1][i][0],func_scope,funcs,False,iteration+1)
-#                 else                            : minrange = None
-#                 if (fexp[1][j][1][i][1] != None): maxrange = gp_eval(fexp[1][j][1][i][1],func_scope,funcs,False,iteration+1)
-#                 else                            : maxrange = None
-#                except KeyboardInterrupt: raise
-#                except:
-#                 if (verbose):
-#                  gp_error("Error evaluating range of function '%s'."%func)
-#                  gp_error("(it may be necessary to delete it with 'f(x)=' and then redefine it)")
-#                 raise
-#                if ((minrange != None) and (args[i] < minrange)): inrange = False
-#                if ((maxrange != None) and (args[i] > maxrange)): inrange = False
-#              if inrange:
-#                expression = test.group(1) + str(gp_eval(fexp[1][j][2],func_scope,funcs,False,iteration+1)) + expression[bracketmatch[len(bracketmatch)-1]+1:]
-#                funcdone   = True
-#          if not funcdone:
-#            raise ValueError, "Attempt to evaluate function '%s' with arguments out of their specified ranges."%func
-#
-#
+def gp_eval_integrand(x, expression, xname, vars, iteration):
+ vars[xname] = x
+ return gp_eval(expression, vars, False, iteration+1)
+
+
+# INT_DX_WRAPPER(): Wrapper for integral functions such as int_dx()
+def int_dx_wrapper(dummy, params):
+ assert not SCIPY_ABSENT, "The integration of functions requires the scipy module for python, which is not installed. Please install and try again."
+ assert (len(params) == 3), "Integral 'int_d%s' should take three parameters -- expression, min, max."%dummy
+ gp_eval_integrand = str(params[0])
+ min               = float(params[1])
+ max               = float(params[2])
+ func_scope = passed_to_funcwrap['vars'].copy()
+ integration_result = scipy.integrate.quad(gp_eval_integrand, min, max, full_output=1, args=(gp_eval_integrand,dummy,func_scope,passed_to_funcwrap['iter']))
+ if verbose and (len(integration_result)>3):
+  gp_warning("Warning whilst integrating expression %s:\n%s"%(gp_eval_integrand,integration_result[3]))
+ return integration_result[0]
+
+# DIFF_DX_WRAPPER(): Wrapper for differential functions such as diff_dx()
+def diff_dx_wrapper(dummy, params):
+ assert not SCIPY_ABSENT, "The integration of functions requires the scipy module for python, which is not installed. Please install and try again."
+ assert (len(params) >= 2) and (len(params) <= 4), "Differential 'diff_d%s' should take 2-4 parameters -- expression, point at which to differentiate, epsilon."%dummy
+ gp_eval_operand = str(params[0])
+ xval            = float(params[1])
+ epsilon1        = 1e-6
+ epsilon2        = 1e-6
+ if (len(params) > 2): epsilon1=float(params[2])
+ if (len(params) > 3): epsilon2=float(params[3])
+ func_scope = passed_to_funcwrap['vars'].copy()
+ epsilon = epsilon1 + xval * epsilon2
+ func_scope[dummy] = xval-epsilon/2.0 ; x1 = gp_eval(gp_eval_operand, func_scope, False, passed_to_funcwrap['iter']+1)
+ func_scope[dummy] = xval+epsilon/2.0 ; x2 = gp_eval(gp_eval_operand, func_scope, False, passed_to_funcwrap['iter']+1)
+ return (x2-x1)/epsilon
+
