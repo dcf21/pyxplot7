@@ -191,25 +191,24 @@ def function_wrapper(name, params):
 # GP_EVAL_INTEGRAND(): Evaluates an integrand, passed to it from the scipy.integrate.quad function
 def gp_eval_integrand(x, expression, xname, vars, iteration):
  vars[xname] = x
- return gp_eval(expression, vars, False, iteration+1)
+ return gp_eval.gp_eval(expression, vars, False, iteration+1)
 
 
 # INT_DX_WRAPPER(): Wrapper for integral functions such as int_dx()
 def int_dx_wrapper(dummy, params):
  assert not SCIPY_ABSENT, "The integration of functions requires the scipy module for python, which is not installed. Please install and try again."
  assert (len(params) == 3), "Integral 'int_d%s' should take three parameters -- expression, min, max."%dummy
- gp_eval_integrand = str(params[0])
- min               = float(params[1])
- max               = float(params[2])
+ integrand  = str(params[0])
+ min        = float(params[1])
+ max        = float(params[2])
  func_scope = passed_to_funcwrap['vars'].copy()
- integration_result = scipy.integrate.quad(gp_eval_integrand, min, max, full_output=1, args=(gp_eval_integrand,dummy,func_scope,passed_to_funcwrap['iter']))
- if verbose and (len(integration_result)>3):
+ integration_result = scipy.integrate.quad(gp_eval_integrand, min, max, full_output=1, args=(integrand,dummy,func_scope,passed_to_funcwrap['iter']))
+ if passed_to_funcwrap['verbose'] and (len(integration_result)>3):
   gp_warning("Warning whilst integrating expression %s:\n%s"%(gp_eval_integrand,integration_result[3]))
  return integration_result[0]
 
 # DIFF_DX_WRAPPER(): Wrapper for differential functions such as diff_dx()
 def diff_dx_wrapper(dummy, params):
- assert not SCIPY_ABSENT, "The integration of functions requires the scipy module for python, which is not installed. Please install and try again."
  assert (len(params) >= 2) and (len(params) <= 4), "Differential 'diff_d%s' should take 2-4 parameters -- expression, point at which to differentiate, epsilon."%dummy
  gp_eval_operand = str(params[0])
  xval            = float(params[1])
@@ -219,7 +218,7 @@ def diff_dx_wrapper(dummy, params):
  if (len(params) > 3): epsilon2=float(params[3])
  func_scope = passed_to_funcwrap['vars'].copy()
  epsilon = epsilon1 + xval * epsilon2
- func_scope[dummy] = xval-epsilon/2.0 ; x1 = gp_eval(gp_eval_operand, func_scope, False, passed_to_funcwrap['iter']+1)
- func_scope[dummy] = xval+epsilon/2.0 ; x2 = gp_eval(gp_eval_operand, func_scope, False, passed_to_funcwrap['iter']+1)
+ func_scope[dummy] = xval-epsilon/2.0 ; x1 = gp_eval.gp_eval(gp_eval_operand, func_scope, False, passed_to_funcwrap['iter']+1)
+ func_scope[dummy] = xval+epsilon/2.0 ; x2 = gp_eval.gp_eval(gp_eval_operand, func_scope, False, passed_to_funcwrap['iter']+1)
  return (x2-x1)/epsilon
 

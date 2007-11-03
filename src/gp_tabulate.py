@@ -179,7 +179,7 @@ def output_table (datagrid, settings, format):
   f = open(outfile, 'w') # Open output datafile
 
   # Write a header
-  f.write("# Datafile produced by PyXPlot %s on %s\n"%(gp_version.VERSION,time.strftime("%a, %d %b %Y %H:%M:%S +0000", gmtime())))
+  f.write("# Datafile produced by PyXPlot %s on %s\n"%(gp_version.VERSION,time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime())))
 
   # Produce a format string.
   cols = datagrid[0][1]
@@ -198,7 +198,7 @@ def output_table (datagrid, settings, format):
    Nformatitems = len(formatitems)
    formats = [formatitems[i%Nformatitems] for i in range(cols)]
   else:
-   formats.append("%15s")
+   formats = ["%16s" for i in range(cols)]
 
   # Actually write the data file
   try:

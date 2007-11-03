@@ -28,7 +28,6 @@ import os
 import sys
 import re
 import gzip
-import exceptions
 
 try: import scipy
 except: SCIPY_ABSENT = True
@@ -40,15 +39,14 @@ ERRORS_MAX = 4
 #                This is just a wrapper for make_datagrid
 
 def gp_dataread(datafile, index, usingrowcol, using_list, select_criterion, select_cont, every_list, vars, style, verb_errors=True, firsterror=None):
-  # Open input datafile
-  if (re.search(r"\.gz$",datafile) != None): # If filename ends in .gz, open it with gunzip
-   f         = gzip.open(os.path.join(gp_settings.cwd, os.path.expanduser(datafile)),"r")
-  else:
-   f         = open(os.path.join(gp_settings.cwd, os.path.expanduser(datafile)),"r")
+  # Open input datafile; if filename ends in .gz, open it with gunzip
+  if (re.search(r"\.gz$",datafile) != None): f = gzip.open(os.path.join(gp_settings.cwd, os.path.expanduser(datafile)),"r") 
+  elif datafile=="-"                       : f = sys.stdin
+  else                                     : f = open(os.path.join(gp_settings.cwd, os.path.expanduser(datafile)),"r")
 
-   datagrid = make_datagrid(iterate_file(f), "of file %s"%datafile, "line ", index, usingrowcol, using_list, select_criterion, select_cont, every_list, vars, style, verb_errors, firsterror=None)
+  datagrid = make_datagrid(iterate_file(f), "of file %s"%datafile, "line ", index, usingrowcol, using_list, select_criterion, select_cont, every_list, vars, style, verb_errors, firsterror=None)
 
-  f.close()
+  if f!=sys.stdin: f.close()
   return datagrid
 
 # GP_FUNCTION_DATAGRID(): Evaluate a (set of) function(s), producing a grid of values
@@ -81,7 +79,6 @@ def gp_function_datagrid(xrast, functions, xname, usingrowcol, using_list, selec
      raise
    # If there *was* no select criterion then there is a bug here
    if (select_criterion == ''):
-    # gp_error("Error: PyXPlot has just evaluated an unevaluable function. Please report as a bug.")  # This is not useful, as there are other reasons why there might be no data.
     gp_warning("Warning: Evaluation of %s produced no data!"%(description[3:],select_criterion))
    elif (verb_errors):
     gp_warning("Warning: Evaluation of %s with select criterion %s produced no data!"%(description[3:],select_criterion))
@@ -89,6 +86,7 @@ def gp_function_datagrid(xrast, functions, xname, usingrowcol, using_list, selec
   return datagrid
 
 # ITERATE_FUNCTION(): Given a function description iterate it over a supplied raster
+
 def iterate_function(xrast, functions, xname, vars):
   local_vars = vars.copy()
   for x in xrast:
@@ -97,37 +95,26 @@ def iterate_function(xrast, functions, xname, vars):
    for item in functions:
     try:    val = gp_eval.gp_eval(item,local_vars,verbose=False)
     except KeyboardInterrupt: raise
-    # except: pass
-    except: datapoint.append('Function evaluation failure') # Note that this is a magic value to trigger a subsequent error
+    except: datapoint.append('Function evaluation failure') # This string value will trigger a subsequent error
     else:   datapoint.append(val)
-   #if (len(datapoint) == (len(functions)+1)):
-   # datagrid.append([[x for i in range(len(functions)+1)], x, datapoint])
-   yield [datapoint, 1]
-
-  ## Parse supplied using statement
-  #if (using == ''):
-  #  for i in range(len(functions)+1):
-  #    using += str(i+1)
-  #    if (i != len(functions)): using += ":"
-  #totalgrid = gp_datafile.grid_using_convert([datagrid], "for function '%s'"%function_str, "evaluate data","at x=", using, select_criteria, vars, funcs, plotwords['style'], verb_errors=verb_errors, errcount=0)
+   yield [datapoint, x]
 
 # ITERATE_FILE(): iterate over a file, returning the lines as lists of floats
+
 def iterate_file(f):
-   Nchomped = 0 # The number of lines we've chomped up since we last returned something
+   Nline = 0 # File line number
    for line in f:
-    Nchomped += 1
-    if (line[0] == '#'): continue # Ignore comment lines completely
+    Nline += 1
+    if (line[0] == '#'): continue # Ignore comment lines
     line_clean = line.strip()
     # Separate line into a series of data values
     data_list = []
     for csv_item in line_clean.split(','): # First separate on commas (CSV files)
      csv_items = csv_item.split() # Then on whitespace
-     # if (csv_items==[]): data_list.extend(['']) # ,, means a blank data item
-     # else              : data_list.extend(csv_items)
+     if (csv_items==[]): data_list.extend(['']) # ,, means a blank data item
+     else              : data_list.extend(csv_items)
      data_list.extend(csv_items)
-    # yield [[float(x) for x in data_list], Nchomped]  # Don't want to float yet
-    yield [data_list, Nchomped]
-    Nchomped = 0
+    yield [data_list, Nline]
 
 # MAKE_DATAGRID(): Make a big grid of data to be plotted given an iterator that
 # produces lines of data.  The function used to form most of gp_dataread
@@ -377,12 +364,16 @@ def make_datagrid(iterator, description, lineunit, index, usingrowcol, using_lis
       verb_errors = False
 
     except KeyboardInterrupt: raise
+    except ValueError:
+     if (verb_errors):
+      gp_warning("%s"%error_str)
+      errcount += 1
+      if (verb_errors and (errcount > ERRORS_MAX)): gp_warning("Warning: Not displaying any more errors for %s."%description) ; verb_errors = False
     except:
      if (verb_errors):
-      if (sys.exc_info()[0] != exceptions.ValueError): gp_warning("%s %s (%s)"%(error_str,sys.exc_info()[1],sys.exc_info()[0]))
-      else                                           : gp_warning("%s"%error_str)
-     errcount += 1
-     if (verb_errors and (errcount > ERRORS_MAX)): gp_warning("Warning: Not displaying any more errors for %s."%description) ; verb_errors = False
+      gp_warning("%s %s (%s)"%(error_str,sys.exc_info()[1],sys.exc_info()[0]))
+      errcount += 1
+      if (verb_errors and (errcount > ERRORS_MAX)): gp_warning("Warning: Not displaying any more errors for %s."%description) ; verb_errors = False
     else:
      # For arrow linestyles, we break up each datapoint into a line between two points
      if (style[0:6] == "arrows"): outgrid.append([2,columns,[data_item,data_item[2:4]+data_item[0:2]+data_item[4:]]]) # arrow linestyles
@@ -535,123 +526,3 @@ def check_every (block, line, every_dict):
   if (every_dict['linestep'] > 1 and (line-every_dict['linefirst'])%every_dict['linestep'] != 0):
    return False
   return True
-
-# GP_MAKE_DATA_MATRIX(): Take datagrid[] in x,y,z form and turn it into a rectangular matrix on a
-# regular grid, suitable for plotting as a colour map.  Either just sort data already on a regular
-# grid or do some funky form of {inter,extra}polation.
-def gp_make_data_matrix (datagrid, xraster, yraster, interpolation):
-  # Deal with the case where the data already claims to be on a regular grid
-  if (interpolation == None):
-   matrix = sort_data_into_matrix (datagrid, xraster, yraster)
-   return matrix
-  
-  # Now deal with interpolation
-  if (interpolation == 'sph'):
-   datagrid = gp_interpolate_grid(datagrid, xraster, yraster)
-   matrix = sort_data_into_matrix (datagrid, [], [])
-   return matrix
-
-  gp_error("Error: Unknown data matrix interpolation method %s\n"%intperolation)
-  return []
-
-# SORT_DATA_INTO_MATRIX(): Take a regularly spaced datagrid[] in x,y,z form and turn it into a rectangular matrix
-def sort_data_into_matrix (datagrid, xraster, yraster):
-  datagrid.sort()
-  N = len(datagrid)
-
-  # Form the rasters.  They should always start off blank
-  assert(xraster == [])
-  assert(yraster == [])
-  # First form the y raster
-  x = datagrid[0][0]
-  i = 0
-  while (datagrid[i][0] == x):
-   yraster.append(datagrid[i][1])
-   i += 1
-  # Then the x raster
-  x = None
-  for i in range(N):
-   if (x != datagrid[i][0]):
-    x = datagrid[i][0]
-    xraster.append(x)
-  # Note that we don't actually check that the data grid is regular and rectangular
-  # If you pass us a stupid grid you get what you deserve
-  # Do this basic check because it's easy
-  Nx = len(xraster)
-  Ny = len(yraster)
-  if (Nx*Ny != N):
-   gp_error('Error: Data grid is not a regular, rectangular grid')
-   return []
-
-  # Assemble the matrix
-  matrix = []
-  k = 0
-  for i in range(Nx):
-   matrix.append([])
-   for j in range(Ny):
-    matrix[-1].append(datagrid[k][2])
-    k += 1
-  return matrix
-
-
-# GP_INTERPOLATE_GRID(): Interpolate from a set of points with values onto an
-# arbitrary rectangular space
-
-def gp_interpolate_grid(datagrid, xrast, yrast):
-
-  Npoints = len(datagrid)
-  valcols = range(2,len(datagrid[0])) # Columns in which there is a value to interpolate
-  NPtarg = int(.5*sqrt(Npoints))
-  area = abs((xrast[-1]-xrast[0])*(yrast[-1]-yrast[0]))
-  hinit = sqrt(area/(pi*NPtarg))
-  hlist = [] # Smoothing lengths
-
-  # First assign smoothing lengths to each particle
-  # We choose that the number of neighbours is sqrt(number of points)
-  # Only do a few iterations on each point to avoid infinite loopage
-  for point in datagrid:
-   h = hinit
-   neighbours = find_neighbours(point, hinit, datagrid)
-   i = 0
-   while (len(neighbours) != NPtarg and i<10):
-    h *= sqrt(NPtarg/float(len(neighbours)))
-    neighbours = find_neighbours(point, h, datagrid)
-    i += 1
-   hlist.append(h)
-
-  print len(hlist)
-
-  # Now cycle over all the points in the raster and evaluate the function there
-  outgrid = []
-  for x in xrast:
-   for y in yrast:
-    p = [x, y] + [0 for i in valcols]
-    # Cycle over all the data points, interpolating
-    j = 0
-    wsum = 0.
-    for point in datagrid:
-     h = hlist[j]
-     rsq = (x-point[0])**2 + (y-point[1])**2
-     if (rsq > h**2): 
-      w = 0
-     else:
-      v = sqrt(rsq)/h
-      if (v < 1.): w = (1. - (3./2.)*v**2 + 3./4.*v**3)/(pi*h**3)
-      else:        w = .25*(2-v)**3/(pi*h**3)
-     for i in valcols: p[i] += point[i] * w
-     j += 1
-     wsum += w
-    if (wsum != 0.): 
-     for i in valcols: p[i] /= wsum
-    outgrid.append(p)
-  return outgrid
-  
-# FIND_NEIGHBOURS(): Find all the points within h of a specified position    
-def find_neighbours(point, h, datagrid):
-  neighbours = []
-  hsq = h*h
-  for p in datagrid:
-   rsq = (point[0]-p[0])**2 + (point[1]-p[1])**2
-   if (rsq<=hsq):
-    neighbours.append(point)
-  return neighbours

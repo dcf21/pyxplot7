@@ -1095,7 +1095,10 @@ def plot_datafile(multiplot_number,g,axes,settings,linestyles,plotwords,vars,plo
   else:
     last_datafile_filename = datafile
 
-  datafiles = glob.glob(os.path.join(gp_settings.cwd, os.path.expanduser(datafile)))
+  if datafile=="-":
+   datafiles=[datafile] # stdin
+  else:
+   datafiles = glob.glob(os.path.join(gp_settings.cwd, os.path.expanduser(datafile)))
   datafiles.sort() # Sort list of globbed input filenames into alphabetical order
   userdatafile = datafile
 
@@ -1663,7 +1666,7 @@ def plot_dataset(multiplot_number,g,axes,axis_x,axis_y,plotwords,settings,title,
       else           : dy_set = ""
       if (dxmin != None): dx_set = x_axisname+"min=dxmin,"+x_axisname+"max=dxmax,"
       if (dymin != None): dy_set = y_axisname+"min=dymin,"+y_axisname+"max=dymax,"
-      exec "g.plot(graph.data.list(datagrid_cpy,"+x_set+y_set+dx_set+dy_set+"title=localtitle),styles=stylelist)"
+      exec "g.plot(graph.data.points(datagrid_cpy,"+x_set+y_set+dx_set+dy_set+"title=localtitle),styles=stylelist)"
       localtitle = None # Only put a title on one dataset
   except KeyboardInterrupt: raise
   except:
