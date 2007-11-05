@@ -25,7 +25,7 @@ import gp_settings
 import gp_eval
 import gp_userspace
 import gp_fit
-import gp_plot
+import gp_canvas
 import gp_postscript
 import gp_text
 import gp_help
@@ -77,9 +77,9 @@ def access_axis(axisname):
   for axis_dir in gp_settings.axes.keys():
    for axis_n in gp_settings.axes[axis_dir].keys():
     output.append( [ axis_dir, axis_n, gp_settings.axes[axis_dir][axis_n], False ] )
-  for axis_dir in gp_plot.axes_this.keys():
-   for axis_n in gp_plot.axes_this[axis_dir].keys():
-    output.append( [ axis_dir, axis_n, gp_plot.axes_this[axis_dir][axis_n]['SETTINGS'], False ] )
+  for axis_dir in gp_canvas.axes_this.keys():
+   for axis_n in gp_canvas.axes_this[axis_dir].keys():
+    output.append( [ axis_dir, axis_n, gp_canvas.axes_this[axis_dir][axis_n]['SETTINGS'], False ] )
   output.append( [ 'd', 0, gp_settings.default_new_axis, False ] ) # Also modify the default new axis
   return output
  else:
@@ -94,20 +94,20 @@ def access_axis(axisname):
 
 # COPY_AXIS_INFO_TO_GPPLOT(): This is called at the end of commands such as
 # "set xtics". Having set axis settings in gp_settings, we also make any
-# necessary changes in gp_plot.axes_this to ensure that the replot command does
+# necessary changes in gp_canvas.axes_this to ensure that the replot command does
 # the right thing. This is necessary because the user may have set ranges on
-# axes in the plot command, which gp_plot needs to remember.
+# axes in the plot command, which gp_canvas needs to remember.
 
 def copy_axis_info_to_gpplot(axisname, attributes):
  assert axisname != None
  [direction, number, axis_in, commit] = access_axis(axisname)[0]
  assert commit == True
 
- if (not number in gp_plot.axes_this[direction]):
-  gp_plot.axes_this[direction][number] = {'SETTINGS':axis_in.copy(), 'MIN_USED':None, 'MAX_USED':None, 'AXIS':None} # Create axis if doesn't exist
+ if (not number in gp_canvas.axes_this[direction]):
+  gp_canvas.axes_this[direction][number] = {'SETTINGS':axis_in.copy(), 'MIN_USED':None, 'MAX_USED':None, 'AXIS':None} # Create axis if doesn't exist
  else:
   for attribute in attributes:
-   gp_plot.axes_this[direction][number]['SETTINGS'][attribute] = axis_in[attribute]
+   gp_canvas.axes_this[direction][number]['SETTINGS'][attribute] = axis_in[attribute]
 
 # Directive Show
 
@@ -340,7 +340,7 @@ def directive_set_unset(userinput):
        axis_n = int(axis_dict['axis'][1:])
        if (not axis_n in gp_settings.axes[direction]):
         gp_settings.axes[direction][axis_n] = gp_settings.default_new_axis.copy()
-        gp_plot.axes_this[direction][axis_n] = {'SETTINGS':gp_settings.axes[direction][axis_n].copy(), 'MIN_USED':None, 'MAX_USED':None, 'AXIS':None}
+        gp_canvas.axes_this[direction][axis_n] = {'SETTINGS':gp_settings.axes[direction][axis_n].copy(), 'MIN_USED':None, 'MAX_USED':None, 'AXIS':None}
 
   elif (userinput['directive'] == "unset") and (userinput['set_option'] == "axis"): # unset axis
       for axis_dict in userinput['axes']:
@@ -350,10 +350,10 @@ def directive_set_unset(userinput):
         del gp_settings.axes[direction][axis_n]
        else:
         gp_warning("Warning: attempt to unset axis %s; no such axis."%(axis_dict['axis']))
-       if (axis_n in gp_plot.axes_this[direction]): del gp_plot.axes_this[direction][axis_n]
+       if (axis_n in gp_canvas.axes_this[direction]): del gp_canvas.axes_this[direction][axis_n]
        if (axis_n == 1):
         gp_settings.axes[direction][1]  = gp_settings.default_new_axis.copy()
-        gp_plot.axes_this[direction][1] = {'SETTINGS':gp_settings.axes[direction][axis_n].copy(), 'MIN_USED':None, 'MAX_USED':None, 'AXIS':None}
+        gp_canvas.axes_this[direction][1] = {'SETTINGS':gp_settings.axes[direction][axis_n].copy(), 'MIN_USED':None, 'MAX_USED':None, 'AXIS':None}
 
 
   elif (userinput['directive'] == "set") and (userinput['set_option'] == "backup"): # set backup
@@ -543,13 +543,13 @@ def directive_set_unset(userinput):
   elif (userinput['directive'] == "set") and (userinput['set_option'] == "multiplot"): # set multiplot
      if (gp_settings.settings['MULTIPLOT'] != "ON"):
       gp_settings.settings['MULTIPLOT'] = 'ON'
-      gp_plot.plotorder_clear()
+      gp_canvas.plotorder_clear()
 
   elif (userinput['directive'] == "unset") and (userinput['set_option'] == "multiplot"): # unset multiplot
      if (gp_settings.settings_default['MULTIPLOT'] == "ON"):
       if (gp_settings.settings['MULTIPLOT'] != "ON"):
        gp_settings.settings['MULTIPLOT'] = 'ON'
-       gp_plot.plotorder_clear()
+       gp_canvas.plotorder_clear()
      else:
       gp_settings.settings['MULTIPLOT'] = 'OFF'
 
@@ -1027,21 +1027,21 @@ def directive(line, toplevel=True, interactive=False):
      gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
 
   elif (command['directive'] == "plot"):         # plot
-    gp_plot.directive_plot(command,gp_settings.linestyles,gp_userspace.variables,gp_settings.settings,
+    gp_canvas.directive_plot(command,gp_settings.linestyles,gp_userspace.variables,gp_settings.settings,
                            gp_settings.axes,gp_settings.labels,gp_settings.arrows,0,interactive)
   elif (command['directive'] == "replot"):       # replot
-    gp_plot.directive_plot(command,gp_settings.linestyles,gp_userspace.variables,gp_settings.settings,
+    gp_canvas.directive_plot(command,gp_settings.linestyles,gp_userspace.variables,gp_settings.settings,
                            gp_settings.axes,gp_settings.labels,gp_settings.arrows,1,interactive)
   elif (command['directive'] == "text"):         # text
-    gp_plot.directive_text(command,gp_settings.linestyles,gp_userspace.variables,gp_settings.settings,interactive)
+    gp_canvas.directive_text(command,gp_settings.linestyles,gp_userspace.variables,gp_settings.settings,interactive)
   elif (command['directive'] == "arrow"):        # arrow
-    gp_plot.directive_arrow(command,gp_settings.linestyles,gp_userspace.variables,gp_settings.settings,interactive)
+    gp_canvas.directive_arrow(command,gp_settings.linestyles,gp_userspace.variables,gp_settings.settings,interactive)
   elif (command['directive'] == "jpeg"):         # jpeg
-    gp_plot.directive_jpeg(command,gp_settings.linestyles,gp_userspace.variables,gp_settings.settings,interactive)
+    gp_canvas.directive_jpeg(command,gp_settings.linestyles,gp_userspace.variables,gp_settings.settings,interactive)
   elif (command['directive'] == "eps"):          # eps
-    gp_plot.directive_eps(command,gp_settings.linestyles,gp_userspace.variables,gp_settings.settings,interactive)
+    gp_canvas.directive_eps(command,gp_settings.linestyles,gp_userspace.variables,gp_settings.settings,interactive)
   elif (command['directive'] == "clear"):        # clear
-    gp_plot.plotorder_clear()
+    gp_canvas.plotorder_clear()
     gp_children.send_command_to_csa("A","")
   elif (command['directive'] == "reset"):        # reset
     gp_settings.settings              = gp_settings.settings_default.copy()
@@ -1060,22 +1060,22 @@ def directive(line, toplevel=True, interactive=False):
      gp_error("Error: Can only edit plots when in multiplot mode.")
     else:
      editno = command['editno']
-     if   (editno >= len(gp_plot.multiplot_plotdesc)) or (editno < 0):
+     if   (editno >= len(gp_canvas.multiplot_plotdesc)) or (editno < 0):
       gp_error("Error: Attempt to edit a multiplot plot with index %d -- no such plot."%editno)
-     elif (gp_plot.multiplot_plotdesc[editno]["itemtype"] != "plot"):
+     elif (gp_canvas.multiplot_plotdesc[editno]["itemtype"] != "plot"):
       gp_error("Error: Attempt to edit a multiplot item which is not a plot. The edit command can only act on plots.")
      else:
-      gp_plot.replot_focus = editno
-      gp_settings.settings = gp_plot.multiplot_plotdesc[editno]['settings'].copy() # Reset all settings to those from this multiplot item
-      gp_plot.plotlist     = gp_plot.multiplot_plotdesc[editno]['plotlist'][:]
-      gp_settings.labels   = gp_plot.multiplot_plotdesc[editno]['labels'].copy()
-      gp_settings.arrows   = gp_plot.multiplot_plotdesc[editno]['arrows'].copy()
+      gp_canvas.replot_focus = editno
+      gp_settings.settings = gp_canvas.multiplot_plotdesc[editno]['settings'].copy() # Reset all settings to those from this multiplot item
+      gp_canvas.plotlist     = gp_canvas.multiplot_plotdesc[editno]['plotlist'][:]
+      gp_settings.labels   = gp_canvas.multiplot_plotdesc[editno]['labels'].copy()
+      gp_settings.arrows   = gp_canvas.multiplot_plotdesc[editno]['arrows'].copy()
       gp_settings.axes     = { 'x':{},'y':{},'z':{} } # Likewise for axis settings
-      gp_plot.axes_this    = { 'x':{},'y':{},'z':{} }
+      gp_canvas.axes_this    = { 'x':{},'y':{},'z':{} }
       for [direction,axis_list_to] in gp_settings.axes.iteritems():
-       for [number,axis] in gp_plot.multiplot_plotdesc[editno]['axes'][direction].iteritems():
+       for [number,axis] in gp_canvas.multiplot_plotdesc[editno]['axes'][direction].iteritems():
         axis_list_to[number] = axis['SETTINGS'].copy()
-        gp_plot.axes_this[direction][number] = {'SETTINGS':axis['SETTINGS'].copy(), 'MIN_USED':None, 'MAX_USED':None, 'AXIS':None}
+        gp_canvas.axes_this[direction][number] = {'SETTINGS':axis['SETTINGS'].copy(), 'MIN_USED':None, 'MAX_USED':None, 'AXIS':None}
 
   elif (command['directive'] == "delete"):       # delete
     if (gp_settings.settings['MULTIPLOT'] != 'ON'):
@@ -1083,14 +1083,14 @@ def directive(line, toplevel=True, interactive=False):
     else:
      for dn_dict in command['deleteno,']:
       deleteno = dn_dict['number']
-      if (deleteno >= len(gp_plot.multiplot_plotdesc)) or (deleteno < 0):
+      if (deleteno >= len(gp_canvas.multiplot_plotdesc)) or (deleteno < 0):
        gp_error("Error: Attempt to delete multiplot item with index %d -- no such item."%deleteno)
       else:
-       if (gp_plot.multiplot_plotdesc[deleteno]['deleted'] == 'ON'): gp_warning("Warning: Attempt to delete a multiplot item which is already deleted.")
-       else: gp_plot.multiplot_plotdesc[deleteno]['deleted'] = 'ON' # Set delete flag on item
+       if (gp_canvas.multiplot_plotdesc[deleteno]['deleted'] == 'ON'): gp_warning("Warning: Attempt to delete a multiplot item which is already deleted.")
+       else: gp_canvas.multiplot_plotdesc[deleteno]['deleted'] = 'ON' # Set delete flag on item
        try:
         if (gp_settings.settings['DISPLAY'] == "ON"):
-         gp_plot.multiplot_plot(gp_settings.linestyles,gp_userspace.variables,gp_settings.settings) # Refresh display
+         gp_canvas.multiplot_plot(gp_settings.linestyles,gp_userspace.variables,gp_settings.settings) # Refresh display
        except KeyboardInterrupt: raise
        except:
         gp_error("Error: Problem encountered whilst refreshing display after delete operation.")
@@ -1102,14 +1102,14 @@ def directive(line, toplevel=True, interactive=False):
     else:
      for dn_dict in command['undeleteno,']:
       deleteno = dn_dict['number']
-      if (deleteno >= len(gp_plot.multiplot_plotdesc)) or (deleteno < 0):
+      if (deleteno >= len(gp_canvas.multiplot_plotdesc)) or (deleteno < 0):
        gp_error("Error: Attempt to undelete multiplot item with index %d -- no such item."%deleteno)
       else:
-       if (gp_plot.multiplot_plotdesc[deleteno]['deleted'] != 'ON'): gp_warning("Warning: Attempt to undelete a multiplot item which isn't deleted.")
-       else: gp_plot.multiplot_plotdesc[deleteno]['deleted'] = 'OFF' # Unset delete flag on a plot
+       if (gp_canvas.multiplot_plotdesc[deleteno]['deleted'] != 'ON'): gp_warning("Warning: Attempt to undelete a multiplot item which isn't deleted.")
+       else: gp_canvas.multiplot_plotdesc[deleteno]['deleted'] = 'OFF' # Unset delete flag on a plot
        try:
         if (gp_settings.settings['DISPLAY'] == "ON"):
-         gp_plot.multiplot_plot(gp_settings.linestyles,gp_userspace.variables,gp_settings.settings) # Refresh display
+         gp_canvas.multiplot_plot(gp_settings.linestyles,gp_userspace.variables,gp_settings.settings) # Refresh display
        except KeyboardInterrupt: raise
        except:
         gp_error("Error: Problem encountered whilst refreshing display after undelete operation.")
@@ -1120,18 +1120,18 @@ def directive(line, toplevel=True, interactive=False):
      gp_error("Error: Can only move items when in multiplot mode.")
     else:
      moveno = command['moveno']
-     if (moveno >= len(gp_plot.multiplot_plotdesc)) or (moveno < 0):
+     if (moveno >= len(gp_canvas.multiplot_plotdesc)) or (moveno < 0):
       gp_error("Error: Attempt to move a multiplot item with index %d -- no such item."%moveno)
      else:
-      if (gp_plot.multiplot_plotdesc[moveno]['itemtype'] == 'plot'): # Plots store their positions in settings -> origin
-       gp_plot.multiplot_plotdesc[moveno]['settings']['ORIGINX'] = command['x']
-       gp_plot.multiplot_plotdesc[moveno]['settings']['ORIGINY'] = command['y']
+      if (gp_canvas.multiplot_plotdesc[moveno]['itemtype'] == 'plot'): # Plots store their positions in settings -> origin
+       gp_canvas.multiplot_plotdesc[moveno]['settings']['ORIGINX'] = command['x']
+       gp_canvas.multiplot_plotdesc[moveno]['settings']['ORIGINY'] = command['y']
       else:
-       gp_plot.multiplot_plotdesc[moveno]['x_pos'] = command['x'] # All other multiplot items store positions in separate settings
-       gp_plot.multiplot_plotdesc[moveno]['y_pos'] = command['y']
+       gp_canvas.multiplot_plotdesc[moveno]['x_pos'] = command['x'] # All other multiplot items store positions in separate settings
+       gp_canvas.multiplot_plotdesc[moveno]['y_pos'] = command['y']
       try:
        if (gp_settings.settings['DISPLAY'] == "ON"):
-        gp_plot.multiplot_plot(gp_settings.linestyles,gp_userspace.variables,gp_settings.settings) # Refresh display
+        gp_canvas.multiplot_plot(gp_settings.linestyles,gp_userspace.variables,gp_settings.settings) # Refresh display
       except KeyboardInterrupt: raise
       except:
        gp_error("Error: Problem encountered whilst refreshing display after move operation.")
@@ -1140,7 +1140,7 @@ def directive(line, toplevel=True, interactive=False):
   elif (command['directive'] == "refresh"):      # refresh
     try:
       if (gp_settings.settings['DISPLAY'] == "ON"):
-        gp_plot.multiplot_plot(gp_settings.linestyles,gp_userspace.variables,gp_settings.settings) # Refresh display
+        gp_canvas.multiplot_plot(gp_settings.linestyles,gp_userspace.variables,gp_settings.settings) # Refresh display
     except KeyboardInterrupt: raise
     except:
      gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
