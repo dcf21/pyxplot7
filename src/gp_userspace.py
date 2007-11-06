@@ -119,7 +119,6 @@ def gp_function_declare(line):
    if not ((name in functions) and (functions[name]['no_args']==len(arguments)) and (functions[name]['type']=='function')):
      functions[name] = {'no_args':len(arguments), 'type':'function', 'histogram':False, 'filename':None, 'defn':[]}
    functions[name]['defn'].append({'args':arguments2,'ranges':ranges2,'expr':expression})
-   print function_namespace
 
 # GP_VARIABLE_SET(): Declare a new user-defined variable
 def gp_variable_set(name,value):
