@@ -212,7 +212,7 @@ under {\tt datafile}.  Other categories are self-explanatory.
 
 To exit any help page, press the `{\tt q}' key.
 
-\section{histogram}\index{histogram command@\texttt{histogrram} command}
+\section{histogram}\index{histogram command@\texttt{histogram} command}
 
 \begin{verbatim}
 histogram [range specification] <function name> '<datafile>' 
@@ -243,6 +243,16 @@ histogram [0:21] trigibins() 'data.dat' bins (0,1,3,6,10,15,21)
 \end{verbatim}
 
 \noindent would only bin data between 0 and 21, into the user-specified bins.
+
+\section{history}\index{history command@\texttt{history} command}
+
+\begin{verbatim}
+history [N]
+\end{verbatim}
+
+The {\tt history} command prints the current command-line history to the
+terminal.  The optional parameter, N, if supplied, causes only the first N lines
+to be printed.
 
 \section{jpeg}\index{jpeg command@\texttt{jpeg} command}
 
