@@ -118,31 +118,42 @@ def iterate_file(f):
 
 # MAKE_DATAGRID(): Make a big grid of data to be plotted given an iterator that
 # produces lines of data.  The function used to form most of gp_dataread
+#
+# make_datagrid works in three steps:
+# Step 1 -- parse the using, every and select modifiers to work out exactly what data we want
+#           We then set up a structure called data_required, into which we will put that data
+#           We design this structure cunningly so that we can tell from it which data to retrieve
+# 
+# Step 2 -- We read in the file / iterate through the function and obtain that data
+# 
+# Step 3 -- We evaluate the using and select statements for each data point and build up a grid of data to return
 
 def make_datagrid(iterator, description, lineunit, index, usingrowcol, using_list, select_criterion, select_cont, every_list, vars, style, verb_errors=True, firsterror=None):
   index_no   = 0
   rows       = 0
-  single_column_datafile = True
+  single_column_datafile = True  # This will be falsified later should the datafile be multi-column
   single_row_datafile = True
+
+  # Step 1. -- Work out what bits of data we want
+
   # Check for blank using list and replace with default, remembering that we did so
   if (using_list == []): 
    using_list = gp_settings.datastyleinfo[style][0].split(":")
    fudged_using_list = True
   else:
    fudged_using_list = False
+
   # Tidy stuff up and set default arrays
-  using_list = using_list[:]
+  using_list = using_list[:] # This is funky python shit
   for i in range(len(using_list)): using_list[i] = using_list[i].strip()
   columns    = len(using_list)
   columns_using = columns # The number of columns of data specified in the "using" statement
-  if (columns == 1): columns=2 # The number of columns of data that we supply.  If the user has only specified a single column we give them the row index too.
-  datagrid   = []
+  if (columns == 1): columns=2 # The number of columns of data that we return.  If the user has only specified a single column we give them the row index too.
+  # datagrid   = []
   totalgrid  = [] # List of [file linenumber, line number for spare x-axis, list of data strings]s for all of the blocks that we're going to plot
   vars_local = vars.copy()
   data_used = {}
   errcount = 0
-
-  # Step 1. -- Work out what bits of data we want
 
   # Parse the "every" list
   # XXX fix this to return the dict directly XXX
@@ -157,6 +168,10 @@ def make_datagrid(iterator, description, lineunit, index, usingrowcol, using_lis
    # Parse using list
    error_str = 'Internal error while parsing using expressions'
    parse_using (using_list, data_used, vars_local, verb_errors)
+
+   # Check for the case where the using list doesn't specify any variables
+   if (data_used == {}):
+    data_used[0] = "used" # We need a single set of data anyway so that we get the right number of points; think about p sin(x) u (1)
 
    # Parse select criterion
    error_str = "Internal error while parsing select criterion -- offending expression was '%s'."%select_criterion
@@ -182,7 +197,7 @@ def make_datagrid(iterator, description, lineunit, index, usingrowcol, using_lis
    # For each row that we need, create a dictionary in the database to hold it
    for row,dummy in data_used.iteritems():
     data_required['rows']['data'][row] = []
-  else: # At some point more complex things like grids can be inserted here
+  else: 
    # For each column that we need, create a dictionary in the database to hold it
    for col,dummy in data_used.iteritems():
     data_required['cols']['data'][col] = [[]] # Include a blank list to put the first block of data into
@@ -192,12 +207,12 @@ def make_datagrid(iterator, description, lineunit, index, usingrowcol, using_lis
   line_count = 0
   block_count = 0 # This counts blocks within an index block
   Nblocks = 0     # Count total number of blocks
-  prev_blank = 10 # Skip opening blank lines
+  prev_blank = 10 # Skip opening blank lines 
 
   fileline = 0
   try:
    for line in iterator: # Iterate here, don't readlines() !
-    fileline += line[1] # Number of file lines chomped; always 1 for a function
+    fileline = line[1]
     data_list = line[0]
     # Check for a blank line; if found update block and index accounting as necessary
     if (len(data_list) == 0):
@@ -278,7 +293,7 @@ def make_datagrid(iterator, description, lineunit, index, usingrowcol, using_lis
   allgrid = []
   outgrid = [[]]
 
-  # First check for a single column datafile and automatic numbering
+  # Deal with the special case where the user didn't supply a using list and the file only has one column/row
   if (fudged_using_list):
    if (single_column_datafile and usingrowcol == "col"):
     # In this case we want to just plot the first column against the data item counter.
@@ -293,35 +308,34 @@ def make_datagrid(iterator, description, lineunit, index, usingrowcol, using_lis
     del data_required['rows']['data'][2]
     columns_using = 1
 
-  # rc == row or column 
-  data_rcs = data_required[rowcol]['data'].keys()
+  # In the following, "rc" means "row or column, as appropriate"
+  data_rcs = data_required[rowcol]['data'].keys()  # The list of rcs that we require
   # Pick the first rc as an example for iterating over etc.
   a_rc = data_rcs[0]
-  Nblocks = len(data_required[rowcol]['data'][a_rc])
-  Nrcs = len(data_required['rows'])
+  Nblocks = len(data_required[rowcol]['data'][a_rc]) # The number of blocks of data extracted from the file
+
+  # Assemble the blocks of data to return one by one
   for i in range(Nblocks):
    data_counter = 0
    outblockgrid = []
-   # Find # points as min # cols in block
-   Npoints = len(data_required[rowcol]['data'][a_rc][i]) # The rc of data
+   # If some rcs have more data in than others, then find the rc with the minimum number of points in; that is the number that we return
+   # This is only ever an issue for rows, not columns, where it's dealt with when reading in the data (you can't do that for rows without double-passing)
+   Npoints = len(data_required[rowcol]['data'][a_rc][i])
    for rc in data_rcs:
     Npoints = min(Npoints, len(data_required[rowcol]['data'][rc][i]))
+
    # Iterate over the points in this block
    for j in range(Npoints):
-    # try: # To evaluate this data point
     data_item = []
     invalid_datapoint = False
 
     # Get line number / x co-ordinate / whatever for error message purposes
-    if (lineunit != "line " and data_required[rowcol]['data'].has_key(1)):
-     linenumber = data_required[rowcol]['data'][1][i][j]  # Extract the x value of the point
-    # Find line number(s) associated with point if this is a data file
-    elif (rowcol == 'cols'): # Then this is nice
-     linenumber = "%d"%data_required['cols']['lineNs'][i][j]
-    else:
-     linenumber = ''.join(["%d, "%data_required['rows']['lineNs'][i][k] for k in data_rcs])
+    if (lineunit != "line " and data_required[rowcol]['data'].has_key(1)): linenumber = data_required[rowcol]['data'][1][i][j]  # Extract the x value of the point, not the line number
+    elif (rowcol == 'cols'): linenumber = "%d"%data_required['cols']['lineNs'][i][j] # Just one line number in the columns case
+    else: linenumber = ''.join(["%d, "%data_required['rows']['lineNs'][i][k] for k in data_rcs])
 
-    for rc in data_rcs: # For each point we cycle over all the rows / columns
+    # For each row / column that we need, place its value in the relevent _gp_param variable
+    for rc in data_rcs:
      if (rc == 0):
       vars_local['_gp_param0'] = data_counter
      else:
@@ -332,7 +346,7 @@ def make_datagrid(iterator, description, lineunit, index, usingrowcol, using_lis
       else:
        try:
         vars_local['_gp_param'+str(rc)] = float(point)
-       except:
+       except: # Error float()ing the data point
         invalid_datapoint = True
         if (verb_errors): 
          gp_warning("Warning: Could not evaluate data at %s%s %s."%(lineunit, linenumber, description))
@@ -345,18 +359,17 @@ def make_datagrid(iterator, description, lineunit, index, usingrowcol, using_lis
      # Check whether this data point satisfies select() criteria
      if (select_criterion != ""):
       error_str = "Warning: Could not evaluate select criterion at %s%s %s."%(lineunit, linenumber, description)
-      value = gp_eval.gp_eval(select_criterion, vars_local, verbose=False)
-      if (value == 0.0): 
+      if (gp_eval.gp_eval(select_criterion, vars_local, verbose=False) == 0.0): 
        invalid_datapoint = True # gp_eval applies float() to result and turns False into 0.0
-       if ((select_cont == False)and(len(outblockgrid) > 0)): # Break line by creating new block here
+       if ((select_cont == False)and(len(outblockgrid) > 0)): # Break line by creating new block here if the user has asked for discontinuous breaking with select
         outgrid.append([len(outblockgrid), columns, outblockgrid])
         outblockgrid = []
        continue
 
      # Evaluate the using statement
-     if (columns_using == 1):
-      data_item.append(data_counter)
+     if (columns_using == 1): data_item.append(data_counter) # If the user asked for a single column, prepend the point number
      data_counter += 1
+
      error_str = "Warning: Could not parse data at %s%s %s."%(lineunit, linenumber, description)
      errcount += evaluate_using(data_item, using_list, vars_local, style, firsterror, verb_errors, lineunit, linenumber, description)
      if (verb_errors and (errcount > ERRORS_MAX)):
@@ -377,8 +390,8 @@ def make_datagrid(iterator, description, lineunit, index, usingrowcol, using_lis
     else:
      # For arrow linestyles, we break up each datapoint into a line between two points
      if (style[0:6] == "arrows"): outgrid.append([2,columns,[data_item,data_item[2:4]+data_item[0:2]+data_item[4:]]]) # arrow linestyles
-     else                       : outblockgrid.append(data_item)
-     allgrid.append(data_item)
+     else                       : outblockgrid.append(data_item) # Append this data item to the current block
+     allgrid.append(data_item) # Append the data item to the list of all data items (all the blocks catenated)
    if (len(outblockgrid) > 0): outgrid.append([len(outblockgrid),columns,outblockgrid])
 
   outgrid[0] = [len(allgrid),columns,allgrid]
