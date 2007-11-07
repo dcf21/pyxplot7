@@ -21,6 +21,7 @@
 import gp_eval
 import gp_datafile
 import gp_math
+import gp_userspace
 from gp_error import *
 
 import sys
@@ -116,8 +117,8 @@ def directive_histogram(command, vars, settings):
 
 def make_histogram_function(filename, funcname, bins, counts):
   # See if the function already exists as a variable and delete it if it does
-  assert name not in gp_userspace.math_functions.keys(), "Cannot re-define a core mathematical function."
-  if name in gp_userspace.variables: del gp_userspace.variables[name]
+  assert funcname not in gp_userspace.math_functions.keys(), "Cannot re-define a core mathematical function."
+  if funcname in gp_userspace.variables: del gp_userspace.variables[funcname]
 
   # First set the function to be zero everywhere
   gp_userspace.gp_function_declare("%s(x) = "%funcname)

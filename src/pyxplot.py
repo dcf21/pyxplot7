@@ -251,30 +251,30 @@ def directive_show(dictlist):
       if autocomplete(word, "functions",1) or (word=="funcs"):
         outstring += "\nUser-Defined Functions:\n"
         for x,y in gp_userspace.functions.iteritems():
-         for definition in y['defn']:
-          string = x+"("
-          if (y['type']=='spline'): # This is a spline
-            outstring += string + "x) = spline fit to file %s.\n"%definition['fname']
-          elif (y['histogram']):    # This is a histogram function
-            outstring += string + "x) = histogram of data in file %s.\n"%definition['fname']
-          else:                     # This is a regular function
-            ranges = " for "
-            for i in range(y['no_args']):
-             if (i != 0): string += ","
-             string += definition['args'][i]
-             if   (i != 0) and (i != y['no_args']-1): ranges += ", "
-             elif (i != 0) and (i == y['no_args']-1): ranges += " and "
-             if (definition['ranges'][i] == [None,None]): ranges += "all "+definition['args'][i]
-             else:
-              ranges += "("
-              if (definition['ranges'][i][0] == None): ranges += "-inf"
-              else                                   : ranges += definition['ranges'][i][0]
-              ranges += " < "+definition['args'][i]+" < "
-              if (definition['ranges'][i][1] == None): ranges += "inf"
-              else                                   : ranges += definition['ranges'][i][1]
-              ranges += ")"
-            outstring += string+") = "+definition['expr']+"\n"
-            outstring += ranges+"\n"
+         if (y['type']=='spline'): # This is a spline
+           outstring += x + "(x) = spline fit to file %s.\n"%y['fname']
+         elif (y['histogram']):    # This is a histogram function
+           outstring += x + "(x) = histogram of data in file %s.\n"%y['fname']
+         else: # This is a regular function
+          for definition in y['defn']:
+           string = x+"("
+           ranges = " for "
+           for i in range(y['no_args']):
+            if (i != 0): string += ","
+            string += definition['args'][i]
+            if   (i != 0) and (i != y['no_args']-1): ranges += ", "
+            elif (i != 0) and (i == y['no_args']-1): ranges += " and "
+            if (definition['ranges'][i] == [None,None]): ranges += "all "+definition['args'][i]
+            else:
+             ranges += "("
+             if (definition['ranges'][i][0] == None): ranges += "-inf"
+             else                                   : ranges += definition['ranges'][i][0]
+             ranges += " < "+definition['args'][i]+" < "
+             if (definition['ranges'][i][1] == None): ranges += "inf"
+             else                                   : ranges += definition['ranges'][i][1]
+             ranges += ")"
+           outstring += string+") = "+definition['expr']+"\n"
+           outstring += ranges+"\n"
 
       if (len(outstring) == 0):
         if   re.match(r"(x|y|z|X|Y|Z)\d\d*(L|l)((A|a)((B|b)((E|e)((L|l)?)?)?)?)?$",word) != None: gp_error("Error: show command requested to show label on non-existent axis '%s'."%word)

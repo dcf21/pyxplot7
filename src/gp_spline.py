@@ -102,8 +102,8 @@ def directive_spline(command, vars):
   except:
    gp_error("Error processing input datafile:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
 
-  assert name not in gp_userspace.math_functions.keys(), "Cannot re-define a core mathematical function."
-  if name in gp_userspace.variables: del gp_userspace.variables[name]
+  assert funcname not in gp_userspace.math_functions.keys(), "Cannot re-define a core mathematical function."
+  if funcname in gp_userspace.variables: del gp_userspace.variables[funcname]
   gp_userspace.functions[funcname] = {'no_args':1, 'type':'spline', 'histogram':False, 'fname':datafile, 'splineobj':splineobj}
   expression_lambda = gp_userspace.make_function_lambda_wrapper(funcname)
   gp_userspace.function_namespace[funcname] = expression_lambda
