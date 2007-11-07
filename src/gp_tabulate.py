@@ -139,7 +139,7 @@ def directive_tabulate(command,vars,settings):
   # Filter the data to remove any datapoints which fall outside the range of the axes
   datagrid = filter_dataset(datagrid, axes)
 
-  if (len(datagrid) == 0):
+  if (len(datagrid) == 1):
    gp_warning("Warning: No data to tabulate!")
    return
 
