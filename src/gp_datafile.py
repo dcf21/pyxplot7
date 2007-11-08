@@ -113,7 +113,6 @@ def iterate_file(f):
      csv_items = csv_item.split() # Then on whitespace
      if (csv_items==[]): data_list.extend(['']) # ,, means a blank data item
      else              : data_list.extend(csv_items)
-     data_list.extend(csv_items)
     yield [data_list, Nline]
 
 # MAKE_DATAGRID(): Make a big grid of data to be plotted given an iterator that
@@ -121,7 +120,7 @@ def iterate_file(f):
 #
 # make_datagrid works in three steps:
 # Step 1 -- parse the using, every and select modifiers to work out exactly what data we want
-#           We then set up a structure called data_required, into which we will put that data
+#           We then set up a structure called data_from_file, into which we will put that data
 #           We design this structure cunningly so that we can tell from it which data to retrieve
 # 
 # Step 2 -- We read in the file / iterate through the function and obtain that data
@@ -129,10 +128,9 @@ def iterate_file(f):
 # Step 3 -- We evaluate the using and select statements for each data point and build up a grid of data to return
 
 def make_datagrid(iterator, description, lineunit, index, usingrowcol, using_list, select_criterion, select_cont, every_list, vars, style, verb_errors=True, firsterror=None):
+  # Note that from henceforth, "rc" means "row or column, as appropriate"
   index_no   = 0
-  rows       = 0
-  single_column_datafile = True  # This will be falsified later should the datafile be multi-column
-  single_row_datafile = True
+  single_rc_datafile = True  # This will be falsified later should the datafile be multi-column/row (as appropriate)
 
   # Step 1. -- Work out what bits of data we want
 
@@ -149,7 +147,6 @@ def make_datagrid(iterator, description, lineunit, index, usingrowcol, using_lis
   columns    = len(using_list)
   columns_using = columns # The number of columns of data specified in the "using" statement
   if (columns == 1): columns=2 # The number of columns of data that we return.  If the user has only specified a single column we give them the row index too.
-  # datagrid   = []
   totalgrid  = [] # List of [file linenumber, line number for spare x-axis, list of data strings]s for all of the blocks that we're going to plot
   vars_local = vars.copy()
   data_used = {}
@@ -183,104 +180,90 @@ def make_datagrid(iterator, description, lineunit, index, usingrowcol, using_lis
    if (verb_errors): gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
    return [[0,0,[]]]
 
-  # Work out what data we need from the file
-  data_required = {'rows':{'data':{}, 'lineNs':[{}]},
-                   'cols':{'data':{}, 'lineNs':[[]]}}
-  # OK, listen up.  The data structure now looks like this:
-  # 'data' -> dictionary of col/row numbers, -> list of blocks -> list of points
-  # 'lineNs' -> list of blocks -> (rows) dictionary of row # / line # pairs
-  #                               (cols) list of blocks -> list of line #s
-  # The point of doing it like this is that we can do rows and cols in the same loop
-  rowcol = "%ss"%usingrowcol
-  if (usingrowcol == "row"):
-   # Rename for convenience
-   # For each row that we need, create a dictionary in the database to hold it
-   for row,dummy in data_used.iteritems():
-    data_required['rows']['data'][row] = []
-  else: 
-   # For each column that we need, create a dictionary in the database to hold it
-   for col,dummy in data_used.iteritems():
-    data_required['cols']['data'][col] = [[]] # Include a blank list to put the first block of data into
+  data_from_file = {'data':{}, 'lineNs':[{}]  }
+  # OK, listen up.  We only ever need rows *or* columns.  So combine the two into one data structure, which looks like this:
+  # data_from_file = { 'data'  : { <1st rc> : [ [ point 1, point 2, ...]  <-- values for the 1st row/column in the first block
+  #                                             [ point 1, point 2, ...]  <-- "----------------------------------" second block
+  #                                             [ .....................] ],
+  #                                <2nd rc> : [ [ point 1, point 2, ...]   <-- values for the 2nd row/column in the first block
+  #                                             [ point 1, point 2, ...]   <-- values for the 2nd row/column in the 2nd block
+  #                                             [...                   ] ],
+  #                                ... }
+  #                    'lineNs': [  { <row/point 1> : <line N>, <row/point 2> : <line N> ...},   <-- Line numbers for the first block
+  #                                 { <row/point 1> : <line N>, <row/point 2> : <line N> ...},   <-- Line numbers for the second block
+  #                                                           ]
+  # The part about data makes reasonable sense: data is stored by rc number first, then block by block as it comes in.  This is easiest from the readin POV.
+  # 
+  # Line numbers need a tad more explaining.  For ROWS, the line number of each ROW   must be stored within each block.  Each POINT then comes from the same row.
+  #                                           For COLS, the line number of each POINT must be stored within each block.  Each COL   then comes from the same row.
+  for rc, dummy in data_used.iteritems():
+   data_from_file['data'][rc] = [[]]   # Include a blank list to put the first block of data into
 
   # Step 2 -- Get the required data from the file
   
-  line_count = 0
-  block_count = 0 # This counts blocks within an index block
+  line_count = 0  # Count lines within a block
+  block_count = 0 # Count blocks within an index block
   Nblocks = 0     # Count total number of blocks
   prev_blank = 10 # Skip opening blank lines 
+  fileline = 0    # The line number within the file that the bit of data that we're looking at came from
 
-  fileline = 0
   try:
    for line in iterator: # Iterate here, don't readlines() !
     fileline = line[1]
     data_list = line[0]
     # Check for a blank line; if found update block and index accounting as necessary
-    if (len(data_list) == 0):
-      prev_blank += 1
-      block_count += 1
-      if (rows > 0): # Discontinuous line; we have a new block of data
-       Nblocks += 1
-       for col in data_required['cols']['data']:
-        data_required['cols']['data'][col].append([])
-       # If no matching row has been found for any given row in this block then we insert a dud row
-       # XXX Think about line numbers XXX
-       for row in data_required['rows']['data']:
-        if len(data_required['rows']['data'][row]) < Nblocks:
-         data_required['rows']['data'][row].append([])
-       if (rowcol == 'cols'):
-        data_required['cols']['lineNs'].append([])
-       else:
-        data_required['rows']['lineNs'].append({})
+    if (data_list == ['']):
+     prev_blank += 1
+     block_count += 1
+     if (line_count > 0): # Discontinuous line; we have a new block of data
+      Nblocks += 1
+      if (usingrowcol == "row") :
+       for row in data_from_file['data']:
+       # Fill in any rows that we didn't get with blank rows (though this data will be useless anyway)
+        if len(data_from_file['data'][row]) < Nblocks:
+         data_from_file['data'][row].append([])
+       # Create blank lists to put the next block#'s worth of rows in
+        data_from_file['data'][row].append([])
+      else:
+       # Create blank lists to put the next block#'s worth of rows in
+       for col in data_from_file['data']:
+        data_from_file['data'][col].append([])
+      data_from_file['lineNs'].append({})
 
-       line_count = 0
-       rows = 0
-      if (prev_blank == 2): # Two blank lines means a new index
-       index_no = index_no + 1
-       block_count = 0
-       if ((index >= 0) and (index_no > index)): break # No more data
-      continue
-    prev_blank = 0 # Reset blank lines counter
+      line_count = 0
+     if (prev_blank == 2): # Two blank lines means a new index
+      index_no += 1
+      block_count = 0
+      if ((index >= 0) and (index_no > index)): break # No more data
+     continue
+    else: prev_blank = 0 # Reset blank lines counter
 
-    if ((index >= 0) and (index_no != index)): continue # Still waiting for our index
+    if ((index >= 0) and (index_no != index)): continue # Still waiting for our index block; we don't want this line of data
 
     # This is the line number within the current block
     line_count += 1
 
-    # See if the data matches a requested row
-    for row in data_required['rows']['data']:
-     if (row == line_count):
-      if (row != 1): 
-       single_row_datafile = False
-      # Check each data point against the every statement
-      filtered_data_list = []
-      for i in range(len(data_list)):
-       if (check_every(block_count, i, every_dict)):
-        filtered_data_list.append(data_list[i])
-      # Note that if filtered_data_list is blank at this point we correctly append a blank list
-      data_required['rows']['data'][row].append(filtered_data_list)
-      data_required['rows']['lineNs'][Nblocks][row] = fileline
-      continue # no row can match more than one row number
-
-    # Or a requested column
-    # First check against criteria from "every" statement
-    if (usingrowcol == 'col'):
-     if (check_every(block_count, line_count-1, every_dict)):
-      if len(data_list)>1: single_column_datafile = False
-      for col in data_required['cols']['data']:
-       myblock = len(data_required['cols']['data'][col]) - 1 # Data block to write to
-       if (col <= len(data_list)):
-        data_required['cols']['data'][col][myblock].append(data_list[col-1])
-       else:
-        data_required['cols']['data'][col][myblock].append('')
-      data_required['cols']['lineNs'][myblock].append(fileline)
-
-    rows += 1
-   # Check that the last set of rows was complete
-   for row in data_required['rows']['data']:
-    if len(data_required['rows']['data'][row]) < Nblocks+1:
-     data_required['rows']['data'][row].append([])
-     data_required['rows']['lineNs'][Nblocks][row] = -1
-
+    if usingrowcol == 'row':
+     # See if data matches a requested row
+     for row in data_from_file['data']:
+      if (row == line_count):
+       if (row != 1): single_rc_datafile = False
+       # Check each data point against the 'every' statemetn
+       for i in range(len(data_list)):
+        if (check_every(block_count, i, every_dict)): data_from_file['data'][row][Nblocks].append(data_list[i]) # Insert into the already present blank list
+       data_from_file['lineNs'][Nblocks][row] = fileline
+       continue # Any given row can only match one row number
+      
+    else:
+     # See if data matches a required column
+     if check_every(block_count, line_count-1, every_dict):
+      cols_read = len(data_list) # Number of cols we read from the file
+      if cols_read > 1: single_rc_datafile = False
+      for col in data_from_file['data']:
+       if (col <= cols_read): data_from_file['data'][col][Nblocks].append(data_list[col-1]) # We have read the col that we're looking for; insert datum
+       else                 : data_from_file['data'][col][Nblocks].append('') # We have not read the col that we're looking for; insert blank item
+      data_from_file['lineNs'][Nblocks][line_count-1] = fileline
+     
   except KeyboardInterrupt: raise
   except:
    if (verb_errors): gp_warning("Error encountered whilst reading '%s'."%description)
@@ -294,35 +277,29 @@ def make_datagrid(iterator, description, lineunit, index, usingrowcol, using_lis
   outgrid = [[]]
 
   # Deal with the special case where the user didn't supply a using list and the file only has one column/row
-  if (fudged_using_list):
-   if (single_column_datafile and usingrowcol == "col"):
-    # In this case we want to just plot the first column against the data item counter.
+  if (fudged_using_list and single_rc_datafile):
+    # In this case we want to just plot the first rc against the data item counter.
     using_list = ['1']
     parse_using (using_list, data_used, vars_local, verb_errors)
-    del data_required['cols']['data'][2]
-    columns_using = 1
-   elif (single_row_datafile and usingrowcol == "row"):
-    # Ditto but for the first row
-    using_list = ['1']
-    parse_using (using_list, data_used, vars_local, verb_errors)
-    del data_required['rows']['data'][2]
+    del data_from_file['data'][2]
     columns_using = 1
 
-  # In the following, "rc" means "row or column, as appropriate"
-  data_rcs = data_required[rowcol]['data'].keys()  # The list of rcs that we require
-  # Pick the first rc as an example for iterating over etc.
-  a_rc = data_rcs[0]
-  Nblocks = len(data_required[rowcol]['data'][a_rc]) # The number of blocks of data extracted from the file
+  data_rcs = data_from_file['data'].keys()  # The list of rcs that we require
 
+  # Nblocks should be the number of blocks (currently it is the index of the last block)
+  Nblocks += 1
+  
   # Assemble the blocks of data to return one by one
   for i in range(Nblocks):
    data_counter = 0
    outblockgrid = []
    # If some rcs have more data in than others, then find the rc with the minimum number of points in; that is the number that we return
    # This is only ever an issue for rows, not columns, where it's dealt with when reading in the data (you can't do that for rows without double-passing)
-   Npoints = len(data_required[rowcol]['data'][a_rc][i])
+   # XXX There's almost certainly some cunning python way to do the following 4 lines in a single line...
+   a_rc = data_rcs[0]
+   Npoints = len(data_from_file['data'][a_rc][i])
    for rc in data_rcs:
-    Npoints = min(Npoints, len(data_required[rowcol]['data'][rc][i]))
+    Npoints = min(Npoints, len(data_from_file['data'][rc][i]))
 
    # Iterate over the points in this block
    for j in range(Npoints):
@@ -330,16 +307,16 @@ def make_datagrid(iterator, description, lineunit, index, usingrowcol, using_lis
     invalid_datapoint = False
 
     # Get line number / x co-ordinate / whatever for error message purposes
-    if (lineunit != "line " and data_required[rowcol]['data'].has_key(1)): linenumber = data_required[rowcol]['data'][1][i][j]  # Extract the x value of the point, not the line number
-    elif (rowcol == 'cols'): linenumber = "%d"%data_required['cols']['lineNs'][i][j] # Just one line number in the columns case
-    else: linenumber = ''.join(["%d, "%data_required['rows']['lineNs'][i][k] for k in data_rcs])
+    if (lineunit != "line " and data_from_file['data'].has_key(1)): linenumber = data_from_file['data'][1][i][j]  # Extract the x value of the point, not the line number
+    elif (usingrowcol == 'col'): linenumber = "%d"%data_from_file['lineNs'][i][j] # Just one line number in the columns case
+    else: linenumber = ''.join(["%d, "%data_from_file['lineNs'][i][k] for k in data_rcs])
 
     # For each row / column that we need, place its value in the relevent _gp_param variable
     for rc in data_rcs:
      if (rc == 0):
       vars_local['_gp_param0'] = data_counter
      else:
-      point = data_required[rowcol]['data'][rc][i][j]
+      point = data_from_file['data'][rc][i][j]
       if point == '':  # Lack of a data point; silently ignore
        invalid_datapoint = True
        break
