@@ -153,13 +153,7 @@ def make_datagrid(iterator, description, lineunit, index, usingrowcol, using_lis
   errcount = 0
 
   # Parse the "every" list
-  # XXX fix this to return the dict directly XXX
-  [linestep,blockstep,linefirst,blockfirst,linelast,blocklast] = parse_every(every_list, verb_errors)
-  if (linestep == None): linestep = 1
-  if (linefirst == None): linefirst = 0
-  if (blockstep == None): blockstep = 1
-  if (blockfirst == None): blockfirst = 0
-  every_dict = {"linestep":linestep, "blockstep":blockstep, "linefirst":linefirst, "blockfirst":blockfirst, "linelast":linelast, "blocklast":blocklast}
+  every_dict = parse_every(every_list, verb_errors)
 
   try:
    # Parse using list
@@ -211,6 +205,7 @@ def make_datagrid(iterator, description, lineunit, index, usingrowcol, using_lis
    for line in iterator: # Iterate here, don't readlines() !
     fileline = line[1]
     data_list = line[0]
+
     # Check for a blank line; if found update block and index accounting as necessary
     if (data_list == ['']):
      prev_blank += 1
@@ -262,7 +257,7 @@ def make_datagrid(iterator, description, lineunit, index, usingrowcol, using_lis
       for col in data_from_file['data']:
        if (col <= cols_read): data_from_file['data'][col][Nblocks].append(data_list[col-1]) # We have read the col that we're looking for; insert datum
        else                 : data_from_file['data'][col][Nblocks].append('') # We have not read the col that we're looking for; insert blank item
-      data_from_file['lineNs'][Nblocks][line_count-1] = fileline
+      data_from_file['lineNs'][Nblocks][len(data_from_file['data'][col][Nblocks])-1] = fileline # The last index is the item number in the data array
      
   except KeyboardInterrupt: raise
   except:
@@ -293,13 +288,9 @@ def make_datagrid(iterator, description, lineunit, index, usingrowcol, using_lis
   for i in range(Nblocks):
    data_counter = 0
    outblockgrid = []
-   # If some rcs have more data in than others, then find the rc with the minimum number of points in; that is the number that we return
+   # If some rcs have more data than others, then find the rc with the minimum number of points; we return that number of points
    # This is only ever an issue for rows, not columns, where it's dealt with when reading in the data (you can't do that for rows without double-passing)
-   # XXX There's almost certainly some cunning python way to do the following 4 lines in a single line...
-   a_rc = data_rcs[0]
-   Npoints = len(data_from_file['data'][a_rc][i])
-   for rc in data_rcs:
-    Npoints = min(Npoints, len(data_from_file['data'][rc][i]))
+   Npoints = min([len(data_from_file['data'][rc][i]) for rc in data_rcs])
 
    # Iterate over the points in this block
    for j in range(Npoints):
@@ -425,7 +416,12 @@ def parse_every (every_list, verb_errors):
   else                                                           : blocklast  = every_list[5]['every_item']
   if (len(every_list) > 6):
     if (verb_errors): gp_warning("Warning: More than six items specified in every modifier -- additional items will be ignored.")
-  return [linestep,blockstep,linefirst,blockfirst,linelast,blocklast]
+  # Practical re-interpretation of "None"
+  if (linestep == None): linestep = 1
+  if (linefirst == None): linefirst = 0
+  if (blockstep == None): blockstep = 1
+  if (blockfirst == None): blockfirst = 0
+  return {"linestep":linestep, "blockstep":blockstep, "linefirst":linefirst, "blockfirst":blockfirst, "linelast":linelast, "blocklast":blocklast}
 
 # PARSE_USING: Parse a "using" modifier, modifying to provide references to the relevent local variables
 
