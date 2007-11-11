@@ -78,10 +78,9 @@ def gp_function_datagrid(xrast, functions, xname, usingrowcol, using_list, selec
      if verb_errors: gp_error("Error evaluating expression '%s':"%item)
      raise
    # If there *was* no select criterion then there is a bug here
-   if (select_criterion == ''):
-    gp_warning("Warning: Evaluation of %s produced no data!"%(description[3:],select_criterion))
-   elif (verb_errors):
-    gp_warning("Warning: Evaluation of %s with select criterion %s produced no data!"%(description[3:],select_criterion))
+   if (verb_errors):
+    if (select_criterion == ''): gp_warning("Warning: Evaluation of %s produced no data!"%(description[3:]))
+    else                       : gp_warning("Warning: Evaluation of %s with select criterion %s produced no data!"%(description[3:],select_criterion))
     
   return datagrid
 
