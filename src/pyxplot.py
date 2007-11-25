@@ -37,6 +37,7 @@ from gp_autocomplete import *
 import gp_parser
 import gp_error
 from gp_error import *
+import gp_plot
 
 import os
 import sys
@@ -1090,7 +1091,7 @@ def directive(line, toplevel=True, interactive=False):
        else: gp_canvas.multiplot_plotdesc[deleteno]['deleted'] = 'ON' # Set delete flag on item
        try:
         if (gp_settings.settings['DISPLAY'] == "ON"):
-         gp_canvas.multiplot_plot(gp_settings.linestyles,gp_userspace.variables,gp_settings.settings) # Refresh display
+         gp_plot.multiplot_plot(gp_settings.linestyles,gp_userspace.variables,gp_settings.settings,gp_canvas.multiplot_plotdesc) # Refresh display
        except KeyboardInterrupt: raise
        except:
         gp_error("Error: Problem encountered whilst refreshing display after delete operation.")
@@ -1109,7 +1110,7 @@ def directive(line, toplevel=True, interactive=False):
        else: gp_canvas.multiplot_plotdesc[deleteno]['deleted'] = 'OFF' # Unset delete flag on a plot
        try:
         if (gp_settings.settings['DISPLAY'] == "ON"):
-         gp_canvas.multiplot_plot(gp_settings.linestyles,gp_userspace.variables,gp_settings.settings) # Refresh display
+         gp_plot.multiplot_plot(gp_settings.linestyles,gp_userspace.variables,gp_settings.settings,gp_canvas.multiplot_plotdesc) # Refresh display
        except KeyboardInterrupt: raise
        except:
         gp_error("Error: Problem encountered whilst refreshing display after undelete operation.")
@@ -1131,7 +1132,7 @@ def directive(line, toplevel=True, interactive=False):
        gp_canvas.multiplot_plotdesc[moveno]['y_pos'] = command['y']
       try:
        if (gp_settings.settings['DISPLAY'] == "ON"):
-        gp_canvas.multiplot_plot(gp_settings.linestyles,gp_userspace.variables,gp_settings.settings) # Refresh display
+        gp_plot.multiplot_plot(gp_settings.linestyles,gp_userspace.variables,gp_settings.settings,gp_canvas.multiplot_plotdesc) # Refresh display
       except KeyboardInterrupt: raise
       except:
        gp_error("Error: Problem encountered whilst refreshing display after move operation.")
@@ -1140,7 +1141,7 @@ def directive(line, toplevel=True, interactive=False):
   elif (command['directive'] == "refresh"):      # refresh
     try:
       if (gp_settings.settings['DISPLAY'] == "ON"):
-        gp_canvas.multiplot_plot(gp_settings.linestyles,gp_userspace.variables,gp_settings.settings) # Refresh display
+        gp_plot.multiplot_plot(gp_settings.linestyles,gp_userspace.variables,gp_settings.settings,gp_canvas.multiplot_plotdesc) # Refresh display
     except KeyboardInterrupt: raise
     except:
      gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")

@@ -119,10 +119,10 @@ def directive_text(command,linestyles,vars,settings,interactive):
    gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
 
  if (settings['MULTIPLOT'] == 'ON'):
-  if (this_plotdesc['number'] in unsuccessful_plot_operations) and (settings['DISPLAY'] == "ON"):
+  if (this_plotdesc['number'] in gp_plot.unsuccessful_plot_operations) and (settings['DISPLAY'] == "ON"):
    multiplot_plotdesc.pop()
    if interactive:
-    gp_report("Text label has removed from multiplot, because it generated an error.")
+    gp_report("Text label has been removed from multiplot, because it generated an error.")
 
 # DIRECTIVE_ARROW(): Handles the 'arrow' command
 
@@ -155,10 +155,10 @@ def directive_arrow(command,linestyles,vars,settings,interactive):
    gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
 
  if (settings['MULTIPLOT'] == 'ON'):
-  if (this_plotdesc['number'] in unsuccessful_plot_operations) and (settings['DISPLAY'] == "ON"):
+  if (this_plotdesc['number'] in gp_plot.unsuccessful_plot_operations) and (settings['DISPLAY'] == "ON"):
    multiplot_plotdesc.pop()
    if interactive:
-    gp_report("Arrow has removed from multiplot, because it generated an error.")
+    gp_report("Arrow has been removed from multiplot, because it generated an error.")
 
 # DIRECTIVE_JPEG(): Handles the 'jpeg' command
 
@@ -200,10 +200,10 @@ def directive_jpeg(command,linestyles,vars,settings,interactive):
    gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
 
  if (settings['MULTIPLOT'] == 'ON'):
-  if (this_plotdesc['number'] in unsuccessful_plot_operations) and (settings['DISPLAY'] == "ON"):
+  if (this_plotdesc['number'] in gp_plot.unsuccessful_plot_operations) and (settings['DISPLAY'] == "ON"):
    multiplot_plotdesc.pop()
    if interactive:
-    gp_report("jpeg image has removed from multiplot, because it generated an error.")
+    gp_report("jpeg image has been removed from multiplot, because it generated an error.")
 
 # DIRECTIVE_EPS(): Handles the 'eps' command
 
@@ -245,10 +245,10 @@ def directive_eps(command,linestyles,vars,settings,interactive):
    gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
 
  if (settings['MULTIPLOT'] == 'ON'):
-  if (this_plotdesc['number'] in unsuccessful_plot_operations) and (settings['DISPLAY'] == "ON"):
+  if (this_plotdesc['number'] in gp_plot.unsuccessful_plot_operations) and (settings['DISPLAY'] == "ON"):
    multiplot_plotdesc.pop()
    if interactive:
-    gp_report("eps image has removed from multiplot, because it generated an error.")
+    gp_report("eps image has been removed from multiplot, because it generated an error.")
 
 # DIRECTIVE_PLOT(): Handles the 'plot' command
 
@@ -339,7 +339,7 @@ def directive_plot(command,linestyles,vars,settings,axes,labels,arrows,replot_st
    except:
     gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
 
-  if (settings['MULTIPLOT'] == 'ON') and (replot_stat == 0) and (this_plotdesc['number'] in unsuccessful_plot_operations) and (settings['DISPLAY'] == "ON"):
+  if (settings['MULTIPLOT'] == 'ON') and (replot_stat == 0) and (this_plotdesc['number'] in gp_plot.unsuccessful_plot_operations) and (settings['DISPLAY'] == "ON"):
     multiplot_plotdesc.pop()
     if interactive:
-     gp_report("Plot has removed from multiplot, because it generated an error.")
+     gp_report("Plot has been removed from multiplot, because it generated an error.")
