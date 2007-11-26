@@ -28,6 +28,7 @@ import pyx
 import gp_userspace
 import gp_postscript
 from gp_error import *
+import gp_eval
 
 #
 # DEFAULT LINESTYLES AND POINTSTYLES
@@ -382,10 +383,10 @@ except:
 try:
  for preconfigvar in config_files.items('variables'):
   try:
-    gp_userspace.gp_variable_set(preconfigvar[0], gp_eval.gp_eval(preconfigvar[1]))
+    gp_userspace.gp_variable_set(preconfigvar[0], gp_eval.gp_eval(preconfigvar[1],gp_userspace.variables))
   except KeyboardInterrupt: raise
   except:
-    gp_warning("Warning: Expression '%s' for variable %s in configuration file could not be evaluated."%(preconfigvar[0],preconfigvar[1]))
+    gp_warning("Warning: Expression '%s' for variable %s in configuration file could not be evaluated."%(preconfigvar[1],preconfigvar[0]))
 except KeyboardInterrupt: raise
 except:
  pass # Ignore if no variables section 

@@ -31,6 +31,7 @@ import gp_math
 import gp_version
 import gp_postscript
 import gp_ticker
+from gp_canvas import coord_transform
 
 import os
 import sys
@@ -117,7 +118,7 @@ def multiplot_plot(linestyles,vars,settings,multiplot_plotdesc):
   for dummy in [0,1]:
    for this_plotdesc in [x for x in multiplot_plotdesc if x['itemtype'] == 'plot']:
     [Mplotlist, Mkey, Msettings, Mlabels, Marrows, Mdeleted, Maxes_this, multiplot_number] = [ this_plotdesc[x] for x in ['plotlist', 'key', 'settings', 'labels', 'arrows', 'deleted', 'axes', 'number'] ]
-    plot_dataset_makeaxes_multipropagate(multiplot_number, Msettings, Maxes_this, Mdeleted)
+    plot_dataset_makeaxes_multipropagate(multiplot_number, Msettings, Maxes_this, Mdeleted, multiplot_plotdesc)
 
   # Now plot everything in order of its appearance in multiplot_plotdesc
   for this_plotdesc in multiplot_plotdesc:
@@ -163,7 +164,7 @@ def multiplot_plot(linestyles,vars,settings,multiplot_plotdesc):
       plot_dataset_makeaxes_makenonlink   (Msettings, Maxes_this)
    
       # Step 4: Make all of our axes which are linked axes, linking them to the ones that we've just created.
-      plot_dataset_makeaxes_makelinked    (Msettings, Maxes_this)
+      plot_dataset_makeaxes_makelinked    (Msettings, Maxes_this, multiplot_plotdesc)
    
       # Step 5: Clean up any linked axes which possibly went wrong, making normal axes instead.
       # For example: circularly defined linked axes are quite bad.
@@ -420,7 +421,7 @@ def multiplot_plot(linestyles,vars,settings,multiplot_plotdesc):
 # PLOT_DATASET_MAKEAXES__________(): Makes axes for a plot, using the ranges which have been found from 
 
 # PLOT_DATASET_MAKEAXES_MULTIPROPAGATE(): Propagate information from linked axes to parent Re range
-def plot_dataset_makeaxes_multipropagate(multiplot_number, Msettings, Maxes_this, Mdeleted):
+def plot_dataset_makeaxes_multipropagate(multiplot_number, Msettings, Maxes_this, Mdeleted, multiplot_plotdesc):
  for [direction, axis_list] in Maxes_this.iteritems():
   if (direction != 'z'): # 2D plots don't have z axes
    for [number,axis] in axis_list.iteritems():
@@ -611,7 +612,7 @@ def plot_dataset_makeaxes_makenonlink(Msettings, Maxes_this):
      continue
 
 # PLOT_DATASET_MAKEAXES_MAKELINKED(): Try to make linked axes
-def plot_dataset_makeaxes_makelinked(Msettings, Maxes_this):
+def plot_dataset_makeaxes_makelinked(Msettings, Maxes_this, multiplot_plotdesc):
  for [direction, axis_list] in Maxes_this.iteritems():
   if (direction != 'z'): # 2D plots don't have z axes
    for [number,axis] in axis_list.iteritems():
