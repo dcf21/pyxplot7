@@ -45,13 +45,12 @@ using_use_warned = False
 def directive_tabulate(command,vars,settings):
   gridlist = []  # List of grids to output from all functions in list supplied
 
-  # Global options: currently only the format string
-  # !!!! DEFINE "GLOBAL OPTIONS"
+  # Options that apply to all things to be tabulated: currently only the format string
   if 'format' in command: format = command['format']
   else                  : format = ''
    
-  # We need separate axes for function and datafile evaluation (unless axes have been specified completely)
-  # !!!! WHY?
+  # We need separate axes for function and datafile evaluation (unless axes have been specified completely by the user)
+  # This is because file axes are chosen from the data, whereas function axes need to be chosen before the data can be generated
   funcaxes = { 'x':{}, 'y':{}, 'z':{} }
   fileaxes = { 'x':{}, 'y':{}, 'z':{} }
   for dir in ['x', 'y']:
@@ -106,7 +105,6 @@ def directive_tabulate(command,vars,settings):
   else:                                 xrast = gp_math.linrast(funcaxes['x'][1]['MIN'], funcaxes['x'][1]['MAX'], settings['SAMPLES'])
     
   # Step 2: Assemble our blocks of data to plot
-  print command
   if not 'tabulate_list,' in command: 
    gp_warning('Nothing to tabulate!')
    return
@@ -239,7 +237,6 @@ def filter_dataset (datagrid, axes):
 # OUTPUT_TABLE(): Write the table of numbers produced out to a file
 
 def output_table (datagrid, settings, format):
-  print datagrid
   # Get the filename
   fname_out = os.path.expanduser(gp_settings.settings_global['OUTPUT'])
   if (fname_out == ""): fname_out = "pyxplot.dat"
