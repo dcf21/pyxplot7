@@ -170,6 +170,8 @@ def directive_show(dictlist):
                                                autocomplete(word, "style",1)):    outstring += "Function style:%s (the default plotting style for functions, if none is specified)\n"%with_words_print(gp_settings.settings['FUNCSTYLE'],False)
       if autocomplete(word, "settings", 1) or autocomplete(word, "terminal", 1):  outstring += "Terminal type: %s\n"%gp_settings.settings_global['TERMTYPE']
       if (autocomplete(word, "settings", 1) or autocomplete(word, "terminal", 1) or
+                                               autocomplete(word, "antialias",1)):outstring += "Anti-Aliasing: %s\n"%gp_settings.settings_global['TERMANTIALIAS']
+      if (autocomplete(word, "settings", 1) or autocomplete(word, "terminal", 1) or
                                                autocomplete(word, "colour",1)):   outstring += "Colour:        %s (when off, all plots will be monochrome)\n"%gp_settings.settings_global['COLOUR']
       if (autocomplete(word, "settings", 1) or autocomplete(word, "terminal", 1) or
                                                autocomplete(word, "enlarge",1)):  outstring += "Enlarge:       %s (when on, output is enlarged to paper size)\n"%gp_settings.settings_global['TERMENLARGE']
@@ -717,6 +719,7 @@ def directive_set_unset(userinput):
 
   elif (userinput['directive'] == "set") and (userinput['set_option'] == "terminal"): # set terminal
      if 'term'   in userinput: gp_settings.settings_global['TERMTYPE']        = userinput['term']
+     if 'antiali'in userinput: gp_settings.settings_global['TERMANTIALIAS']   = userinput['antiali']
      if 'col'    in userinput: gp_settings.settings_global['COLOUR']          = userinput['col']
      if 'enlarge'in userinput: gp_settings.settings_global['TERMENLARGE']     = userinput['enlarge']
      if 'land'   in userinput: gp_settings.settings_global['LANDSCAPE']       = userinput['land']
@@ -844,8 +847,10 @@ def directive_set_unset(userinput):
 
   elif (userinput['directive'] == "set") and (userinput['set_option'] == "range"): # set xrange
      [direction,number,axis,commit] = access_axis(userinput['axis'])[0]
-     if 'min' in userinput: axis['MIN'] = userinput['min']
-     if 'max' in userinput: axis['MAX'] = userinput['max']
+     if 'min'     in userinput: axis['MIN'] = userinput['min']
+     if 'max'     in userinput: axis['MAX'] = userinput['max']
+     if 'minauto' in userinput: axis['MIN'] = None
+     if 'maxauto' in userinput: axis['MAX'] = None
      if commit: copy_axis_info_to_gpplot(userinput['axis'], ['MIN','MAX'] )
 
   elif (userinput['directive'] == "unset") and (userinput['set_option'] == "range"): # unset xrange

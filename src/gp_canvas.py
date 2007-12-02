@@ -293,8 +293,10 @@ def directive_plot(command,linestyles,vars,settings,axes,labels,arrows,replot_st
    # Create axes if they don't already exist; linear autoscaling axes
    if (not number in axes_this[direction]): axes_this[direction][number] = {'SETTINGS':gp_settings.default_new_axis.copy(), 'MIN_USED':None, 'MAX_USED':None, 'AXIS':None}
 
-   if 'min' in command['range_list'][i]: axes_this[direction][number]['SETTINGS']['MIN'] = command['range_list'][i]['min']
-   if 'max' in command['range_list'][i]: axes_this[direction][number]['SETTINGS']['MAX'] = command['range_list'][i]['max']
+   if 'min'     in command['range_list'][i]: axes_this[direction][number]['SETTINGS']['MIN'] = command['range_list'][i]['min']
+   if 'max'     in command['range_list'][i]: axes_this[direction][number]['SETTINGS']['MAX'] = command['range_list'][i]['max']
+   if 'minauto' in command['range_list'][i]: axes_this[direction][number]['SETTINGS']['MIN'] = None
+   if 'maxauto' in command['range_list'][i]: axes_this[direction][number]['SETTINGS']['MAX'] = None
 
   # We leave the setting up of the key until a later date
   key = None

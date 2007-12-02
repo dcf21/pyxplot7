@@ -43,14 +43,15 @@ using_use_warned = False
 # DIRECTIVE_TABULATE(): Handles the 'tabulate' command
 
 def directive_tabulate(command,vars,settings):
-  gridlist = []  # List of grids to output from all our functions
+  gridlist = []  # List of grids to output from all functions in list supplied
 
   # Global options: currently only the format string
-  # format string
+  # !!!! DEFINE "GLOBAL OPTIONS"
   if 'format' in command: format = command['format']
   else                  : format = ''
    
-  # Faff with axes.  We need separate axes for function and datafile evaluation (unless axes have been specified completely)
+  # We need separate axes for function and datafile evaluation (unless axes have been specified completely)
+  # !!!! WHY?
   funcaxes = { 'x':{}, 'y':{}, 'z':{} }
   fileaxes = { 'x':{}, 'y':{}, 'z':{} }
   for dir in ['x', 'y']:
@@ -63,11 +64,13 @@ def directive_tabulate(command,vars,settings):
    else           : direction='y'
    number=int(i/2)+1
    if 'min' in command['range_list'][i]: 
-    fileaxes[direction][number]['MIN'] = command['range_list'][i]['min']
-    funcaxes[direction][number]['MIN'] = command['range_list'][i]['min']
+    fileaxes[direction][number]['MIN'] = funcaxes[direction][number]['MIN'] = command['range_list'][i]['min']
    if 'max' in command['range_list'][i]: 
-    fileaxes[direction][number]['MAX'] = command['range_list'][i]['max']
-    funcaxes[direction][number]['MAX'] = command['range_list'][i]['max']
+    fileaxes[direction][number]['MAX'] = funcaxes[direction][number]['MAX'] = command['range_list'][i]['max']
+   if 'minauto' in command['range_list'][i]:
+    fileaxes[direction][number]['MIN'] = funcaxes[direction][number]['MIN'] = None
+   if 'maxauto' in command['range_list'][i]:
+    fileaxes[direction][number]['MAX'] = funcaxes[direction][number]['MAX'] = None
 
   # Step 1: Set up the axes structure for function evaluation
   for direction in 'x', 'y':

@@ -406,8 +406,10 @@ def multiplot_plot(linestyles,vars,settings,multiplot_plotdesc):
    command = "convert -density %f -quality 100 "%gp_settings.settings_global['DPI']
    if (gp_settings.settings_global['TERMINVERT'] == "ON"): command = command + "-negate "
    if (gp_settings.settings_global['TERMTRANSPARENT'] == "ON"):
-    if (gp_settings.settings_global['TERMINVERT'] == "ON"): command = command + "-transparent black +antialias "
-    else                               : command = command + "-transparent white +antialias "
+    if (gp_settings.settings_global['TERMINVERT'] == "ON"): command = command + "-transparent black "
+    else                                                  : command = command + "-transparent white "
+   if (gp_settings.settings_global['TERMANTIALIAS'] == "ON"): command = command + "-antialias "
+   else:                                                      command = command + "+antialias "
    command = command + "%s %s.png"%(fname,fname)
    os.system(command)
    write_output("%s.png"%fname,out_fname,settings)
@@ -415,14 +417,18 @@ def multiplot_plot(linestyles,vars,settings,multiplot_plotdesc):
    command = "convert -density %f -quality 100 "%gp_settings.settings_global['DPI']
    if (gp_settings.settings_global['TERMINVERT'] == "ON"): command = command + "-negate "
    if (gp_settings.settings_global['TERMTRANSPARENT'] == "ON"): 
-    if (gp_settings.settings_global['TERMINVERT'] == "ON"): command = command + "-transparent black +antialias "
-    else                               : command = command + "-transparent white +antialias "
+    if (gp_settings.settings_global['TERMINVERT'] == "ON"): command = command + "-transparent black "
+    else                                                  : command = command + "-transparent white "
+   if (gp_settings.settings_global['TERMANTIALIAS'] == "ON"): command = command + "-antialias "
+   else:                                                      command = command + "+antialias "
    command = command + "%s %s.gif"%(fname,fname)
    os.system(command)
    write_output("%s.gif"%fname,out_fname,settings)
   elif (gp_settings.settings_global['TERMTYPE'] == "JPG"):                  # JPG output
    command = "convert -density %f -quality 100 "%gp_settings.settings_global['DPI']
    if (gp_settings.settings_global['TERMINVERT'] == "ON"): command = command + "-negate "
+   if (gp_settings.settings_global['TERMANTIALIAS'] == "ON"): command = command + "-antialias "
+   else:                                                      command = command + "+antialias "
    command = command + "%s %s.jpg"%(fname,fname)
    os.system(command)
    write_output("%s.jpg"%fname,out_fname,settings)
@@ -1237,8 +1243,10 @@ def plot_dataset(multiplot_number,g,axes,axis_x,axis_y,plotwords,settings,title,
           if (stylestr == 'steps')             : datagrid_cpy.append([ (ptC[0]+ptB[0])/2            , ptC[1] , (ptC[0]-ptB[0])/2      ])
           if (stylestr == 'fsteps')            : datagrid_cpy.append([ ptC[0]                       , ptC[1] , 0.0                    ])
        else: # Special case for datasets with only one box
-          if (settings['BOXWIDTH'] <= 0.0): datagrid_cpy.append([ ptC[0], ptC[1], 0.5                    ])
-          else                            : datagrid_cpy.append([ ptC[0], ptC[1], settings['BOXWIDTH']/2 ])
+          if (stylestr in ['boxes', 'histeps', 'steps', 'fsteps']):
+           if (settings['BOXWIDTH'] <= 0.0): datagrid_cpy.append([ ptC[0], ptC[1], 0.5                    ])
+           else                            : datagrid_cpy.append([ ptC[0], ptC[1], settings['BOXWIDTH']/2 ])
+          if (stylestr == 'impulses')          : datagrid_cpy.append([ ptC[0]                       , ptC[1] , 0.0                    ])
        datagrid = datagrid_cpy
       else: # Work out widths of wboxes
        datagrid_cpy      = []

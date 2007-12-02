@@ -283,10 +283,12 @@ settings_global_default = {
                     'LANDSCAPE'      :config_lookup_opt  ('settings','LANDSCAPE'      ,'OFF'             ,onoff     ) , # Landscape output?
                     'MULTIPLOT'      :config_lookup_opt  ('settings','MULTIPLOT'      ,'OFF'             ,onoff     ) ,
                     'OUTPUT'         :config_lookup_str  ('settings','OUTPUT'         ,''                           ) ,
+                    'TERMANTIALIAS'  :config_lookup_opt  ('settings','TERMANTIALIAS'  ,'ON'              ,onoff     ) , # Antialias bitmap output?
                     'TERMTYPE'       :config_lookup_opt  ('settings','TERMTYPE'       ,'X11_singlewindow',termtypes ) ,
                     'TERMENLARGE'    :config_lookup_opt  ('settings','ENLARGE'        ,'OFF'             ,onoff     ) , # Does terminal enlarge output?
                     'TERMINVERT'     :config_lookup_opt  ('settings','TERMINVERT'     ,'OFF'             ,onoff     ) , # Inverted colour image output?
                     'TERMTRANSPARENT':config_lookup_opt  ('settings','TERMTRANSPARENT','OFF'             ,onoff     ) , # Image output transparent?
+                    'TERMTYPE'       :config_lookup_opt  ('settings','TERMTYPE'       ,'X11_singlewindow',termtypes )
                     }
 
 # Now set default options pertaining to plot styles, using configuration file settings as overide if present
