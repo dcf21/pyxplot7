@@ -20,6 +20,7 @@
 
 import os
 import sys
+import copy
 import glob
 import stat
 import ConfigParser
@@ -272,22 +273,35 @@ colours    = pyx_colours.keys()
 
 colour_list_default = ['Black', 'Red', 'Blue', 'Magenta', 'Cyan', 'Brown', 'Salmon', 'Gray', 'Green', 'Navyblue', 'Periwinkle', 'Pinegreen', 'Seagreen', 'Greenyellow', 'Orange', 'Carnationpink', 'Plum' ]
 
-# Now set default options, using configuration file settings as overide if present
+# Now set default PyXPlot options pertaining to matters such as the output which it is to produce
+
+settings_global_default = {
+                    'BACKUP'         :config_lookup_opt  ('settings','BACKUP'         ,'OFF'             ,onoff     ) ,
+                    'COLOUR'         :config_lookup_opt  ('settings','COLOUR'         ,'ON'              ,onoff     ) ,
+                    'DISPLAY'        :config_lookup_opt  ('settings','DISPLAY'        ,'ON'              ,onoff     ) ,
+                    'DPI'            :config_lookup_float('settings','DPI'            ,300.0                        ) , # DPI of bitmap graphics output.
+                    'LANDSCAPE'      :config_lookup_opt  ('settings','LANDSCAPE'      ,'OFF'             ,onoff     ) , # Landscape output?
+                    'MULTIPLOT'      :config_lookup_opt  ('settings','MULTIPLOT'      ,'OFF'             ,onoff     ) ,
+                    'OUTPUT'         :config_lookup_str  ('settings','OUTPUT'         ,''                           ) ,
+                    'TERMTYPE'       :config_lookup_opt  ('settings','TERMTYPE'       ,'X11_singlewindow',termtypes ) ,
+                    'TERMENLARGE'    :config_lookup_opt  ('settings','ENLARGE'        ,'OFF'             ,onoff     ) , # Does terminal enlarge output?
+                    'TERMINVERT'     :config_lookup_opt  ('settings','TERMINVERT'     ,'OFF'             ,onoff     ) , # Inverted colour image output?
+                    'TERMTRANSPARENT':config_lookup_opt  ('settings','TERMTRANSPARENT','OFF'             ,onoff     ) , # Image output transparent?
+                    }
+
+# Now set default options pertaining to plot styles, using configuration file settings as overide if present
+# These options differ from those above in that they are stored separately for each plot on a multiplot
 
 settings_default = {
                     'AXESCOLOUR'     :config_lookup_opt2 ('settings','AXESCOLOUR'     ,'Black'           ,colours   ) ,
                     'ASPECT'         :config_lookup_float('settings','ASPECT'         ,1.0                          ) , # Aspect ratio of plot
                     'AUTOASPECT'     :config_lookup_opt  ('settings','AUTOASPECT'     ,'ON'              ,onoff     ) , # Use PyX default aspect ratio
-                    'BACKUP'         :config_lookup_opt  ('settings','BACKUP'         ,'OFF'             ,onoff     ) ,
                     'BAR'            :config_lookup_float('settings','BAR'            ,1.0                          ) ,
                     'BINORIGIN'      :config_lookup_float('settings','BINORIGIN'      ,0.0                          ) ,
                     'BINWIDTH'       :config_lookup_float('settings','BINWIDTH'       ,1.0                          ) ,
                     'BOXFROM'        :config_lookup_float('settings','BOXFROM'        ,0.0                          ) ,
                     'BOXWIDTH'       :config_lookup_float('settings','BOXWIDTH'       ,0.0                          ) ,
-                    'COLOUR'         :config_lookup_opt  ('settings','COLOUR'         ,'ON'              ,onoff     ) ,
                     'DATASTYLE'      :config_lookup_opt  ('settings','DATASTYLE'      ,'points'          ,datastyles) ,
-                    'DISPLAY'        :config_lookup_opt  ('settings','DISPLAY'        ,'ON'              ,onoff     ) ,
-                    'DPI'            :config_lookup_float('settings','DPI'            ,300.0                        ) , # DPI of bitmap graphics output.
                     'FONTSIZE'       :int(config_lookup_opt('settings','FONTSIZE'     ,'0'               ,fontsizes )), # Font size (-4 < i < 5)
                     'FUNCSTYLE'      :config_lookup_opt  ('settings','FUNCSTYLE'      ,'lines'           ,datastyles) ,
                     'GRID'           :config_lookup_opt  ('settings','GRID'           ,'OFF'             ,onoff     ) ,
@@ -300,25 +314,18 @@ settings_default = {
                     'KEYPOS'         :config_lookup_opt  ('settings','KEYPOS'         ,'TOP RIGHT'       ,keyposes  ) , # Text description of key pos
                     'KEY_XOFF'       :config_lookup_float('settings','KEY_XOFF'       ,0.0                          ) ,
                     'KEY_YOFF'       :config_lookup_float('settings','KEY_YOFF'       ,0.0                          ) ,
-                    'LANDSCAPE'      :config_lookup_opt  ('settings','LANDSCAPE'      ,'OFF'             ,onoff     ) , # Landscape output?
                     'LINEWIDTH'      :config_lookup_float('settings','LINEWIDTH'      ,1.0                          ) , # Default linewidth
-                    'MULTIPLOT'      :config_lookup_opt  ('settings','MULTIPLOT'      ,'OFF'             ,onoff     ) ,
                     'ORIGINX'        :config_lookup_float('settings','ORIGINX'        ,0.0                          ) ,
                     'ORIGINY'        :config_lookup_float('settings','ORIGINY'        ,0.0                          ) ,
-                    'OUTPUT'         :config_lookup_str  ('settings','OUTPUT'         ,''                           ) ,
                     'POINTSIZE'      :config_lookup_float('settings','POINTSIZE'      ,1.0                          ) , # Default pointsize
                     'POINTLINEWIDTH' :config_lookup_float('settings','POINTLINEWIDTH' ,1.0             ) , # Default linewidth used for drawing points
                     'SAMPLES'        :config_lookup_int  ('settings','SAMPLES'        ,250               ,min=1     ) ,
-                    'TERMTYPE'       :config_lookup_opt  ('settings','TERMTYPE'       ,'X11_singlewindow',termtypes ) ,
                     'TEXTCOLOUR'     :config_lookup_opt2 ('settings','TEXTCOLOUR'     ,'Black'           ,colours   ) ,
-                    'TERMENLARGE'    :config_lookup_opt  ('settings','ENLARGE'        ,'OFF'             ,onoff     ) , # Does terminal enlarge output?
                     'TEXTHALIGN'     :config_lookup_opt2 ('settings','TEXTHALIGN'     ,'Left'            ,halignment) ,
                     'TEXTVALIGN'     :config_lookup_opt2 ('settings','TEXTVALIGN'     ,'Bottom'          ,valignment) ,
                     'TITLE'          :config_lookup_str  ('settings','TITLE'          ,''                           ) , # Plot title
                     'TIT_XOFF'       :config_lookup_float('settings','TIT_XOFF'       ,0.0                          ) , # x offset of title
                     'TIT_YOFF'       :config_lookup_float('settings','TIT_YOFF'       ,0.0                          ) , # bitmap terminals produce inv output?
-                    'TERMINVERT'     :config_lookup_opt  ('settings','TERMINVERT'     ,'OFF'             ,onoff     ) , # Inverted colour image output?
-                    'TERMTRANSPARENT':config_lookup_opt  ('settings','TERMTRANSPARENT','OFF'             ,onoff     ) , # Image output transparent?
                     'WIDTH'          :config_lookup_float('settings','WIDTH'          ,8.0                          ) , # Width of output / cm
                     }
 
@@ -328,18 +335,19 @@ settings_default['FUNCSTYLE'] = {'style':settings_default['FUNCSTYLE']}
 try:
   get_papersize = os.popen("locale -c LC_PAPER 2> /dev/null") # Read locale papersize
   get_papersize.readline()
-  settings_default['PAPER_HEIGHT'] = float(get_papersize.readline())
-  settings_default['PAPER_WIDTH']  = float(get_papersize.readline())
+  settings_global_default['PAPER_HEIGHT'] = float(get_papersize.readline())
+  settings_global_default['PAPER_WIDTH']  = float(get_papersize.readline())
   get_papersize.close()
-  assert settings_default['PAPER_HEIGHT'] > 0
-  assert settings_default['PAPER_WIDTH']  > 0
+  assert settings_global_default['PAPER_HEIGHT'] > 0
+  assert settings_global_default['PAPER_WIDTH']  > 0
 except:
-  settings_default['PAPER_HEIGHT'] = 297 # If can't read the default locale papersize, use A4 instead
-  settings_default['PAPER_WIDTH']  = 210
+  settings_global_default['PAPER_HEIGHT'] = 297 # If can't read the default locale papersize, use A4 instead
+  settings_global_default['PAPER_WIDTH']  = 210
 
-settings_default['PAPER_HEIGHT'] = config_lookup_float('settings','PAPER_HEIGHT',settings_default['PAPER_HEIGHT']) # Config file can override this, though
-settings_default['PAPER_WIDTH']  = config_lookup_float('settings','PAPER_WIDTH' ,settings_default['PAPER_WIDTH' ])
-settings_default['PAPER_NAME']   = gp_postscript.get_papername(settings_default['PAPER_HEIGHT'], settings_default['PAPER_WIDTH'])
+# Config file can override the paper size settings above, though...
+settings_global_default['PAPER_HEIGHT'] = config_lookup_float('settings','PAPER_HEIGHT',settings_global_default['PAPER_HEIGHT'])
+settings_global_default['PAPER_WIDTH']  = config_lookup_float('settings','PAPER_WIDTH' ,settings_global_default['PAPER_WIDTH' ])
+settings_global_default['PAPER_NAME']   = gp_postscript.get_papername(settings_global_default['PAPER_HEIGHT'], settings_global_default['PAPER_WIDTH'])
 
 default_axis = {'LABEL'    : '', # These are the axis settings which the unset command accesses
                 'MIN'      : None,
@@ -414,9 +422,8 @@ latex_preamble = default_latex_preamble
 
 # Now that we have default settings, make copy them into initial settings
 
-settings = settings_default.copy()
-settings['GRIDAXISX'] = settings_default['GRIDAXISX'][:]
-settings['GRIDAXISY'] = settings_default['GRIDAXISY'][:]
+settings        = copy.deepcopy(settings_default       )
+settings_global = copy.deepcopy(settings_global_default)
 
 # By default, have one of each kind of axis... x1, y1 and z1
 axes = {'x':{1:default_axis.copy()},

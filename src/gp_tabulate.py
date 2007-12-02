@@ -238,12 +238,12 @@ def filter_dataset (datagrid, axes):
 def output_table (datagrid, settings, format):
   print datagrid
   # Get the filename
-  fname_out = os.path.expanduser(settings['OUTPUT'])
+  fname_out = os.path.expanduser(gp_settings.settings_global['OUTPUT'])
   if (fname_out == ""): fname_out = "pyxplot.dat"
   outfile = os.path.join(gp_settings.cwd, os.path.expanduser(fname_out))
 
   # Create backup of pre-existing datafile if necessary
-  if( settings['BACKUP']=="ON") and os.path.exists(outfile):
+  if( gp_settings.settings_global['BACKUP']=="ON") and os.path.exists(outfile):
    i=0
    while os.path.exists("%s~%d"%(outfile,i)): i+=1
    os.rename(outfile,"%s~%d"%(outfile,i))
@@ -270,7 +270,24 @@ def output_table (datagrid, settings, format):
    Nformatitems = len(formatitems)
    formats = [formatitems[i%Nformatitems] for i in range(cols)]
   else:
-   formats = ["%16s" for i in range(cols)]
+   # Produce a default format string for each column of data; ensure that same format is used down whole column for easy readibility.
+   allints  = [True for i in range(cols)]
+   allsmall = [True for i in range(cols)]
+   for [rows, cols, block] in datagrid:
+    for line in block:
+     for i in range(cols):
+      if (line[i] != float(int(line[i])) or (abs(line[i])>1000)):
+       allints[i] = False
+      if (abs(line[i]) >= 1000 or (abs(line[i]) < .0999999 and line[i] != 0.)):
+       allsmall[i] = False
+   for i in range(cols):
+    if (allints[i]):
+     formats.append("%10d")
+    elif (allsmall[i]):
+     formats.append("%11f")
+    else:
+     formats.append("%15e")
+
 
   # Actually write the data file
   try:

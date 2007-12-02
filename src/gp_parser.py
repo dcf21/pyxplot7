@@ -20,13 +20,16 @@
 
 # Parse commands, using syntax specification in gp_commands
 
+import os
 import re
+import pickle
 
 import gp_commands
 import gp_eval
 from gp_autocomplete import *
 from gp_error import *
 import gp_text
+import gp_version
 
 # --------------------------------------------------------------------------
 # PART I: READ SYNTAX SPECIFICATION
@@ -80,8 +83,15 @@ def roll_back(type, def_tree, var_inputs, def_txt):
 # list-based definitions of PyXPlot's commands, parsed using the functions
 # above from gp_commands
 
-commands = []
-for def_txt in gp_commands.commands.splitlines(): # Loop over PyXPlot's commands
+# Try to load cached copy of command definitions to save time at startup
+fname = os.path.join(gp_version.SRCDIR, "gp_commands.cache")
+if os.path.exists(fname):
+ commands = pickle.load(open(os.path.join(gp_version.SRCDIR, "gp_commands.cache")))
+
+# If that didn't exist, then we have to make command cache anew
+else:
+ commands = []
+ for def_txt in gp_commands.commands.splitlines(): # Loop over PyXPlot's commands
   if (len(def_txt) == 0): continue # Ignore blank lines
   def_tree = []
   var_inputs = {}
@@ -130,6 +140,10 @@ for def_txt in gp_commands.commands.splitlines(): # Loop over PyXPlot's commands
 
   def_tree[0][0][1] = "line" # Store whole line to "line"
   commands.append([def_tree[0],var_inputs])
+ try:
+  pickle.dump(commands,open(os.path.join(gp_version.SRCDIR, "gp_commands.cache"),"w"))
+ except:
+  gp_error("Could not write cache of command definitions")
 
 # Debugging: this outputs a copy of the python syntax specification list
 # for command,vardict in commands:

@@ -9,6 +9,8 @@
 	  efficiency.
 	- histogram command implemented.
 	- tabulate command implemented.
+	- set label with colour implemented.
+	- text with colour implemented.
 
 2007 Mar 15: PyXPlot 0.6.3.1
    - Minor bugfix so that gv will work with -watch.

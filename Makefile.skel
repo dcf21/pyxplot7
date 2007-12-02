@@ -85,6 +85,7 @@ install:
 	cp -r src/pyx ${SRCDIR}
 	chmod -R 755 ${SRCDIR}/pyx
 	install -m644 src/*.py ${SRCDIR}
+	install -m644 src/*.cache ${SRCDIR}
 	install -m644 src/gp_version_install.py ${SRCDIR}/gp_version.py
 	install -m644 src/*.pyc ${SRCDIR}
 	install -m644 src/*.xml ${SRCDIR}

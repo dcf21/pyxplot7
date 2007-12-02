@@ -127,14 +127,14 @@ def directive_show(dictlist):
         continue
       outstring = ""
       if autocomplete(word, "settings", 1) or autocomplete(word, "axescolour",1): outstring += "Axes colour:   %s\n"%gp_settings.settings['AXESCOLOUR']
-      if autocomplete(word, "settings", 1) or autocomplete(word, "backup", 1):    outstring += "File backups:  %s\n"%gp_settings.settings['BACKUP']
+      if autocomplete(word, "settings", 1) or autocomplete(word, "backup", 1):    outstring += "File backups:  %s\n"%gp_settings.settings_global['BACKUP']
       if autocomplete(word, "settings", 1) or autocomplete(word, "bar",1):        outstring += "Bar width:     %f (the size of the strokes at the end of errorbars, set with 'set bar')\n"%gp_settings.settings['BAR']
       if autocomplete(word, "settings", 1) or autocomplete(word, "binorigin",1):  outstring += "Bin origin:    %f (the x-origin of a histogram bin)\n"%gp_settings.settings['BINORIGIN']
       if autocomplete(word, "settings", 1) or autocomplete(word, "binwidth",1):   outstring += "Bin width:     %f (the width of a histogram bin)\n"%gp_settings.settings['BINWIDTH']
       if autocomplete(word, "settings", 1) or autocomplete(word, "boxwidth",1):   outstring += "Boxwidth:      %s (the default width of bars on barcharts and histograms; a negative value means automatic widths)\n"%gp_settings.settings['BOXWIDTH']
       if autocomplete(word, "settings", 1) or autocomplete(word, "boxfrom",1):    outstring += "BoxFrom:       %s (the vertical point from which the bars of barcharts and histograms emanate)\n"%gp_settings.settings['BOXFROM']
-      if autocomplete(word, "settings", 1) or autocomplete(word, "display", 1)  : outstring += "Display:       %s\n"%gp_settings.settings['DISPLAY']
-      if autocomplete(word, "settings", 1) or autocomplete(word, "dpi", 1):       outstring += "Output DPI:    %f (only relevant when output is sent to a bitmap terminal -- gif, jpg or png)\n"%gp_settings.settings['DPI']
+      if autocomplete(word, "settings", 1) or autocomplete(word, "display", 1)  : outstring += "Display:       %s\n"%gp_settings.settings_global['DISPLAY']
+      if autocomplete(word, "settings", 1) or autocomplete(word, "dpi", 1):       outstring += "Output DPI:    %f (only relevant when output is sent to a bitmap terminal -- gif, jpg or png)\n"%gp_settings.settings_global['DPI']
       if autocomplete(word, "settings", 1) or autocomplete(word, "fontsize",1) or autocomplete(word, "fountsize",1):   outstring += "Fontsize:      %d (-4 is smallest, 5 largest)\n"%gp_settings.settings['FONTSIZE']
       if autocomplete(word, "settings", 1) or autocomplete(word, "grid",1):
         outstring += "Grid:          %s\n"%gp_settings.settings['GRID']
@@ -150,11 +150,11 @@ def directive_show(dictlist):
       if autocomplete(word, "settings", 1) or autocomplete(word, "key",1):        outstring += "Key position:  %s, with offset (%f,%f)\n"%(gp_settings.settings['KEYPOS'],gp_settings.settings['KEY_XOFF'],gp_settings.settings['KEY_YOFF'])
       if(autocomplete(word, "settings", 1) or autocomplete(word, "linewidth", 1) or
                                               autocomplete(word, "lw",2)       ): outstring += "Linewidth:     %f\n"%gp_settings.settings['LINEWIDTH']
-      if autocomplete(word, "settings", 1) or autocomplete(word, "multiplot", 1): outstring += "Multiplot:     %s\n"%gp_settings.settings['MULTIPLOT']
+      if autocomplete(word, "settings", 1) or autocomplete(word, "multiplot", 1): outstring += "Multiplot:     %s\n"%gp_settings.settings_global['MULTIPLOT']
       if autocomplete(word, "settings", 1) or autocomplete(word, "origin", 1):    outstring += "Plot Offset:  (%f,%f)\n"%(gp_settings.settings['ORIGINX'],gp_settings.settings['ORIGINY'])
-      if autocomplete(word, "settings", 1) or autocomplete(word, "output", 1):    outstring += "Output fname:  %s\n"%gp_settings.settings['OUTPUT']
+      if autocomplete(word, "settings", 1) or autocomplete(word, "output", 1):    outstring += "Output fname:  %s\n"%gp_settings.settings_global['OUTPUT']
       if autocomplete(word, "settings", 1) or autocomplete(word, "palette",1):    outstring += "Palette:       %s\n"%gp_settings.colour_list
-      if autocomplete(word, "settings", 1) or autocomplete(word, "papersize", 1): outstring += "Papersize:     %s (%s by %s mm)\n"%(gp_settings.settings['PAPER_NAME'],gp_settings.settings['PAPER_HEIGHT'],gp_settings.settings['PAPER_WIDTH'])
+      if autocomplete(word, "settings", 1) or autocomplete(word, "papersize", 1): outstring += "Papersize:     %s (%s by %s mm)\n"%(gp_settings.settings_global['PAPER_NAME'],gp_settings.settings_global['PAPER_HEIGHT'],gp_settings.settings_global['PAPER_WIDTH'])
       if (autocomplete(word, "settings", 1) or
           autocomplete(word, "pointlinewidth",1) or autocomplete(word, "plw",3)): outstring += "Pointlinewidth:%f\n"%gp_settings.settings['POINTLINEWIDTH']
       if(autocomplete(word, "settings", 1) or autocomplete(word, "pointsize", 1) or
@@ -168,17 +168,17 @@ def directive_show(dictlist):
                                                autocomplete(word, "style",1)):    outstring += "Data style:    %s (the default plotting style for datafiles, if none is specified)\n"%with_words_print(gp_settings.settings['DATASTYLE'],False)
       if(autocomplete(word, "settings", 1) or autocomplete(word, "function", 1) or
                                                autocomplete(word, "style",1)):    outstring += "Function style:%s (the default plotting style for functions, if none is specified)\n"%with_words_print(gp_settings.settings['FUNCSTYLE'],False)
-      if autocomplete(word, "settings", 1) or autocomplete(word, "terminal", 1):  outstring += "Terminal type: %s\n"%gp_settings.settings['TERMTYPE']
+      if autocomplete(word, "settings", 1) or autocomplete(word, "terminal", 1):  outstring += "Terminal type: %s\n"%gp_settings.settings_global['TERMTYPE']
       if (autocomplete(word, "settings", 1) or autocomplete(word, "terminal", 1) or
-                                               autocomplete(word, "colour",1)):   outstring += "Colour:        %s (when off, all plots will be monochrome)\n"%gp_settings.settings['COLOUR']
+                                               autocomplete(word, "colour",1)):   outstring += "Colour:        %s (when off, all plots will be monochrome)\n"%gp_settings.settings_global['COLOUR']
       if (autocomplete(word, "settings", 1) or autocomplete(word, "terminal", 1) or
-                                               autocomplete(word, "enlarge",1)):  outstring += "Enlarge:       %s (when on, output is enlarged to paper size)\n"%gp_settings.settings['TERMENLARGE']
+                                               autocomplete(word, "enlarge",1)):  outstring += "Enlarge:       %s (when on, output is enlarged to paper size)\n"%gp_settings.settings_global['TERMENLARGE']
       if (autocomplete(word, "settings", 1) or autocomplete(word, "terminal", 1) or
-                                               autocomplete(word, "invert",1)):   outstring += "Invert colours:%s (only relevant when output is sent to a bitmap terminal -- gif, jpg or png)\n"%gp_settings.settings['TERMINVERT']
+                                               autocomplete(word, "invert",1)):   outstring += "Invert colours:%s (only relevant when output is sent to a bitmap terminal -- gif, jpg or png)\n"%gp_settings.settings_global['TERMINVERT']
       if (autocomplete(word, "settings", 1) or autocomplete(word, "terminal", 1) or
-         autocomplete(word, "landscape", 1) or autocomplete(word, "portrait", 1)):outstring += "Landscape mode:%s\n"%gp_settings.settings['LANDSCAPE']
+         autocomplete(word, "landscape", 1) or autocomplete(word, "portrait", 1)):outstring += "Landscape mode:%s\n"%gp_settings.settings_global['LANDSCAPE']
       if (autocomplete(word, "settings", 1) or autocomplete(word, "terminal", 1) or
-         autocomplete(word, "transparent", 1) or autocomplete(word, "solid", 1)): outstring += "Transparency:  %s (only relevant when output is sent to gif or png terminals, which support transparency)\n"%gp_settings.settings['TERMTRANSPARENT']
+         autocomplete(word, "transparent", 1) or autocomplete(word, "solid", 1)): outstring += "Transparency:  %s (only relevant when output is sent to gif or png terminals, which support transparency)\n"%gp_settings.settings_global['TERMTRANSPARENT']
       if autocomplete(word, "settings", 1) or autocomplete(word, "textcolour",1): outstring += "Text colour:   %s\n"%gp_settings.settings['TEXTCOLOUR']
       if autocomplete(word, "settings", 1) or autocomplete(word, "texthalign",1): outstring += "Text halign:   %s\n"%gp_settings.settings['TEXTHALIGN']
       if autocomplete(word, "settings", 1) or autocomplete(word, "textvalign",1): outstring += "Text valign:   %s\n"%gp_settings.settings['TEXTVALIGN']
@@ -299,7 +299,7 @@ def directive_set_unset(userinput):
       try:
        x = int(userinput[key])
        if (x<1):
-        gp_error("set label command refers to axis %s%d; negative axes are not allowed."%(key[0],x))
+        gp_error("set arrow command refers to axis %s%d; negative axes are not allowed."%(key[0],x))
         state=False
        else: userinput[key]="axis%d"%x
       except KeyboardInterrupt: raise
@@ -358,10 +358,10 @@ def directive_set_unset(userinput):
 
 
   elif (userinput['directive'] == "set") and (userinput['set_option'] == "backup"): # set backup
-     gp_settings.settings['BACKUP'] = "ON"
+     gp_settings.settings_global['BACKUP'] = "ON"
 
   elif (userinput['directive'] == "unset") and (userinput['set_option'] == "backup"): # unset backup
-     gp_settings.settings['BACKUP'] = gp_settings.settings_default['BACKUP']
+     gp_settings.settings_global['BACKUP'] = gp_settings.settings_global_default['BACKUP']
 
   elif (userinput['directive'] == "set") and (userinput['set_option'] == "bar"): # set bar
      gp_settings.settings['BAR'] = float(userinput['bar_size'])
@@ -394,19 +394,19 @@ def directive_set_unset(userinput):
      gp_settings.settings['BOXWIDTH'] = gp_settings.settings_default['BOXWIDTH']
 
   elif (userinput['directive'] == "set") and (userinput['set_option'] == "display"): # set display
-     gp_settings.settings['DISPLAY'] = 'ON'
+     gp_settings.settings_global['DISPLAY'] = 'ON'
 
   elif (userinput['directive'] == "unset") and (userinput['set_option'] == "display"): # unset display
-     gp_settings.settings['DISPLAY'] = gp_settings.settings_default['DISPLAY']
+     gp_settings.settings_global['DISPLAY'] = gp_settings.settings_global_default['DISPLAY']
      
   elif (userinput['directive'] == "set") and (userinput['set_option'] == "dpi"): # set dpi
      if (userinput['dpi'] < 2.0):
       gp_error("Error: the set dpi command should be followed by a positive value >= 2.")
      else:
-      gp_settings.settings['DPI'] = userinput['dpi']
+      gp_settings.settings_global['DPI'] = userinput['dpi']
 
   elif (userinput['directive'] == "unset") and (userinput['set_option'] == "dpi"): # unset dpi
-     gp_settings.settings['DPI'] = gp_settings.settings_default['DPI']
+     gp_settings.settings_global['DPI'] = gp_settings.settings_global_default['DPI']
      
   elif (userinput['directive'] == "set") and (userinput['set_option'] == "fontsize"): # set fontsize
      if (userinput['fontsize'] < -4): userinput['fontsize'] = -4
@@ -508,7 +508,11 @@ def directive_set_unset(userinput):
       xs       = userinput['x_system']
       ys       = userinput['y_system']
       rot      = userinput['rotation']
-      gp_settings.labels[label_id] = (text,xs,xp,ys,yp,rot)
+      if 'colour' not in userinput: userinput['colour'] = gp_settings.settings['TEXTCOLOUR']
+      texthal  = gp_settings.settings['TEXTHALIGN']
+      textval  = gp_settings.settings['TEXTVALIGN']
+      textsize = gp_settings.settings['FONTSIZE']
+      gp_settings.labels[label_id] = (text,xs,xp,ys,yp,rot,userinput['colour'],texthal,textval,textsize)
 
   elif (userinput['directive'] == "set") and (userinput['set_option'] == "linestyle"): # set linestyle
      gp_settings.linestyles[userinput['linestyle_id']] = userinput
@@ -542,23 +546,23 @@ def directive_set_unset(userinput):
       if commit: copy_axis_info_to_gpplot(axisname, ["LOG","LOGBASE"])
 
   elif (userinput['directive'] == "set") and (userinput['set_option'] == "multiplot"): # set multiplot
-     if (gp_settings.settings['MULTIPLOT'] != "ON"):
-      gp_settings.settings['MULTIPLOT'] = 'ON'
+     if (gp_settings.settings_global['MULTIPLOT'] != "ON"):
+      gp_settings.settings_global['MULTIPLOT'] = 'ON'
       gp_canvas.plotorder_clear()
 
   elif (userinput['directive'] == "unset") and (userinput['set_option'] == "multiplot"): # unset multiplot
-     if (gp_settings.settings_default['MULTIPLOT'] == "ON"):
-      if (gp_settings.settings['MULTIPLOT'] != "ON"):
-       gp_settings.settings['MULTIPLOT'] = 'ON'
+     if (gp_settings.settings_global_default['MULTIPLOT'] == "ON"):
+      if (gp_settings.settings_global['MULTIPLOT'] != "ON"):
+       gp_settings.settings_global['MULTIPLOT'] = 'ON'
        gp_canvas.plotorder_clear()
      else:
-      gp_settings.settings['MULTIPLOT'] = 'OFF'
+      gp_settings.settings_global['MULTIPLOT'] = 'OFF'
 
   elif (userinput['directive'] == "set") and (userinput['set_option'] == "nobackup"): # set nobackup
-     gp_settings.settings['BACKUP'] = "OFF"
+     gp_settings.settings_global['BACKUP'] = "OFF"
 
   elif (userinput['directive'] == "set") and (userinput['set_option'] == 'nodisplay'): # set nodisplay
-     gp_settings.settings['DISPLAY'] = 'OFF'
+     gp_settings.settings_global['DISPLAY'] = 'OFF'
 
   elif (userinput['directive'] == "set") and (userinput['set_option'] == 'nogrid'): # set nogrid
      if userinput['axes']==[]:
@@ -600,7 +604,7 @@ def directive_set_unset(userinput):
       if commit: copy_axis_info_to_gpplot(axisname, ["LOG","LOGBASE"])
 
   elif (userinput['directive'] == "set") and (userinput['set_option'] == "nomultiplot"): # set nomultiplot
-     gp_settings.settings['MULTIPLOT'] = 'OFF'
+     gp_settings.settings_global['MULTIPLOT'] = 'OFF'
 
   elif (userinput['directive'] == "set") and (userinput['set_option'] == "notics"): # set notics
      if 'axis' not in userinput: userinput['axis'] = None # act on all axes
@@ -621,10 +625,10 @@ def directive_set_unset(userinput):
      gp_settings.settings['ORIGINY'] = gp_settings.settings_default['ORIGINY']
 
   elif (userinput['directive'] == "set") and (userinput['set_option'] == "output"): # set output
-     gp_settings.settings['OUTPUT'] = userinput['filename']
+     gp_settings.settings_global['OUTPUT'] = userinput['filename']
 
   elif (userinput['directive'] == "unset") and (userinput['set_option'] == "output"): # unset output
-     gp_settings.settings['OUTPUT'] = gp_settings.settings_default['OUTPUT']
+     gp_settings.settings_global['OUTPUT'] = gp_settings.settings_global_default['OUTPUT']
 
   elif (userinput['directive'] == "set") and (userinput['set_option'] == "palette"): # set palette
      palette_new = []
@@ -644,9 +648,9 @@ def directive_set_unset(userinput):
      if ('x_size' in userinput):
       h = fabs(userinput['x_size'])
       w = fabs(userinput['y_size'])
-      gp_settings.settings['PAPER_HEIGHT'] = h
-      gp_settings.settings['PAPER_WIDTH']  = w
-      gp_settings.settings['PAPER_NAME']   = gp_postscript.get_papername(h,w)
+      gp_settings.settings_global['PAPER_HEIGHT'] = h
+      gp_settings.settings_global['PAPER_WIDTH']  = w
+      gp_settings.settings_global['PAPER_NAME']   = gp_postscript.get_papername(h,w)
      else:
       requested = userinput['paper_name'].lower()
 
@@ -657,15 +661,15 @@ def directive_set_unset(userinput):
        if len(matches)==1: requested = matches[0]
  
       if requested in gp_postscript.papersizes:
-       [gp_settings.settings['PAPER_HEIGHT'], gp_settings.settings['PAPER_WIDTH']] = gp_postscript.papersizes[requested]
-       gp_settings.settings['PAPER_NAME'] = requested
+       [gp_settings.settings_global['PAPER_HEIGHT'], gp_settings.settings_global['PAPER_WIDTH']] = gp_postscript.papersizes[requested]
+       gp_settings.settings_global['PAPER_NAME'] = requested
       else:
        gp_error("Error: set papersize passed unrecognised papersize '%s'."%requested)
 
   elif (userinput['directive'] == "unset") and (userinput['set_option'] == "papersize"): # unset papersize
-     gp_settings.settings['PAPER_HEIGHT'] = gp_settings.settings_default['PAPER_HEIGHT']
-     gp_settings.settings['PAPER_WIDTH']  = gp_settings.settings_default['PAPER_WIDTH']
-     gp_settings.settings['PAPER_NAME']   = gp_settings.settings_default['PAPER_NAME']
+     gp_settings.settings_global['PAPER_HEIGHT'] = gp_settings.settings_global_default['PAPER_HEIGHT']
+     gp_settings.settings_global['PAPER_WIDTH']  = gp_settings.settings_global_default['PAPER_WIDTH']
+     gp_settings.settings_global['PAPER_NAME']   = gp_settings.settings_global_default['PAPER_NAME']
 
   elif (userinput['directive'] == "set") and (userinput['set_option'] == "pointlinewidth"): # set pointlinewidth
      gp_settings.settings['POINTLINEWIDTH'] = userinput['pointlinewidth']
@@ -712,16 +716,16 @@ def directive_set_unset(userinput):
       if word in userinput: gp_settings.settings[key][word] = userinput[word]
 
   elif (userinput['directive'] == "set") and (userinput['set_option'] == "terminal"): # set terminal
-     if 'term'   in userinput: gp_settings.settings['TERMTYPE']        = userinput['term']
-     if 'col'    in userinput: gp_settings.settings['COLOUR']          = userinput['col']
-     if 'enlarge'in userinput: gp_settings.settings['TERMENLARGE']     = userinput['enlarge']
-     if 'land'   in userinput: gp_settings.settings['LANDSCAPE']       = userinput['land']
-     if 'trans'  in userinput: gp_settings.settings['TERMTRANSPARENT'] = userinput['trans']
-     if 'invert' in userinput: gp_settings.settings['TERMINVERT']      = userinput['invert']
+     if 'term'   in userinput: gp_settings.settings_global['TERMTYPE']        = userinput['term']
+     if 'col'    in userinput: gp_settings.settings_global['COLOUR']          = userinput['col']
+     if 'enlarge'in userinput: gp_settings.settings_global['TERMENLARGE']     = userinput['enlarge']
+     if 'land'   in userinput: gp_settings.settings_global['LANDSCAPE']       = userinput['land']
+     if 'trans'  in userinput: gp_settings.settings_global['TERMTRANSPARENT'] = userinput['trans']
+     if 'invert' in userinput: gp_settings.settings_global['TERMINVERT']      = userinput['invert']
 
   elif (userinput['directive'] == "unset") and (userinput['set_option'] == "terminal"): # unset terminal
      for X in ['TERMTYPE','COLOUR','LANDSCAPE','TERMTRANSPARENT','TERMINVERT','TERMENLARGE']:
-      gp_settings.settings[X] = gp_settings.settings_default[X]
+      gp_settings.settings_global[X] = gp_settings.settings_global_default[X]
 
   elif (userinput['directive'] == "set") and (userinput['set_option'] == "texthalign"): # set texthalign
      if 'left'   in userinput: gp_settings.settings['TEXTHALIGN'] = "Left"
@@ -907,6 +911,8 @@ def directive(line, toplevel=True, interactive=False):
 
   # Can use ; to pass multiple commands on one line
   if (line.strip()[0] != "!"): # Don't split shell commandlines
+   linelist = gp_eval.gp_split(line,'#') # Hash can be used to place comments after commands
+   if len(linelist)>1: line=linelist[0]
    linelist = gp_eval.gp_split(line,';')
   else:
    linelist = [line.strip()]
@@ -966,7 +972,7 @@ def directive(line, toplevel=True, interactive=False):
     for subdict in command['path']:
      new_dir = glob.glob(os.path.join(gp_settings.cwd, subdict['directory']))
      if (len(new_dir) == 0):
-      gp_error("Error: Directory '%s' could not be found."%linelist[i])
+      gp_error("Error: Directory '%s' could not be found."%subdict['directory'])
      else:
       gp_settings.cwd = new_dir[0]
   elif (command['directive'] == "pwd"):          # the pwd command
@@ -1057,7 +1063,7 @@ def directive(line, toplevel=True, interactive=False):
                         'z':{1:gp_settings.default_axis.copy()} }
 
   elif (command['directive'] == "edit"):         # edit
-    if (gp_settings.settings['MULTIPLOT'] != 'ON'):
+    if (gp_settings.settings_global['MULTIPLOT'] != 'ON'):
      gp_error("Error: Can only edit plots when in multiplot mode.")
     else:
      editno = command['editno']
@@ -1079,7 +1085,7 @@ def directive(line, toplevel=True, interactive=False):
         gp_canvas.axes_this[direction][number] = {'SETTINGS':axis['SETTINGS'].copy(), 'MIN_USED':None, 'MAX_USED':None, 'AXIS':None}
 
   elif (command['directive'] == "delete"):       # delete
-    if (gp_settings.settings['MULTIPLOT'] != 'ON'):
+    if (gp_settings.settings_global['MULTIPLOT'] != 'ON'):
      gp_error("Error: Can only delete items when in multiplot mode.")
     else:
      for dn_dict in command['deleteno,']:
@@ -1090,7 +1096,7 @@ def directive(line, toplevel=True, interactive=False):
        if (gp_canvas.multiplot_plotdesc[deleteno]['deleted'] == 'ON'): gp_warning("Warning: Attempt to delete a multiplot item which is already deleted.")
        else: gp_canvas.multiplot_plotdesc[deleteno]['deleted'] = 'ON' # Set delete flag on item
        try:
-        if (gp_settings.settings['DISPLAY'] == "ON"):
+        if (gp_settings.settings_global['DISPLAY'] == "ON"):
          gp_plot.multiplot_plot(gp_settings.linestyles,gp_userspace.variables,gp_settings.settings,gp_canvas.multiplot_plotdesc) # Refresh display
        except KeyboardInterrupt: raise
        except:
@@ -1098,7 +1104,7 @@ def directive(line, toplevel=True, interactive=False):
         gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
 
   elif (command['directive'] == "undelete"):     # undelete
-    if (gp_settings.settings['MULTIPLOT'] != 'ON'):
+    if (gp_settings.settings_global['MULTIPLOT'] != 'ON'):
      gp_error("Error: Can only undelete items when in multiplot mode.")
     else:
      for dn_dict in command['undeleteno,']:
@@ -1109,7 +1115,7 @@ def directive(line, toplevel=True, interactive=False):
        if (gp_canvas.multiplot_plotdesc[deleteno]['deleted'] != 'ON'): gp_warning("Warning: Attempt to undelete a multiplot item which isn't deleted.")
        else: gp_canvas.multiplot_plotdesc[deleteno]['deleted'] = 'OFF' # Unset delete flag on a plot
        try:
-        if (gp_settings.settings['DISPLAY'] == "ON"):
+        if (gp_settings.settings_global['DISPLAY'] == "ON"):
          gp_plot.multiplot_plot(gp_settings.linestyles,gp_userspace.variables,gp_settings.settings,gp_canvas.multiplot_plotdesc) # Refresh display
        except KeyboardInterrupt: raise
        except:
@@ -1131,7 +1137,7 @@ def directive(line, toplevel=True, interactive=False):
        gp_canvas.multiplot_plotdesc[moveno]['x_pos'] = command['x'] # All other multiplot items store positions in separate settings
        gp_canvas.multiplot_plotdesc[moveno]['y_pos'] = command['y']
       try:
-       if (gp_settings.settings['DISPLAY'] == "ON"):
+       if (gp_settings.settings_global['DISPLAY'] == "ON"):
         gp_plot.multiplot_plot(gp_settings.linestyles,gp_userspace.variables,gp_settings.settings,gp_canvas.multiplot_plotdesc) # Refresh display
       except KeyboardInterrupt: raise
       except:
@@ -1140,7 +1146,7 @@ def directive(line, toplevel=True, interactive=False):
 
   elif (command['directive'] == "refresh"):      # refresh
     try:
-      if (gp_settings.settings['DISPLAY'] == "ON"):
+      if (gp_settings.settings_global['DISPLAY'] == "ON"):
         gp_plot.multiplot_plot(gp_settings.linestyles,gp_userspace.variables,gp_settings.settings,gp_canvas.multiplot_plotdesc) # Refresh display
     except KeyboardInterrupt: raise
     except:
@@ -1298,7 +1304,7 @@ if (gp_settings.config_lookup_opt('settings','TERMTYPE','default',gp_settings.te
      or (len(os.environ['DISPLAY']) < 1)
      or (not sys.stdin.isatty())
      ):
-  gp_settings.settings['TERMTYPE'] = 'EPS'
+  gp_settings.settings_global['TERMTYPE'] = 'EPS'
 
 if (  ((len(sys.argv)>1) and ("-" not in sys.argv))
    or (not sys.stdin.isatty())

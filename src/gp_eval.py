@@ -20,6 +20,7 @@
 
 # Evaluates expressions using user variables and functions
 
+from __future__ import division # Use -Qnew implementation of python division
 import sys
 import re
 

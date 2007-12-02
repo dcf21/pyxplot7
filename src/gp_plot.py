@@ -202,17 +202,21 @@ def multiplot_plot(linestyles,vars,settings,multiplot_plotdesc):
    
         # Print text labels
         try:
-          for dummy,(textstr,systx,x,systy,y,rotation) in Mlabels.iteritems():
+          for dummy,(textstr,systx,x,systy,y,rotation,colour,texthal,textval,textsize) in Mlabels.iteritems():
             [x,y] = coord_transform(g, Maxes_this, systx, systy, x, y)
-            if   (Msettings['TEXTHALIGN'] == 'Centre'): halign = text.halign.center
-            elif (Msettings['TEXTHALIGN'] == 'Right' ): halign = text.halign.right
-            else                                      : halign = text.halign.left
-            if   (Msettings['TEXTVALIGN'] == 'Top'   ): valign = text.valign.top
-            elif (Msettings['TEXTVALIGN'] == 'Centre'): valign = text.valign.middle
-            else                                      : valign = text.valign.bottom
+            if   (texthal == 'Centre'): halign = text.halign.center
+            elif (texthal == 'Right' ): halign = text.halign.right
+            else                      : halign = text.halign.left
+            if   (textval == 'Top'   ): valign = text.valign.top
+            elif (textval == 'Centre'): valign = text.valign.middle
+            else                      : valign = text.valign.bottom
+
+            user_input = with_words_cleanup({'colour':colour},{'linetype':1},Msettings,linestyles,vars,True)
+            colour     = gp_settings.pyx_colours[user_input['colour']]
+
             texter = text.texrunner() # Make a new texrunner instance, so that incorrect LaTeX doesn't screw up default texrunner
             pyx_texrunner_init(texter)
-            textitem = texter.text(x, y, textstr, [halign,valign,text.size(Msettings['FONTSIZE']),gp_settings.pyx_colours[Msettings['TEXTCOLOUR']],trafo.rotate(rotation,0,0)])
+            textitem = texter.text(x, y, textstr, [halign,valign,text.size(textsize),colour,trafo.rotate(rotation,0,0)])
             multiplot_canvas.insert(textitem)
         except KeyboardInterrupt: raise
         except:
@@ -237,7 +241,7 @@ def multiplot_plot(linestyles,vars,settings,multiplot_plotdesc):
            # Arrows which go nowhere don't have a direction, and cause PyX to become unhappy... so revert to 'nohead' style
            if ((x0 == x1) and (y0 == y1)): arrow_style_list = []
  
-           if ((settings['COLOUR'] == 'ON') and (arrow_style['colour'] != "gp_auto")):
+           if ((gp_settings.settings_global['COLOUR'] == 'ON') and (arrow_style['colour'] != "gp_auto")):
             colour = gp_settings.pyx_colours[arrow_style['colour']]  # Use requested colour, if specified
            else:
             colour = color.grey.black                               # If monochrome or no specified colour, then set colour to black
@@ -264,7 +268,8 @@ def multiplot_plot(linestyles,vars,settings,multiplot_plotdesc):
       unsuccessful_plot_operations[multiplot_number] = 'ON'
 
     elif (this_plotdesc['itemtype'] == "text"): # PRINT MULTIPLOT TEXT LABELS
-      [textstr,x,y,Msettings,deleted,rotation,multiplot_number] = [ this_plotdesc[x] for x in ['text','x_pos','y_pos','settings','deleted','rotation','number'] ]
+      [textstr,x,y,Msettings,deleted,rotation,colour,multiplot_number] = [ this_plotdesc[x]
+                                        for x in ['text','x_pos','y_pos','settings','deleted','rotation','colour','number'] ]
       if (deleted != 'ON'):
        try:
         if   (Msettings['TEXTHALIGN'] == 'Centre'): halign = text.halign.center
@@ -273,9 +278,13 @@ def multiplot_plot(linestyles,vars,settings,multiplot_plotdesc):
         if   (Msettings['TEXTVALIGN'] == 'Top'   ): valign = text.valign.top
         elif (Msettings['TEXTVALIGN'] == 'Centre'): valign = text.valign.middle
         else                                      : valign = text.valign.bottom
+
+        user_input = with_words_cleanup({'colour':colour},{'linetype':1},Msettings,linestyles,vars,True)
+        colour     = gp_settings.pyx_colours[user_input['colour']]
+
         texter = text.texrunner() # Make a new texrunner instance, so that incorrect LaTeX doesn't screw up default texrunner
         pyx_texrunner_init(texter)
-        textitem = texter.text(x, y, textstr, [halign,valign,text.size(Msettings['FONTSIZE']),gp_settings.pyx_colours[Msettings['TEXTCOLOUR']],trafo.rotate(rotation,0,0)])
+        textitem = texter.text(x, y, textstr, [halign,valign,text.size(Msettings['FONTSIZE']),colour,trafo.rotate(rotation,0,0)])
         multiplot_canvas.insert(textitem)
         del texter
        except KeyboardInterrupt: raise
@@ -329,7 +338,7 @@ def multiplot_plot(linestyles,vars,settings,multiplot_plotdesc):
         # Arrows which go nowhere don't have a direction, and cause PyX to become unhappy... so revert to 'nohead' style
         if ((x0 == x1) and (y0 == y1)): arrow_style_list = []
 
-        if ((settings['COLOUR'] == 'ON') and (arrow_style['colour'] != "gp_auto")):
+        if ((gp_settings.settings_global['COLOUR'] == 'ON') and (arrow_style['colour'] != "gp_auto")):
          colour = gp_settings.pyx_colours[arrow_style['colour']]  # Use requested colour, if specified
         else:
          colour = color.grey.black                               # If monochrome or no specified colour, then set colour to black
@@ -359,61 +368,61 @@ def multiplot_plot(linestyles,vars,settings,multiplot_plotdesc):
    gp_error("Failed while producing eps output:")
    raise
 
-  if (settings['TERMTYPE'][0:3] == "X11"): gp_postscript.epssetname(fname, "PyXPlot")
-  else:                                    gp_postscript.epssetname(fname, settings['OUTPUT'])
+  if (gp_settings.settings_global['TERMTYPE'][0:3] == "X11"): gp_postscript.epssetname(fname, "PyXPlot")
+  else:                                    gp_postscript.epssetname(fname, gp_settings.settings_global['OUTPUT'])
 
-  if (settings['LANDSCAPE'] == 'ON'): # Convert file to landscape in place
+  if (gp_settings.settings_global['LANDSCAPE'] == 'ON'): # Convert file to landscape in place
    gp_postscript.landscape(fname)
 
-  if (settings['TERMENLARGE'] == 'ON'): # Enlarge to fit page in place
+  if (gp_settings.settings_global['TERMENLARGE'] == 'ON'): # Enlarge to fit page in place
    gp_postscript.enlarge(fname, settings)
 
-  fname_out = os.path.expanduser(settings['OUTPUT'])
-  if (fname_out == ""): fname_out = "pyxplot.%s"%settings['TERMTYPE'].lower()
+  fname_out = os.path.expanduser(gp_settings.settings_global['OUTPUT'])
+  if (fname_out == ""): fname_out = "pyxplot.%s"%gp_settings.settings_global['TERMTYPE'].lower()
   out_fname = os.path.join(gp_settings.cwd, os.path.expanduser(fname_out))
 
-  if (settings['TERMTYPE'][0:3] == "X11"):               # X11_singlewindow / X11_multiwindow / X11_persist
+  if (gp_settings.settings_global['TERMTYPE'][0:3] == "X11"):               # X11_singlewindow / X11_multiwindow / X11_persist
    if (gp_version.GHOSTVIEW == '/bin/false'):
      gp_error("Error: An attempt is being made to use X11 terminal for output, but the required package 'ghostview' could not be found when PyXPlot was installed.")
    elif ('DISPLAY' not in os.environ.keys()) or (len(os.environ['DISPLAY']) < 1):
      gp_error("Error: An attempt is being made to use X11 terminal for output, but your DISPLAY environment variable is not set; there is no accessible X11 display.")
    else:
      if not gp_settings.interactive:
-       if (settings['TERMTYPE'] != "X11_persist"): gp_warning("Warning: An attempt is being made to use the %s terminal in a non-interactive PyXPlot session. This won't work, as the resulting plot window will close immediately when PyXPlot exits. Defaulting to the 'X11_persist' terminal instead"%settings['TERMTYPE'])
+       if (gp_settings.settings_global['TERMTYPE'] != "X11_persist"): gp_warning("Warning: An attempt is being made to use the %s terminal in a non-interactive PyXPlot session. This won't work, as the resulting plot window will close immediately when PyXPlot exits. Defaulting to the 'X11_persist' terminal instead"%gp_settings.settings_global['TERMTYPE'])
        csa_command = "2"
      else:
-       csa_command = {"X11_singlewindow":"0","X11_multiwindow":"1","X11_persist":"2"}[settings['TERMTYPE']]
+       csa_command = {"X11_singlewindow":"0","X11_multiwindow":"1","X11_persist":"2"}[gp_settings.settings_global['TERMTYPE']]
      gp_children.send_command_to_csa(csa_command,fname)
-  elif (settings['TERMTYPE'] in ["PS","EPS"]):           # PS output
-   if (settings['TERMTYPE'] == "PS"):
+  elif (gp_settings.settings_global['TERMTYPE'] in ["PS","EPS"]):           # PS output
+   if (gp_settings.settings_global['TERMTYPE'] == "PS"):
     gp_postscript.epstops(fname, settings) # If producing printable postscript, do so now
    write_output(fname,out_fname,settings)
-  elif (settings['TERMTYPE'] == "PDF"):                  # PDF output
+  elif (gp_settings.settings_global['TERMTYPE'] == "PDF"):                  # PDF output
    gp_postscript.epstops(fname, settings) # ps2pdf takes printable postscript as input
    command = "ps2pdf %s %s.pdf"%(fname,fname)
    os.system(command)
    write_output("%s.pdf"%fname,out_fname,settings)
-  elif (settings['TERMTYPE'] == "PNG"):                  # PNG output
-   command = "convert -density %f -quality 100 "%settings['DPI']
-   if (settings['TERMINVERT'] == "ON"): command = command + "-negate "
-   if (settings['TERMTRANSPARENT'] == "ON"):
-    if (settings['TERMINVERT'] == "ON"): command = command + "-transparent black +antialias "
+  elif (gp_settings.settings_global['TERMTYPE'] == "PNG"):                  # PNG output
+   command = "convert -density %f -quality 100 "%gp_settings.settings_global['DPI']
+   if (gp_settings.settings_global['TERMINVERT'] == "ON"): command = command + "-negate "
+   if (gp_settings.settings_global['TERMTRANSPARENT'] == "ON"):
+    if (gp_settings.settings_global['TERMINVERT'] == "ON"): command = command + "-transparent black +antialias "
     else                               : command = command + "-transparent white +antialias "
    command = command + "%s %s.png"%(fname,fname)
    os.system(command)
    write_output("%s.png"%fname,out_fname,settings)
-  elif (settings['TERMTYPE'] == "GIF"):                  # GIF output
-   command = "convert -density %f -quality 100 "%settings['DPI']
-   if (settings['TERMINVERT'] == "ON"): command = command + "-negate "
-   if (settings['TERMTRANSPARENT'] == "ON"): 
-    if (settings['TERMINVERT'] == "ON"): command = command + "-transparent black +antialias "
+  elif (gp_settings.settings_global['TERMTYPE'] == "GIF"):                  # GIF output
+   command = "convert -density %f -quality 100 "%gp_settings.settings_global['DPI']
+   if (gp_settings.settings_global['TERMINVERT'] == "ON"): command = command + "-negate "
+   if (gp_settings.settings_global['TERMTRANSPARENT'] == "ON"): 
+    if (gp_settings.settings_global['TERMINVERT'] == "ON"): command = command + "-transparent black +antialias "
     else                               : command = command + "-transparent white +antialias "
    command = command + "%s %s.gif"%(fname,fname)
    os.system(command)
    write_output("%s.gif"%fname,out_fname,settings)
-  elif (settings['TERMTYPE'] == "JPG"):                  # JPG output
-   command = "convert -density %f -quality 100 "%settings['DPI']
-   if (settings['TERMINVERT'] == "ON"): command = command + "-negate "
+  elif (gp_settings.settings_global['TERMTYPE'] == "JPG"):                  # JPG output
+   command = "convert -density %f -quality 100 "%gp_settings.settings_global['DPI']
+   if (gp_settings.settings_global['TERMINVERT'] == "ON"): command = command + "-negate "
    command = command + "%s %s.jpg"%(fname,fname)
    os.system(command)
    write_output("%s.jpg"%fname,out_fname,settings)
@@ -445,7 +454,7 @@ def plot_dataset_makeaxes_multipropagate(multiplot_number, Msettings, Maxes_this
     # Test to see whether it is a linked axis
     test = re.match(r"""linkaxis\s\s*(\d\d*)(\s*,?\s*)(\d*)""", axis['SETTINGS']['LABEL'])  
     if (test != None):
-     if (Msettings['MULTIPLOT'] != 'ON'):
+     if (gp_settings.settings_global['MULTIPLOT'] != 'ON'):
       gp_warning("Warning: apparent attempt to create a linked axis when not in multiplot mode... doomed to fail!")
      else:
       try:
@@ -1129,7 +1138,7 @@ def plot_dataset(multiplot_number,g,axes,axis_x,axis_y,plotwords,settings,title,
 
     # Determine what colour to use to plot this dataset
 
-    if (settings['COLOUR'] == 'ON'): # Match colour
+    if (gp_settings.settings_global['COLOUR'] == 'ON'): # Match colour
      if (plotwords['colour'] == "gp_auto"):
       if (repeat != 0): colourcnt  = colourcnt -1
       colour = gp_settings.pyx_colours[gp_settings.colour_list[(colourcnt-1)%len(gp_settings.colour_list)]] # If plot colour not set, automatically increment colour
@@ -1158,7 +1167,7 @@ def plot_dataset(multiplot_number,g,axes,axis_x,axis_y,plotwords,settings,title,
 
     if (stylestr in ['lines','linespoints','csplines','acsplines']): # Match lines and linespoints
       if (plotwords['linetype'] < 0):
-        if (settings['COLOUR'] == 'ON'):
+        if (gp_settings.settings_global['COLOUR'] == 'ON'):
           plotwords['linetype'] = 1 # Colour lines are automatically all solid
         else:
           if (repeat != 0): linecount = linecount - 1
@@ -1167,7 +1176,7 @@ def plot_dataset(multiplot_number,g,axes,axis_x,axis_y,plotwords,settings,title,
       stylelist.append(graph.style.line(lineattrs=[ gp_settings.linestyle_list[(plotwords['linetype']-1)%len(gp_settings.linestyle_list)], lw, colour ]))
     if (stylestr in ['arrows_head','arrows_nohead','arrows_twohead']):
       if (plotwords['linetype'] < 0):
-        if (settings['COLOUR'] == 'ON'):
+        if (gp_settings.settings_global['COLOUR'] == 'ON'):
           plotwords['linetype'] = 1 # Colour lines are automatically all solid
         else:
           if (repeat != 0): linecount = linecount - 1
@@ -1194,7 +1203,7 @@ def plot_dataset(multiplot_number,g,axes,axis_x,axis_y,plotwords,settings,title,
     if (stylestr in ['boxes', 'wboxes', 'impulses', 'steps', 'fsteps', 'histeps']): # Match boxes
       dx=3 # Widths of boxes are about to be put into a third column
       if (plotwords['linetype'] < 0):
-        if (settings['COLOUR'] == 'ON'):
+        if (gp_settings.settings_global['COLOUR'] == 'ON'):
           plotwords['linetype'] = 1 # Colour lines are automatically all solid
         else:
           if (repeat != 0): linecount = linecount - 1
@@ -1238,7 +1247,7 @@ def plot_dataset(multiplot_number,g,axes,axis_x,axis_y,plotwords,settings,title,
       if   (stylestr in ['boxes', 'wboxes', 'impulses']):
        if (plotwords['fillcolour'] == "gp_auto"): # Process fill colour if we're going to fill our boxes
         fillcolset = None
-       elif (settings['COLOUR'] != 'ON'):
+       elif (gp_settings.settings_global['COLOUR'] != 'ON'):
         fillcolset = deco.filled([colour])
        elif (plotwords['fillcolour'] == "auto"): # Fill colour auto --> fill box with line colour
         fillcolset = deco.filled([colour])
@@ -1261,7 +1270,7 @@ def plot_dataset(multiplot_number,g,axes,axis_x,axis_y,plotwords,settings,title,
        stylelist.append(graph.style.line(lineattrs=[ gp_settings.linestyle_list[(plotwords['linetype']-1)%len(gp_settings.linestyle_list)], lw, colour ]))
     if (re.search('error',stylestr) != None): # Match {x|y|xy}error{bars|range}
       if (plotwords['linetype'] < 0):
-        if (settings['COLOUR'] == 'ON'):
+        if (gp_settings.settings_global['COLOUR'] == 'ON'):
           plotwords['linetype'] = 1 # Colour errorbars are automatically all solid
         else:
           if (repeat != 0): linecount = linecount - 1
@@ -1367,7 +1376,7 @@ def plot_dataset(multiplot_number,g,axes,axis_x,axis_y,plotwords,settings,title,
 # WRITE_OUTPUT(): Moves output from file "infile" to file "outfile", possibly backing up any file which might be over-written
 
 def write_output(infile, outfile, settings):
- if( settings['BACKUP']=="ON") and os.path.exists(outfile):
+ if( gp_settings.settings_global['BACKUP']=="ON") and os.path.exists(outfile):
   i=0
   while os.path.exists("%s~%d"%(outfile,i)): i+=1
   os.rename(outfile,"%s~%d"%(outfile,i))

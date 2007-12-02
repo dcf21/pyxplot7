@@ -20,6 +20,7 @@
 
 import gp_eval
 import gp_datafile
+import gp_userspace
 from gp_autocomplete import *
 from gp_error import *
 
@@ -165,7 +166,7 @@ def directive_fit(command, vars):
   # Function name
   pass_function = command['fit_function']
   if not pass_function in gp_userspace.functions: gp_error("Error: fit command requested to fit function '%s'; no such function."%pass_function) ; return
-  no_arguments  = gp_userspace.functions[pass_function][0]
+  no_arguments  = gp_userspace.functions[pass_function]['no_args']
 
   # Read datafile filename
   datafile = command['filename']
