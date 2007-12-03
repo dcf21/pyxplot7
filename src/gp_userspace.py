@@ -20,6 +20,7 @@
 
 import math
 import re
+import random
 
 try: import scipy.integrate
 except: SCIPY_ABSENT = True
@@ -51,6 +52,7 @@ math_functions={"acos":math.acos,
 "modf":math.modf,
 "pow":math.pow,
 "radians":math.radians,
+"random":random.random,
 "sin":math.sin,
 "sinh":math.sinh,
 "sqrt":math.sqrt,
