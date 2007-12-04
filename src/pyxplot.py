@@ -134,7 +134,8 @@ def directive_show(dictlist):
       if autocomplete(word, "settings", 1) or autocomplete(word, "boxwidth",1):   outstring += "Boxwidth:      %s (the default width of bars on barcharts and histograms; a negative value means automatic widths)\n"%gp_settings.settings['BOXWIDTH']
       if autocomplete(word, "settings", 1) or autocomplete(word, "boxfrom",1):    outstring += "BoxFrom:       %s (the vertical point from which the bars of barcharts and histograms emanate)\n"%gp_settings.settings['BOXFROM']
       if autocomplete(word, "settings", 1) or autocomplete(word, "display", 1)  : outstring += "Display:       %s\n"%gp_settings.settings_global['DISPLAY']
-      if autocomplete(word, "settings", 1) or autocomplete(word, "dpi", 1):       outstring += "Output DPI:    %f (only relevant when output is sent to a bitmap terminal -- gif, jpg or png)\n"%gp_settings.settings_global['DPI']
+      if (autocomplete(word, "settings", 1) or autocomplete(word, "terminal", 1) or
+                                                   autocomplete(word, "dpi", 1)): outstring += "Output DPI:    %f (only relevant when output is sent to a bitmap terminal -- gif, jpg or png)\n"%gp_settings.settings_global['DPI']
       if autocomplete(word, "settings", 1) or autocomplete(word, "fontsize",1) or autocomplete(word, "fountsize",1):   outstring += "Fontsize:      %d (-4 is smallest, 5 largest)\n"%gp_settings.settings['FONTSIZE']
       if autocomplete(word, "settings", 1) or autocomplete(word, "grid",1):
         outstring += "Grid:          %s\n"%gp_settings.settings['GRID']

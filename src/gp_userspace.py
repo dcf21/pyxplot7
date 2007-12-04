@@ -148,8 +148,26 @@ def gp_variable_re(name,regex):
  split_char=regex[0]
  words=regex.split(split_char)
  assert len(words)==4, "Regular expression should have the form s/search/replace/flags."
- assert words[3]=="", "Regular expression flags are not yet implemented."
- variables[name] = re.sub(words[1],words[2],str(variables[name]))
+
+ flags_all   = {'g':"g", 'i':re.IGNORECASE, 'l':re.LOCALE, 'm':re.MULTILINE, 's':re.DOTALL, 'u':re.UNICODE, 'x':re.VERBOSE}
+ flags_unset = flags_all.copy()
+ flags_set   = {}
+ for character in words[3]: # words[3] is the list of flags which follow the regular expression
+  assert character in flags_all, "Regular expression flag '%s' not recognised."%character
+  assert character in flags_unset, "Regular expression flag '%s' is already set."%character
+  flags_set[character] = flags_unset[character]
+  del flags_unset[character]
+
+ if 'g' in flags_set: # The global flag is not handled directly by the RE module; it tells us how many substitutions to request from re.sub
+   del flags_set['g']
+   n_subs = 0
+ else:
+   n_subs = 1
+
+ flags = 0 # The RE module requires that its flags be merged via bitwise OR, not supplied as a list
+ for x,y in flags_set.iteritems(): flags |= y
+
+ variables[name] = re.sub(re.compile(words[1],flags),words[2],str(variables[name]),n_subs)
 
 # passed_to_funcwrap -- Passed from gp_eval; variables which are defined in the current scope, for function wrapper to access
 

@@ -22,7 +22,7 @@
 
 import gp_math
 import pyx
-from math import *
+import math
 
 # The maximum number of ticks along any axis
 
@@ -35,14 +35,14 @@ TICKS_MAXIMUM = 100
 def linear_ticksep(axis_min, axis_max, log_base, length, sep, ticks_overlay=[]):
 
   # Work out order of magnitude of range of axis
-  OoM = pow(log_base, ceil(log(axis_max - axis_min, log_base)))
+  OoM = math.pow(log_base, math.ceil(math.log(axis_max - axis_min, log_base)))
 
   # Round the limits of the axis outwards to nearest round number
-  min_outer = floor(axis_min / OoM) * OoM
-  max_outer = ceil (axis_max / OoM) * OoM
+  min_outer = math.floor(axis_min / OoM) * OoM
+  max_outer = math.ceil (axis_max / OoM) * OoM
 
   # How many ticks do we want, assuming one every sep cm?
-  number_ticks = floor(length / sep) + 1
+  number_ticks = math.floor(length / sep) + 1
   if (number_ticks > TICKS_MAXIMUM): number_ticks = TICKS_MAXIMUM # 100 ticks max
   if (number_ticks <             2): number_ticks =             2 #   2 ticks min
 
@@ -103,8 +103,8 @@ def tickschemes(OoM, log_base, log=False):
     tick_schemes.append([[1] , step*OoMscan , offset*OoMscan])
 
  level_descend = 2 # Once we go below top level OoM, into dividing up several orders of magnitude, we any split into factor multiples
- while (pow(log_base,level_descend-1) < (log_base * TICKS_MAXIMUM)):
-  OoMscan = OoM / pow(log_base, level_descend) # e.g. 0.0, 0.5, 1.0, 1.5, 2.0 or 0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2
+ while (math.pow(log_base,level_descend-1) < (log_base * TICKS_MAXIMUM)):
+  OoMscan = OoM / math.pow(log_base, level_descend) # e.g. 0.0, 0.5, 1.0, 1.5, 2.0 or 0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2
   if log and (OoMscan == 1.0/log_base):
    tickschemes_log(log, tick_schemes)
   else:
@@ -123,7 +123,7 @@ def tickschemes_log(log, tick_schemes):
  while not stopping:
   mantissas = []
   for i in range(0,divisor):
-   mantissas.append(int(floor(pow(log,float(i)/divisor)+0.5)))
+   mantissas.append(int(math.floor(math.pow(log,float(i)/divisor)+0.5)))
    if (i > 0) and (mantissas[-1] == mantissas[-2]):
     stopping = True
     break
@@ -164,16 +164,16 @@ def log_ticks_realise(min,step,max,log_base):
 def log_ticksep(axis_min, axis_max, log_base, length, sep, ticks_overlay=[]):
 
   # Work out order of magnitude of range of axis in log space
-  axis_minl = log(axis_min, log_base)
-  axis_maxl = log(axis_max, log_base)
-  OoM = pow(10.0, ceil(log10(axis_maxl - axis_minl)))
+  axis_minl = math.log(axis_min, log_base)
+  axis_maxl = math.log(axis_max, log_base)
+  OoM = math.pow(10.0, math.ceil(math.log10(axis_maxl - axis_minl)))
 
   # Round the log-limits of the axis outwards to nearest round number
-  min_outer = floor(axis_minl / OoM) * OoM
-  max_outer = ceil (axis_maxl / OoM) * OoM
+  min_outer = math.floor(axis_minl / OoM) * OoM
+  max_outer = math.ceil (axis_maxl / OoM) * OoM
 
   # How many ticks do we want, assuming one every sep cm?
-  number_ticks = floor(length / sep) + 1
+  number_ticks = math.floor(length / sep) + 1
   if (number_ticks > TICKS_MAXIMUM): number_ticks = TICKS_MAXIMUM # 100 ticks max
   if (number_ticks <             2): number_ticks =             2 #   2 ticks min
 
@@ -195,7 +195,7 @@ def log_ticksep(axis_min, axis_max, log_base, length, sep, ticks_overlay=[]):
      # NB: We store x positions in log form until we've trimmed the ends to user's range, to prevent overflows
      for m in mantissa_footprint:
       exponent = ts_min + i*ticksep
-      x        = exponent           + log(m, log_base)
+      x        = exponent           + math.log(m, log_base)
       ticks.append([ x , log_textoutput(m, exponent, log_base) ])
 
     # Remove any ticks which fall off the end of the axis
@@ -203,7 +203,7 @@ def log_ticksep(axis_min, axis_max, log_base, length, sep, ticks_overlay=[]):
     while (len(ticks)>0) and gp_math.isgreaterthan(ticks[-1][0],axis_maxl): ticks = ticks[ :-1]
 
     # Now exponentiate x positions, having trimmed our list to user range
-    for tick in ticks: tick[0] = pow(log_base, tick[0])
+    for tick in ticks: tick[0] = math.pow(log_base, tick[0])
 
     # Make sure that this set of ticks overlays ticks_overlay
     matched = True
@@ -233,7 +233,7 @@ def log_ticksep(axis_min, axis_max, log_base, length, sep, ticks_overlay=[]):
 # LOG_TEXTOUTPUT(): Takes i*10^x, and works out best format to output it in
 
 def log_textoutput(mantissa, exponent, logbase):
- if (mantissa < 0.0): sign = "-" ; mantissa = fabs(mantissa)
+ if (mantissa < 0.0): sign = "-" ; mantissa = math.fabs(mantissa)
  else               : sign = ""
 
  if (exponent == None): # If exponent is none, we need to do exponent/mantissa decomposition
@@ -247,11 +247,11 @@ def log_textoutput(mantissa, exponent, logbase):
  exp_str     = gp_math.val2string(exponent)
  man_str     = gp_math.val2string(mantissa)    
 
- if (fabs(exponent) >  3) or (not gp_math.isinteger(exponent)):
+ if (math.fabs(exponent) >  3) or (not gp_math.isinteger(exponent)):
   if (mantissa != 1): output = sign + r"%s \times %s^{%s}"%(man_str,logbase_str,exp_str) # format for "5 * 10^n"
   else              : output = sign + r"%s^{%s}"%(logbase_str,exp_str)                   # format for "10^n"
  else:
-  value_str = gp_math.val2string(mantissa * pow(logbase,exponent))
+  value_str = gp_math.val2string(mantissa * math.pow(logbase,exponent))
   output = sign + value_str # format for "0.1", "1" , "10" , "100" or "1000"
 
  return "$"+output+"$"
@@ -305,6 +305,11 @@ def getticks(axis, axis_length, sepmaj, sepmin, ticks_realise, ticksep, axis_typ
       tmin  = axis_set[TICKMIN]
       tstep = axis_set[TICKSTEP]
       tmax  = axis_set[TICKMAX]
+      if (tstep<0):
+        tstep=-tstep
+        temp=tmax ; tmax=tmin ; tmin=temp # So that ticks from 2 -> None step -0.5 produces ticks going left not right...
+      if (tmax < tmin) and not (None in [tmin,tmax]):
+       temp=tmax ; tmax=tmin ; tmin=temp
       if (tmin == None): tmin = axis_min
       if (tmax == None): tmax = axis_max
       tick_sets[TICKSET] = ticks_realise(tmin,tstep,tmax,axis_base) # Either linear_ticks_realise or log_ticks_realise; selected in wrappers below
