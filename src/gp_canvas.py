@@ -316,6 +316,15 @@ def directive_plot(command,linestyles,vars,settings,axes,labels,arrows,replot_st
                    'axes'    :None # Fill in this below
                    }
 
+  for item in this_plotdesc['plotlist']: # Turn string variables into filenames
+    if ('expression_list:' in item):
+     if len(item['expression_list:'])==1:
+      filename_var = item['expression_list:'][0]['expression'].strip()
+      if (filename_var in vars):
+       if (type(vars[filename_var])==type("")):
+        item['filename']=vars[filename_var]
+        del item['expression_list:']
+
   if (replot_stat != 0) and (replot_focus != None): # If replotting a multiplot, overwrite last graph
    multiplot_plotdesc[replot_focus] = this_plotdesc
   else:

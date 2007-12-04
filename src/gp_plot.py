@@ -42,6 +42,34 @@ import exceptions
 import re
 from pyx import *
 
+# --------------------------
+# This is a temporary piece of sickness. Remove ASAP.
+# Fix keys so that we can move them by (x,y) cm
+
+class graph_pyxplot(graph.graphxy):
+    def dokey(self):
+        if self.did(self.dokey):
+            return
+        self.dobackground()
+        self.dostyles()
+        if self.key is not None:
+            c = self.key.paint(self.plotitems)
+            bbox = c.bbox()
+            def parentchildalign(pmin, pmax, cmin, cmax, pos, dist, inside):
+                ppos = pmin+0.5*(cmax-cmin)+dist+pos*(pmax-pmin-cmax+cmin-2*dist)
+                cpos = 0.5*(cmin+cmax)+(1-inside)*(1-2*pos)*(cmax-cmin+2*dist)
+                return ppos-cpos
+            if bbox:
+                x = parentchildalign(self.xpos_pt, self.xpos_pt+self.width_pt,
+                                     bbox.llx_pt, bbox.urx_pt,
+                                     self.key.hpos, unit.topt(self.key.hdist), self.key.hinside)
+                y = parentchildalign(self.ypos_pt, self.ypos_pt+self.height_pt,
+                                     bbox.lly_pt, bbox.ury_pt,
+                                     self.key.vpos, unit.topt(self.key.vdist), self.key.vinside)
+                self.insert(c, [trafo.translate_pt(x, y), trafo.translate(self.KEY_XOFF,self.KEY_YOFF)])
+
+# --------------------------
+
 # Stores the number of lines on our graph. PyX gets unhappy when this is zero.
 plot_counter = 0     # Used for X11 terminal, to give each plot output an individual name
 
@@ -139,12 +167,20 @@ def multiplot_plot(linestyles,vars,settings,multiplot_plotdesc):
 
         # Now deal with horizontal and vertical offsets for the key, which are special in "outside" and "below" cases
         if (Msettings['KEYPOS'] == "BELOW"):
-          # Count number of x-axes along top of plot, and shift title to be above them all
+          # Count number of x-axes along bottom of plot, and shift title to be below them all
           number_bottom_axes = 0
           for [number,xaxis] in Maxes_this['x'].iteritems():
             if ((number % 2) == 1): number_bottom_axes = number_bottom_axes + 1
           vdist = 1.90 * number_bottom_axes - 0.25
           hdist = 0.6*unit.v_cm
+        elif (Msettings['KEYPOS'] == "ABOVE"):
+          # Count number of x-axes along top of plot, and shift title to be above them all
+          number_top_axes = 0
+          for [number,xaxis] in Maxes_this['x'].iteritems():
+            if ((number % 2) == 0): number_top_axes = number_top_axes + 1
+          vdist = 1.90 * number_top_axes - 0.25
+          hdist = 0.6*unit.v_cm
+          if (vdist < 0): vdist=0.5
         elif (Msettings['KEYPOS'] == "OUTSIDE"):
           number_right_axes = 0
           for [number,xaxis] in Maxes_this['y'].iteritems():
@@ -155,7 +191,9 @@ def multiplot_plot(linestyles,vars,settings,multiplot_plotdesc):
           hdist = 0.6*unit.v_cm
           vdist = 0.6*unit.v_cm
 
-        Mkey = graph.key.key(pos=None,hpos=hpos+Msettings['KEY_XOFF'],vpos=vpos+Msettings['KEY_YOFF'],hdist=hdist,vdist=vdist,hinside=hinside,vinside=vinside,columns=Msettings['KEYCOLUMNS'],textattrs=[text.size(Msettings['FONTSIZE']),gp_settings.pyx_colours[Msettings['TEXTCOLOUR']]])
+        Mkey = graph.key.key(pos=None,hpos=hpos,vpos=vpos,hdist=hdist,vdist=vdist,hinside=hinside,vinside=vinside,columns=Msettings['KEYCOLUMNS'],textattrs=[text.size(Msettings['FONTSIZE']),gp_settings.pyx_colours[Msettings['TEXTCOLOUR']]])
+        graph_pyxplot.KEY_XOFF = Msettings['KEY_XOFF'] # THIS IS SICK!!!
+        graph_pyxplot.KEY_YOFF = Msettings['KEY_YOFF']
       else:
         Mkey = None
       multiplot_plotdesc[multiplot_number]['key'] = Mkey
@@ -685,7 +723,7 @@ def plot_dataset_makeaxes_setupplot(multiplot_number, Msettings, Mkey, Maxes_thi
     else:
      axisassign = axisassign + direction+"2=Maxes_this['"+direction+"'][1]['AXIS_SPARE']," # If axis 1 is linked, just use the spare linked axis
 
- exec "g = graph.graphxy(width=Msettings['WIDTH'],"+ratioassign+axisassign+"key=Mkey,xpos=%f,ypos=%f)"%(Msettings['ORIGINX'],Msettings['ORIGINY'])
+ exec "g = graph_pyxplot(width=Msettings['WIDTH'],"+ratioassign+axisassign+"key=Mkey,xpos=%f,ypos=%f)"%(Msettings['ORIGINX'],Msettings['ORIGINY'])
  if (g == None):
    gp_error("Internal error: Failed to produce graph object in PyX.")
  else:

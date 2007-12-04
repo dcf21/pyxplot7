@@ -463,6 +463,7 @@ def directive_set_unset(userinput):
      gp_settings.settings['KEY'] = 'ON'
      if 'pos' in userinput:
       if (userinput['pos'] == 'below'  ): gp_settings.settings['KEYPOS'] = "BELOW"
+      if (userinput['pos'] == 'above'  ): gp_settings.settings['KEYPOS'] = "ABOVE"
       if (userinput['pos'] == 'outside'): gp_settings.settings['KEYPOS'] = "OUTSIDE"
      if 'xpos' in userinput:
       if (len(gp_settings.settings['KEYPOS'].split()) != 2): gp_settings.settings['KEYPOS'] = "TOP RIGHT" # Deal with if previously "below"

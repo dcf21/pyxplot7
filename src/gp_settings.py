@@ -253,6 +253,7 @@ key_positions = {
                  "BOTTOM MIDDLE": [0.5, 0.0 , 1, 1],
                  "BOTTOM LEFT":   [0.0, 0.0 , 1, 1],
                  "BELOW":         [0.5, 0.0 , 1, 0],
+                 "ABOVE":         [0.5, 1.0 , 1, 0],
                  "OUTSIDE":       [1.0, 1.0 , 0, 1]
                  }
 
