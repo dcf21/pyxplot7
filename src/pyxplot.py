@@ -868,18 +868,21 @@ def directive_set_unset(userinput):
 # Directive history
 
 def directive_history(userinput):
-  # Work out how many lines to write
-  if ('histlines' in userinput):
-   Nhist = userinput['histlines']
-   if (Nhist < 1):
-    gp_error("You can't have fewer than 1 lines of your history!")
+  Nstored = readline.get_current_history_length() # Length of stored history
+
+  if ('number_lines' in userinput): # Work out how many lines to write
+   Nrequested = userinput['number_lines']
+   if (Nrequested < 1):
+    gp_error("Cannot display fewer than one lines of history.")
     return
-   Nhist = min(Nhist, readline.get_current_history_length())
+   Nhist = min(Nrequested, Nstored-1)
   else:
-   Nhist = readline.get_current_history_length()
+   Nhist = Nstored-1
+
+  Noffset = Nstored-Nhist
   for i in range(Nhist):
-   item = readline.get_history_item(i)
-   print item
+   item = readline.get_history_item(Noffset + i)
+   gp_report(item)
 
 # Main Directive Processor
 
@@ -986,7 +989,7 @@ def directive(line, toplevel=True, interactive=False):
     gp_report(gp_settings.cwd)
   elif (command['directive'] == "help"):         # help / ?
     gp_help.directive_help(command, interactive)
-  elif (command['directive'] == "history"):
+  elif (command['directive'] == "history"):      # history
     directive_history(command)
   elif (command['directive'] == "load"):         # load
     main_loop([command['filename']])

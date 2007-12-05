@@ -23,6 +23,7 @@
 import gp_settings
 from gp_autocomplete import *
 from gp_error import *
+import gp_plot
 
 import os
 import sys
@@ -44,46 +45,6 @@ def plotorder_clear():
   global multiplot_plotdesc, replot_focus
   multiplot_plotdesc  = [] # Wipe the plotting canvas
   replot_focus        = None
-
-# COORD_TRANSFORM(): Transform from "first", "second" coord systems, etc, into canvas coordinates
-
-def coord_transform(g, axes, systx, systy, x0, y0):
-  g.dolayout()
-
-  axisx = axisy = None
-  testx = re.match(r"axis(\d\d*)$",systx)
-  testy = re.match(r"axis(\d\d*)$",systy)
-  if (testx != None): axisx = int(testx.group(1))
-  if (testy != None): axisy = int(testy.group(1))
-
-  # Transform x coordinate
-  if   (systx in ['graph', 'screen']):
-   x = g.pos(x=axes['x'][1]['MIN_RANGE'],y=1.0,xaxis=axes['x'][    1]['AXIS'],yaxis=axes['y'][1]['AXIS'])[0] + x0
-  elif ((systx == "second") and (2 in axes['x'])):
-   x = g.pos(x=                       x0,y=1.0,xaxis=axes['x'][    2]['AXIS'],yaxis=axes['y'][1]['AXIS'])[0]
-  elif ((testx != None) and (axisx in axes['x'])):
-   x = g.pos(x=                       x0,y=1.0,xaxis=axes['x'][axisx]['AXIS'],yaxis=axes['y'][1]['AXIS'])[0]
-  else:
-   if  (systx != "first") :
-    gp_warning("Warning -- attempt to use x axis '%s' when it doesn't exist... reverting to 'first'."%systx)
-   x = g.pos(x=                       x0,y=1.0,xaxis=axes['x'][    1]['AXIS'],yaxis=axes['y'][1]['AXIS'])[0]
-
-  # Transform y coordinate
-  if   (systy in ['graph', 'screen']):
-   y = g.pos(x=1.0,y=axes['y'][1]['MIN_RANGE'],xaxis=axes['x'][1]['AXIS'],yaxis=axes['y'][    1]['AXIS'])[1] + y0
-  elif ((systy == "second") and (2 in axes['y'])):
-   y = g.pos(x=1.0,y=                       y0,xaxis=axes['x'][1]['AXIS'],yaxis=axes['y'][    2]['AXIS'])[1]
-  elif ((testy != None) and (axisy in axes['y'])):
-   y = g.pos(x=1.0,y=                       y0,xaxis=axes['x'][1]['AXIS'],yaxis=axes['y'][axisy]['AXIS'])[1]
-  else:
-   if  (systy != "first"):
-    gp_warning("Warning -- attempt to use y axis '%s' when it doesn't exist... reverting to 'first'."%systy)
-   y = g.pos(x=1.0,y=                       y0,xaxis=axes['x'][1]['AXIS'],yaxis=axes['y'][    1]['AXIS'])[1]
-
-  return [x,y]
-
-# We import this here, as gp_plot uses the function above...
-from gp_plot import multiplot_plot, unsuccessful_plot_operations
 
 # DIRECTIVE_TEXT(): Handles the 'text' command
 
@@ -118,7 +79,7 @@ def directive_text(command,linestyles,vars,settings,interactive):
 
  if (gp_settings.settings_global['DISPLAY'] == "ON"):
   try:
-   multiplot_plot(linestyles,vars,settings,multiplot_plotdesc)
+   unsuccessful_plot_operations = gp_plot.multiplot_plot(linestyles,vars,settings,multiplot_plotdesc)
   except KeyboardInterrupt: raise
   except:
    gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
@@ -154,7 +115,7 @@ def directive_arrow(command,linestyles,vars,settings,interactive):
 
  if (gp_settings.settings_global['DISPLAY'] == "ON"):
   try:
-   multiplot_plot(linestyles,vars,settings,multiplot_plotdesc)
+   unsuccessful_plot_operations = gp_plot.multiplot_plot(linestyles,vars,settings,multiplot_plotdesc)
   except KeyboardInterrupt: raise
   except:
    gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
@@ -199,7 +160,7 @@ def directive_jpeg(command,linestyles,vars,settings,interactive):
 
  if (gp_settings.settings_global['DISPLAY'] == "ON"):
   try:
-   multiplot_plot(linestyles,vars,settings,multiplot_plotdesc)
+   unsuccessful_plot_operations = gp_plot.multiplot_plot(linestyles,vars,settings,multiplot_plotdesc)
   except KeyboardInterrupt: raise
   except:
    gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
@@ -244,7 +205,7 @@ def directive_eps(command,linestyles,vars,settings,interactive):
 
  if (gp_settings.settings_global['DISPLAY'] == "ON"):
   try:
-   multiplot_plot(linestyles,vars,settings,multiplot_plotdesc)
+   unsuccessful_plot_operations = gp_plot.multiplot_plot(linestyles,vars,settings,multiplot_plotdesc)
   except KeyboardInterrupt: raise
   except:
    gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
@@ -350,7 +311,7 @@ def directive_plot(command,linestyles,vars,settings,axes,labels,arrows,replot_st
 
   if (gp_settings.settings_global['DISPLAY'] == "ON"):
    try:
-    multiplot_plot(linestyles,vars,settings,multiplot_plotdesc)
+    unsuccessful_plot_operations = gp_plot.multiplot_plot(linestyles,vars,settings,multiplot_plotdesc)
    except KeyboardInterrupt: raise
    except:
     gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")

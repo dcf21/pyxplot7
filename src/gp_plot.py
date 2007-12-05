@@ -31,7 +31,6 @@ import gp_math
 import gp_version
 import gp_postscript
 import gp_ticker
-from gp_canvas import coord_transform
 
 import os
 import sys
@@ -88,6 +87,43 @@ last_datafile_filename = ''
 
 # Only warn user once about the using modifier when plotting functions
 using_use_warned = False
+
+# COORD_TRANSFORM(): Transform from "first", "second" coord systems, etc, into canvas coordinates
+
+def coord_transform(g, axes, systx, systy, x0, y0):
+  g.dolayout()
+
+  axisx = axisy = None
+  testx = re.match(r"axis(\d\d*)$",systx)
+  testy = re.match(r"axis(\d\d*)$",systy)
+  if (testx != None): axisx = int(testx.group(1))
+  if (testy != None): axisy = int(testy.group(1))
+
+  # Transform x coordinate
+  if   (systx in ['graph', 'screen']):
+   x = g.pos(x=axes['x'][1]['MIN_RANGE'],y=1.0,xaxis=axes['x'][    1]['AXIS'],yaxis=axes['y'][1]['AXIS'])[0] + x0
+  elif ((systx == "second") and (2 in axes['x'])):
+   x = g.pos(x=                       x0,y=1.0,xaxis=axes['x'][    2]['AXIS'],yaxis=axes['y'][1]['AXIS'])[0]
+  elif ((testx != None) and (axisx in axes['x'])):
+   x = g.pos(x=                       x0,y=1.0,xaxis=axes['x'][axisx]['AXIS'],yaxis=axes['y'][1]['AXIS'])[0]
+  else:
+   if  (systx != "first") :
+    gp_warning("Warning -- attempt to use x axis '%s' when it doesn't exist... reverting to 'first'."%systx)
+   x = g.pos(x=                       x0,y=1.0,xaxis=axes['x'][    1]['AXIS'],yaxis=axes['y'][1]['AXIS'])[0]
+
+  # Transform y coordinate
+  if   (systy in ['graph', 'screen']):
+   y = g.pos(x=1.0,y=axes['y'][1]['MIN_RANGE'],xaxis=axes['x'][1]['AXIS'],yaxis=axes['y'][    1]['AXIS'])[1] + y0
+  elif ((systy == "second") and (2 in axes['y'])):
+   y = g.pos(x=1.0,y=                       y0,xaxis=axes['x'][1]['AXIS'],yaxis=axes['y'][    2]['AXIS'])[1]
+  elif ((testy != None) and (axisy in axes['y'])):
+   y = g.pos(x=1.0,y=                       y0,xaxis=axes['x'][1]['AXIS'],yaxis=axes['y'][axisy]['AXIS'])[1]
+  else:
+   if  (systy != "first"):
+    gp_warning("Warning -- attempt to use y axis '%s' when it doesn't exist... reverting to 'first'."%systy)
+   y = g.pos(x=1.0,y=                       y0,xaxis=axes['x'][1]['AXIS'],yaxis=axes['y'][    1]['AXIS'])[1]
+
+  return [x,y]
 
 # MULTIPLOT_PLOT(): The main plotting engine. Plots whatever is in the current list "multiplot_plotdesc"
 

@@ -102,11 +102,13 @@ def child_support_agency_init():
   os._exit(0)
 
 def csa_main():
+ global pyxplot_running
  while pyxplot_running or (ghostview_persists != []):
   try:
    time.sleep(1) # Wake up every second
    csa_check_for_child_exits()
    csa_command_stat() # Check for orders from PyXPlot
+   if os.getppid()==1: pyxplot_running=False # We've been orphaned and adopted by init
   except KeyboardInterrupt: pass
  os.chdir("/tmp") # Remove temporary directory
  gv_errorfile.close()
