@@ -29,6 +29,7 @@
 import signal
 import re
 import os
+import stat
 import sys
 import time
 
@@ -39,12 +40,12 @@ import gp_error
 # Communications files which link PyXPlot to the CSA
 
 gv_errorfile_fn  = "%s/gv_errors"%gp_settings.tempdir
-gv_errorfile     = open(gv_errorfile_fn, "a") # File where ghostview errors get sent
+gv_errorfile     = None # File where ghostview errors get sent
 gv_errorfile_pos = 0
 gv_errorfile_stat= None
 
 csa_cmd_fn  = "%s/csa_cmd"%gp_settings.tempdir
-csa_cmd     = open(csa_cmd_fn, "a") # File where PyXPlot sends commands to CSA
+csa_cmd     = None # File where PyXPlot sends commands to CSA
 csa_cmd_pos = 0
 csa_cmd_stat= None
 
@@ -56,7 +57,8 @@ csa_cmd_stat= None
 # the console, without getting SIGTERM messages as well.
 
 def stat_gv_output():
- global gv_errorfile_pos, gv_errorfile_stat
+ global gv_errorfile_pos, gv_errorfile_stat, gv_errorfile
+ if gv_errorfile==None: gv_errorfile = open(gv_errorfile_fn, "a")
  latest_stat = os.stat(gv_errorfile_fn)[8:9] # [st_mtime, st_ctime]
  if (latest_stat == gv_errorfile_stat): return
  i=0
@@ -75,6 +77,8 @@ def stat_gv_output():
 #      B -- The CSA is hereby informed that PyXPlot has quit...
 
 def send_command_to_csa(command, string):
+ global csa_cmd
+ if csa_cmd==None: csa_cmd = open(csa_cmd_fn, "a")
  csa_cmd.write("%s%s\n"%(command[0], string))
  csa_cmd.flush()
 
@@ -97,6 +101,11 @@ def child_support_agency_init():
  if (fork != 0):
   return # Parent process
  else:
+  os.makedirs(gp_settings.tempdir,mode=0700) # Create temporary working directory
+  if ((not os.path.isdir(gp_settings.tempdir)) or (not (os.stat(gp_settings.tempdir)[stat.ST_UID] == os.getuid()))):
+   gp_error("Fatal Error: Security error whilst trying to create temporary directory")
+   sys.exit(0)
+
   os.chdir(gp_settings.tempdir)
   csa_main() # Child process
   os._exit(0)
@@ -111,8 +120,8 @@ def csa_main():
    if os.getppid()==1: pyxplot_running=False # We've been orphaned and adopted by init
   except KeyboardInterrupt: pass
  os.chdir("/tmp") # Remove temporary directory
- gv_errorfile.close()
- csa_cmd.close()
+ if gv_errorfile != None: gv_errorfile.close()
+ if csa_cmd      != None: csa_cmd.close()
  os.system("rm -Rf %s"%gp_settings.tempdir)
 
 def csa_check_for_child_exits():
@@ -125,7 +134,8 @@ def csa_check_for_child_exits():
     if (ghostview == ghostview_pid): ghostview_pid = None
 
 def csa_command_stat():
- global csa_cmd_pos, csa_cmd_stat, ghostview_fname, ghostview_pid, pyxplot_running
+ global csa_cmd, csa_cmd_pos, csa_cmd_stat, ghostview_fname, ghostview_pid, pyxplot_running
+ if csa_cmd==None: csa_cmd = open(csa_cmd_fn, "a")
  cmd_for_processing = []
  latest_stat = os.stat(csa_cmd_fn)[8:9] # [st_mtime, st_ctime]
  if (latest_stat == csa_cmd_stat): return
@@ -154,6 +164,8 @@ def csa_command_stat():
  csa_cmd_stat = latest_stat
 
 def csa_fork_gv(fname, gv_list):
+ global gv_errorfile
+ if gv_errorfile==None: gv_errorfile = open(gv_errorfile_fn, "a")
  fork = os.fork()
  if (fork != 0):
   gv_list.append(fork)

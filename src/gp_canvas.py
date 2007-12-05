@@ -83,12 +83,13 @@ def directive_text(command,linestyles,vars,settings,interactive):
   except KeyboardInterrupt: raise
   except:
    gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
+   return
 
- if (gp_settings.settings_global['MULTIPLOT'] == 'ON'):
-  if (this_plotdesc['number'] in unsuccessful_plot_operations) and (gp_settings.settings_global['DISPLAY'] == "ON"):
-   multiplot_plotdesc.pop()
-   if interactive:
-    gp_report("Text label has been removed from multiplot, because it generated an error.")
+  if (gp_settings.settings_global['MULTIPLOT'] == 'ON'):
+   if (this_plotdesc['number'] in unsuccessful_plot_operations) and (gp_settings.settings_global['DISPLAY'] == "ON"):
+    multiplot_plotdesc.pop()
+    if interactive:
+     gp_report("Text label has been removed from multiplot, because it generated an error.")
 
 # DIRECTIVE_ARROW(): Handles the 'arrow' command
 
@@ -119,12 +120,13 @@ def directive_arrow(command,linestyles,vars,settings,interactive):
   except KeyboardInterrupt: raise
   except:
    gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
+   return
 
- if (gp_settings.settings_global['MULTIPLOT'] == 'ON'):
-  if (this_plotdesc['number'] in unsuccessful_plot_operations) and (gp_settings.settings_global['DISPLAY'] == "ON"):
-   multiplot_plotdesc.pop()
-   if interactive:
-    gp_report("Arrow has been removed from multiplot, because it generated an error.")
+  if (gp_settings.settings_global['MULTIPLOT'] == 'ON'):
+   if (this_plotdesc['number'] in unsuccessful_plot_operations) and (gp_settings.settings_global['DISPLAY'] == "ON"):
+    multiplot_plotdesc.pop()
+    if interactive:
+     gp_report("Arrow has been removed from multiplot, because it generated an error.")
 
 # DIRECTIVE_JPEG(): Handles the 'jpeg' command
 
@@ -164,12 +166,13 @@ def directive_jpeg(command,linestyles,vars,settings,interactive):
   except KeyboardInterrupt: raise
   except:
    gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
+   return
 
- if (gp_settings.settings_global['MULTIPLOT'] == 'ON'):
-  if (this_plotdesc['number'] in unsuccessful_plot_operations) and (gp_settings.settings_global['DISPLAY'] == "ON"):
-   multiplot_plotdesc.pop()
-   if interactive:
-    gp_report("jpeg image has been removed from multiplot, because it generated an error.")
+  if (gp_settings.settings_global['MULTIPLOT'] == 'ON'):
+   if (this_plotdesc['number'] in unsuccessful_plot_operations) and (gp_settings.settings_global['DISPLAY'] == "ON"):
+    multiplot_plotdesc.pop()
+    if interactive:
+     gp_report("jpeg image has been removed from multiplot, because it generated an error.")
 
 # DIRECTIVE_EPS(): Handles the 'eps' command
 
@@ -209,12 +212,13 @@ def directive_eps(command,linestyles,vars,settings,interactive):
   except KeyboardInterrupt: raise
   except:
    gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
+   return
 
- if (gp_settings.settings_global['MULTIPLOT'] == 'ON'):
-  if (this_plotdesc['number'] in unsuccessful_plot_operations) and (gp_settings.settings_global['DISPLAY'] == "ON"):
-   multiplot_plotdesc.pop()
-   if interactive:
-    gp_report("eps image has been removed from multiplot, because it generated an error.")
+  if (gp_settings.settings_global['MULTIPLOT'] == 'ON'):
+   if (this_plotdesc['number'] in unsuccessful_plot_operations) and (gp_settings.settings_global['DISPLAY'] == "ON"):
+    multiplot_plotdesc.pop()
+    if interactive:
+     gp_report("eps image has been removed from multiplot, because it generated an error.")
 
 # DIRECTIVE_PLOT(): Handles the 'plot' command
 
@@ -315,8 +319,9 @@ def directive_plot(command,linestyles,vars,settings,axes,labels,arrows,replot_st
    except KeyboardInterrupt: raise
    except:
     gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
+    return
 
-  if (gp_settings.settings_global['MULTIPLOT'] == 'ON') and (replot_stat == 0) and (this_plotdesc['number'] in unsuccessful_plot_operations) and (gp_settings.settings_global['DISPLAY'] == "ON"):
+   if (gp_settings.settings_global['MULTIPLOT'] == 'ON') and (replot_stat == 0) and (this_plotdesc['number'] in unsuccessful_plot_operations) and (gp_settings.settings_global['DISPLAY'] == "ON"):
     multiplot_plotdesc.pop()
     if interactive:
      gp_report("Plot has been removed from multiplot, because it generated an error.")

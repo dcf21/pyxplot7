@@ -49,10 +49,10 @@ clean:
 	rm -Rf src/pyx
 
 setup:
-	echo "#!${PYTHON_COMMAND}      "                                                            >  src/__init__.py
-	echo "import sys"                                                                           >> src/__init__.py
-	echo "try: __import__('pyxplot')"                                                           >> src/__init__.py
-	echo "except KeyboardInterrupt: sys.stderr.write('PyXPlot has received SIGINT: Exitting.')" >> src/__init__.py
+	echo "#!${PYTHON_COMMAND}      "                                                               >  src/__init__.py
+	echo "import sys"                                                                              >> src/__init__.py
+	echo "try: __import__('pyxplot')"                                                              >> src/__init__.py
+	echo 'except KeyboardInterrupt: sys.stderr.write("PyXPlot has received SIGINT: Exitting.\\n")' >> src/__init__.py
 	echo "#!${PYTHON_COMMAND}      "   >  src/pyxplot_watch
 	echo "__import__('pyxplot_watch')" >> src/pyxplot_watch
 	echo "VERSION='${VERSION}'"        >  src/gp_version.py
@@ -85,7 +85,6 @@ install:
 	cp -r src/pyx ${SRCDIR}
 	chmod -R 755 ${SRCDIR}/pyx
 	install -m644 src/*.py ${SRCDIR}
-	install -m644 src/*.cache ${SRCDIR}
 	install -m644 src/gp_version_install.py ${SRCDIR}/gp_version.py
 	install -m644 src/*.pyc ${SRCDIR}
 	install -m644 src/*.xml ${SRCDIR}

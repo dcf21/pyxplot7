@@ -22,7 +22,6 @@ import os
 import sys
 import copy
 import glob
-import stat
 import ConfigParser
 import pyx
 
@@ -463,14 +462,10 @@ cwd = ""
 # Make a directory into which we put temporary files
 tempdirnumber = 1
 file_paths=['foo']
-while (len(file_paths) != 0): # Take care not to overright a pre-existing file in /tmp
+while (len(file_paths) != 0): # Take care not to overwrite a pre-existing file in /tmp
  tempdirnumber = tempdirnumber + 1
  tempdir = "/tmp/pyxplot_" + str(os.getpid()) + "_" + str(tempdirnumber)
  file_paths=glob.glob(tempdir)
-os.makedirs(tempdir,mode=0700)
-if ((not os.path.isdir(tempdir)) or (not (os.stat(tempdir)[stat.ST_UID] == os.getuid()))):
- gp_error("Fatal Error: Security error whilst trying to create temporary directory")
- sys.exit(0)
 
 # List of commands executed in this session, to be saved via save command
 cmd_history = []

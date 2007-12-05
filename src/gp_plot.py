@@ -136,7 +136,7 @@ def multiplot_plot(linestyles,vars,settings,multiplot_plotdesc):
 
   if not "OFF" in [ x['deleted'] for x in multiplot_plotdesc ]:
    gp_warning("Nothing to plot!")
-   return
+   return unsuccessful_plot_operations
 
   # Prepare PyX
   pyx_texter_cleanup()
@@ -506,6 +506,8 @@ def multiplot_plot(linestyles,vars,settings,multiplot_plotdesc):
    command = command + "%s %s.jpg"%(fname,fname)
    os.system(command)
    write_output("%s.jpg"%fname,out_fname,settings)
+
+  return unsuccessful_plot_operations
 
 # PLOT_DATASET_MAKEAXES__________(): Makes axes for a plot, using the ranges which have been found from 
 
