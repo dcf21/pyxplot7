@@ -181,22 +181,25 @@ def directive_tabulate(command,vars,settings):
   # Check that the block structure is the same for each grid of data.  If not, collapse each one into a single block
   blocks_differ = 0
   blocks = []
+  # For each grid, extract the number of rows in each block into "blocks"
   for grid in range(len(gridlist)):
    blocks.append([gridlist[grid][block][0] for block in range(len(gridlist[grid]))])
+  # Check that each list of block sizes is identical
   for i in range(1,len(blocks)):
    if (blocks[i] != blocks[0]):
     blocks_differ = 1
     break
   
   if (blocks_differ == 1):
-   gp_warning("Blocks don't match; collapsing into a single block")
+   gp_warning("Warning: Tabulating sets of data that are different sizes.")
    for grid in range(len(gridlist)):
     for block in range(1,len(gridlist[grid])): 
      gridlist[grid][0][0] += gridlist[grid][block][0]  # Sum the row numbers
      gridlist[grid][0][2] += gridlist[grid][block][2] # Catenate the blocks
      del gridlist[grid][block]                        # Delete the old block
 
-   # Additionally if the block structure was different we may not have blocks the same length.  In this case pad with blanks
+   # We have now collapsed each grid into a single block.  But these overall blocks may not have the same length.
+   # In that case we pad the ends of the shorter blocks with zeros.
    max_grid_length = gridlist[0][0][0]
    blocks_differ = 0
    for grid in range(1,len(gridlist)):
@@ -205,15 +208,18 @@ def directive_tabulate(command,vars,settings):
      max_grid_length = max(max_grid_length, gridlist[grid][0][0])
    # Produce correctly-sized blank points and pad
    for grid in range(len(gridlist)):
-    point = []
-    for i in range(len(gridlist[grid][0][1])): point.append('')
-    for i in range(len(gridlist[grid][0][0]),max_grid_length): gridlist[grid][0][2].append(point)
+    for i in range(gridlist[grid][0][0],max_grid_length): # Append the correct number of blank rows to the block
+     point = []
+     for i in range(gridlist[grid][0][1]): point.append('') # Produce a set of empty points the same width as the block
+     gridlist[grid][0][2].append(point) 
+    gridlist[grid][0][0] = max_grid_length
 
   # Catenate the grids into one large grid
   for grid in range(1,len(gridlist)):
    for block in range(len(gridlist[0])):
     gridlist[0][block][1] += gridlist[grid][block][1]
-    for point in range(len(gridlist[grid][block][2])): gridlist[0][block][2][point] += gridlist[grid][block][2][point]
+    for point in range(len(gridlist[grid][block][2])): 
+     gridlist[0][block][2][point] += gridlist[grid][block][2][point]
   
   # Print the data out
   output_table(gridlist[0], settings, format)
@@ -276,17 +282,15 @@ def output_table (datagrid, settings, format):
    for [rows, cols, block] in datagrid:
     for line in block:
      for i in range(cols):
-      if (line[i] != float(int(line[i])) or (abs(line[i])>1000)):
-       allints[i] = False
-      if (abs(line[i]) >= 1000 or (abs(line[i]) < .0999999 and line[i] != 0.)):
-       allsmall[i] = False
+      if (line[i]==''): continue # Skip blank points (padding for uneven data grids)
+      if (line[i] != float(int(line[i])) or (abs(line[i])>1000)):               allints[i] = False
+      if (abs(line[i]) >= 1000 or (abs(line[i]) < .0999999 and line[i] != 0.)): allsmall[i] = False
+       
    for i in range(cols):
-    if (allints[i]):
-     formats.append("%10d")
-    elif (allsmall[i]):
-     formats.append("%11f")
-    else:
-     formats.append("%15e")
+    if (allints[i]):    formats.append("%10d")
+    elif (allsmall[i]): formats.append("%11f")
+    else:               formats.append("%15e")
+     
 
 
   # Actually write the data file
@@ -296,10 +300,9 @@ def output_table (datagrid, settings, format):
      strs = [formatprefix]
      for i in range(len(line)):
       format = formats[i]
-      if (format[-1] == 'd'):
-       strs.append(formats[i]%int(line[i]))
-      else: 
-       strs.append(formats[i]%line[i])
+      if (line[i]==''): format = "%ss"%format[0:-1] # Change the format string from %XX(d/e/f) to %XXs (sick, eh?)
+      if (format[-1] == 'd'): strs.append(format%int(line[i]))
+      else:                   strs.append(format%line[i])
      str = ' '.join(strs)
      f.write("%s\n"%str)
     f.write("\n")
