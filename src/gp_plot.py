@@ -449,7 +449,7 @@ def multiplot_plot(linestyles,vars,settings,multiplot_plotdesc):
    gp_postscript.landscape(fname)
 
   if (gp_settings.settings_global['TERMENLARGE'] == 'ON'): # Enlarge to fit page in place
-   gp_postscript.enlarge(fname, settings)
+   gp_postscript.enlarge(fname)
 
   fname_out = os.path.expanduser(gp_settings.settings_global['OUTPUT'])
   if (fname_out == ""): fname_out = "pyxplot.%s"%gp_settings.settings_global['TERMTYPE'].lower()
@@ -469,10 +469,10 @@ def multiplot_plot(linestyles,vars,settings,multiplot_plotdesc):
      gp_children.send_command_to_csa(csa_command,fname)
   elif (gp_settings.settings_global['TERMTYPE'] in ["PS","EPS"]):           # PS output
    if (gp_settings.settings_global['TERMTYPE'] == "PS"):
-    gp_postscript.epstops(fname, settings) # If producing printable postscript, do so now
+    gp_postscript.epstops(fname) # If producing printable postscript, do so now
    write_output(fname,out_fname,settings)
   elif (gp_settings.settings_global['TERMTYPE'] == "PDF"):                  # PDF output
-   gp_postscript.epstops(fname, settings) # ps2pdf takes printable postscript as input
+   gp_postscript.epstops(fname) # ps2pdf takes printable postscript as input
    command = "ps2pdf %s %s.pdf"%(fname,fname)
    os.system(command)
    write_output("%s.pdf"%fname,out_fname,settings)

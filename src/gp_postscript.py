@@ -26,6 +26,8 @@ import re
 import sys
 from math import *
 
+import gp_settings
+
 # Paper sizes
 # See http://www.cl.cam.ac.uk/~mgk25/iso-paper.html
 
@@ -153,24 +155,26 @@ def getbbox(filename):
 # ENLARGE(): Enlarges an eps file to fit the page.  Output file has same name
 # as input file
 
-def enlarge(filename, settings):
+def enlarge(filename):
+  paper_width  = gp_settings.settings_global['PAPER_WIDTH']
+  paper_height = gp_settings.settings_global['PAPER_HEIGHT']
   # Read bounding box of the input eps file
   inbbox = getbbox(filename)
   width  = inbbox[2] - inbbox[0]
   height = inbbox[3] - inbbox[1]
   # Calculate the scaling in the x and y directions to see which is smallest
-  xscaling = (settings['PAPER_WIDTH'] - margins['LEFT'] - margins['RIGHT'])*mm_to_ps/width
-  yscaling = (settings['PAPER_HEIGHT'] - margins['TOP'] - margins['BOTTOM'])*mm_to_ps/height
+  xscaling = (paper_width - margins['LEFT'] - margins['RIGHT'])*mm_to_ps/width
+  yscaling = (paper_height - margins['TOP'] - margins['BOTTOM'])*mm_to_ps/height
   scaling = min(xscaling, yscaling)
   # Generate a line of postscript to transform the eps and a new bounding box
   xtrans = margins['LEFT'] * mm_to_ps - inbbox[0] * scaling
-  ytrans = settings['PAPER_HEIGHT']*mm_to_ps - margins['TOP'] * mm_to_ps - inbbox[3]*scaling
+  ytrans = paper_height*mm_to_ps - margins['TOP'] * mm_to_ps - inbbox[3]*scaling
   transformation = "%s %s translate\n%s %s scale\n"%(xtrans,ytrans,scaling,scaling)
   bbox = [0,0,0,0]
   bbox[0] = margins['LEFT']*mm_to_ps
-  bbox[1] = (settings['PAPER_HEIGHT']-margins['TOP'])*mm_to_ps - height*scaling
+  bbox[1] = (paper_height-margins['TOP'])*mm_to_ps - height*scaling
   bbox[2] = margins['LEFT']*mm_to_ps + width*scaling
-  bbox[3] = (settings['PAPER_HEIGHT']-margins['TOP'])*mm_to_ps
+  bbox[3] = (paper_height-margins['TOP'])*mm_to_ps
   newbbox = "%%%%BoundingBox: %s %s %s %s\n"%(bbox[0],bbox[1],bbox[2],bbox[3])
 
   # Write the new file out
@@ -221,7 +225,9 @@ def epssetname(filename, title):
 # EPSTOPS(): Converts EPS file to PS file. Output file has same filename as
 # input file.
 
-def epstops(filename, settings):
+def epstops(filename):
+  paper_width  = gp_settings.settings_global['PAPER_WIDTH']
+  paper_height = gp_settings.settings_global['PAPER_HEIGHT']
   # Read the bounding box of the input EPS file
   infile = open(filename,"r")
   inbbox = None
@@ -238,13 +244,13 @@ def epstops(filename, settings):
   margin_y = margin_x
  
   trans_x = margin_x - inbbox[0] # Left margin - left bbox
-  trans_y = settings['PAPER_HEIGHT'] * mm_to_ps - margin_y - inbbox[3]
+  trans_y = paper_height * mm_to_ps - margin_y - inbbox[3]
  
   # Start producing output postscript
   outfile = open("%s2"%filename,"w")
-  outfile.write("%%!PS-Adobe-2.0\n%%%%DocumentPaperSizes: %s\n"%settings['PAPER_NAME'])
+  outfile.write("%%!PS-Adobe-2.0\n%%%%DocumentPaperSizes: %s\n"%gp_settings.settings_global['PAPER_NAME'])
   # The following line is bollocks, but it may be helpful bollocks in some circumstances
-  outfile.write("%%%%BoundingBox: 0 0 %s %s\n"%(settings['PAPER_WIDTH']*mm_to_ps,settings['PAPER_HEIGHT']*mm_to_ps))
+  outfile.write("%%%%BoundingBox: 0 0 %s %s\n"%(paper_width*mm_to_ps,paper_height*mm_to_ps))
   outfile.write(r"""%%EndComments
 /BeginEPSF { %def
   /b4_Inc_state save def                       % Save state for cleanup
