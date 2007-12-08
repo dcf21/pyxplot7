@@ -3,7 +3,8 @@
 # The code in this file is part of PyXPlot
 # <http://www.pyxplot.org.uk>
 #
-# Copyright (C) 2006-7 Dominic Ford <coders@pyxplot.org.uk>
+# Copyright (C) 2006-8 Dominic Ford <coders@pyxplot.org.uk>
+#               2008   Ross Church
 #
 # $Id$
 #

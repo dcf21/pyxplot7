@@ -4,6 +4,7 @@
 % <http://www.pyxplot.org.uk>
 %
 % Copyright (C) 2006-7 Dominic Ford <coders@pyxplot.org.uk>
+%               2008   Ross Church
 %
 % $Id$
 %
@@ -27,56 +28,77 @@
 
 \section{Overview}
 
-PyXPlot is a command-line graphing package, which, for ease of use, has an
-interface based heavily upon that of gnuplot -- perhaps UNIX's most widely-used
-plotting package. Despite the shared interface, however, PyXPlot is intended to
-significantly improve upon the quality of gnuplot's output, producing
-publication-quality figures. The command-line interface has also been extended,
-providing a wealth of new features, and short-cuts for some operations which
-were felt to be excessively cumbersome in the original.
+A graphing package is a cornerstone requirement of any scientific or
+mathematical computing project.  Historically, the most widely used open-source
+programme has been {\sc gnuplot}, which is attractive mainly on account of its
+easy-to-use command-line interface, which allows the contents of data files to
+be visually inspected within seconds.  Its main rival has been {\sc pgplot},
+which is somewhat more flexible, but much less easy to use; it can only be
+called from within a program, and C or FORTRAN code must be written to produce
+each plot.
 
-The motivation behind PyXPlot's creation was the apparent lack of a free
-plotting package which combined both high-quality output and a simple
-interface.  Some -- pgplot for one -- provided very attractive output, but
-required a program to be written each time a plot was to be produced -- a
-potentially time consuming task. Others, gnuplot being the prime example, were
-quick and simple to use, but produced less attractive results.
+Alongside these, several commercial packages have existed, including {\sc
+Maple}, {\sc Mathematica} and {\sc SuperMongo}.  These can typically produce
+nicer-looking results than their free counterparts, but carry with them
+considerable price tags and licensing restrictions.
 
-PyXPlot attempts to fill that gap, offering the best of both worlds. Though the
-interface is based upon that of gnuplot, text is now rendered with all of the
-beauty and flexibility of the \LaTeX\ typesetting environment; the
-``multiplot'' environment is made massively more flexible, making it easy to
-produce galleries of plots; and the range of possible output formats is
-extended -- to name but a few of the enhancements. A number of examples of the
-results of which PyXPlot is capable can be seen on the project
-website\footnote{\url{http://www.pyxplot.org.uk/}}.
+Both gnuplot and pgplot were developed in the mid 1980s. At the time, the
+quality of their output seemed state-of-the-art, but this is less true today.
+In most journal papers today, the text and equations are rendered with a high
+degree of professionalism by the \LaTeX\ typesetting system, but all to often,
+the same cannot be said of the graphs: axes are poorly labelled or illegible.
+The same is often true of the slides used in presentations.
 
-As well as the ease of use and flexibility of gnuplot's command-line interface
--- it can be used either interactively, read a list of commands from a file, or
-receive instructions through a UNIX pipe from another process -- I believe it
-to bring another distinct advantage. It insists upon data being written to a
-datafile on disk before being plotted. Packages which allow, or more often
-require, plotting to be done from within a programming language can encourage
-the calculation of data and its plotting to occur in the same program. I
-believe this to be a dangerous temptation, as the storage of raw datapoints to
-disk can then often be seen as a secondary priority. Months later, when the
-need arises to replot the same data in a different form, or to compare it with
-newer data, remembering how to use a hurriedly written program can prove
-tricky, but remembering how to plot a simple datafile less so.
+In the early 2000s, several new free graphing packages emerged, among them {\sc
+MatPlotLib} and {\sc PyX}.  These have significantly improved upon the quality
+of the plots produced by gnuplot and pgplot, but both are libraries which can
+be called from within the python programming language. They are not as easy to
+use as gnuplot.  For visualising data at speed, then, gnuplot remains the only
+realistic option.
+
+{\sc PyXPlot} aims to fill this gap. Like gnuplot, it is a command-line
+graphing package, and, for ease of use, its interface is based heavily upon
+that of gnuplot. However, it uses the PyX graphics library to produce its
+output, allowing it to bring the quality of gnuplot's output up to date.  The
+command-line interface has also been extended into a more fully-featured vector
+graphics and data processing package.  Where we are aware of frequently-cited
+problems in gnuplot's interface, we have tried to put them right.  For example,
+all text is now rendered automatically in the \LaTeX\ typesetting environment,
+making it straightforward to label graphs with mathematical expressions. The
+``multiplot'' environment has been essentially re-designed from scratch, making
+it easy to produce galleries of plots and basic vector graphics.  For some
+samples of the results of which PyXPlot is capable, the reader is refered to
+the project website\footnote{\url{http://www.pyxplot.org.uk/}}.
+
+The command-line interface of gnuplot is very flexible: it can be controlled
+interactively, by typing commands into a terminal, or it can read a list of
+commands in from a file, or it can receive commands through a UNIX pipe from
+another process. These modes of use are all possible in PyXPlot too.  But we
+also argue that PyXPlot had another distinct advantage over plotting packages
+which insist upon being called from within a programming language. PyXPlot
+insists that data is written to a file on disk before it can be plotted. When
+plotting is done from within programmes, this can tempt the user into writing
+programmes which both perform calculations and plot immediately the results.
+This sounds neat, but it can be a dangerous temptation. Remembering to store a
+copy of the data used to produce a graph becomes a secondary priority.  Months
+later, when the need arises to replot the same data in a different form, or to
+compare it with newer data, remembering how to use a hurriedly written program
+can prove tricky -- especially if the program was originally written by someone
+else. But a simple datafile is quite straightforward to plot.
 
 The similarity of the interface to that of gnuplot is such that simple scripts
 written for gnuplot should work with PyXPlot with minimal modification; gnuplot
-users should be able to get started very quickly.  However, as PyXPlot remains
-work in progress, some gnuplot features may be found to be missing.  A detailed
+users should be able to get started very quickly.  However, PyXPlot is still
+work in progress, and some of gnuplot's features are still missing.  A detailed
 list of which features are supported can be found in
-Section~\ref{missing_features}.  Furthermore many new features have been added
-to the interface; these are described in the remainder of this manual.
+Section~\ref{missing_features}. The new features which have been added to the
+interface are described in the remainder of this manual.
 
 A brief overview of gnuplot's interface is provided for novice users in
 Chapter~\ref{gnuplot_intro}. However, the attention of past gnuplot users is
 drawn to one of the key changes to the interface -- namely that all textual
-labels on plots are now printed using the \LaTeX\ typesetting environment. This
-does unfortunately introduce some incompatibility with the original, since some
+labels on plots are now rendered using the \LaTeX\ typesetting environment. This
+does unfortunately introduce some incompatibility with gnuplot, since some
 strings which were valid before are no longer valid (see
 Section~\ref{sec:latex_incompatibility} for more details). For example:
 
@@ -87,19 +109,18 @@ Section~\ref{sec:latex_incompatibility} for more details). For example:
 
 \begin{verbatim}set xlabel '$x^2$'\end{verbatim}
 
-\noindent It is the view of the author, however, that the nuisance of this
-incompatibility is far outweighed by the power that \LaTeX\ brings. For users
-with no prior knowledge of \LaTeX\ the author recommends Tobias Oetiker's
-excellent introduction, \textit{The Not So Short Guide to \LaTeX
-$2\epsilon$}\footnote{Download from:\\
+\noindent The nuisance of this incompatibility is surely far outweighed by the
+power that \LaTeX\ brings, however. For users with no prior knowledge of
+\LaTeX\ we recommend Tobias Oetiker's excellent introduction, \textit{The Not
+So Short Guide to \LaTeX $2\epsilon$}\footnote{Download from:\\
 \url{http://www.ctan.org/tex-archive/info/lshort/english/lshort.pdf}}.
 
 \section{System Requirements}
 
-PyXPlot works on many UNIX-like operating systems. The authors have tested it
-under Linux, SunOS and MacOS X, and believe that it should work on other
-similar systems. It requires that the following software packages (not
-included) be installed:\index{system requirements}
+PyXPlot works on most UNIX-like operating systems. We have tested it under
+Linux, SunOS and MacOS X, and believe that it should work on other similar
+systems. It requires that the following software packages (not included) be
+installed:\index{system requirements}
 
 \vspace{0.5cm}
 \begin{tabular}{ll}
@@ -147,7 +168,7 @@ installed; if they are not, you need to contact your system administrator.
 \item Unpack the distributed .tar.gz:
 
 \begin{verbatim}
-tar xvfz pyxplot_0.6.3.1.tar.gz
+tar xvfz pyxplot_0.7.0.tar.gz
 cd pyxplot
 \end{verbatim}
 
@@ -188,17 +209,19 @@ pyxplot
 
 \section{Credits}
 
-Before proceeding any further, the author would like to express his gratitude
-to those people who have contributed to PyXPlot -- first and foremost, to
-J\"org Lehmann and Andr\'e Wobst, for writing the PyX graphics library for
-Python, upon which this software is heavily built. Thanks must also go to Ross
-Church for his many useful comments and suggestions during its development.
+We would like to express his gratitude to several people who have contributed
+to PyXPlot -- first and foremost, to J\"org Lehmann, Andr\'e Wobst and Michael
+Schindler, for writing the PyX graphics library for Python, upon which this
+software is heavily built. We would also like to think all of the users who
+have got in touch with us by email since PyXPlot was first released on the web.
+Your feedback and suggestions have been gratefully received.
 
 \section{Legal Blurb}
 
-This manual and the software which it describes are both copyright (C)
-Dominic Ford 2006-7. They are both distributed under the GNU General Public
-License (GPL) Version~2, a copy of which is provided in the \texttt{COPYING}
-file in this distribution.\index{General Public License} Alternatively, it may
-be downloaded from:\\ \url{http://www.gnu.org/copyleft/gpl.html}.
+This manual and the software which it describes are both copyright (C) Dominic
+Ford 2006-8, Ross Church 2008. They are distributed under the GNU General
+Public License (GPL) Version~2, a copy of which is provided in the
+\texttt{COPYING} file in this distribution.\index{General Public License}
+Alternatively, it may be downloaded from the web, from the following
+location:\\ \url{http://www.gnu.org/copyleft/gpl.html}.
 
