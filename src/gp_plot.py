@@ -521,14 +521,6 @@ def plot_dataset_makeaxes_multipropagate(multiplot_number, Msettings, Maxes_this
     if (number == 1): axisname = direction             # x1 axis is called x in PyX
     else            : axisname = direction+str(number) # but x2 axis is called x2 in PyX
 
-    # PyX 0.9 doesn't like having x5 axis without an x3, so we form a numbering system for PyX
-    pyx_number = pyx_oddeven = number%2
-    if (pyx_number == 0): pyx_number = 2
-    for [n2,a2] in axis_list.iteritems():
-      if ((n2 < number) and (n2%2 == pyx_oddeven)): pyx_number = pyx_number + 2
-    if (pyx_number == 1): axispyxname = direction
-    else                : axispyxname = direction+str(pyx_number)
-
     linkaxis      = 'OFF'
     linkaxis_plot = None
     linkaxis_no   = None
@@ -567,7 +559,7 @@ def plot_dataset_makeaxes_multipropagate(multiplot_number, Msettings, Maxes_this
        gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
 
     # Store information about our linkage status
-    axis['LINKINFO']={'LINKED':linkaxis, 'PLOT':linkaxis_plot, 'AXISNO': linkaxis_no, 'AXISNAME':axisname, 'AXISPYXNAME':axispyxname}
+    axis['LINKINFO']={'LINKED':linkaxis, 'PLOT':linkaxis_plot, 'AXISNO': linkaxis_no, 'AXISNAME':axisname, 'AXISPYXNAME':axisname}
 
 # PLOT_DATASET_MAKEAXES_MAKENONLINK(): Make axes which are not linked axes
 def plot_dataset_makeaxes_makenonlink(Msettings, Maxes_this):

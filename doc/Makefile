@@ -29,7 +29,7 @@ all: $(EPSFILES) pyxplot.pdf
 
 clean:
 	rm -Rf $(EPSDIR)
-	rm -f pyxplot.pdf pyxplot.ps pyxplot.dvi pyxplot.aux pyxplot.idx pyxplot.ilg pyxplot.ind pyxplot.log pyxplot.toc
+	rm -f pyxplot.pdf pyxplot.ps pyxplot.dvi *.aux *.idx *.ilg *.ind *.log *.toc
 	rm -Rf html
 
 $(EPSDIR)/%.eps: $(EXAMPLEDIR)/%.ppl

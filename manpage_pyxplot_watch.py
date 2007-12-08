@@ -29,14 +29,14 @@ description = ""
 sys.stdout.write("""
 .\" pyxplot_watch.man
 .\" Dominic Ford
-.\" 21/02/2007
+.\" 07/12/2007
 
 .\" Man page for pyxplot_watch
 
 .TH PYXPLOT_WATCH 1
 .SH NAME
-pyxplot_watch \- a commandline plotting package, with interface similar to that of
-gnuplot, which produces publication-quality output.
+pyxplot_watch \- a tool which monitors a collection of PyXPlot command scripts
+and executes them whenever they are modified.
 .SH SYNOPSIS
 .B pyxplot_watch
 [file ...]
