@@ -21,31 +21,14 @@
 
 % LaTeX source for the PyXPlot Users' Guide
 
-\chapter{Plotting}
-\section{Chosing which data to plot}
-\label{select_modifier} 
-As well as the \texttt{index}, \texttt{using} and \texttt{every} keywords which
-allow users to plot subsets of data from datafiles, PyXPlot also has a further
-modifier, \index{select keyword@\texttt{select} keyword}. This can be used to
-plot only those datapoints in a datafile which specify some given criterion. For
-example:
+\chapter{Advanced Plotting}
 
-\begin{verbatim}
-plot 'datafile' select ($8>5)
-plot sin(x) select (($1>0) and ($2>0))
-\end{verbatim}
+In this chapter, we continue to explore the various options of the {\tt plot}
+command. Specifically, we turn to those aspects which differ from gnuplot's
+{\tt plot} command.
 
-In the second example, two select criteria are given, combined with the logical
-and operator\footnote{See Table~\ref{operators_table} for a list of all
-operators recognised by PyXPlot.}. The select modifier has many applications,
-including plotting two-dimensional slices from three-dimensional datasets, and
-selecting certain subsets of datapoints from a datafile for plotting.
 
-Logical operators such as \texttt{and}, \texttt{or} and \texttt{not} can be
-used, as seen in the second example above; indeed, any expression which is valid
-Python can be used.
-
-\section{Plot styles}
+\section{A Tour of PyXPlot's Plot Styles}
 
 The following basic plotting styles are supported by PyXPlot:
 \begin{itemize}
@@ -188,50 +171,6 @@ unexpected -- PyXPlot would find itself autoscaling the $x$-axis range to the
 spread of values of $f(x)$, but find that this itself changed depending upon
 the range of the $x$-axis.
 
-\section{Horizontally arranged datafiles}
-
-\index{horizontal
-datafiles}\index{datafiles!horizontal}\index{using rows modifier@\texttt{using
-rows} modifier}\index{using columns modifier@\texttt{using columns}
-modifier}\label{horizontal_datafiles} 
-The command syntax for plotting
-columns of datafiles against one another was previously described in
-Section~\ref{plot_datafiles}.  In an extension of gnuplot's interface, it is
-also possible to plot \textit{rows} of data against one another in
-horizontally-arranged datafiles.  For this, the keyword `\texttt{rows}' is
-placed after the \texttt{using} modifier:\index{rows keyword@\texttt{rows} keyword}
-
-\begin{verbatim}
-plot 'datafile' index 1 using rows 1:2
-\end{verbatim}
-
-The syntax `\texttt{using columns}' is also accepted, to specify the default
-behaviour of plotting columns against one another:\index{columns keyword@\texttt{columns} keyword}
-
-\begin{verbatim}
-plot 'datafile' index 1 using columns 1:2
-\end{verbatim}
-
-When plotting horizontally-arranged datafiles, the meanings of the
-\texttt{index} and \texttt{every} modifiers (see Section~\ref{plot_datafiles})
-are altered slightly. The former continues to refer to vertical blocks of data
-separated by two blank lines.  Blocks, as referenced in the \texttt{every}
-modifier, continue to be vertical blocks of datapoints, separated by single
-blank lines. The row numbers passed to the \texttt{using} modifier are counted
-from the top of the current block.
-
-However, the line-numbers specified in the \texttt{every} modifier -- i.e.
-variables $a$, $c$ and $e$ in the system above -- now refer to horizontal
-columns, rather than lines. For example:
-
-\begin{verbatim}
-plot 'datafile' using rows 1:2 every 2::3::9
-\end{verbatim}
-
-\noindent would plot the data in row 2 against that in row 1, using only the
-values in every other column, between columns 3 and 9.
-
-
 \section{Barcharts and Histograms}
 \label{barcharts}\index{bar charts}
 \index{steps plot style@\texttt{steps} plot style}
@@ -359,230 +298,392 @@ when using the \texttt{fsteps} plot style. The \texttt{histeps} plot style
 works rather like the \texttt{boxes} plot style; the interfaces between the
 steps occur at the horizontal midpoints between the datapoints.
 
-
-
-
-\section{Multi-plotting}
-\label{multiplot}
-\index{multiplot}
-
-Gnuplot has a plotting mode called ``multiplot'' which allows many graphs to be
-plotted together, and display side-by-side. The basic syntax of this mode is
-reproduced in PyXPlot, but is hugely extended.
-
-The mode is entered by the command ``\texttt{set multiplot}''. This can be compared
-to taking a blank sheet of paper on which to place plots. Plots are then placed
-on that sheet of paper, as usual, with the \texttt{plot} command. The position
-of each plot is set using the \texttt{set origin} command, which takes a
-comma-separated $x,y$ coordinate pair, measured in centimetres. The following,
-for example, would plot a graph of $\sin(x)$ to the left of a plot of
-$\cos(x)$:\index{set origin command@\texttt{set origin} command}
-
-\begin{verbatim} 
-set multiplot
-plot sin(x)
-set origin 10,0
-plot cos(x)
-\end{verbatim}
-
-The multiplot page may subsequently be cleared with the \texttt{clear} command,
-and multiplot mode may be left using the ``\texttt{set nomultiplot}''
-command.\index{clear command@\texttt{clear} command}
-
-\subsection{Deleting, Moving and Changing Plots}
-
-Each time a plot is placed on the multiplot page in PyXPlot, it is allocated a
-reference number, which is output to the terminal. Reference numbers count up
-from zero each time the multiplot page is cleared. A number of commands exist
-for modifying plots after they have been placed on the page, selecting them by
-making reference to their reference numbers.
-
-Plots may be removed from the page with the \texttt{delete} command, and
-restored with the \texttt{undelete} command:\index{delete
-command@\texttt{delete} command}\index{undelete command@\texttt{undelete}
-command}
-
-\begin{verbatim} 
-delete <number>
-undelete <number>
-\end{verbatim}
-
-The reference numbers of deleted plots are not reused until the page is
-cleared, as they may always be restored with the \texttt{undelete} command;
-plots which have been deleted simply do not appear.
-
-Plots may also be moved with the \texttt{move} command. For example, the
-following would move plot 23 to position (8,8) measured in centimetres:
-
-\begin{verbatim} 
-move 23 to 8,8
-\end{verbatim}
-
-In multiplot mode, the \texttt{replot} command can be used to modify the last
-plot added to the page. For example, the following would change the title of
-the latest plot to ``foo'', and add a plot of $\cos(x)$ to it:
-
-\begin{verbatim} 
-set title 'foo'
-replot cos(x)
-\end{verbatim}
-
-Additionally, it is possible to modify any plot on the page, by first selecting
-it with the \texttt{edit} command. Subsequently, the \texttt{replot} will act
-upon the selected plot. The following example would produce two plots, and then
-change the colour of the text on the first:
-
-\begin{verbatim} 
-set multiplot
-plot sin(x)
-set origin 10,0
-plot cos(x)
-edit 0        # Select the first plot ...
-set textcolour red
-replot        # ... and replot it.
-\end{verbatim}
-
-The \texttt{edit} command can also be used to view the settings which are
-applied to any plot on the multiplot page -- after executing ``edit 0'', the
-\texttt{show} command will show the settings applied to plot zero.
-
-When a new plot is added to the page, \texttt{replot} always switches to act
-upon this most recent plot.
-
-\index{refresh command@\texttt{refresh} command}\index{replotting}
-\index{replot command@\texttt{replot} command} The \texttt{refresh} command is
-rather similar to the \texttt{replot} command, but produces an exact copy of
-the latest display. This can be useful, for example, after changing the
-terminal type, to produce a second copy of a multiplot page in a different
-format. But the crucial difference between this command and \texttt{replot} is
-that it doesn't replot anything. Indeed, there could be only textual items and
-arrows on the present multiplot page, and no graphs \textit{to} replot.
-
-\subsection{Linked Axes}
-
-The axes of plots can be linked together, in such a way that they always share
-a common scale. This can be useful when placing plots next to one another,
-firstly, of course, if it is of intrinsic interest to ensure that they are on a
-common scale, but also because the two plots then do not both need their own
-axis labels, and space can be saved by one sharing the labels from the other.
-In PyXPlot, an axis which borrows its scale and labels from another is called a
-``linked axis''.
-
-Such axes are declared by setting the label of the linked axis to a magic
-string such as ``\texttt{linkaxis 0}''\label{linked_axes}\index{axes!reserved
-labels}\index{magic axis labels}. This magic label would set the axis to borrow
-its scale from an axis from plot zero. The general syntax is
-``\texttt{linkaxis} $n$ $m$'', where $n$ and $m$ are two integers, separated by
-a comma or whitespace. The first, $n$, indicates the plot from which to borrow
-an axis; the second, $m$, indicates whether to borrow the scale of axis $x1$,
-$x2$, $x3$, etc. By default, $m=1$. The linking will fail, and a warning
-result, if an attempt is made to link to an axis which doesn't exist.
-
-\subsection{Text Labels, Arrows and Images}
-
-\label{text_command}\index{text command@\texttt{text} command} In addition to
-placing plots on the multiplot page, text labels may also be inserted
-independently of any plots, using the \texttt{text} command. This has the
-following syntax:
-
-\begin{verbatim} 
-text 'This is some text' at x,y
-\end{verbatim}
-
-In this case, the string ``This is some text'' would be rendered at position
-$(x,y)$ on the multiplot. As with the \texttt{set label} command, a rotation
-angle may optionally be specified to rotate text labels through any given
-angle, measured in degrees counter-clockwise, for example:
-
-\begin{verbatim} 
-text 'This is some text' at x,y rotate r
-\end{verbatim}
-
-The commands \texttt{set textcolour}, \texttt{set
-texthalign} and \texttt{set textvalign}, which have already been described in
-the context in the \texttt{set label} command, can also be used to set the
-colour and alignment of text produced with the \texttt{text} command.\index{set
-textcolour command@\texttt{set textcolour} command}\index{set texthalign
-command@\texttt{set texthalign} command}\index{set textvalign
-command@\texttt{set textvalign} command}. A useful application of this is to
-produce centred headings at the top of multiplots.
-
-As with plots, each text item has a unique identification number, and can be
-moved around, deleted or undeleted with the \texttt{delete}, \texttt{undelete}
-and \texttt{move} commands.
-\index{delete command@\texttt{delete} command}
-\index{undelete command@\texttt{undelete} command}
-
-It should be noted that the \texttt{text} command can also be used outside of
-the multiplot environment, to render a single piece of short text instead of a
-graph. One obvious application is to produce equations rendered as graphical
-files for inclusion in talks.
-
-\label{arrows} \index{arrow command@\texttt{arrow} command} Arrows may also be
-placed on multiplot pages, independently of any plots, using the \texttt{arrow}
-command, which has syntax:
-
-\begin{verbatim} 
-arrow from x,y to x,y
-\end{verbatim}
-
-As above, arrows receive unique identification numbers, and can be deleted and
-undeleted.
-
-The \texttt{arrow} command may be followed by the `\texttt{with}' keyword to
-specify to style of the arrow. The style keywords which are accepted are
-identical to those accepted by the \texttt{set arrow} command (see
-Section~\ref{set_arrow}). For example:
-
-\begin{verbatim} 
-arrow from x1,y1 to x2,y2 \
-with twohead colour red
-\end{verbatim}
-
-\index{jpeg command@\texttt{jpeg} command} Bitmap images in jpeg form may be
-placed on the multiplot using the {\tt jpeg} command.  This has syntax:
-
-\begin{verbatim}
-jpeg 'filename' at x,y width w
-\end{verbatim}
-
-As an alternative to the {\tt width} modifier the height of the image can be
-specified, using the analogous {\tt height} modifier.  An optional angle can
-also be specified using the {\tt rotate} modifier; this causes the included
-image to be rotated counter-clockwise by a specified angle (in degrees).
-
-\index{eps command@\texttt{eps} command} Vector graphic images in eps format may
-be placed on to a multiplot using the {\tt eps} command, which has a syntax
-analogous to the {\tt jpeg} command.  However neither height nor width need be
-specified; in this case the image will be included at its native size.  For
+\section{Choosing which data to plot}
+\label{select_modifier} 
+As well as the \texttt{index}, \texttt{using} and \texttt{every} keywords which
+allow users to plot subsets of data from datafiles, PyXPlot also has a further
+modifier, {\tt switch}\index{select keyword@\texttt{select} keyword}. This can be used to
+plot only those datapoints in a datafile which specify some given criterion. For
 example:
 
 \begin{verbatim}
-eps 'filename' at 3,2 rotate 5
+plot 'data.dat' select ($8>5)
+plot sin(x) select (($1>0) and ($2>0))
 \end{verbatim}
 
-\noindent will place the eps file with its bottom-left corner at position
-$(3,2)$ cm from the origin, rotated counter-clockwise through 5 degrees.
+In the second example, two select criteria are given, combined with the logical
+{\tt and} operator. A full list of all of the operators recognised by PyXPlot
+was given in Chapter~2; see Table~\ref{operators_table}.  The select modifier
+has many applications, for example, plotting two-dimensional slices from
+three-dimensional datasets and selecting certain subsets of datapoints from a
+datafile for plotting.
 
-\subsection{Speed Issues}
-\label{set_display}
+\section{Horizontally arranged datafiles}
 
-By default, whenever an item is added to a multiplot, or an existing item moved
-or replotted, the whole multiplot is replotted to show the change. This can be
-a time consuming process on large and complex multiplots. For this reason, the
-\texttt{set nodisplay}\index{set display command@\texttt{set display} command}
-command is provided, which stops PyXPlot from producing any output. The
-\texttt{set display} command can subsequently be issued to return to normal
-behaviour.
+\index{horizontal
+datafiles}\index{datafiles!horizontal}\index{using rows modifier@\texttt{using
+rows} modifier}\index{using columns modifier@\texttt{using columns}
+modifier}\label{horizontal_datafiles} 
+The command syntax for plotting
+columns of datafiles against one another was previously described in
+Section~\ref{plot_datafiles}.  In an extension of gnuplot's interface, it is
+also possible to plot \textit{rows} of data against one another in
+horizontally-arranged datafiles.  For this, the keyword `\texttt{rows}' is
+placed after the \texttt{using} modifier:\index{rows keyword@\texttt{rows} keyword}
 
-This can be especially useful in scripts which produce large multiplots. There
-is no point in producing output at each step in the construction of a large
-multiplot, and so a great speed increase can be achieved by wrapping the script
-with:
-
-\begin{verbatim} 
-set nodisplay
-[...prepare large multiplot...]
-set display
-refresh
+\begin{verbatim}
+plot 'datafile' index 1 using rows 1:2
 \end{verbatim}
+
+The syntax `\texttt{using columns}' is also accepted, to specify the default
+behaviour of plotting columns against one another:\index{columns keyword@\texttt{columns} keyword}
+
+\begin{verbatim}
+plot 'datafile' index 1 using columns 1:2
+\end{verbatim}
+
+When plotting horizontally-arranged datafiles, the meanings of the
+\texttt{index} and \texttt{every} modifiers (see Section~\ref{plot_datafiles})
+are altered slightly. The former continues to refer to vertical blocks of data
+separated by two blank lines.  Blocks, as referenced in the \texttt{every}
+modifier, continue to be vertical blocks of datapoints, separated by single
+blank lines. The row numbers passed to the \texttt{using} modifier are counted
+from the top of the current block.
+
+However, the line-numbers specified in the \texttt{every} modifier -- i.e.
+variables $a$, $c$ and $e$ in the system above -- now refer to horizontal
+columns, rather than lines. For example:
+
+\begin{verbatim}
+plot 'datafile' using rows 1:2 every 2::3::9
+\end{verbatim}
+
+\noindent would plot the data in row 2 against that in row 1, using only the
+values in every other column, between columns 3 and 9.
+
+
+\section{Configuring Axes}
+\label{axis_extensions}\label{ranges_multiaxes}\label{multiple_axes}
+
+By default, plots have only one $x$-axis and one $y$-axis. Further parallel
+axes can be added and configured via statements such as:\index{axes
+modifier@\texttt{axes} modifier}\index{set axis command@\texttt{set axis}
+command}
+
+\begin{verbatim}
+set x3label 'foo'
+plot sin(x) axes x3y1
+set axis x3
+\end{verbatim}
+
+\noindent In the top statement, a further $x$ axis, called $x3$, is implicitly
+created by giving it a label. In the next, the \texttt{axes} modifier is used
+to tell the \texttt{plot} command to plot data against the $x3$-axis, which
+also implicitly created such an axis if it doesn't already exist. In the third,
+an $x3$-axis is explicitly created.
+
+Unlike gnuplot, which allowed only a maximum of two parallel axes to be added
+to plots, PyXPlot allows an unlimited number of axes to be used. Odd-numbered
+$x$-axes appear below the plot, and even numbered $x$-axes above it; a similar
+rule applies for $y$-axes, to the left and to the right. This is illustrated in
+Figure~\ref{fig:ex_multiaxes}.
+
+\begin{figure}
+\begin{center}
+\includegraphics{examples/eps/ex_multiaxes.eps}
+\end{center}
+\caption{A plot demonstating the use of large numbers of axes. Odd-numbered
+$x$-axes appear below the plot, and even numbered $x$-axes above it; a similar
+rule applies for $y$-axes, to the left and to the right.}
+\label{fig:ex_multiaxes}
+\end{figure}
+
+As discussed in the previous chapter, the ranges of axes can be set either
+using the \texttt{set xrange} command\index{set xrange command@\texttt{set
+xrange} command}, or within the \texttt{plot} command. The following two
+statements would set equivalent ranges for the $x3$-axis:
+
+\begin{verbatim}
+set x3range [-2:2]
+plot [:][:][:][:][-2:2] sin(x) axes x3y1
+\end{verbatim}
+
+\noindent As usual, the first two ranges specified in the \texttt{plot} command
+apply to the $x$- and $y$-axes. The next pair apply to the $x2$- and $y2$-axes,
+and so forth.
+
+\index{axes!removal}\index{removing axes}\index{hidden
+axes}\label{axis_removal} Having made axes with the above commands, they may
+subsequently be removed using the \texttt{unset axis} command as follows:
+
+\begin{verbatim}
+unset axis x3
+unset axis x3x5y3 y7
+\end{verbatim}
+
+\noindent The top statement, for example, would remove axis $x3$. The command
+\texttt{unset axis} on its own, with no axes specified, returns all axes to
+their default configuration.  The special case of \texttt{unset axis x1} does
+not remove the first $x$-axis -- it cannot be removed -- but instead returns it
+to its default configuration.
+
+It should be noted, that if the following two commands are typed in succession,
+the second may not entirely negate the first:
+
+\begin{verbatim}
+set x3label 'foo'
+unset x3label 'foo'
+\end{verbatim}
+
+\noindent The first may have implicitly created an $x3$-axis, which would need
+to be removed with the \texttt{unset axis x3} command.
+
+A subtly different task is that of removing labels from axes, or setting axes
+not to display. To achieve this, a number of special axis labels are used.
+Labelling an axis ``\texttt{nolabels}''\index{nolabels
+keyword@\texttt{nolabels} keyword} has the effect that no title or numerical
+labels are placed upon it. Labelling it\label{nolabelstics}
+``\texttt{nolabelstics}''\index{nolabelstics keyword@\texttt{nolabelstics}
+keyword} is stronger still; this removes all tick marks from it as well
+(similar in effect to \texttt{set noxtics} in gnuplot). Finally, labelling it
+``\texttt{invisible}''\index{invisible keyword@\texttt{invisible} keyword}
+makes an axis completely invisible.
+
+Labels may be placed on such axes, by following the magic keywords above with a
+colon and the desired title, for example:
+
+\begin{verbatim}
+set xlabel 'nolabels:Time'
+\end{verbatim}
+
+\noindent would produce an $x$-axis with no numeric labels, but a label of
+`Time'.
+
+In the unlikely event of wanting
+to label a normal axis with one of these magic words\index{axes!reserved
+labels}\index{magic axis labels}, this may be achieved by prefixing the magic
+word with a space. There is one further magic axis label, \texttt{linkaxis},
+which will be described in Section~\ref{linked_axes}.
+
+The ticks of axes can be configured to point either inward, towards the plot,
+as is the default, or outward towards the axis labels, or in both directions.
+This is achieved using the \texttt{set xticdir} command, for example:
+
+\begin{verbatim}
+set xticdir inward
+set y2ticdir outward
+set x2ticdir both
+\end{verbatim}
+
+The position of ticks along each axis can be configured with the \texttt{set
+xtics}\index{set xtics command@\texttt{set xtics} command} command. The
+appearance of ticks along any axis can be turned off with the \texttt{set
+noxtics}\index{set noxtics command@\texttt{set noxtics} command} command. The
+syntax for these is given below:
+
+\begin{verbatim}
+set xtics { axis | border | inward | outward | both }
+          {  autofreq
+           | <increment>
+           | <minimum>, <increment> { , <maximum> }
+           | (     {"label"} <position>
+               { , {"label"} <position> } .... )
+          }
+set noxtics
+show xtics
+\end{verbatim}
+
+The keywords \texttt{inward}, \texttt{outward} and \texttt{both} alter the
+directions of the ticks, and have the same effect as in the \texttt{set
+xticdir} command. The keyword \texttt{axis} is an alias for \texttt{inward},
+and \texttt{border} an alias for \texttt{outward}, both provided for gnuplot
+compatibility. If the keyword \texttt{autofreq} is given, the automatic
+placement of ticks on the axis is restored.
+
+If \texttt{<minimum>, <increment>, <maximum>} are specified, then ticks are
+placed at evenly spaced intervals between the specified limits. In the case of
+logarithmic axes, \texttt{<increment>} is applied multiplicatively.
+
+Alternatively, the final form allows ticks to be placed on an axis
+individually, and each given its own textual label.
+
+The following pair of examples would both place tick marks at $x=$2, 3, 4, 5.
+In the second example, they would be labelled ``a'', ``b'', ``c'' and ``d'':
+
+\begin{verbatim}
+set xtics 2, 1, 5
+
+set x2tics ("a" 2, "b" 3, "c" 4, "d" 5)
+\end{verbatim}
+
+The following example would place tick marks at intervals of two units along
+the $x3$-axis:
+
+\begin{verbatim}
+set x3tics 2
+\end{verbatim}
+
+The following example would restore the automatic placement of ticks along the
+$x4$-axis, placing those ticks facing outwards from the graph:
+
+\begin{verbatim}
+set x4tics border autofreq
+\end{verbatim}
+
+\begin{figure}
+\begin{center}
+\includegraphics{examples/eps/ex_axistics.eps}
+\end{center}
+\caption{A plot demonstrating the use of the {\tt set xtics} command. The commands used to create the axes in this plot are as given in the text.}
+\label{fig:ex_axistics}
+\end{figure}
+
+
+All of the examples above are illustrated in Figure~\ref{fig:ex_axistics}.
+Minor tick marks can be placed on axes with the \texttt{set mxtics} command,
+which has the same syntax as above.
+
+\section{Keys and Legends}
+
+By default, plots are displayed with a legend in their top-right corners. The
+textual description of each dataset is drawn by default from the command used
+to plot it. Alternatively, the user may specify his own description for each
+dataset by following the \texttt{plot} command with the \texttt{title}
+modifier\index{title modifier@\texttt{title} modifier}, as follows:
+
+\begin{verbatim}
+plot sin(x) title 'A sine wave'
+plot cos(x) title ''
+\end{verbatim}
+
+In the lower case, a blank title is specified, in which case, PyXPlot makes no
+entry for this dataset in the legend. This is useful if it is desired to place
+some but not all datasets into the legend of a plot.  Alternatively, the
+production of the legend can be completely turned off for all datasets, by the
+command \texttt{set nokey}. The opposite effect can be achieved by the
+\texttt{set key}\index{set key@\texttt{set key} command} command.
+
+This latter command can also be used to dictate where on the plot the legend
+should be placed, using a syntax along the lines of:
+
+\begin{verbatim}
+set key top right
+\end{verbatim}
+
+The following recognised positioning keywords are self-explanatory:
+\texttt{top}, \texttt{bottom}, \texttt{left}, \texttt{right}, \texttt{xcentre}
+and \texttt{ycentre}. The word \texttt{outside} places the key outside the
+plot, on its right side. The word \texttt{below} places the legend below the
+plot.
+
+In addition, two positional offset coordinates may be specified after such
+keywords -- the first value is assumed to be an $x$-offset, and the second a
+$y$-offset, in units approximately equal to the size of the plot. For example:
+
+\begin{verbatim}
+set key bottom left 0.0 -0.5
+\end{verbatim}
+
+\noindent would display a key below the bottom left corner of the graph.
+
+By default, entries in the key are placed in a single vertical list. They can
+instead be arranged into a number of columns by means of the \texttt{set
+keycolumns} command.\index{set keycolumns command@\texttt{set keycolumns}
+command}. This should be followed by the integer number of desired columns, for
+example:
+
+\begin{verbatim}
+set keycolumns 2
+\end{verbatim}
+
+An example of a plot with a two-column legend is given in Figure~\ref{fig:ex_legends}.
+
+\begin{figure}
+\begin{center}
+\includegraphics{examples/eps/ex_legends.eps}
+\end{center}
+\caption{An example of a plot with a two-column legend, positioned below the plot using {\tt set key below}.}
+\label{fig:ex_legends}
+\end{figure}
+
+\section{The \texttt{linestyle} Keyword}
+
+At times, the string of style keywords following the \texttt{with} modifier in
+\texttt{plot} commands can grow rather unwieldily long. For clarity, frequently
+used plot styles can be stored as ``linestyles''; this is true of styles
+involving points as well as lines. The syntax for setting a linestyle is:
+
+\begin{verbatim}
+set linestyle 2 points pointtype 3
+\end{verbatim}
+
+\noindent where the ``2'' is the identification number of the linestyle. In a
+subsequent \texttt{plot} statement, this linestyle can be recalled as follows:
+
+\begin{verbatim}
+plot sin(x) with linestyle 2
+\end{verbatim}
+
+\section{Colour Plotting}
+
+\index{colours!setting for datasets} In the \texttt{with}
+clause of the plot command, the modifier \texttt{colour}, (abbrev.
+`\texttt{c}'), allows the colour of each dataset to be manually selected. It
+should be followed either by an integer, to set a colour from the present
+palette, or by a colour name. A list of valid colour names is given in
+Section~\ref{colour_names}. For example:
+
+\begin{verbatim}
+plot sin(x) with c 5
+plot sin(x) with colour blue
+\end{verbatim}
+
+\noindent The \texttt{colour} modifier can also be used when defining linestyles.
+
+\index{colours!setting the palette}\index{set palette command@\texttt{set
+palette} command} PyXPlot has a palette of colours which it assigns
+sequentially to datasets when colours are not manually assigned. This is also
+the palette to which integers passed to \texttt{set colour} refer -- the `5'
+above, for example. It may be set using the \texttt{set palette} command, which
+differs in syntax from gnuplot. It should be followed by a comma-separated list
+of colours, for example:
+
+\begin{verbatim}
+set palette red,green,blue
+\end{verbatim}
+
+Another way of setting the palette, in a configuration file, is described in
+Section~\ref{config_files}; a list of valid colour names is given in
+Section~\ref{colour_names}.
+
+\section{General Extensions Beyond Gnuplot}
+
+\begin{longtable}{p{3cm}lp{9cm}}
+
+
+
+datafile wildcards\index{globbing}\index{wildcards}\index{datafiles!globbing} & --- & PyXPlot allows the wildcards `*' and `?' to be used both in the filenames of datafiles following the \texttt{plot} command, and also when specifying command files on the command line and with the \texttt{load} command. For example, the following would plot all datafiles in the current directory with a `.dat' suffix, using the same plot options:
+\\ & &
+\begin{verbatim}
+plot '*.dat' with linewidth 2
+\end{verbatim}
+
+In the legend, full filenames are displayed, allowing the datafiles to be distinguished.
+\\ & &
+As in gnuplot, a blank filename passed to the plot command causes the last used datafile to be used again.
+\\
+
+backing up overwritten files\index{set backup command@\texttt{set backup}
+command}\index{overwriting files}\index{backup files}\label{filebackup} & ---
+& By default, when plotting to a file, if the output filename matches that of
+an existing file, that file is overwritten. This behaviour may be changed with
+the \texttt{set backup} command, which has syntax:
+\\ & &
+\begin{verbatim}
+set backup
+set nobackup
+\end{verbatim}
+\\ & &
+When this switch is turned on, pre-existing files will be renamed with a tilde at the end of their filenames, rather than being overwritten. \\
+
+\end{longtable}

@@ -21,7 +21,7 @@
 
 % LaTeX source for the PyXPlot Users' Guide
 
-\chapter{Other features}
+\chapter{PyXPlot and the Outside World}
 
 This Chapter describes a few additional features of PyXPlot.
 
@@ -91,48 +91,243 @@ twister =~ s/s/th/
 print twister
 \end{verbatim}
 
-Doesn't do what you expect it to. XXX FIXME
+\section{Formatting and Terminals}
+\label{set_terminal2}
 
-\section{Tabulating Functions and Slicing Data Files}
+In this section I shall outline the new and modified commands for controlling
+the graphic output format of PyXPlot.
 
-PyXPlot includes a command that can be used to tabulate functions, that is, to
-produce a text file containing the values of the function at a set of points.
-For example, to produce a data file called {\tt sine.dat} with the principal
-values of the sine function:
-
-\begin{verbatim}
-set output 'sine.dat'
-tabulate [-pi:pi] sin(x)
-\end{verbatim}
-
-Multiple functions may be tabulated into the same file with the {\tt using}
-modifier:
+The widths of plots may be set be means of two commands -- \texttt{set
+size}\index{set size command@\texttt{set size} command} and \texttt{set
+width}\index{set width command@\texttt{set width} command}. Both are
+equivalent, and should be followed by the desired width measured in
+centimetres, for example:
 
 \begin{verbatim}
-tabulate [0:2*pi] sin(x):cos(x):tan(x) u 1:2:3:4
+set width 20
 \end{verbatim}
 
-The {\tt samples} setting can be used to control the number of points that are
-inserted into the data file.  If the $x$-axis is set to be logrithmic then the
-points at which the functions are evaluated are spaced logrithmically.
-
-The {\tt tabulate} command can also be used to select portions of data files.
-For example, to print the third, sixth and nineth columns of the datafile {\tt
-plot.1}, but only when the arcsine of the value in the fourth column is
-positive:
+The \texttt{set size} command can also be used to set the aspect ratio of plots
+by following it with the keyword \texttt{ratio}\index{set size ratio
+command@\texttt{set size ratio} command}. The number which follows should be
+the desired ratio of height to width. The following, for example would produce
+plots three times as high as they are wide:
 
 \begin{verbatim}
-set output 'filtered.dat'
-tabulate 'plot.1' u 3:6:9 select (asin($4)>0)
+set size ratio 3.0
 \end{verbatim}
 
-\noindent The {\tt select}, {\tt using} and {\tt every} modifiers operate in the
-same manner as with the {\tt plot} command.  The format statement used to print
-the output file is chosen automatically with integers and small numbers treated
-differently.  If desired, however, a format statement may be specified using the
-{\tt with format} specifier; it should be a standard python format string.  If
-there are not enough columns available in the supplied format statement it will
-be repeated for each line of the data file.
+The command \texttt{set size noratio} returns to PyXPlot's default aspect ratio
+of the golden ratio, i.e. $\left((1+\sqrt{5})/2\right)^{-1}$, which matches
+that of a sheet of A4 paper\footnote{Of less practical significance, it has
+been in use since the time of the Pythagoreans, and is seen repeatedly in the
+architecture of the Parthenon.}.  The special command \texttt{set size
+square}\index{set size square command@\texttt{set size square} command} sets
+the aspect ratio to unity.
+
+If the \texttt{enlarge} modifier is used with the {\tt set terminal} command
+then the whole plot is enlarged or, in the case of large plots, shrunk to the
+current paper size (minus a small margin).  The aspect ratio of the plot is
+preserved.  This is perhaps most useful when preparing a plot to send to a
+printer with the postscript terminal.
+
+In Section~\ref{directing_output} I described how the \texttt{set terminal}
+command\index{set terminal command@\texttt{set terminal} command} can be used
+to produce plots in various graphic formats. In addition, I here describe how
+the way in which plots are displayed on the screen can be changed. The default
+terminal, \texttt{X11}, is used to send output to screen.
+
+By default, each time a new plot is generated, if the previous plot is still
+open on the display, the X11 terminal will replace it with the new one, thus
+keeping only one plot window open at a time. This has the advantage that the
+desktop does not become flooded with plot windows.
+
+If this behaviour is not desired, old plots can be kept visible when plotting
+further graphs by using the the \texttt{X11\_multiwindow} terminal: \index{X11
+terminal}\index{multiple windows}
+
+\begin{verbatim} 
+set terminal X11_singlewindow
+plot sin(x)
+plot cos(x)  <-- first plot window disappears
+\end{verbatim}
+
+\noindent c.f.:
+
+\begin{verbatim} 
+set terminal X11_multiwindow
+plot sin(x)
+plot cos(x)  <-- first plot window remains
+\end{verbatim}
+
+As an additional option, the \texttt{X11\_persist} terminal keeps plot windows
+open after PyXPlot exits; the above two terminals close all plot windows upon
+exit.
+
+\index{set terminal command@\texttt{set terminal} command} As there are many
+changes to the options accepted by the \texttt{set terminal} command in
+comparison to those understood by gnuplot, the syntax of PyXPlot's command is
+given below, followed by a list of the recognised settings:
+
+\begin{verbatim} 
+set terminal { X11_singlewindow | X11_multiwindow | X11_persist |
+               postscript | eps | pdf | gif | png | jpg }
+             { colour | color | monochrome }
+             { portrait | landscape }
+             { invert | noinvert }
+             { transparent | solid }
+             { enlarge | noenlarge }
+\end{verbatim}
+
+\begin{longtable}{p{3cm}p{9cm}}
+\texttt{x11\_singlewindow} & Displays plots on the screen (in X11 windows, using ghostview). Each time a new plot is generated, it replaces the old one, preventing the desktop from becoming flooded with old plots.\footnote{The author is aware of a bug, that this terminal can occasionally go blank when a new plot is generated. This is a known bug in ghostview, and can be worked around by selecting File $\to$ Reload within the ghostview window.} \textbf{[default when running interactively; see below]}\\
+\end{longtable} % WHY IS THIS NECESSARY??
+\begin{longtable}{p{3cm}p{9cm}}
+\texttt{x11\_multiwindow} & As above, but each new plot appears in a new window, and the old plots remain visible. As many plots as may be desired can be left on the desktop simultaneously.\\
+\texttt{x11\_persist} & As above, but plot windows remain open after PyXPlot closes.\\
+\texttt{postscript} & Sends output to a postscript file. The filename for this file should be set using \texttt{set output}. \textbf{[default when running non-interactively; see below]}\index{postscript output}\\
+\texttt{eps} & As above, but produces encapsulated postscript.\index{encapsulated postscript}\index{postscript!encapsulated}\\
+\texttt{pdf} & As above, but produces pdf output.\index{pdf output}\\
+\texttt{gif} & Sends output to a gif image file; as above, the filename should be set using \texttt{set output}.\index{gif output}\\
+\texttt{png} & As above, but produces a png image.\index{png output}\\
+\texttt{jpg} & As above, but produces a jpeg image.\index{jpeg output}\\
+\texttt{colour} & Allows datasets to be plotted in colour. Automatically they will be displayed in a series of different colours, or alternatively colours may be specified using the \texttt{with colour} plot modifier (see below). \textbf{[default]}\index{colour output}\\
+\texttt{color} & Equivalent to the above; provided for users of nationalities which can't spell. \smiley \\
+\texttt{monochrome} & Opposite to the above; all datasets will be plotted in black.\index{monochrome output}\\
+\texttt{portrait} & Sets plots to be displayed in upright (normal) orientation. \textbf{[default]}\index{portrait orientation}\\
+\texttt{landscape} & Opposite of the above; produces side-ways plots. Not very useful when displayed on the screen, but you fit more on a sheet of paper that way around.\index{landscape orientation}\\
+\texttt{invert} & Modifier for the gif, png and jpg terminals; produces output with inverted colours.\footnote{This terminal setting is useful for producing plots to embed in talk slideshows, which often contain bright text on a dark background. It only works when producing bitmapped output, though a similar effect can be achieved in postscript using the \texttt{set textcolour} and \texttt{set axescolour} commands (see Section~\ref{set_colours}).}\index{colours!inverting}\\
+\texttt{noinvert} & Modifier for the gif, png and jpg terminals; opposite to the above. \textbf{[default]}\\
+\texttt{transparent} & Modifier for the gif and png terminals; produces output with a transparent background.\index{transparent terminal}\index{gif output!transparency}\index{png output!transparency}\\
+\texttt{solid} & Modifier for the gif and png terminals; opposite to the above. \textbf{[default]}\\
+\texttt{enlarge} & Enlarge or shrink contents to fit the current paper
+size.\index{enlarging output}\\
+\texttt{noenlarge} & Do not enlarge output; opposite to the above. \textbf{[default]}\\
+\end{longtable}
+\label{terminals}
+
+The default terminal is normally \texttt{x11\_singlewindow}, matching
+approximately the behaviour of gnuplot. However, there is an exception to this.
+When PyXPlot is used non-interactively -- i.e. one or more command scripts are
+specified on the command line, and PyXPlot exits as soon as it finishes
+executing them -- the \texttt{x11\_singlewindow} is not a very sensible
+terminal to use. Any plot window would close as soon as PyXPlot exited. The
+default terminal in this case changes to \texttt{postscript}.
+
+One exception to this is when the special `--' filename is specified in a list
+of command scripts on the command line, to produce an interactive terminal
+between running a series of scripts. In this case, PyXPlot detects that the
+session will be interactive, and defaults to the usual
+\texttt{x11\_singlewindow} terminal.
+
+An additional exception is on machines where the \texttt{DISPLAY} environment
+variable\index{display environment variable@\texttt{DISPLAY} environment
+variable} is not set. In this case, PyXPlot detects that it has access to no
+X-terminal on which to display plots, and defaults to the \texttt{postscript}
+terminal.
+
+The \texttt{gif}, \texttt{png} and \texttt{jpg} terminals result in some loss
+of quality, since the plot has to be sampled into a bitmapped graphic format.
+By default, this sampling is performed at 300 dpi, though this may be changed
+using the command \texttt{set dpi <value>}. Alternatively, it may be changed
+using the \texttt{DPI} option in the \texttt{settings} section of a
+configuration file (see Section~\ref{configuration}).\index{set dpi
+command@\texttt{set dpi} command}\index{resolution of bitmap
+output}\index{image resolution}
+
+\section{Paper Sizes}
+
+By default, when the postscript terminal produces printable, i.e. not
+encapsulated, output, the paper size for this output is read from your system
+locale settings. It may be changed, however, with the \texttt{set
+papersize}\index{set papersize command@\texttt{set papersize} command} command,
+which may be followed either by the name of a recognised paper size, or by the
+dimensions of a user-defined size, specified as a \texttt{height},
+\texttt{width} pair, both being measured in millimetres. For example:
+
+\begin{verbatim}
+set papersize a4
+set papersize 100,100
+\end{verbatim}
+
+A list of recognised paper size names is given in Figure~\ref{paper_sizes}.
+
+\begin{figure}
+\tiny \center
+\begin{tabular}{|rrr|rrr|}
+\hline
+\textbf{Name} & \textbf{$h$/mm} & \textbf{$w$/mm} & \textbf{Name} & \textbf{$h$/mm} & \textbf{$w$/mm} \\
+\hline
+                       2a0 &   1681 &   1189 &           medium &    584 &    457 \\
+                       4a0 &   2378 &   1681 &          monarch &    267 &    184 \\
+                        a0 &   1189 &    840 &             post &    489 &    394 \\
+                        a1 &    840 &    594 &        quad\_demy &   1143 &   889 \\
+                       a10 &     37 &     26 &           quarto &    254 &    203 \\
+                        a2 &    594 &    420 &            royal &    635 &    508 \\
+                        a3 &    420 &    297 &        statement &    216 &    140 \\
+                        a4 &    297 &    210 &       swedish\_d0 &   1542 &   1090 \\
+                        a5 &    210 &    148 &       swedish\_d1 &   1090 &    771 \\
+                        a6 &    148 &    105 &      swedish\_d10 &     48 &     34 \\
+                        a7 &    105 &     74 &       swedish\_d2 &    771 &    545 \\
+                        a8 &     74 &     52 &       swedish\_d3 &    545 &    385 \\
+                        a9 &     52 &     37 &       swedish\_d4 &    385 &    272 \\
+                        b0 &   1414 &    999 &       swedish\_d5 &    272 &    192 \\
+                        b1 &    999 &    707 &       swedish\_d6 &    192 &    136 \\
+                       b10 &     44 &     31 &       swedish\_d7 &    136 &     96 \\
+                        b2 &    707 &    499 &       swedish\_d8 &     96 &     68 \\
+                        b3 &    499 &    353 &       swedish\_d9 &     68 &     48 \\
+                        b4 &    353 &    249 &       swedish\_e0 &   1241 &    878 \\
+                        b5 &    249 &    176 &       swedish\_e1 &    878 &    620 \\
+                        b6 &    176 &    124 &      swedish\_e10 &     38 &     27 \\
+                        b7 &    124 &     88 &       swedish\_e2 &    620 &    439 \\
+                        b8 &     88 &     62 &       swedish\_e3 &    439 &    310 \\
+                        b9 &     62 &     44 &       swedish\_e4 &    310 &    219 \\
+                        c0 &   1296 &    917 &       swedish\_e5 &    219 &    155 \\
+                        c1 &    917 &    648 &       swedish\_e6 &    155 &    109 \\
+                       c10 &     40 &     28 &       swedish\_e7 &    109 &     77 \\
+                        c2 &    648 &    458 &       swedish\_e8 &     77 &     54 \\
+                        c3 &    458 &    324 &       swedish\_e9 &     54 &     38 \\
+                        c4 &    324 &    229 &       swedish\_f0 &   1476 &   1044 \\
+                        c5 &    229 &    162 &       swedish\_f1 &   1044 &    738 \\
+                        c6 &    162 &    114 &      swedish\_f10 &     46 &     32 \\
+                        c7 &    114 &     81 &       swedish\_f2 &    738 &    522 \\
+                        c8 &     81 &     57 &       swedish\_f3 &    522 &    369 \\
+                        c9 &     57 &     40 &       swedish\_f4 &    369 &    261 \\
+                     crown &    508 &    381 &       swedish\_f5 &    261 &    184 \\
+                      demy &    572 &    445 &       swedish\_f6 &    184 &    130 \\
+               double\_demy &    889 &    597 &       swedish\_f7 &    130 &     92 \\
+                  elephant &    711 &    584 &       swedish\_f8 &     92 &     65 \\
+               envelope\_dl &    110 &    220 &       swedish\_f9 &     65 &     46 \\
+                 executive &    267 &    184 &       swedish\_g0 &   1354 &    957 \\
+                  foolscap &    330 &    203 &       swedish\_g1 &    957 &    677 \\
+         government\_letter &    267 &    203 &      swedish\_g10 &     42 &     29 \\
+international\_businesscard &     85 &     53 &       swedish\_g2 &    677 &    478 \\
+               japanese\_b0 &   1435 &   1015 &       swedish\_g3 &    478 &    338 \\
+               japanese\_b1 &   1015 &    717 &       swedish\_g4 &    338 &    239 \\
+              japanese\_b10 &     44 &     31 &       swedish\_g5 &    239 &    169 \\
+               japanese\_b2 &    717 &    507 &       swedish\_g6 &    169 &    119 \\
+               japanese\_b3 &    507 &    358 &       swedish\_g7 &    119 &     84 \\
+               japanese\_b4 &    358 &    253 &       swedish\_g8 &     84 &     59 \\
+               japanese\_b5 &    253 &    179 &       swedish\_g9 &     59 &     42 \\
+               japanese\_b6 &    179 &    126 &       swedish\_h0 &   1610 &   1138 \\
+               japanese\_b7 &    126 &     89 &       swedish\_h1 &   1138 &    805 \\
+               japanese\_b8 &     89 &     63 &      swedish\_h10 &     50 &     35 \\
+               japanese\_b9 &     63 &     44 &       swedish\_h2 &    805 &    569 \\
+            japanese\_kiku4 &    306 &    227 &       swedish\_h3 &    569 &    402 \\
+            japanese\_kiku5 &    227 &    151 &       swedish\_h4 &    402 &    284 \\
+         japanese\_shiroku4 &    379 &    264 &       swedish\_h5 &    284 &    201 \\
+         japanese\_shiroku5 &    262 &    189 &       swedish\_h6 &    201 &    142 \\
+         japanese\_shiroku6 &    188 &    127 &       swedish\_h7 &    142 &    100 \\
+                large\_post &    533 &    419 &       swedish\_h8 &    100 &     71 \\
+                    ledger &    432 &    279 &       swedish\_h9 &     71 &     50 \\
+                     legal &    356 &    216 &          tabloid &    432 &    279 \\
+                    letter &    279 &    216 &  us\_businesscard &     89 &     51 \\
+\hline
+\end{tabular}
+\caption{A list of all of the named paper sizes recognised by the \texttt{set papersize}\index{set
+papersize command@\texttt{set papersize} command} command, with their heights, $h$, and widths, $w$, measured in millimetres.}
+\label{paper_sizes}
+\end{figure}
 
 \section{Script Watching: pyxplot\_watch}
 

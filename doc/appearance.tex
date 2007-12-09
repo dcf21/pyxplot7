@@ -21,580 +21,9 @@
 
 % LaTeX source for the PyXPlot Users' Guide
 
-\chapter{Controlling the Appearance of your Plots}
+\chapter{Labelling Plots and Producing Galleries}
 
-\section{Formatting and Terminals}
-\label{set_terminal2}
-
-In this section I shall outline the new and modified commands for controlling
-the graphic output format of PyXPlot.
-
-The widths of plots may be set be means of two commands -- \texttt{set
-size}\index{set size command@\texttt{set size} command} and \texttt{set
-width}\index{set width command@\texttt{set width} command}. Both are
-equivalent, and should be followed by the desired width measured in
-centimetres, for example:
-
-\begin{verbatim}
-set width 20
-\end{verbatim}
-
-The \texttt{set size} command can also be used to set the aspect ratio of plots
-by following it with the keyword \texttt{ratio}\index{set size ratio
-command@\texttt{set size ratio} command}. The number which follows should be
-the desired ratio of height to width. The following, for example would produce
-plots three times as high as they are wide:
-
-\begin{verbatim}
-set size ratio 3.0
-\end{verbatim}
-
-The command \texttt{set size noratio} returns to PyXPlot's default aspect ratio
-of the golden ratio, i.e. $\left((1+\sqrt{5})/2\right)^{-1}$, which matches
-that of a sheet of A4 paper\footnote{Of less practical significance, it has
-been in use since the time of the Pythagoreans, and is seen repeatedly in the
-architecture of the Parthenon.}.  The special command \texttt{set size
-square}\index{set size square command@\texttt{set size square} command} sets
-the aspect ratio to unity.
-
-If the \texttt{enlarge} modifier is used with the {\tt set terminal} command
-then the whole plot is enlarged or, in the case of large plots, shrunk to the
-current paper size (minus a small margin).  The aspect ratio of the plot is
-preserved.  This is perhaps most useful when preparing a plot to send to a
-printer with the postscript terminal.
-
-In Section~\ref{directing_output} I described how the \texttt{set terminal}
-command\index{set terminal command@\texttt{set terminal} command} can be used
-to produce plots in various graphic formats. In addition, I here describe how
-the way in which plots are displayed on the screen can be changed. The default
-terminal, \texttt{X11}, is used to send output to screen.
-
-By default, each time a new plot is generated, if the previous plot is still
-open on the display, the X11 terminal will replace it with the new one, thus
-keeping only one plot window open at a time. This has the advantage that the
-desktop does not become flooded with plot windows.
-
-If this behaviour is not desired, old plots can be kept visible when plotting
-further graphs by using the the \texttt{X11\_multiwindow} terminal: \index{X11
-terminal}\index{multiple windows}
-
-\begin{verbatim} 
-set terminal X11_singlewindow
-plot sin(x)
-plot cos(x)  <-- first plot window disappears
-\end{verbatim}
-
-\noindent c.f.:
-
-\begin{verbatim} 
-set terminal X11_multiwindow
-plot sin(x)
-plot cos(x)  <-- first plot window remains
-\end{verbatim}
-
-As an additional option, the \texttt{X11\_persist} terminal keeps plot windows
-open after PyXPlot exits; the above two terminals close all plot windows upon
-exit.
-
-\index{set terminal command@\texttt{set terminal} command} As there are many
-changes to the options accepted by the \texttt{set terminal} command in
-comparison to those understood by gnuplot, the syntax of PyXPlot's command is
-given below, followed by a list of the recognised settings:
-
-\begin{verbatim} 
-set terminal { X11_singlewindow | X11_multiwindow | X11_persist |
-               postscript | eps | pdf | gif | png | jpg }
-             { colour | color | monochrome }
-             { portrait | landscape }
-             { invert | noinvert }
-             { transparent | solid }
-             { enlarge | noenlarge }
-\end{verbatim}
-
-\begin{longtable}{p{3cm}p{9cm}}
-\texttt{x11\_singlewindow} & Displays plots on the screen (in X11 windows, using ghostview). Each time a new plot is generated, it replaces the old one, preventing the desktop from becoming flooded with old plots.\footnote{The author is aware of a bug, that this terminal can occasionally go blank when a new plot is generated. This is a known bug in ghostview, and can be worked around by selecting File $\to$ Reload within the ghostview window.} \textbf{[default when running interactively; see below]}\\
-\end{longtable} % WHY IS THIS NECESSARY??
-\begin{longtable}{p{3cm}p{9cm}}
-\texttt{x11\_multiwindow} & As above, but each new plot appears in a new window, and the old plots remain visible. As many plots as may be desired can be left on the desktop simultaneously.\\
-\texttt{x11\_persist} & As above, but plot windows remain open after PyXPlot closes.\\
-\texttt{postscript} & Sends output to a postscript file. The filename for this file should be set using \texttt{set output}. \textbf{[default when running non-interactively; see below]}\index{postscript output}\\
-\texttt{eps} & As above, but produces encapsulated postscript.\index{encapsulated postscript}\index{postscript!encapsulated}\\
-\texttt{pdf} & As above, but produces pdf output.\index{pdf output}\\
-\texttt{gif} & Sends output to a gif image file; as above, the filename should be set using \texttt{set output}.\index{gif output}\\
-\texttt{png} & As above, but produces a png image.\index{png output}\\
-\texttt{jpg} & As above, but produces a jpeg image.\index{jpeg output}\\
-\texttt{colour} & Allows datasets to be plotted in colour. Automatically they will be displayed in a series of different colours, or alternatively colours may be specified using the \texttt{with colour} plot modifier (see below). \textbf{[default]}\index{colour output}\\
-\texttt{color} & Equivalent to the above; provided for users of nationalities which can't spell. \smiley \\
-\texttt{monochrome} & Opposite to the above; all datasets will be plotted in black.\index{monochrome output}\\
-\texttt{portrait} & Sets plots to be displayed in upright (normal) orientation. \textbf{[default]}\index{portrait orientation}\\
-\texttt{landscape} & Opposite of the above; produces side-ways plots. Not very useful when displayed on the screen, but you fit more on a sheet of paper that way around.\index{landscape orientation}\\
-\texttt{invert} & Modifier for the gif, png and jpg terminals; produces output with inverted colours.\footnote{This terminal setting is useful for producing plots to embed in talk slideshows, which often contain bright text on a dark background. It only works when producing bitmapped output, though a similar effect can be achieved in postscript using the \texttt{set textcolour} and \texttt{set axescolour} commands (see Section~\ref{set_colours}).}\index{colours!inverting}\\
-\texttt{noinvert} & Modifier for the gif, png and jpg terminals; opposite to the above. \textbf{[default]}\\
-\texttt{transparent} & Modifier for the gif and png terminals; produces output with a transparent background.\index{transparent terminal}\index{gif output!transparency}\index{png output!transparency}\\
-\texttt{solid} & Modifier for the gif and png terminals; opposite to the above. \textbf{[default]}\\
-\texttt{enlarge} & Enlarge or shrink contents to fit the current paper
-size.\index{enlarging output}\\
-\texttt{noenlarge} & Do not enlarge output; opposite to the above. \textbf{[default]}\\
-\end{longtable}
-\label{terminals}
-
-The default terminal is normally \texttt{x11\_singlewindow}, matching
-approximately the behaviour of gnuplot. However, there is an exception to this.
-When PyXPlot is used non-interactively -- i.e. one or more command scripts are
-specified on the command line, and PyXPlot exits as soon as it finishes
-executing them -- the \texttt{x11\_singlewindow} is not a very sensible
-terminal to use. Any plot window would close as soon as PyXPlot exited. The
-default terminal in this case changes to \texttt{postscript}.
-
-One exception to this is when the special `--' filename is specified in a list
-of command scripts on the command line, to produce an interactive terminal
-between running a series of scripts. In this case, PyXPlot detects that the
-session will be interactive, and defaults to the usual
-\texttt{x11\_singlewindow} terminal.
-
-An additional exception is on machines where the \texttt{DISPLAY} environment
-variable\index{display environment variable@\texttt{DISPLAY} environment
-variable} is not set. In this case, PyXPlot detects that it has access to no
-X-terminal on which to display plots, and defaults to the \texttt{postscript}
-terminal.
-
-The \texttt{gif}, \texttt{png} and \texttt{jpg} terminals result in some loss
-of quality, since the plot has to be sampled into a bitmapped graphic format.
-By default, this sampling is performed at 300 dpi, though this may be changed
-using the command \texttt{set dpi <value>}. Alternatively, it may be changed
-using the \texttt{DPI} option in the \texttt{settings} section of a
-configuration file (see Section~\ref{configuration}).\index{set dpi
-command@\texttt{set dpi} command}\index{resolution of bitmap
-output}\index{image resolution}
-
-\subsection{Paper Sizes}
-
-By default, when the postscript terminal produces printable, i.e. not
-encapsulated, output, the paper size for this output is read from your system
-locale settings. It may be changed, however, with the \texttt{set
-papersize}\index{set papersize command@\texttt{set papersize} command} command,
-which may be followed either by the name of a recognised paper size, or by the
-dimensions of a user-defined size, specified as a \texttt{height},
-\texttt{width} pair, both being measured in millimetres. For example:
-
-\begin{verbatim}
-set papersize a4
-set papersize 100,100
-\end{verbatim}
-
-A list of recognised paper size names is given in Figure~\ref{paper_sizes}.
-
-\begin{figure}
-\tiny \center
-\begin{tabular}{|rrr|rrr|}
-\hline
-\textbf{Name} & \textbf{$h$/mm} & \textbf{$w$/mm} & \textbf{Name} & \textbf{$h$/mm} & \textbf{$w$/mm} \\
-\hline
-                       2a0 &   1681 &   1189 &           medium &    584 &    457 \\
-                       4a0 &   2378 &   1681 &          monarch &    267 &    184 \\
-                        a0 &   1189 &    840 &             post &    489 &    394 \\
-                        a1 &    840 &    594 &        quad\_demy &   1143 &   889 \\
-                       a10 &     37 &     26 &           quarto &    254 &    203 \\
-                        a2 &    594 &    420 &            royal &    635 &    508 \\
-                        a3 &    420 &    297 &        statement &    216 &    140 \\
-                        a4 &    297 &    210 &       swedish\_d0 &   1542 &   1090 \\
-                        a5 &    210 &    148 &       swedish\_d1 &   1090 &    771 \\
-                        a6 &    148 &    105 &      swedish\_d10 &     48 &     34 \\
-                        a7 &    105 &     74 &       swedish\_d2 &    771 &    545 \\
-                        a8 &     74 &     52 &       swedish\_d3 &    545 &    385 \\
-                        a9 &     52 &     37 &       swedish\_d4 &    385 &    272 \\
-                        b0 &   1414 &    999 &       swedish\_d5 &    272 &    192 \\
-                        b1 &    999 &    707 &       swedish\_d6 &    192 &    136 \\
-                       b10 &     44 &     31 &       swedish\_d7 &    136 &     96 \\
-                        b2 &    707 &    499 &       swedish\_d8 &     96 &     68 \\
-                        b3 &    499 &    353 &       swedish\_d9 &     68 &     48 \\
-                        b4 &    353 &    249 &       swedish\_e0 &   1241 &    878 \\
-                        b5 &    249 &    176 &       swedish\_e1 &    878 &    620 \\
-                        b6 &    176 &    124 &      swedish\_e10 &     38 &     27 \\
-                        b7 &    124 &     88 &       swedish\_e2 &    620 &    439 \\
-                        b8 &     88 &     62 &       swedish\_e3 &    439 &    310 \\
-                        b9 &     62 &     44 &       swedish\_e4 &    310 &    219 \\
-                        c0 &   1296 &    917 &       swedish\_e5 &    219 &    155 \\
-                        c1 &    917 &    648 &       swedish\_e6 &    155 &    109 \\
-                       c10 &     40 &     28 &       swedish\_e7 &    109 &     77 \\
-                        c2 &    648 &    458 &       swedish\_e8 &     77 &     54 \\
-                        c3 &    458 &    324 &       swedish\_e9 &     54 &     38 \\
-                        c4 &    324 &    229 &       swedish\_f0 &   1476 &   1044 \\
-                        c5 &    229 &    162 &       swedish\_f1 &   1044 &    738 \\
-                        c6 &    162 &    114 &      swedish\_f10 &     46 &     32 \\
-                        c7 &    114 &     81 &       swedish\_f2 &    738 &    522 \\
-                        c8 &     81 &     57 &       swedish\_f3 &    522 &    369 \\
-                        c9 &     57 &     40 &       swedish\_f4 &    369 &    261 \\
-                     crown &    508 &    381 &       swedish\_f5 &    261 &    184 \\
-                      demy &    572 &    445 &       swedish\_f6 &    184 &    130 \\
-               double\_demy &    889 &    597 &       swedish\_f7 &    130 &     92 \\
-                  elephant &    711 &    584 &       swedish\_f8 &     92 &     65 \\
-               envelope\_dl &    110 &    220 &       swedish\_f9 &     65 &     46 \\
-                 executive &    267 &    184 &       swedish\_g0 &   1354 &    957 \\
-                  foolscap &    330 &    203 &       swedish\_g1 &    957 &    677 \\
-         government\_letter &    267 &    203 &      swedish\_g10 &     42 &     29 \\
-international\_businesscard &     85 &     53 &       swedish\_g2 &    677 &    478 \\
-               japanese\_b0 &   1435 &   1015 &       swedish\_g3 &    478 &    338 \\
-               japanese\_b1 &   1015 &    717 &       swedish\_g4 &    338 &    239 \\
-              japanese\_b10 &     44 &     31 &       swedish\_g5 &    239 &    169 \\
-               japanese\_b2 &    717 &    507 &       swedish\_g6 &    169 &    119 \\
-               japanese\_b3 &    507 &    358 &       swedish\_g7 &    119 &     84 \\
-               japanese\_b4 &    358 &    253 &       swedish\_g8 &     84 &     59 \\
-               japanese\_b5 &    253 &    179 &       swedish\_g9 &     59 &     42 \\
-               japanese\_b6 &    179 &    126 &       swedish\_h0 &   1610 &   1138 \\
-               japanese\_b7 &    126 &     89 &       swedish\_h1 &   1138 &    805 \\
-               japanese\_b8 &     89 &     63 &      swedish\_h10 &     50 &     35 \\
-               japanese\_b9 &     63 &     44 &       swedish\_h2 &    805 &    569 \\
-            japanese\_kiku4 &    306 &    227 &       swedish\_h3 &    569 &    402 \\
-            japanese\_kiku5 &    227 &    151 &       swedish\_h4 &    402 &    284 \\
-         japanese\_shiroku4 &    379 &    264 &       swedish\_h5 &    284 &    201 \\
-         japanese\_shiroku5 &    262 &    189 &       swedish\_h6 &    201 &    142 \\
-         japanese\_shiroku6 &    188 &    127 &       swedish\_h7 &    142 &    100 \\
-                large\_post &    533 &    419 &       swedish\_h8 &    100 &     71 \\
-                    ledger &    432 &    279 &       swedish\_h9 &     71 &     50 \\
-                     legal &    356 &    216 &          tabloid &    432 &    279 \\
-                    letter &    279 &    216 &  us\_businesscard &     89 &     51 \\
-\hline
-\end{tabular}
-\caption{A list of all of the named paper sizes recognised by the \texttt{set papersize}\index{set
-papersize command@\texttt{set papersize} command} command, with their heights, $h$, and widths, $w$, measured in millimetres.}
-\label{paper_sizes}
-\end{figure}
-\section{Plotting}
-
-In this section I outline some of the extensions of the \texttt{plot} command,
-to give greater flexibility in the appearance of graphs.
-
-TODO: The top half of this really needs breaking off and sticking in "plotting",
-but at the moment it's a continuous narative, so I'm not sure how to achieve
-this.
-
-\subsection{Configuring Axes}
-\label{axis_extensions}\label{ranges_multiaxes}\label{multiple_axes}
-
-By default, plots have only one $x$-axis and one $y$-axis. Further parallel
-axes can be added and configured via statements such as:\index{axes
-modifier@\texttt{axes} modifier}\index{set axis command@\texttt{set axis}
-command}
-
-\begin{verbatim}
-set x3label 'foo'
-plot sin(x) axes x3y1
-set axis x3
-\end{verbatim}
-
-\noindent In the top statement, a further $x$ axis, called $x3$, is implicitly
-created by giving it a label. In the next, the \texttt{axes} modifier is used
-to tell the \texttt{plot} command to plot data against the $x3$-axis, which
-also implicitly created such an axis if it doesn't already exist. In the third,
-an $x3$-axis is explicitly created.
-
-Unlike gnuplot, which allowed only a maximum of two parallel axes to be added
-to plots, PyXPlot allows an unlimited number of axes to be used. Odd-numbered
-$x$-axes appear below the plot, and even numbered $x$-axes above it; a similar
-rule applies for $y$-axes, to the left and to the right. This is illustrated in
-Figure~\ref{fig:ex_multiaxes}.
-
-\begin{figure}
-\begin{center}
-\includegraphics{examples/eps/ex_multiaxes.eps}
-\end{center}
-\caption{A plot demonstating the use of large numbers of axes. Odd-numbered
-$x$-axes appear below the plot, and even numbered $x$-axes above it; a similar
-rule applies for $y$-axes, to the left and to the right.}
-\label{fig:ex_multiaxes}
-\end{figure}
-
-As discussed in the previous chapter, the ranges of axes can be set either
-using the \texttt{set xrange} command\index{set xrange command@\texttt{set
-xrange} command}, or within the \texttt{plot} command. The following two
-statements would set equivalent ranges for the $x3$-axis:
-
-\begin{verbatim}
-set x3range [-2:2]
-plot [:][:][:][:][-2:2] sin(x) axes x3y1
-\end{verbatim}
-
-\noindent As usual, the first two ranges specified in the \texttt{plot} command
-apply to the $x$- and $y$-axes. The next pair apply to the $x2$- and $y2$-axes,
-and so forth.
-
-\index{axes!removal}\index{removing axes}\index{hidden
-axes}\label{axis_removal} Having made axes with the above commands, they may
-subsequently be removed using the \texttt{unset axis} command as follows:
-
-\begin{verbatim}
-unset axis x3
-unset axis x3x5y3 y7
-\end{verbatim}
-
-\noindent The top statement, for example, would remove axis $x3$. The command
-\texttt{unset axis} on its own, with no axes specified, returns all axes to
-their default configuration.  The special case of \texttt{unset axis x1} does
-not remove the first $x$-axis -- it cannot be removed -- but instead returns it
-to its default configuration.
-
-It should be noted, that if the following two commands are typed in succession,
-the second may not entirely negate the first:
-
-\begin{verbatim}
-set x3label 'foo'
-unset x3label 'foo'
-\end{verbatim}
-
-\noindent The first may have implicitly created an $x3$-axis, which would need
-to be removed with the \texttt{unset axis x3} command.
-
-A subtly different task is that of removing labels from axes, or setting axes
-not to display. To achieve this, a number of special axis labels are used.
-Labelling an axis ``\texttt{nolabels}''\index{nolabels
-keyword@\texttt{nolabels} keyword} has the effect that no title or numerical
-labels are placed upon it. Labelling it\label{nolabelstics}
-``\texttt{nolabelstics}''\index{nolabelstics keyword@\texttt{nolabelstics}
-keyword} is stronger still; this removes all tick marks from it as well
-(similar in effect to \texttt{set noxtics} in gnuplot). Finally, labelling it
-``\texttt{invisible}''\index{invisible keyword@\texttt{invisible} keyword}
-makes an axis completely invisible.
-
-Labels may be placed on such axes, by following the magic keywords above with a
-colon and the desired title, for example:
-
-\begin{verbatim}
-set xlabel 'nolabels:Time'
-\end{verbatim}
-
-\noindent would produce an $x$-axis with no numeric labels, but a label of
-`Time'.
-
-In the unlikely event of wanting
-to label a normal axis with one of these magic words\index{axes!reserved
-labels}\index{magic axis labels}, this may be achieved by prefixing the magic
-word with a space. There is one further magic axis label, \texttt{linkaxis},
-which will be described in Section~\ref{linked_axes}.
-
-The ticks of axes can be configured to point either inward, towards the plot,
-as is the default, or outward towards the axis labels, or in both directions.
-This is achieved using the \texttt{set xticdir} command, for example:
-
-\begin{verbatim}
-set xticdir inward
-set y2ticdir outward
-set x2ticdir both
-\end{verbatim}
-
-The position of ticks along each axis can be configured with the \texttt{set
-xtics}\index{set xtics command@\texttt{set xtics} command} command. The
-appearance of ticks along any axis can be turned off with the \texttt{set
-noxtics}\index{set noxtics command@\texttt{set noxtics} command} command. The
-syntax for these is given below:
-
-\begin{verbatim}
-set xtics { axis | border | inward | outward | both }
-          {  autofreq
-           | <increment>
-           | <minimum>, <increment> { , <maximum> }
-           | (     {"label"} <position>
-               { , {"label"} <position> } .... )
-          }
-set noxtics
-show xtics
-\end{verbatim}
-
-The keywords \texttt{inward}, \texttt{outward} and \texttt{both} alter the
-directions of the ticks, and have the same effect as in the \texttt{set
-xticdir} command. The keyword \texttt{axis} is an alias for \texttt{inward},
-and \texttt{border} an alias for \texttt{outward}, both provided for gnuplot
-compatibility. If the keyword \texttt{autofreq} is given, the automatic
-placement of ticks on the axis is restored.
-
-If \texttt{<minimum>, <increment>, <maximum>} are specified, then ticks are
-placed at evenly spaced intervals between the specified limits. In the case of
-logarithmic axes, \texttt{<increment>} is applied multiplicatively.
-
-Alternatively, the final form allows ticks to be placed on an axis
-individually, and each given its own textual label.
-
-The following pair of examples would both place tick marks at $x=$2, 3, 4, 5.
-In the second example, they would be labelled ``a'', ``b'', ``c'' and ``d'':
-
-\begin{verbatim}
-set xtics 2, 1, 5
-
-set x2tics ("a" 2, "b" 3, "c" 4, "d" 5)
-\end{verbatim}
-
-The following example would place tick marks at intervals of two units along
-the $x3$-axis:
-
-\begin{verbatim}
-set x3tics 2
-\end{verbatim}
-
-The following example would restore the automatic placement of ticks along the
-$x4$-axis, placing those ticks facing outwards from the graph:
-
-\begin{verbatim}
-set x4tics border autofreq
-\end{verbatim}
-
-\begin{figure}
-\begin{center}
-\includegraphics{examples/eps/ex_axistics.eps}
-\end{center}
-\caption{A plot demonstrating the use of the {\tt set xtics} command. The commands used to create the axes in this plot are as given in the text.}
-\label{fig:ex_axistics}
-\end{figure}
-
-
-All of the examples above are illustrated in Figure~\ref{fig:ex_axistics}.
-Minor tick marks can be placed on axes with the \texttt{set mxtics} command,
-which has the same syntax as above.
-
-\subsection{Keys and Legends}
-
-By default, plots are displayed with a legend in their top-right corners. The
-textual description of each dataset is drawn by default from the command used
-to plot it. Alternatively, the user may specify his own description for each
-dataset by following the \texttt{plot} command with the \texttt{title}
-modifier\index{title modifier@\texttt{title} modifier}, as follows:
-
-\begin{verbatim}
-plot sin(x) title 'A sine wave'
-plot cos(x) title ''
-\end{verbatim}
-
-In the lower case, a blank title is specified, in which case, PyXPlot makes no
-entry for this dataset in the legend. This is useful if it is desired to place
-some but not all datasets into the legend of a plot.  Alternatively, the
-production of the legend can be completely turned off for all datasets, by the
-command \texttt{set nokey}. The opposite effect can be achieved by the
-\texttt{set key}\index{set key@\texttt{set key} command} command.
-
-This latter command can also be used to dictate where on the plot the legend
-should be placed, using a syntax along the lines of:
-
-\begin{verbatim}
-set key top right
-\end{verbatim}
-
-The following recognised positioning keywords are self-explanatory:
-\texttt{top}, \texttt{bottom}, \texttt{left}, \texttt{right}, \texttt{xcentre}
-and \texttt{ycentre}. The word \texttt{outside} places the key outside the
-plot, on its right side. The word \texttt{below} places the legend below the
-plot.
-
-In addition, two positional offset coordinates may be specified after such
-keywords -- the first value is assumed to be an $x$-offset, and the second a
-$y$-offset, in units approximately equal to the size of the plot. For example:
-
-\begin{verbatim}
-set key bottom left 0.0 -0.5
-\end{verbatim}
-
-\noindent would display a key below the bottom left corner of the graph.
-
-By default, entries in the key are placed in a single vertical list. They can
-instead be arranged into a number of columns by means of the \texttt{set
-keycolumns} command.\index{set keycolumns command@\texttt{set keycolumns}
-command}. This should be followed by the integer number of desired columns, for
-example:
-
-\begin{verbatim}
-set keycolumns 2
-\end{verbatim}
-
-An example of a plot with a two-column legend is given in Figure~\ref{fig:ex_legends}.
-
-\begin{figure}
-\begin{center}
-\includegraphics{examples/eps/ex_legends.eps}
-\end{center}
-\caption{An example of a plot with a two-column legend, positioned below the plot using {\tt set key below}.}
-\label{fig:ex_legends}
-\end{figure}
-
-\subsection{The \texttt{linestyle} Keyword}
-
-At times, the string of style keywords following the \texttt{with} modifier in
-\texttt{plot} commands can grow rather unwieldily long. For clarity, frequently
-used plot styles can be stored as ``linestyles''; this is true of styles
-involving points as well as lines. The syntax for setting a linestyle is:
-
-\begin{verbatim}
-set linestyle 2 points pointtype 3
-\end{verbatim}
-
-\noindent where the ``2'' is the identification number of the linestyle. In a
-subsequent \texttt{plot} statement, this linestyle can be recalled as follows:
-
-\begin{verbatim}
-plot sin(x) with linestyle 2
-\end{verbatim}
-
-\subsection{Colour Plotting}
-
-\index{colours!setting for datasets} In the \texttt{with}
-clause of the plot command, the modifier \texttt{colour}, (abbrev.
-`\texttt{c}'), allows the colour of each dataset to be manually selected. It
-should be followed either by an integer, to set a colour from the present
-palette, or by a colour name. A list of valid colour names is given in
-Section~\ref{colour_names}. For example:
-
-\begin{verbatim}
-plot sin(x) with c 5
-plot sin(x) with colour blue
-\end{verbatim}
-
-\noindent The \texttt{colour} modifier can also be used when defining linestyles.
-
-\index{colours!setting the palette}\index{set palette command@\texttt{set
-palette} command} PyXPlot has a palette of colours which it assigns
-sequentially to datasets when colours are not manually assigned. This is also
-the palette to which integers passed to \texttt{set colour} refer -- the `5'
-above, for example. It may be set using the \texttt{set palette} command, which
-differs in syntax from gnuplot. It should be followed by a comma-separated list
-of colours, for example:
-
-\begin{verbatim}
-set palette red,green,blue
-\end{verbatim}
-
-Another way of setting the palette, in a configuration file, is described in
-Section~\ref{config_files}; a list of valid colour names is given in
-Section~\ref{colour_names}.
-
-\subsection{General Extensions Beyond Gnuplot}
-
-\begin{longtable}{p{3cm}lp{9cm}}
-
-
-
-datafile wildcards\index{globbing}\index{wildcards}\index{datafiles!globbing} & --- & PyXPlot allows the wildcards `*' and `?' to be used both in the filenames of datafiles following the \texttt{plot} command, and also when specifying command files on the command line and with the \texttt{load} command. For example, the following would plot all datafiles in the current directory with a `.dat' suffix, using the same plot options:
-\\ & &
-\begin{verbatim}
-plot '*.dat' with linewidth 2
-\end{verbatim}
-
-In the legend, full filenames are displayed, allowing the datafiles to be distinguished.
-\\ & &
-As in gnuplot, a blank filename passed to the plot command causes the last used datafile to be used again.
-\\
-
-backing up overwritten files\index{set backup command@\texttt{set backup}
-command}\index{overwriting files}\index{backup files}\label{filebackup} & ---
-& By default, when plotting to a file, if the output filename matches that of
-an existing file, that file is overwritten. This behaviour may be changed with
-the \texttt{set backup} command, which has syntax:
-\\ & &
-\begin{verbatim}
-set backup
-set nobackup
-\end{verbatim}
-\\ & &
-When this switch is turned on, pre-existing files will be renamed with a tilde at the end of their filenames, rather than being overwritten. \\
-
-\end{longtable}
-\section{Sundry Items (Arrows, Text Labels, and More)}
+\section{Adding Arrows, Text Labels, and More}
 
 This section describes how to put arrows and text labels on plots; the syntax
 is similar to that used by gnuplot, but slightly changed. It is now possible,
@@ -787,6 +216,230 @@ axescolourcommand@\texttt{set axescolour} command}, which has a syntax similar
 to that above, and sets the colour of the graph's axes.
 \label{set_colours}
 
-TODO: There should be a section on advanced LaTeX trickery.
+\section{LaTeX and PyXPlot}
 
+\section{Multi-plotting}
+\label{multiplot}
+\index{multiplot}
+
+Gnuplot has a plotting mode called ``multiplot'' which allows many graphs to be
+plotted together, and display side-by-side. The basic syntax of this mode is
+reproduced in PyXPlot, but is hugely extended.
+
+The mode is entered by the command ``\texttt{set multiplot}''. This can be compared
+to taking a blank sheet of paper on which to place plots. Plots are then placed
+on that sheet of paper, as usual, with the \texttt{plot} command. The position
+of each plot is set using the \texttt{set origin} command, which takes a
+comma-separated $x,y$ coordinate pair, measured in centimetres. The following,
+for example, would plot a graph of $\sin(x)$ to the left of a plot of
+$\cos(x)$:\index{set origin command@\texttt{set origin} command}
+
+\begin{verbatim} 
+set multiplot
+plot sin(x)
+set origin 10,0
+plot cos(x)
+\end{verbatim}
+
+The multiplot page may subsequently be cleared with the \texttt{clear} command,
+and multiplot mode may be left using the ``\texttt{set nomultiplot}''
+command.\index{clear command@\texttt{clear} command}
+
+\subsection{Deleting, Moving and Changing Plots}
+
+Each time a plot is placed on the multiplot page in PyXPlot, it is allocated a
+reference number, which is output to the terminal. Reference numbers count up
+from zero each time the multiplot page is cleared. A number of commands exist
+for modifying plots after they have been placed on the page, selecting them by
+making reference to their reference numbers.
+
+Plots may be removed from the page with the \texttt{delete} command, and
+restored with the \texttt{undelete} command:\index{delete
+command@\texttt{delete} command}\index{undelete command@\texttt{undelete}
+command}
+
+\begin{verbatim} 
+delete <number>
+undelete <number>
+\end{verbatim}
+
+The reference numbers of deleted plots are not reused until the page is
+cleared, as they may always be restored with the \texttt{undelete} command;
+plots which have been deleted simply do not appear.
+
+Plots may also be moved with the \texttt{move} command. For example, the
+following would move plot 23 to position (8,8) measured in centimetres:
+
+\begin{verbatim} 
+move 23 to 8,8
+\end{verbatim}
+
+In multiplot mode, the \texttt{replot} command can be used to modify the last
+plot added to the page. For example, the following would change the title of
+the latest plot to ``foo'', and add a plot of $\cos(x)$ to it:
+
+\begin{verbatim} 
+set title 'foo'
+replot cos(x)
+\end{verbatim}
+
+Additionally, it is possible to modify any plot on the page, by first selecting
+it with the \texttt{edit} command. Subsequently, the \texttt{replot} will act
+upon the selected plot. The following example would produce two plots, and then
+change the colour of the text on the first:
+
+\begin{verbatim} 
+set multiplot
+plot sin(x)
+set origin 10,0
+plot cos(x)
+edit 0        # Select the first plot ...
+set textcolour red
+replot        # ... and replot it.
+\end{verbatim}
+
+The \texttt{edit} command can also be used to view the settings which are
+applied to any plot on the multiplot page -- after executing ``edit 0'', the
+\texttt{show} command will show the settings applied to plot zero.
+
+When a new plot is added to the page, \texttt{replot} always switches to act
+upon this most recent plot.
+
+\index{refresh command@\texttt{refresh} command}\index{replotting}
+\index{replot command@\texttt{replot} command} The \texttt{refresh} command is
+rather similar to the \texttt{replot} command, but produces an exact copy of
+the latest display. This can be useful, for example, after changing the
+terminal type, to produce a second copy of a multiplot page in a different
+format. But the crucial difference between this command and \texttt{replot} is
+that it doesn't replot anything. Indeed, there could be only textual items and
+arrows on the present multiplot page, and no graphs \textit{to} replot.
+
+\subsection{Linked Axes}
+
+The axes of plots can be linked together, in such a way that they always share
+a common scale. This can be useful when placing plots next to one another,
+firstly, of course, if it is of intrinsic interest to ensure that they are on a
+common scale, but also because the two plots then do not both need their own
+axis labels, and space can be saved by one sharing the labels from the other.
+In PyXPlot, an axis which borrows its scale and labels from another is called a
+``linked axis''.
+
+Such axes are declared by setting the label of the linked axis to a magic
+string such as ``\texttt{linkaxis 0}''\label{linked_axes}\index{axes!reserved
+labels}\index{magic axis labels}. This magic label would set the axis to borrow
+its scale from an axis from plot zero. The general syntax is
+``\texttt{linkaxis} $n$ $m$'', where $n$ and $m$ are two integers, separated by
+a comma or whitespace. The first, $n$, indicates the plot from which to borrow
+an axis; the second, $m$, indicates whether to borrow the scale of axis $x1$,
+$x2$, $x3$, etc. By default, $m=1$. The linking will fail, and a warning
+result, if an attempt is made to link to an axis which doesn't exist.
+
+\subsection{Text Labels, Arrows and Images}
+
+\label{text_command}\index{text command@\texttt{text} command} In addition to
+placing plots on the multiplot page, text labels may also be inserted
+independently of any plots, using the \texttt{text} command. This has the
+following syntax:
+
+\begin{verbatim} 
+text 'This is some text' at x,y
+\end{verbatim}
+
+In this case, the string ``This is some text'' would be rendered at position
+$(x,y)$ on the multiplot. As with the \texttt{set label} command, a rotation
+angle may optionally be specified to rotate text labels through any given
+angle, measured in degrees counter-clockwise, for example:
+
+\begin{verbatim} 
+text 'This is some text' at x,y rotate r
+\end{verbatim}
+
+The commands \texttt{set textcolour}, \texttt{set
+texthalign} and \texttt{set textvalign}, which have already been described in
+the context in the \texttt{set label} command, can also be used to set the
+colour and alignment of text produced with the \texttt{text} command.\index{set
+textcolour command@\texttt{set textcolour} command}\index{set texthalign
+command@\texttt{set texthalign} command}\index{set textvalign
+command@\texttt{set textvalign} command}. A useful application of this is to
+produce centred headings at the top of multiplots.
+
+As with plots, each text item has a unique identification number, and can be
+moved around, deleted or undeleted with the \texttt{delete}, \texttt{undelete}
+and \texttt{move} commands.
+\index{delete command@\texttt{delete} command}
+\index{undelete command@\texttt{undelete} command}
+
+It should be noted that the \texttt{text} command can also be used outside of
+the multiplot environment, to render a single piece of short text instead of a
+graph. One obvious application is to produce equations rendered as graphical
+files for inclusion in talks.
+
+\label{arrows} \index{arrow command@\texttt{arrow} command} Arrows may also be
+placed on multiplot pages, independently of any plots, using the \texttt{arrow}
+command, which has syntax:
+
+\begin{verbatim} 
+arrow from x,y to x,y
+\end{verbatim}
+
+As above, arrows receive unique identification numbers, and can be deleted and
+undeleted.
+
+The \texttt{arrow} command may be followed by the `\texttt{with}' keyword to
+specify to style of the arrow. The style keywords which are accepted are
+identical to those accepted by the \texttt{set arrow} command (see
+Section~\ref{set_arrow}). For example:
+
+\begin{verbatim} 
+arrow from x1,y1 to x2,y2 \
+with twohead colour red
+\end{verbatim}
+
+\index{jpeg command@\texttt{jpeg} command} Bitmap images in jpeg form may be
+placed on the multiplot using the {\tt jpeg} command.  This has syntax:
+
+\begin{verbatim}
+jpeg 'filename' at x,y width w
+\end{verbatim}
+
+As an alternative to the {\tt width} modifier the height of the image can be
+specified, using the analogous {\tt height} modifier.  An optional angle can
+also be specified using the {\tt rotate} modifier; this causes the included
+image to be rotated counter-clockwise by a specified angle (in degrees).
+
+\index{eps command@\texttt{eps} command} Vector graphic images in eps format may
+be placed on to a multiplot using the {\tt eps} command, which has a syntax
+analogous to the {\tt jpeg} command.  However neither height nor width need be
+specified; in this case the image will be included at its native size.  For
+example:
+
+\begin{verbatim}
+eps 'filename' at 3,2 rotate 5
+\end{verbatim}
+
+\noindent will place the eps file with its bottom-left corner at position
+$(3,2)$ cm from the origin, rotated counter-clockwise through 5 degrees.
+
+\subsection{Speed Issues}
+\label{set_display}
+
+By default, whenever an item is added to a multiplot, or an existing item moved
+or replotted, the whole multiplot is replotted to show the change. This can be
+a time consuming process on large and complex multiplots. For this reason, the
+\texttt{set nodisplay}\index{set display command@\texttt{set display} command}
+command is provided, which stops PyXPlot from producing any output. The
+\texttt{set display} command can subsequently be issued to return to normal
+behaviour.
+
+This can be especially useful in scripts which produce large multiplots. There
+is no point in producing output at each step in the construction of a large
+multiplot, and so a great speed increase can be achieved by wrapping the script
+with:
+
+\begin{verbatim} 
+set nodisplay
+[...prepare large multiplot...]
+set display
+refresh
+\end{verbatim}
 

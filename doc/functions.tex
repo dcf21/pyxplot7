@@ -21,7 +21,7 @@
 
 % LaTeX source for the PyXPlot Users' Guide
 
-\chapter{Functions}
+\chapter{Numerical Analysis}
 
 This chapter describes some of the more advanced function-related features that
 PyXPlot contains.
@@ -168,6 +168,47 @@ the higher the value, the more smoothing is applied. The default behaviour is
 not to smooth at all (equivalent to \texttt{smooth 0.0}); a value of $1.0$
 corresponds to the default amount of smoothing applied in the
 gnuplot \texttt{acsplines} plot style.
+
+\section{Tabulating Functions and Slicing Data Files}
+
+PyXPlot includes a command that can be used to tabulate functions, that is, to
+produce a text file containing the values of the function at a set of points.
+For example, to produce a data file called {\tt sine.dat} with the principal
+values of the sine function:
+
+\begin{verbatim}
+set output 'sine.dat'
+tabulate [-pi:pi] sin(x)
+\end{verbatim}
+
+Multiple functions may be tabulated into the same file with the {\tt using}
+modifier:
+
+\begin{verbatim}
+tabulate [0:2*pi] sin(x):cos(x):tan(x) u 1:2:3:4
+\end{verbatim}
+
+The {\tt samples} setting can be used to control the number of points that are
+inserted into the data file.  If the $x$-axis is set to be logrithmic then the
+points at which the functions are evaluated are spaced logrithmically.
+
+The {\tt tabulate} command can also be used to select portions of data files.
+For example, to print the third, sixth and nineth columns of the datafile {\tt
+plot.1}, but only when the arcsine of the value in the fourth column is
+positive:
+
+\begin{verbatim}
+set output 'filtered.dat'
+tabulate 'plot.1' u 3:6:9 select (asin($4)>0)
+\end{verbatim}
+
+\noindent The {\tt select}, {\tt using} and {\tt every} modifiers operate in the
+same manner as with the {\tt plot} command.  The format statement used to print
+the output file is chosen automatically with integers and small numbers treated
+differently.  If desired, however, a format statement may be specified using the
+{\tt with format} specifier; it should be a standard python format string.  If
+there are not enough columns available in the supplied format statement it will
+be repeated for each line of the data file.
 
 \section{Numerical Integration and Differentiation}
 
