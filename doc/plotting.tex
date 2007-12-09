@@ -27,137 +27,154 @@ In this chapter, we continue to explore the various options of the {\tt plot}
 command. Specifically, we turn to those aspects which differ from gnuplot's
 {\tt plot} command.
 
-
 \section{A Tour of PyXPlot's Plot Styles}
 
-The following basic plotting styles are supported by PyXPlot:
+We begin by reviewing the various plot styles which are available in PyXPlot.
+Two of these we have already met: {\tt lines}, which draws straight lines
+between data points, and {\tt points}, which does not connect data points.
+
+\subsection{Lines and Points}
+
+The following are PyXPlot's most basic plot styles\footnote{This is not an
+exhaustive list; see Section~\ref{list_of_plotstyles} for such a list.}:
 \begin{itemize}
 \item dots -- places a small dot at each datum
 \item points -- places a marker symbol at each datum
 \item lines -- connects the data with lines
 \item linespoints -- a combination of both lines and points
-\item impulses -- draws a line from the $x$-axis up to each datum
 \end{itemize}
 
-When using the \texttt{points}, \texttt{linespoints} and \texttt{dots} plotting
-styles the size of the plotted points or dots can be varied with the
-\texttt{pointsize} modifier. For example, to display big dots, use:
+When using the \texttt{points}, \texttt{linespoints} and \texttt{dots} plot
+styles, the size of the plotted points or dots can be varied by using the
+\texttt{pointsize} modifier. In each case, the default value of these settings
+is $1.0$. For example, to represent data with large dots, the following would
+be used:
 
 \begin{verbatim}
 plot sin(x) with dots pointsize 10
 \end{verbatim}
 
-The width of lines can similarly be controlled with the
-\texttt{linewidth}\index{linewidth modifier@\texttt{linewidth} modifier}.
-Similarly, the width of lines used to draw point symbols can be controlled with
-the \texttt{pointlinewidth}\index{pointlinewidth
-modifier@\texttt{pointlinewidth} modifier}.  For example:
+\noindent The width of lines can similarly be controlled with the
+\texttt{linewidth}\index{linewidth modifier@\texttt{linewidth} modifier}
+modifier, and the width of the lines used to draw point symbols can be
+controlled with the \texttt{pointlinewidth}\index{pointlinewidth
+modifier@\texttt{pointlinewidth} modifier} modifier. For example:
 
 \begin{verbatim}
 plot sin(x) with points pointlinewidth 2
 \end{verbatim}
 
 \noindent
-Furthermore, \texttt{set pointlinewidth 2} will set the default linewidth to be
-used when drawing data points.  In both cases, the abbreviation \texttt{plw} is
-valid. 
-
-PyXPlot can plot datapoints using the
-standard upper- and lower-limit symbols.\index{lower-limit
-datapoints}\index{upper-limit datapoints} No special syntax is required for
-this; these symbols are pointtypes\footnote{The \texttt{pointtype} modifier was
-introduced in Section~\ref{pointtype_modifier}.} 12 and 13 respectively,
-obtained as follows:
+In addition to setting these parameters on a per-plot basis, their default values can also be changed. The command:
 
 \begin{verbatim}
-plot 'upperlimits' with points pointtype 12
-plot 'lowerlimits' with points pointtype 13
+\texttt{set pointlinewidth 2}
 \end{verbatim}
 
-\subsection{\texttt{arrows} plot style}
+\noindent will set the default linewidth used when drawing data points. Both
+here, and in the {\tt plot} command, the abbreviation \texttt{plw} is valid. 
+
+\subsection{Upper and Lower Limit Data Points}
+
+PyXPlot can plot datapoints using the standard upper- and lower-limit
+symbols.\index{lower-limit datapoints}\index{upper-limit datapoints} No special
+syntax is required for this; these symbols are pointtypes\footnote{The
+\texttt{pointtype} modifier was introduced in
+Section~\ref{pointtype_modifier}.} 12 and 13 respectively, obtained as follows:
+
+\begin{verbatim}
+plot 'upperlimits.dat' with points pointtype 12
+plot 'lowerlimits.dat' with points pointtype 13
+\end{verbatim}
+
+\subsection{Drawing Arrows}
 \label{arrows_plot_style} 
 
-The \index{arrows plot style@\texttt{arrows} plot style}
-takes four columns of data, $x_1$, $y_1$, $x_2$, $y_2$, and for each data point
-draws an arrow from the point $(x_1,y_1)$ to $(x_2,y_2)$.  Three different kinds
-of arrows can be drawn: ones with normal arrow heads, ones with no arrow heads,
-which just appear as lines, and ones with arrow heads on both ends. The syntax
-is:
+Data may be represented as arrows connecting two points on a plot by using the
+{\tt arrows} plot style\index{arrows plot style@\texttt{arrows} plot style}.
+This takes four columns of data, $x_1$, $y_1$, $x_2$, $y_2$, and for each data
+point draws an arrow from the point $(x_1,y_1)$ to $(x_2,y_2)$.  Three
+different kinds of arrows can be drawn: ones with normal arrow heads, ones with
+no arrow heads, which just appear as lines, and ones with arrow heads on both
+ends. The syntax is:
 
 \begin{verbatim}
-plot 'datafile' with arrows_head
-plot 'datafile' with arrows_nohead
-plot 'datafile' with arrows_twohead
+plot 'datafile.dat' with arrows_head
+plot 'datafile.dat' with arrows_nohead
+plot 'datafile.dat' with arrows_twohead
 \end{verbatim}
 
-The syntax `\texttt{with arrows}' is a shorthand for `\texttt{with arrows\_head}'.
+The syntax `\texttt{with arrows}' is a shorthand for `\texttt{with
+arrows\_head}'. This plot style is analogous to the {\tt vectors} plot style in
+version~4 of gnuplot.
 
-
-\subsection{Plotting with error bars}
+\subsection{Error Bars}
 
 \index{errorbars}\label{errorbars}
-In gnuplot, when one used
-errorbars, one could either specify the size of the errorbar, or the min/max
-range of the errorbar. Both of these usages shared a common syntax, and
-gnuplot's behaviour depended upon the number of data columns provided:
+In gnuplot, when one used errorbars, one could either specify the size of the
+errorbar, or the min/max range of the errorbar. Both of these usages shared a
+common syntax, and gnuplot's behaviour depended upon the number of data columns
+provided:
 
 \begin{verbatim}
-plot 'datafile' with yerrorbars
+plot 'datafile.dat' with yerrorbars
 \end{verbatim}
 
 \noindent Given a datafile with three columns, this would take the third column
-to indicate the size of the $y$-errorbar, and given a four-column datafile, it
+to indicate the size of the $y$-errorbar. Given a four-column datafile, it
 would take the third and fourth columns to indicate the min/max range to be
 marked out by the errorbar.
 
 To avoid confusion, a different syntax is adopted in PyXPlot. The syntax:
 
 \begin{verbatim}
-plot 'datafile' with yerrorbars
+plot 'datafile.dat' with yerrorbars
 \end{verbatim}
 
 \noindent now always assumes the third column of the datafile to indicate the
 size of the errorbar, regardless of whether a fourth is present. The syntax:
 
 \begin{verbatim}
-plot 'datafile' with yerrorrange
+plot 'datafile.dat' with yerrorrange
 \end{verbatim}
 
 \noindent always assumes the third and fourth columns to indicate the min/max
 range of the errorbar.
 
 \vspace{0.5cm}
-For clarity, a complete list of errorbar styles is given below:
+For clarity, a complete list of errorbar styles available in PyXPlot is given below:
 
-\begin{tabular}{p{2.5cm}p{5.5cm}}
+\begin{tabular}{p{2.5cm}p{7.5cm}}
 \texttt{yerrorbars} & Vertical errorbars; size drawn from the third data-column. \\
 \texttt{xerrorbars} & Horizontal errorbars; size drawn from the third data-column. \\
 \texttt{xyerrorbars} & Horizontal and vertical errorbars; sizes drawn from the third and fourth data-columns respectively.\\
 \texttt{errorbars} & Shorthand for \texttt{yerrorbars}. \\
 \end{tabular}
 
-\begin{tabular}{p{2.5cm}p{5.5cm}}
+\begin{tabular}{p{2.5cm}p{7.5cm}}
 \texttt{yerrorrange} & Vertical errorbars; minimum drawn from the third data-column, maximum from the fourth.\\
 \texttt{xerrorrange} & Horizontal errorbars; minimum drawn from the third data-column, maximum from the fourth.\\
 \texttt{xyerrorrange} & Horizontal and vertical errorbars; horizontal minimum drawn from the third data-column, and maximum from the fourth; vertical minimum drawn from the fifth, and maximum from the sixth.\\
 \texttt{errorrange} & Shorthand for \texttt{yerrorrange}. \\
 \end{tabular}
 
+\subsection{Plotting Functions with Errorbars, Arrows, or More}
+
 In gnuplot, when a function (as opposed to a datafile) is plotted, only those
 plot styles which accept two columns of data can be used -- for example,
-\texttt{lines} or \texttt{points}. It is not possible to plot a function with
-errorbars, for example. In PyXPlot, by contrast, this is possible using the
-following syntax:
+\texttt{lines} or \texttt{points}. This means that it is not possible to plot a
+function with errorbars. In PyXPlot, this is possible using the following
+syntax:
 
 \begin{verbatim}
 plot f(x):g(x) with yerrorbars
 \end{verbatim}
 
-Two functions are supplied, separated by a colon; plotting proceeds as if a
-datafile had been supplied, containing values of $x$ in column 1, values of
-$f(x)$ in column 2, and values of $g(x)$ in column 3. This may be useful, for
-example, if $g(x)$ measures the intrinsic uncertainty in $f(x)$. The
-\texttt{using} modifier may also be used:
+\noindent Two functions are supplied, separated by a colon; plotting proceeds
+as if a datafile had been supplied, containing values of $x$ in column 1,
+values of $f(x)$ in column 2, and values of $g(x)$ in column 3. This may be
+useful, for example, if $g(x)$ measures the intrinsic uncertainty in $f(x)$.
+The \texttt{using} modifier may also be used:
 
 \begin{verbatim}
 plot f(x):g(x) using 2:3
@@ -169,7 +186,8 @@ correspond to the range of the plot's horizontal axis. If the above were to be
 attempted with an autoscaling horizontal axis, the result might be rather
 unexpected -- PyXPlot would find itself autoscaling the $x$-axis range to the
 spread of values of $f(x)$, but find that this itself changed depending upon
-the range of the $x$-axis.
+the range of the $x$-axis.\footnote{We're aware that this is not good. Expect
+it to change in a future release.}
 
 \section{Barcharts and Histograms}
 \label{barcharts}\index{bar charts}
@@ -185,7 +203,7 @@ As in gnuplot, bar charts and histograms can be produced using the
 \texttt{boxes}\index{boxes plot style@\texttt{boxes} plot style} plot style:
 
 \begin{verbatim} 
-plot 'datafile' with boxes
+plot 'datafile.dat' with boxes
 \end{verbatim}
 
 \noindent Horizontally, the interfaces between the bars are, by default, at the
@@ -216,7 +234,7 @@ each bar manually, in a column of the input datafile. For this, the
 should be used:
 
 \begin{verbatim} 
-plot 'datafile' using 1:2:3 with wboxes
+plot 'datafile.dat' using 1:2:3 with wboxes
 \end{verbatim}
 
 \noindent This plot style expects three columns of data to be specified: the
@@ -251,8 +269,8 @@ modifier@\texttt{fillcolour} modifier} modifier, followed by the name of a
 colour:
 
 \begin{verbatim} 
-plot 'datafile' with boxes fillcolour blue
-plot 'datafile' with boxes fc 4
+plot 'datafile.dat' with boxes fillcolour blue
+plot 'datafile.dat' with boxes fc 4
 \end{verbatim}
 
 \noindent Panels~(c) and (d) of Figure~\ref{fig:ex_barchart2} demonstrate the
@@ -287,9 +305,9 @@ is illustrated by these panels, three flavours of steps are available (exactly
 as in gnuplot):
 
 \begin{verbatim}
-plot 'datafile' with steps 
-plot 'datafile' with fsteps 
-plot 'datafile' with histeps
+plot 'datafile.dat' with steps 
+plot 'datafile.dat' with fsteps 
+plot 'datafile.dat' with histeps
 \end{verbatim}
 
 When using the \texttt{steps} plot style, the datapoints specify the right-most
@@ -307,7 +325,7 @@ plot only those datapoints in a datafile which specify some given criterion. For
 example:
 
 \begin{verbatim}
-plot 'data.dat' select ($8>5)
+plot 'datafile.dat' select ($8>5)
 plot sin(x) select (($1>0) and ($2>0))
 \end{verbatim}
 
@@ -332,35 +350,36 @@ horizontally-arranged datafiles.  For this, the keyword `\texttt{rows}' is
 placed after the \texttt{using} modifier:\index{rows keyword@\texttt{rows} keyword}
 
 \begin{verbatim}
-plot 'datafile' index 1 using rows 1:2
+plot 'datafile.dat' index 1 using rows 1:2
 \end{verbatim}
 
-The syntax `\texttt{using columns}' is also accepted, to specify the default
-behaviour of plotting columns against one another:\index{columns keyword@\texttt{columns} keyword}
+\noindent The syntax `\texttt{using columns}' is also accepted, to specify the
+default behaviour of plotting columns against one another:\index{columns
+keyword@\texttt{columns} keyword}
 
 \begin{verbatim}
-plot 'datafile' index 1 using columns 1:2
+plot 'datafile.dat' index 1 using columns 1:2
 \end{verbatim}
 
 When plotting horizontally-arranged datafiles, the meanings of the
 \texttt{index} and \texttt{every} modifiers (see Section~\ref{plot_datafiles})
-are altered slightly. The former continues to refer to vertical blocks of data
-separated by two blank lines.  Blocks, as referenced in the \texttt{every}
-modifier, continue to be vertical blocks of datapoints, separated by single
-blank lines. The row numbers passed to the \texttt{using} modifier are counted
-from the top of the current block.
+are altered slightly. The former continues to refer to vertically-displaced
+blocks of data separated by two blank lines.  Blocks, as referenced in the
+\texttt{every} modifier, likewise continue to be vertically-displaced blocks of
+datapoints, separated by single blank lines. The row numbers passed to the
+\texttt{using} modifier are counted from the top of the current block.
 
 However, the line-numbers specified in the \texttt{every} modifier -- i.e.
-variables $a$, $c$ and $e$ in the system above -- now refer to horizontal
-columns, rather than lines. For example:
+variables $a$, $c$ and $e$ in the system introduced in
+Section~\ref{introduce_every} -- now refer to horizontal columns, rather than
+lines. For example:
 
 \begin{verbatim}
-plot 'datafile' using rows 1:2 every 2::3::9
+plot 'datafile.dat' using rows 1:2 every 2::3::9
 \end{verbatim}
 
 \noindent would plot the data in row 2 against that in row 1, using only the
 values in every other column, between columns 3 and 9.
-
 
 \section{Configuring Axes}
 \label{axis_extensions}\label{ranges_multiaxes}\label{multiple_axes}

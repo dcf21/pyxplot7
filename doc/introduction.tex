@@ -28,47 +28,50 @@
 
 \section{Overview}
 
-A graphing package is a cornerstone requirement of any scientific or
-mathematical computing project.  Historically, the most widely used open-source
-programme has been {\sc gnuplot}, which is attractive mainly on account of its
-easy-to-use command-line interface, which allows the contents of data files to
-be visually inspected within seconds.  Its main rival has been {\sc pgplot},
-which is somewhat more flexible, but much less easy to use; it can only be
-called from within a program, and C or FORTRAN code must be written to produce
-each plot.
+The ability to represent data visually, usually as some form of graph, is a
+cornerstone requirement for any scientific or mathematical computing project.
+Historically, the most widely used open-source programme has been {\sc
+gnuplot}, the principal attraction of which is its easy-to-use command-line
+interface, which allows data files to be turned into graphs within seconds. Its
+main rival has been {\sc pgplot}, which is somewhat more flexible, but much
+less easy to use; it can only be called from within a program, and so C or
+FORTRAN code must be written to produce each plot. This is potentially time
+consuming, and it is assumed that the user has some programming experience.
 
 Alongside these, several commercial packages have existed, including {\sc
 Maple}, {\sc Mathematica} and {\sc SuperMongo}.  These can typically produce
-nicer-looking results than their free counterparts, but carry with them
-considerable price tags and licensing restrictions.
+prettier results than their free counterparts, but carry with them considerable
+price tags and licensing restrictions.
 
-Both gnuplot and pgplot were developed in the mid 1980s. At the time, the
-quality of their output seemed state-of-the-art, but this is less true today.
-In most journal papers today, the text and equations are rendered with a high
-degree of professionalism by the \LaTeX\ typesetting system, but all to often,
-the same cannot be said of the graphs: axes are poorly labelled or illegible.
-The same is often true of the slides used in presentations.
+Both gnuplot and pgplot were developed in the mid 1980s. At that time, the
+quality of their output seemed state-of-the-art. But this is less true today.
+In most journal articles today, the text and equations are rendered with a high
+degree of professionalism by the \LaTeX\ typesetting system. But all to often,
+the graphs are less neat.  The same is often true of the slides used in
+presentations: graph axes are often poorly labelled or illegible.
 
 In the early 2000s, several new free graphing packages emerged, among them {\sc
 MatPlotLib} and {\sc PyX}.  These have significantly improved upon the quality
-of the plots produced by gnuplot and pgplot, but both are libraries which can
-be called from within the python programming language. They are not as easy to
-use as gnuplot.  For visualising data at speed, then, gnuplot remains the only
-realistic option.
+of the plots produced by gnuplot and pgplot. However, both are libraries which
+can be called from within the python programming language, rather than
+stand-alone plotting packages. They are not as easy to use as gnuplot.  For
+visualising data at speed, gnuplot remains the best option.
 
-{\sc PyXPlot} aims to fill this gap. Like gnuplot, it is a command-line
-graphing package, and, for ease of use, its interface is based heavily upon
-that of gnuplot. However, it uses the PyX graphics library to produce its
-output, allowing it to bring the quality of gnuplot's output up to date.  The
+{\sc PyXPlot} aims to fill this gap. Like gnuplot, it is a stand-alone
+command-line graphing package. For ease of use, its interface is based heavily
+upon that of gnuplot, so users don't need to learn a whole new scripting
+language. However, it uses the PyX graphics library to produce its output,
+allowing it to bring the quality of gnuplot's output up-to-date.  The
 command-line interface has also been extended into a more fully-featured vector
-graphics and data processing package.  Where we are aware of frequently-cited
-problems in gnuplot's interface, we have tried to put them right.  For example,
-all text is now rendered automatically in the \LaTeX\ typesetting environment,
-making it straightforward to label graphs with mathematical expressions. The
-``multiplot'' environment has been essentially re-designed from scratch, making
-it easy to produce galleries of plots and basic vector graphics.  For some
-samples of the results of which PyXPlot is capable, the reader is refered to
-the project website\footnote{\url{http://www.pyxplot.org.uk/}}.
+graphics and data processing package.  Where we are aware of
+frequently-repeated complaints about gnuplot's interface, we have tried to put
+them right.  For example, all text is now rendered automatically in the \LaTeX\
+typesetting environment, making it straightforward to label graphs with
+mathematical expressions. The ``multiplot'' environment has been essentially
+re-designed from scratch, making it easy to produce galleries of plots with
+other basic vector graphics around them.  For some samples of the results of
+which PyXPlot is capable, the reader is referred to the project
+website\footnote{\url{http://www.pyxplot.org.uk/}}.
 
 The command-line interface of gnuplot is very flexible: it can be controlled
 interactively, by typing commands into a terminal, or it can read a list of
@@ -102,11 +105,13 @@ does unfortunately introduce some incompatibility with gnuplot, since some
 strings which were valid before are no longer valid (see
 Section~\ref{sec:latex_incompatibility} for more details). For example:
 
+\dontdo
 \begin{verbatim}set xlabel 'x^2'\end{verbatim}
 
 \noindent would have been valid in gnuplot, but now needs to be written in
 \LaTeX\ mathmode as:
 
+\dodo
 \begin{verbatim}set xlabel '$x^2$'\end{verbatim}
 
 \noindent The nuisance of this incompatibility is surely far outweighed by the

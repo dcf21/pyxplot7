@@ -97,7 +97,7 @@ file \texttt{foo.ppl} into the present session.
 
 Usually a text editor is used to produce PyXPlot command scripts, but the
 \texttt{save}\index{save command@\texttt{save} command} command may also
-assist. Thish stores a history of the commands executed in the present
+assist. This stores a history of the commands executed in the present
 interactive session to file.
 
 Command files can include comment lines, which should begin with a hash
@@ -137,7 +137,7 @@ $y$-coordinate from the second.  The datafile is assumed to be in plain text
 format\footnote{If the filename of a datafile ends with a \texttt{.gz} suffix,
 it is assuming to be gzipped plaintext, and is decoded accordingly.}, with
 columns separated by whitespace and/or commas\footnote{This format is
-compatible with the Comma Seperated Values (CSV) format produced by many
+compatible with the Comma Separated Values (CSV) format produced by many
 applications, including Microsoft Excel.}\index{csv files}\index{spreadsheets,
 importing data from}\index{Microsoft Excel}:
 
@@ -234,7 +234,7 @@ $\backslash$~\&~\%~\#~\{~\}~\$~\_~\^{} or $\sim$.
 
 Because of the use of quotes to delimit text labels, special care needs to be
 taken when apostrophe and quote characters are used. The following command
-would raise an error, because the apostrophe would be interpretted as marking
+would raise an error, because the apostrophe would be interpreted as marking
 the end of the text label:
 
 \dontdo
@@ -263,7 +263,7 @@ set xlabel "J\\"org's Data"
 
 \noindent In this example, two backslashes are required.  The first is the
 \LaTeX\ escape character used to produce the umlaut; the second is a PyXPlot
-escape character, used so that the " character is not interpretted as
+escape character, used so that the " character is not interpreted as
 delimiting the string. \index{escape characters}\index{quote
 characters}\index{special characters}
 
@@ -482,7 +482,7 @@ modifier@\texttt{index} modifier}
 It is also possible to specify which lines and/or data blocks to plot from
 within each index. To do so, the \texttt{every} modifier is used, which takes
 up to six values, separated by colons:\index{every modifier@\texttt{every}
-modifier}
+modifier}\label{introduce_every}
 
 \begin{verbatim}
 plot 'datafile' every a:b:c:d:e:f
@@ -845,7 +845,7 @@ help commands help
 
 \section{Shell Commands}
 
-Shell commands\index{shell commands|executing} may be executed directly from
+Shell commands\index{shell commands!executing} may be executed directly from
 within PyXPlot by prefixing them with an {\tt !} character\index{!
 command@\texttt{!} command}. The remainder of the line is sent directly to the
 shell, for example:
