@@ -31,17 +31,19 @@
 The ability to represent data visually, usually as some form of graph, is a
 cornerstone requirement for any scientific or mathematical computing project.
 Historically, the most widely used open-source programme has been {\sc
-gnuplot}, the principal attraction of which is its easy-to-use command-line
-interface, which allows data files to be turned into graphs within seconds. Its
-main rival has been {\sc pgplot}, which is somewhat more flexible, but much
-less easy to use; it can only be called from within a program, and so C or
-FORTRAN code must be written to produce each plot. This is potentially time
-consuming, and it is assumed that the user has some programming experience.
+gnuplot}\index{gnuplot}, the principal attraction of which is its easy-to-use
+command-line interface, which allows data files to be turned into graphs within
+seconds. Its main rival has been {\sc pgplot}\index{pgplot}, which is somewhat
+more flexible, but much less easy to use; it can only be called from within a
+program, and so C or FORTRAN code must be written to produce each plot. This is
+potentially time consuming, and it is assumed that the user has some
+programming experience.
 
 Alongside these, several commercial packages have existed, including {\sc
-Maple}, {\sc Mathematica} and {\sc SuperMongo}.  These can typically produce
-prettier results than their free counterparts, but carry with them considerable
-price tags and licensing restrictions.
+Maple}\index{Maple}, {\sc Mathematica}\index{Mathematica} and {\sc
+SuperMongo}\index{SuperMongo}.  These can typically produce prettier results
+than their free counterparts, but carry with them considerable price tags and
+licensing restrictions.
 
 Both gnuplot and pgplot were developed in the mid 1980s. At that time, the
 quality of their output seemed state-of-the-art. But this is less true today.
@@ -51,11 +53,12 @@ the graphs are less neat.  The same is often true of the slides used in
 presentations: graph axes are often poorly labelled or illegible.
 
 In the early 2000s, several new free graphing packages emerged, among them {\sc
-MatPlotLib} and {\sc PyX}.  These have significantly improved upon the quality
-of the plots produced by gnuplot and pgplot. However, both are libraries which
-can be called from within the python programming language, rather than
-stand-alone plotting packages. They are not as easy to use as gnuplot.  For
-visualising data at speed, gnuplot remains the best option.
+MatPlotLib}\index{MatPlotLib} and {\sc PyX}\index{PyX}.  These have
+significantly improved upon the quality of the plots produced by gnuplot and
+pgplot. However, both are libraries which can be called from within the python
+programming language, rather than stand-alone plotting packages. They are not
+as easy to use as gnuplot.  For visualising data at speed, gnuplot remains the
+best option.
 
 {\sc PyXPlot} aims to fill this gap. Like gnuplot, it is a stand-alone
 command-line graphing package. For ease of use, its interface is based heavily
@@ -105,69 +108,88 @@ does unfortunately introduce some incompatibility with gnuplot, since some
 strings which were valid before are no longer valid (see
 Section~\ref{sec:latex_incompatibility} for more details). For example:
 
-\dontdo
-\begin{verbatim}set xlabel 'x^2'\end{verbatim}
+\dontdo{
+\begin{verbatim}
+set xlabel 'x^2'
+\end{verbatim}
+}
 
 \noindent would have been valid in gnuplot, but now needs to be written in
 \LaTeX\ mathmode as:
 
-\dodo
-\begin{verbatim}set xlabel '$x^2$'\end{verbatim}
+\dodo{
+\begin{verbatim}
+set xlabel '$x^2$'
+\end{verbatim}
+}
 
 \noindent The nuisance of this incompatibility is surely far outweighed by the
 power that \LaTeX\ brings, however. For users with no prior knowledge of
-\LaTeX\ we recommend Tobias Oetiker's excellent introduction, \textit{The Not
+\LaTeX\ we recommend Tobias Oetiker's\index{Tobias Oetiker} excellent
+introduction, {\it The Not So Short Guide to \LaTeX $2\epsilon$}\index{The Not
 So Short Guide to \LaTeX $2\epsilon$}\footnote{Download from:\\
 \url{http://www.ctan.org/tex-archive/info/lshort/english/lshort.pdf}}.
 
 \section{System Requirements}
 
 PyXPlot works on most UNIX-like operating systems. We have tested it under
-Linux, SunOS and MacOS X, and believe that it should work on other similar
-systems. It requires that the following software packages (not included) be
-installed:\index{system requirements}
+Linux, SunOS\index{SunOS} and MacOS X\index{MacOS X}, and believe that it
+should work on other similar systems. It requires that the following software
+packages (not included) be installed:\index{system requirements}
 
 \vspace{0.5cm}
 \begin{tabular}{ll}
-python  & (Version 2.3 or later) \\
+python  & (Version 2.3 or later)\index{python} \\
 latex   & (Used for all textual labels) \\
-convert & (ImageMagick; needed for the gif, png and jpg terminals) \\
+convert & (ImageMagick; needed for the gif, png and jpg terminals)\index{ImageMagick} \\
 \end{tabular}
 \vspace{0.5cm}
 
 The following package is not required for installation, but many PyXPlot
-features are disabled when it is not present, including the \texttt{fit} and
-\texttt{spline} commands and the integration of functions. It is very strongly
-recommended:
+features are disabled when it is not present, including the {\tt fit} and {\tt
+spline} commands and the integration of functions. It is very strongly
+recommended:\indcmd{fit}\indcmd{spline}
 
 \vspace{0.5cm}
 \begin{tabular}{ll} 
-scipy   & (Python Scientific Library) \\
+scipy   & (Python Scientific Library)\index{scipy} \\
 \end{tabular}
 \vspace{0.5cm}
 
 The following package is not required for installation, but it is not possible
-to use the X11 terminal, i.e. to display plots on screen, without it:
+to use the X11 terminal, i.e.\ to display plots on screen, without it:
 
 \vspace{0.5cm}
 \begin{tabular}{ll}
-gv      & (Ghostview; used for the X11 terminal) \\
+gv      & (Ghostview; used for the X11 terminal)\index{Ghostview} \\
 \end{tabular}
 \vspace{0.5cm}
 
-Debian/Ubuntu users can find the above software in the packages \texttt{tetex-extra},
-\texttt{gv}, \texttt{imagemagick}, \texttt{python2.3},
-\texttt{python2.3-scipy}.\index{Debian Linux}\index{installation!under Debian}
+Debian/Ubuntu users can find the above software in the packages {\tt
+tetex-extra}, {\tt gv}, {\tt imagemagick}, {\tt python2.3}, {\tt
+python2.3-scipy}.\index{Debian Linux}\index{Ubuntu
+Linux}\index{installation!under Debian}\index{installation!under Ubuntu}
 
 \section{Installation}
 \index{installation}
 
+\subsection{Installation within Linux Distributions}
+
+PyXPlot is available as a user-installable package within some Linux
+distributions. Gentoo has such a package already.\index{Gentoo
+Linux}\index{installation!under Gentoo}\footnote{See
+\url{http://gentoo-portage.com/sci-visualization/pyxplot}}. Debian will have
+such a package in their next release, Lenny, which is scheduled for late 2008.
+Ubuntu will also have such a package in their next release, Hardy Heron, which
+is scheduled for 24th April 2008. In the meantime, Debian/Ubuntu users can
+download the package from the PyXPlot website, for manual installation.
+
 \subsection{Installation as User}
 
-The following steps describe the installation of PyXPlot from a
-\texttt{.tar.gz} archive by a user without superuser (i.e. root) access to his
-machine. It is assumed that the packages listed above have already been
-installed; if they are not, you need to contact your system administrator.
+The following steps describe the installation of PyXPlot from a {\tt .tar.gz}
+archive by a user without superuser (i.e.\ root) access to his machine. It is
+assumed that the packages listed above have already been installed; if they are
+not, you need to contact your system administrator.
 
 \begin{itemize}
 \item Unpack the distributed .tar.gz:
@@ -201,10 +223,10 @@ system-wide by a superuser with the following additional step:
 make install
 \end{verbatim}
 
-By default, the PyXPlot executable installs to \texttt{/usr/local/bin/pyxplot}.
-If desired, this installation path may be modified in the file
-\texttt{Makefile.skel}, by changing the variable \texttt{USRDIR} in the first
-line to an alternative desired installation location.
+By default, the PyXPlot executable installs to {\tt /usr/local/bin/pyxplot}.
+If desired, this installation path may be modified in the file {\tt
+Makefile.skel}, by changing the variable {\tt USRDIR} in the first line to an
+alternative desired installation location.
 
 PyXPlot may now be started by any system user, simply by typing:
 
@@ -223,10 +245,10 @@ Your feedback and suggestions have been gratefully received.
 
 \section{Legal Blurb}
 
-This manual and the software which it describes are both copyright (C) Dominic
-Ford 2006-8, Ross Church 2008. They are distributed under the GNU General
-Public License (GPL) Version~2, a copy of which is provided in the
-\texttt{COPYING} file in this distribution.\index{General Public License}
+This manual and the software which it describes are both copyright \copyright
+Dominic Ford 2006-8, Ross Church 2008. They are distributed under the GNU
+General Public License (GPL) Version~2, a copy of which is provided in the {\tt
+COPYING} file in this distribution.\index{General Public License}
 Alternatively, it may be downloaded from the web, from the following
 location:\\ \url{http://www.gnu.org/copyleft/gpl.html}.
 

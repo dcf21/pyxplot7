@@ -27,25 +27,25 @@
 
 \label{configuration}
 
-\index{set command@\texttt{set} command}
+\index{set command@{\tt set} command}
 As is the case in gnuplot, PyXPlot can be configured using the \noindent
-\texttt{set} command -- for example:
+{\tt set} command -- for example:
 
 \begin{verbatim}set output 'foo.eps'\end{verbatim}
 
 \noindent would set it to send its plotted output to the file
-\texttt{foo.eps}.  Typing `\texttt{set}' on its own returns a list of all
-recognised `\texttt{set}' configuration parameters. The \texttt{unset} command
+{\tt foo.eps}.  Typing `{\tt set}' on its own returns a list of all
+recognised `{\tt set}' configuration parameters. The {\tt unset} command
 may be used to return settings to their default values; it recognises a similar
-set of parameter names, and once again, typing `\texttt{unset}' on its own
-gives a list of them. The \texttt{show} command can be used to display the
+set of parameter names, and once again, typing `{\tt unset}' on its own
+gives a list of them. The {\tt show} command can be used to display the
 values of settings.
 
 \section{Configuration Files}
 \label{config_files}
 
 PyXPlot can also be configured by means of a configuration file, with filename
-\texttt{.pyxplotrc}, which is scanned once upon startup. This file may be
+{\tt .pyxplotrc}, which is scanned once upon startup. This file may be
 placed either in the user's current working directory, or in his home
 directory. In the event of both files existing, settings in the former override
 those in the latter; in the event of neither file existing, PyXPlot uses its
@@ -63,17 +63,17 @@ The following sections are used, although they do not all need to be present in
 any given file:
 
 \begin{itemize}
-\item \texttt{settings} -- contains parameters similar to those which can be set with the \texttt{set} command. A complete list is given in Section~\ref{configfile_settings} below.
-\item \texttt{terminal} -- contains parameters for altering the behaviour and appearance of PyXPlot's interactive terminal. A complete list is given in Section~\ref{configfile_terminal}.
-\item \texttt{variables} -- contains variable definitions. Any variables defined in this section will be predefined in the PyXPlot mathematical environment upon startup.
-\item \texttt{functions} -- contains function definitions.
-\item \texttt{colours} -- contains a variable `\texttt{palette}', which should be set to a comma-separated list of the sequence of colours in the palette used to plot datasets. The first will be called colour 1 in PyXPlot, the second colour 2, etc. A list of recognised colour names is given in Section~\ref{colour_names}.
-\item \texttt{latex} -- contains a variable `\texttt{preamble}', which is
+\item {\tt settings} -- contains parameters similar to those which can be set with the {\tt set} command. A complete list is given in Section~\ref{configfile_settings} below.
+\item {\tt terminal} -- contains parameters for altering the behaviour and appearance of PyXPlot's interactive terminal. A complete list is given in Section~\ref{configfile_terminal}.
+\item {\tt variables} -- contains variable definitions. Any variables defined in this section will be predefined in the PyXPlot mathematical environment upon startup.
+\item {\tt functions} -- contains function definitions.
+\item {\tt colours} -- contains a variable `{\tt palette}', which should be set to a comma-separated list of the sequence of colours in the palette used to plot datasets. The first will be called colour 1 in PyXPlot, the second colour 2, etc. A list of recognised colour names is given in Section~\ref{colour_names}.
+\item {\tt latex} -- contains a variable `{\tt preamble}', which is
 prefixed to the beginning of all \LaTeX\ text items, before the
-\texttt{\textbackslash begin\{document\}} statement. It can be used to define
-custom \LaTeX\ macros, or to include packages using the \texttt{\textbackslash
+{\tt \textbackslash begin\{document\}} statement. It can be used to define
+custom \LaTeX\ macros, or to include packages using the {\tt \textbackslash
 includepackage\{\}} command.  The preamble can be changed using the {\tt set
-preamble} command.\index{set preamble command@\texttt{set preamble} command}
+preamble} command.\index{set preamble command@{\tt set preamble} command}
 \end{itemize}
 
 \section{An Example Configuration File}
@@ -146,350 +146,350 @@ Orange, CarnationPink, Plum
 PREAMBLE=
 \end{verbatim}
 
-\section{Configuration Options: \texttt{settings} section}
+\section{Configuration Options: {\tt settings} section}
 \label{configfile_settings}
 
 The following table provides a brief description of the function of each of the
-parameters in the \texttt{settings} section of the above configuration file,
+parameters in the {\tt settings} section of the above configuration file,
 with a list of possible values for each:
 
 \begin{longtable}{p{3.4cm}p{9cm}}
-\texttt{ASPECT} & \textbf{Possible values:} Any floating-point number.
+{\tt ASPECT} & {\bf Possible values:} Any floating-point number.
 
-                   \textbf{Analogous set command:} \texttt{set size ratio}\index{set size ratio command@\texttt{set size ratio} command}
+                   {\bf Analogous set command:} {\tt set size ratio}\index{set size ratio command@{\tt set size ratio} command}
 
                    Sets the aspect ratio of plots.
                    \\
-\texttt{AUTOASPECT} & \textbf{Possible values:} ON / OFF
+{\tt AUTOASPECT} & {\bf Possible values:} ON / OFF
 
-                   \textbf{Analogous set command:} \texttt{set size ratio}
+                   {\bf Analogous set command:} {\tt set size ratio}
 
-                   Sets whether plots have the automatic aspect ratio, which is the golden ratio. If \texttt{ON}, then the above setting is ignored.
+                   Sets whether plots have the automatic aspect ratio, which is the golden ratio. If {\tt ON}, then the above setting is ignored.
                    \\
-\texttt{AXESCOLOUR} & \textbf{Possible values:} Any recognised colour.
+{\tt AXESCOLOUR} & {\bf Possible values:} Any recognised colour.
 
-                   \textbf{Analogous set command:} \texttt{set axescolour}\index{set axescolour command@\texttt{set axescolour} command}
+                   {\bf Analogous set command:} {\tt set axescolour}\index{set axescolour command@{\tt set axescolour} command}
 
                    Sets the colour of axis lines and ticks.
                    \\
-\texttt{BACKUP} & \textbf{Possible values:} ON / OFF
+{\tt BACKUP} & {\bf Possible values:} ON / OFF
 
-                   \textbf{Analogous set command:} \texttt{set backup}\index{set backup command@\texttt{set backup} command}
+                   {\bf Analogous set command:} {\tt set backup}\index{set backup command@{\tt set backup} command}
 
                    When this switch is set to `ON', and plot output is being directed to file, attempts to write output over existing files cause a copy of the existing file to be preserved, with a tilda after its old filename (see Section~\ref{filebackup}).
                    \\
-\texttt{BAR}     & \textbf{Possible values:}  Any floating-point number.
+{\tt BAR}     & {\bf Possible values:}  Any floating-point number.
 
-                   \textbf{Analogous set command:} \texttt{set bar}\index{set bar command@\texttt{set bar} command}
+                   {\bf Analogous set command:} {\tt set bar}\index{set bar command@{\tt set bar} command}
 
                    Sets the horizontal length of the lines drawn at the end of errorbars, in units of their default length.
                    \\
-\texttt{BINORIGIN} & \textbf{Possible values:} Any floating-point number
+{\tt BINORIGIN} & {\bf Possible values:} Any floating-point number
 
-                   \textbf{Analogous set command:} \texttt{set binorigin}
+                   {\bf Analogous set command:} {\tt set binorigin}
 
                    Sets the point along the $x$ axis from which the bins used by
-                   the \texttt{histogram} command originate.
+                   the {\tt histogram} command originate.
                    \\
-\texttt{BINWIDTH} & \textbf{Possible values:} Any floating-point number
+{\tt BINWIDTH} & {\bf Possible values:} Any floating-point number
 
-                   \textbf{Analogous set command:} \texttt{set binwidth}
+                   {\bf Analogous set command:} {\tt set binwidth}
 
-                   Sets the widths of the bins used by the \texttt{histogram}
+                   Sets the widths of the bins used by the {\tt histogram}
                    command.
                    \\
-\texttt{BOXFROM} & \textbf{Possible values:} Any floating-point number.
+{\tt BOXFROM} & {\bf Possible values:} Any floating-point number.
 
-                   \textbf{Analogous set command:} \texttt{set boxfrom}\index{set boxfrom command@\texttt{set boxfrom} command}
+                   {\bf Analogous set command:} {\tt set boxfrom}\index{set boxfrom command@{\tt set boxfrom} command}
 
                    Sets the horizontal point from which bars on bar charts appear to emanate.
                    \\
-\texttt{BOXWIDTH} & \textbf{Possible values:} Any floating-point number.
+{\tt BOXWIDTH} & {\bf Possible values:} Any floating-point number.
 
-                   \textbf{Analogous set command:} \texttt{set boxwidth}\index{set boxwidth command@\texttt{set boxwidth} command}
+                   {\bf Analogous set command:} {\tt set boxwidth}\index{set boxwidth command@{\tt set boxwidth} command}
 
                    Sets the default width of boxes on barcharts. If negative, then the boxes have automatically selected widths, so that the interfaces between bars occur at the horizontal midpoints between the specified datapoints.
                    \\
-\texttt{COLOUR} & \textbf{Possible values:} ON / OFF
+{\tt COLOUR} & {\bf Possible values:} ON / OFF
 
-                   \textbf{Analogous set command:} \texttt{set terminal}\index{set terminal command@\texttt{set terminal} command}
+                   {\bf Analogous set command:} {\tt set terminal}\index{set terminal command@{\tt set terminal} command}
 
                    Sets whether output should be colour (ON) or monochrome (OFF).
                    \\
-\texttt{DATASTYLE} & \textbf{Possible values:} Any plot style. 
+{\tt DATASTYLE} & {\bf Possible values:} Any plot style. 
 
-                   \textbf{Analogous set command:} \texttt{set data style}\index{set data style command@\texttt{set data style} command}
+                   {\bf Analogous set command:} {\tt set data style}\index{set data style command@{\tt set data style} command}
                    
                    Sets the plot style used by default when plotting datafiles.
                    \\
-\texttt{DISPLAY} & \textbf{Possible values:} ON / OFF
+{\tt DISPLAY} & {\bf Possible values:} ON / OFF
 
-                   \textbf{Analogous set command:} \texttt{set display}\index{set display command@\texttt{set display} command}
+                   {\bf Analogous set command:} {\tt set display}\index{set display command@{\tt set display} command}
 
-                   When set to `ON', no output is produced until the \texttt{set display} command is issued. This is useful for speeding up scripts which produce large multiplots; see Section~\ref{set_display} for more details.
+                   When set to `ON', no output is produced until the {\tt set display} command is issued. This is useful for speeding up scripts which produce large multiplots; see Section~\ref{set_display} for more details.
                    \\
-\texttt{DPI} & \textbf{Possible values:} Any floating-point number.
+{\tt DPI} & {\bf Possible values:} Any floating-point number.
 
-                   \textbf{Analogous set command:} \texttt{set dpi}\index{set dpi command@\texttt{set dpi} command}
+                   {\bf Analogous set command:} {\tt set dpi}\index{set dpi command@{\tt set dpi} command}
 
                    Sets the sampling quality used, in dots per inch, when output is sent to a bitmapped terminal (the jpeg/gif/png terminals).
                    \\
-\texttt{ENLARGE} & \textbf{Possible values:} ON / OFF
+{\tt ENLARGE} & {\bf Possible values:} ON / OFF
 
-                   \textbf{Analogous set command:} \texttt{set terminal}\index{set terminal command@\texttt{set terminal} command}
+                   {\bf Analogous set command:} {\tt set terminal}\index{set terminal command@{\tt set terminal} command}
                    
                    When set to `ON' output is enlarged or shrunk to fit the
                    current paper size.
                    \\
 
-\texttt{FONTSIZE} & \textbf{Possible values:} Integers in the range $-4 \to 5$.
+{\tt FONTSIZE} & {\bf Possible values:} Integers in the range $-4 \to 5$.
 
-                   \textbf{Analogous set command:} \texttt{set fontsize}\index{set fontsize command@\texttt{set fontsize} command}
+                   {\bf Analogous set command:} {\tt set fontsize}\index{set fontsize command@{\tt set fontsize} command}
 
-                   Sets the fontsize of text, varying between \LaTeX's \texttt{tiny} ($-4$) and \texttt{Huge} (5).
+                   Sets the fontsize of text, varying between \LaTeX's {\tt tiny} ($-4$) and {\tt Huge} (5).
                    \\
-\texttt{FUNCSTYLE} & \textbf{Possible values:} Any plot style.
+{\tt FUNCSTYLE} & {\bf Possible values:} Any plot style.
 
-                   \textbf{Analogous set command:} \texttt{set function style}\index{set function style command@\texttt{set function style} command}
+                   {\bf Analogous set command:} {\tt set function style}\index{set function style command@{\tt set function style} command}
 
                    Sets the plot style used by default when plotting functions.
                    \\
-\texttt{GRID} & \textbf{Possible values:} ON / OFF
+{\tt GRID} & {\bf Possible values:} ON / OFF
 
-                   \textbf{Analogous set command:} \texttt{set grid}\index{set grid command@\texttt{set grid} command}
+                   {\bf Analogous set command:} {\tt set grid}\index{set grid command@{\tt set grid} command}
 
                    Sets whether a grid should be displayed on plots.
                    \\
-\texttt{GRIDAXISX} & \textbf{Possible values:} Any integer.
+{\tt GRIDAXISX} & {\bf Possible values:} Any integer.
 
-                   \textbf{Analogous set command:} None
+                   {\bf Analogous set command:} None
 
-                   Sets the default $x$-axis to which gridlines should attach, if the \texttt{set grid} command is called without specifying which axes to use.
+                   Sets the default $x$-axis to which gridlines should attach, if the {\tt set grid} command is called without specifying which axes to use.
                    \\
-\texttt{GRIDAXISY} & \textbf{Possible values:} Any integer.
+{\tt GRIDAXISY} & {\bf Possible values:} Any integer.
 
-                   \textbf{Analogous set command:} None
+                   {\bf Analogous set command:} None
 
-                   Sets the default $y$-axis to which gridlines should attach, if the \texttt{set grid} command is called without specifying which axes to use.
+                   Sets the default $y$-axis to which gridlines should attach, if the {\tt set grid} command is called without specifying which axes to use.
                    \\
-\texttt{GRIDMAJCOLOUR} & \textbf{Possible values:} Any recognised colour.
+{\tt GRIDMAJCOLOUR} & {\bf Possible values:} Any recognised colour.
 
-                   \textbf{Analogous set command:} \texttt{set gridmajcolour}\index{set gridmajcolour command@\texttt{set gridmajcolour} command}
+                   {\bf Analogous set command:} {\tt set gridmajcolour}\index{set gridmajcolour command@{\tt set gridmajcolour} command}
 
                    Sets the colour of major grid lines.
                    \\
-\texttt{GRIDMINCOLOUR} & \textbf{Possible values:} Any recognised colour.
+{\tt GRIDMINCOLOUR} & {\bf Possible values:} Any recognised colour.
 
-                   \textbf{Analogous set command:} \texttt{set gridmincolour}\index{set gridmincolour command@\texttt{set gridmincolour} command}
+                   {\bf Analogous set command:} {\tt set gridmincolour}\index{set gridmincolour command@{\tt set gridmincolour} command}
 
                    Sets the colour of minor grid lines.
                    \\
-\texttt{KEY} & \textbf{Possible values:} ON / OFF
+{\tt KEY} & {\bf Possible values:} ON / OFF
 
-                   \textbf{Analogous set command:} \texttt{set key}\index{set key command@\texttt{set key} command}
+                   {\bf Analogous set command:} {\tt set key}\index{set key command@{\tt set key} command}
 
                    Sets whether a legend is displayed on plots.
                    \\
-\texttt{KEYCOLUMNS} & \textbf{Possible values:} Any integer $>0$.
+{\tt KEYCOLUMNS} & {\bf Possible values:} Any integer $>0$.
 
-                   \textbf{Analogous set command:} \texttt{set keycolumns}\index{set keycolumnscommand@\texttt{set keycolumns} command}
+                   {\bf Analogous set command:} {\tt set keycolumns}\index{set keycolumnscommand@{\tt set keycolumns} command}
 
                    Sets the number of columns into which the legends of plots should be divided.
                    \\
-\texttt{KEYPOS} & \textbf{Possible values:} ``TOP RIGHT'', ``TOP MIDDLE'', ``TOP LEFT'', ``MIDDLE RIGHT'', ``MIDDLE MIDDLE'', ``MIDDLE LEFT'', ``BOTTOM RIGHT'', ``BOTTOM MIDDLE'', ``BOTTOM LEFT'', ``BELOW'', ``OUTSIDE''.
+{\tt KEYPOS} & {\bf Possible values:} ``TOP RIGHT'', ``TOP MIDDLE'', ``TOP LEFT'', ``MIDDLE RIGHT'', ``MIDDLE MIDDLE'', ``MIDDLE LEFT'', ``BOTTOM RIGHT'', ``BOTTOM MIDDLE'', ``BOTTOM LEFT'', ``BELOW'', ``OUTSIDE''.
 
-                   \textbf{Analogous set command:} \texttt{set key}\index{set key command@\texttt{set key} command}
+                   {\bf Analogous set command:} {\tt set key}\index{set key command@{\tt set key} command}
 
                    Sets where the legend should appear on plots.
                    \\
-\texttt{KEY\_XOFF} & \textbf{Possible values:} Any floating-point number.
+{\tt KEY\_XOFF} & {\bf Possible values:} Any floating-point number.
 
-                   \textbf{Analogous set command:} \texttt{set key}\index{set key command@\texttt{set key} command}
+                   {\bf Analogous set command:} {\tt set key}\index{set key command@{\tt set key} command}
 
-                   Sets the horizontal offset, in approximate graph-widths, that should be applied to the legend, relative to its default position, as set by \texttt{KEYPOS}.
+                   Sets the horizontal offset, in approximate graph-widths, that should be applied to the legend, relative to its default position, as set by {\tt KEYPOS}.
                    \\
-\texttt{KEY\_YOFF} & \textbf{Possible values:} Any floating-point number.
+{\tt KEY\_YOFF} & {\bf Possible values:} Any floating-point number.
 
-                   \textbf{Analogous set command:} \texttt{set key}\index{set key command@\texttt{set key} command}
+                   {\bf Analogous set command:} {\tt set key}\index{set key command@{\tt set key} command}
 
-                   Sets the vertical offset, in approximate graph-heights, that should be applied to the legend, relative to its default position, as set by \texttt{KEYPOS}.
+                   Sets the vertical offset, in approximate graph-heights, that should be applied to the legend, relative to its default position, as set by {\tt KEYPOS}.
                    \\
-\texttt{LANDSCAPE} & \textbf{Possible values:} ON / OFF
+{\tt LANDSCAPE} & {\bf Possible values:} ON / OFF
 
-                   \textbf{Analogous set command:} \texttt{set terminal}\index{set terminal command@\texttt{set terminal} command}
+                   {\bf Analogous set command:} {\tt set terminal}\index{set terminal command@{\tt set terminal} command}
 
                    Sets whether output is in portrait orientation (OFF), or landscape orientation (ON).
                    \\
-\texttt{LINEWIDTH} & \textbf{Possible values:} Any floating-point number.
+{\tt LINEWIDTH} & {\bf Possible values:} Any floating-point number.
 
-                   \textbf{Analogous set command:} \texttt{set linewidth}\index{set linewidth command@\texttt{set linewidth} command}
+                   {\bf Analogous set command:} {\tt set linewidth}\index{set linewidth command@{\tt set linewidth} command}
 
                    Sets the width of lines on plots, as a  multiple of the default.
                    \\
-\texttt{MULTIPLOT} & \textbf{Possible values:} ON / OFF
+{\tt MULTIPLOT} & {\bf Possible values:} ON / OFF
 
-                   \textbf{Analogous set command:} \texttt{set multiplot}\index{set multiplot command@\texttt{set multiplot} command}
+                   {\bf Analogous set command:} {\tt set multiplot}\index{set multiplot command@{\tt set multiplot} command}
 
                    Sets whether multiplot mode is on or off.
                    \\
-\texttt{ORIGINX} & \textbf{Possible values:} Any floating point number.
+{\tt ORIGINX} & {\bf Possible values:} Any floating point number.
 
-                   \textbf{Analogous set command:} \texttt{set origin}\index{set origin command@\texttt{set origin} command}
+                   {\bf Analogous set command:} {\tt set origin}\index{set origin command@{\tt set origin} command}
 
                    Sets the horizontal position, in centimetres, of the default origin of plots on the page. Most useful when multiplotting many plots.
                    \\
-\texttt{ORIGINY} & \textbf{Possible values:} Any floating point number.
+{\tt ORIGINY} & {\bf Possible values:} Any floating point number.
 
-                   \textbf{Analogous set command:} \texttt{set origin}\index{set origin command@\texttt{set origin} command}
+                   {\bf Analogous set command:} {\tt set origin}\index{set origin command@{\tt set origin} command}
 
                    Sets the vertical position, in centimetres, of the default origin of plots on the page. Most useful when multiplotting many plots.
                    \\
-\texttt{OUTPUT} & \textbf{Possible values:} Any string.
+{\tt OUTPUT} & {\bf Possible values:} Any string.
 
-                   \textbf{Analogous set command:} \texttt{set output}\index{set output command@\texttt{set output} command}
+                   {\bf Analogous set command:} {\tt set output}\index{set output command@{\tt set output} command}
 
                    Sets the output filename for plots. If blank, the default filename of pyxplot.foo is used, where `foo' is an extension appropriate for the file format.
                    \\
-\texttt{PAPER\_HEIGHT} & \textbf{Possible values:} Any floating-point number.
+{\tt PAPER\_HEIGHT} & {\bf Possible values:} Any floating-point number.
 
-                   \textbf{Analogous set command:} \texttt{set papersize}\index{set papersize command@\texttt{set papersize} command}
+                   {\bf Analogous set command:} {\tt set papersize}\index{set papersize command@{\tt set papersize} command}
 
                    Sets the height of the papersize for postscript output in millimetres.
                    \\
-\texttt{PAPER\_WIDTH} & \textbf{Possible values:} Any floating-point number.
+{\tt PAPER\_WIDTH} & {\bf Possible values:} Any floating-point number.
 
-                   \textbf{Analogous set command:} \texttt{set papersize}\index{set papersize command@\texttt{set papersize} command}
+                   {\bf Analogous set command:} {\tt set papersize}\index{set papersize command@{\tt set papersize} command}
 
                    Sets the width of the papersize for postscript output in millimetres.
                    \\
-\texttt{POINTLINEWIDTH} & \textbf{Possible values:} Any floating-point number.
+{\tt POINTLINEWIDTH} & {\bf Possible values:} Any floating-point number.
 
-                   \textbf{Analogous set command:} \texttt{set pointlinewidth} / \texttt{plot with pointlinewidth}\index{set pointlinewidth command@\texttt{set pointlinewidth} command}
+                   {\bf Analogous set command:} {\tt set pointlinewidth} / {\tt plot with pointlinewidth}\index{set pointlinewidth command@{\tt set pointlinewidth} command}
 
                    Sets the linewidth used to stroke points onto plots, as a multiple of the default.
                    \\
-\texttt{POINTSIZE} & \textbf{Possible values:} Any floating-point number.
+{\tt POINTSIZE} & {\bf Possible values:} Any floating-point number.
 
-                   \textbf{Analogous set command:} \texttt{set pointsize} / \texttt{plot with pointsize}\index{set pointsize command@\texttt{set pointsize} command}
+                   {\bf Analogous set command:} {\tt set pointsize} / {\tt plot with pointsize}\index{set pointsize command@{\tt set pointsize} command}
 
                    Sets the sizes of points on plots, as a multiple of their normal sizes.
                    \\
-\texttt{SAMPLES} & \textbf{Possible values:} Any integer.
+{\tt SAMPLES} & {\bf Possible values:} Any integer.
 
-                   \textbf{Analogous set command:} \texttt{set samples}\index{set samples command@\texttt{set samples} command}
+                   {\bf Analogous set command:} {\tt set samples}\index{set samples command@{\tt set samples} command}
 
                    Sets the number of samples (datapoints) to be evaluated along the $x$-axis when plotting a function.
                    \\
-\texttt{TERMINVERT} & \textbf{Possible values:} ON / OFF
+{\tt TERMINVERT} & {\bf Possible values:} ON / OFF
 
-                   \textbf{Analogous set command:} \texttt{set terminal}\index{set terminal command@\texttt{set terminal} command}
+                   {\bf Analogous set command:} {\tt set terminal}\index{set terminal command@{\tt set terminal} command}
 
                    Sets whether jpeg/gif/png output has normal colours (OFF), or inverted colours (ON).
                    \\
-\texttt{TERMTRANSPARENT} & \textbf{Possible values:} ON / OFF
+{\tt TERMTRANSPARENT} & {\bf Possible values:} ON / OFF
 
-                   \textbf{Analogous set command:} \texttt{set terminal}\index{set terminal command@\texttt{set terminal} command}
+                   {\bf Analogous set command:} {\tt set terminal}\index{set terminal command@{\tt set terminal} command}
 
                    Sets whether jpeg/gif/png output has transparent background (ON), or solid background (OFF).
                    \\
-\texttt{TERMTYPE} & \textbf{Possible values:} \texttt{X11\_singlewindow},
+{\tt TERMTYPE} & {\bf Possible values:} {\tt X11\_singlewindow},
 
-                   \texttt{X11\_multiwindow}, \texttt{X11\_persist}, \texttt{PS}, \texttt{EPS}, \texttt{PDF}, \texttt{PNG}, \texttt{JPG}, \texttt{GIF}
+                   {\tt X11\_multiwindow}, {\tt X11\_persist}, {\tt PS}, {\tt EPS}, {\tt PDF}, {\tt PNG}, {\tt JPG}, {\tt GIF}
 
-                   \textbf{Analogous set command:} \texttt{set terminal}\index{set terminal command@\texttt{set terminal} command}
+                   {\bf Analogous set command:} {\tt set terminal}\index{set terminal command@{\tt set terminal} command}
 
-                   Sets whether output is sent to the screen or to disk, and, in the latter case, the format of the output. The \texttt{ps} option should be used for both encapsulated and normal postscript output; these are distinguished using the \texttt{ENHANCED} option, above.
+                   Sets whether output is sent to the screen or to disk, and, in the latter case, the format of the output. The {\tt ps} option should be used for both encapsulated and normal postscript output; these are distinguished using the {\tt ENHANCED} option, above.
                    \\
-\texttt{TEXTCOLOUR} & \textbf{Possible values:} Any recognised colour.
+{\tt TEXTCOLOUR} & {\bf Possible values:} Any recognised colour.
 
-                   \textbf{Analogous set command:} \texttt{set textcolour}\index{set textcolour command@\texttt{set textcolour} command}
+                   {\bf Analogous set command:} {\tt set textcolour}\index{set textcolour command@{\tt set textcolour} command}
 
                    Sets the colour of all text output.
                    \\
-\texttt{TEXTHALIGN} & \textbf{Possible values:} \texttt{Left}, \texttt{Centre}, \texttt{Right}
+{\tt TEXTHALIGN} & {\bf Possible values:} {\tt Left}, {\tt Centre}, {\tt Right}
 
-                   \textbf{Analogous set command:} \texttt{set texthalign}\index{set texthalign command@\texttt{set texthalign} command}
+                   {\bf Analogous set command:} {\tt set texthalign}\index{set texthalign command@{\tt set texthalign} command}
 
                    Sets the horizontal alignment of text labels to their given reference positions.
                    \\
-\texttt{TEXTVALIGN} & \textbf{Possible values:} \texttt{Top}, \texttt{Centre}, \texttt{Bottom}
+{\tt TEXTVALIGN} & {\bf Possible values:} {\tt Top}, {\tt Centre}, {\tt Bottom}
 
-                   \textbf{Analogous set command:} \texttt{set textvalign}\index{set textvalign command@\texttt{set textvalign} command}
+                   {\bf Analogous set command:} {\tt set textvalign}\index{set textvalign command@{\tt set textvalign} command}
 
                    Sets the vertical alignment of text labels to their given reference positions.
                    \\
-\texttt{TITLE} & \textbf{Possible values:} Any string.
+{\tt TITLE} & {\bf Possible values:} Any string.
 
-                   \textbf{Analogous set command:} \texttt{set title}\index{set title command@\texttt{set title} command}
+                   {\bf Analogous set command:} {\tt set title}\index{set title command@{\tt set title} command}
 
                    Sets the title to appear at the top of the plot.
                    \\
-\texttt{TIT\_XOFF} & \textbf{Possible values:} Any floating point number.
+{\tt TIT\_XOFF} & {\bf Possible values:} Any floating point number.
 
-                   \textbf{Analogous set command:} \texttt{set title}
+                   {\bf Analogous set command:} {\tt set title}
 
                    Sets the horizontal offset of the title of the plot from its default central location.
                    \\
-\texttt{TIT\_YOFF} & \textbf{Possible values:} Any floating point number.
+{\tt TIT\_YOFF} & {\bf Possible values:} Any floating point number.
 
-                   \textbf{Analogous set command:} \texttt{set title}
+                   {\bf Analogous set command:} {\tt set title}
 
                    Sets the vertical offset of the title of the plot from its default location at the top of the plot.
                    \\
-\texttt{WIDTH} & \textbf{Possible values:} Any floating-point number.
+{\tt WIDTH} & {\bf Possible values:} Any floating-point number.
 
-                   \textbf{Analogous set command:} \texttt{set width} / \texttt{set size}\index{set width command@\texttt{set width} command}\index{set size command@\texttt{set size} command}
+                   {\bf Analogous set command:} {\tt set width} / {\tt set size}\index{set width command@{\tt set width} command}\index{set size command@{\tt set size} command}
 
                    Sets the width of plots in centimetres.
                    \\
 \end{longtable}
 
-\section{Configuration Options: \texttt{terminal} section}
+\section{Configuration Options: {\tt terminal} section}
 \label{configfile_terminal}
 
 The following table provides a brief description of the function of each of the
-parameters in the \texttt{terminal} section of the above configuration file,
+parameters in the {\tt terminal} section of the above configuration file,
 with a list of possible values for each:
 
 \begin{longtable}{p{3.4cm}p{9cm}}
-\texttt{COLOUR} & \textbf{Possible values:} ON / OFF
+{\tt COLOUR} & {\bf Possible values:} ON / OFF
 
-                  \textbf{Analogous command-line switches:} \texttt{-c}, \texttt{--colour}, \texttt{-m}, \texttt{--monochrome}
+                  {\bf Analogous command-line switches:} {\tt -c}, {\tt --colour}, {\tt -m}, {\tt --monochrome}
 
                   Sets whether colour highlighting should be used in the interactive terminal. If turned on, output is displayed in green, warning messages in amber, and error messages in red; these colours are configurable, as described below. Note that not all UNIX terminals support the use of colour.
                    \\
-\texttt{COLOUR\_ERR} & \textbf{Possible values:} Any recognised terminal colour.
+{\tt COLOUR\_ERR} & {\bf Possible values:} Any recognised terminal colour.
 
-                  \textbf{Analogous command-line switches:} None.
+                  {\bf Analogous command-line switches:} None.
 
                   Sets the colour in which error messages are displayed when colour highlighting is used. Note that the list of recognised colour names differs from that used in PyXPlot; a list is given at the end of this section.
                    \\
-\texttt{COLOUR\_REP} & \textbf{Possible values:} Any recognised terminal colour.
+{\tt COLOUR\_REP} & {\bf Possible values:} Any recognised terminal colour.
 
-                  \textbf{Analogous command-line switches:} None.
+                  {\bf Analogous command-line switches:} None.
 
                   As above, but sets the colour in which PyXPlot displays its non-error-related output.
                    \\
-\texttt{COLOUR\_WRN} & \textbf{Possible values:} Any recognised terminal colour.
+{\tt COLOUR\_WRN} & {\bf Possible values:} Any recognised terminal colour.
 
-                  \textbf{Analogous command-line switches:} None.
+                  {\bf Analogous command-line switches:} None.
 
                   As above, but sets the colour in which PyXPlot displays its warning messages.
                    \\
-\texttt{SPLASH} & \textbf{Possible values:} ON / OFF
+{\tt SPLASH} & {\bf Possible values:} ON / OFF
 
-                  \textbf{Analogous command-line switches:} \texttt{-q}, \texttt{--quiet}, \texttt{-V}, \texttt{--verbose}
+                  {\bf Analogous command-line switches:} {\tt -q}, {\tt --quiet}, {\tt -V}, {\tt --verbose}
 
                   Sets whether the standard welcome message is displayed upon startup.
                    \\
 \end{longtable}
 
-The colours recognised by the \texttt{COLOUR\_XXX} configuration options above are: \texttt{Red}, \texttt{Green}, \texttt{Brown}, \texttt{Blue}, \texttt{Purple}, \texttt{Magenta}, \texttt{Cyan}, \texttt{White}, \texttt{Normal}. The final option produces the default foreground colour of your terminal.
+The colours recognised by the {\tt COLOUR\_XXX} configuration options above are: {\tt Red}, {\tt Green}, {\tt Brown}, {\tt Blue}, {\tt Purple}, {\tt Magenta}, {\tt Cyan}, {\tt White}, {\tt Normal}. The final option produces the default foreground colour of your terminal.
 
 \section{Recognised Colour Names}
 \label{colour_names}
 
-The following is a complete list of the colour names which PyXPlot recognises in the \texttt{set textcolour}, \texttt{set axescolour} commands, and in the \texttt{colours} section of its configuration file. It should be noted that they are case-insensitive:
+The following is a complete list of the colour names which PyXPlot recognises in the {\tt set textcolour}, {\tt set axescolour} commands, and in the {\tt colours} section of its configuration file. It should be noted that they are case-insensitive:
 
 \index{configuration file!colours}\index{colours!configuration file}
 GreenYellow, Yellow, Goldenrod, Dandelion, Apricot, Peach, Melon, YellowOrange, Orange, BurntOrange, Bittersweet, RedOrange, Mahogany, Maroon, BrickRed, Red, OrangeRed, RubineRed, WildStrawberry, Salmon, CarnationPink, Magenta, VioletRed, Rhodamine, Mulberry, RedViolet, Fuchsia, Lavender, Thistle, Orchid, DarkOrchid, Purple, Plum, Violet, RoyalPurple, BlueViolet, Periwinkle, CadetBlue, CornflowerBlue, MidnightBlue, NavyBlue, RoyalBlue, Blue, Cerulean, Cyan, ProcessBlue, SkyBlue, Turquoise, TealBlue, Aquamarine, BlueGreen, Emerald, JungleGreen, SeaGreen, Green, ForestGreen, PineGreen, LimeGreen, YellowGreen, SpringGreen, OliveGreen, RawSienna, Sepia, Brown, Tan, Gray, Grey, Black, White, white, black.

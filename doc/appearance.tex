@@ -33,9 +33,9 @@ and colour of textual labels on plots.
 
 \subsection{Arrows}
 
-\label{set_arrow}\index{arrows}\index{set arrow command@\texttt{set arrow}
-command} Arrows may be placed on plots using the \texttt{set arrow} command,
-which has similar syntax to that used by gnuplot. A simple example would be:
+\label{set_arrow}\index{arrows} Arrows may be placed on plots using the
+\indcmdt{set arrow}, which has similar syntax to that used by gnuplot. A simple
+example would be:
 
 \begin{verbatim}
 set arrow 1 from 0,0 to 1,1
@@ -48,26 +48,25 @@ number for the arrow, allowing it to be subsequently removed via:
 unset arrow 1
 \end{verbatim}
 
-\noindent or equivalently, via:\index{set noarrow command@\texttt{set noarrow}
-command}
+\noindent or equivalently, via:\indcmd{set noarrow}
 
 \begin{verbatim}
 set noarrow 1
 \end{verbatim}
 
-In PyXPlot, this syntax is extended; the \texttt{set arrow} command can be
-followed by the keyword `\texttt{with}', to specify the style of the arrow. For
-example, the specifiers `\texttt{nohead}', `\texttt{head}' and
-`\texttt{twohead}', after the keyword `\texttt{with}', can be used to make
+In PyXPlot, this syntax is extended; the {\tt set arrow} command can be
+followed by the keyword `{\tt with}', to specify the style of the arrow. For
+example, the specifiers `{\tt nohead}', `{\tt head}' and
+`{\tt twohead}', after the keyword `{\tt with}', can be used to make
 arrows with no arrow heads, normal arrow heads, or two arrow heads.
-`\texttt{twoway}' is an alias for `\texttt{twohead}'.  For example:
+`{\tt twoway}' is an alias for `{\tt twohead}'.  For example:
 
 \begin{verbatim}
 set arrow 1 from 0,0 to 1,1 with nohead
 \end{verbatim}
 
 In addition, linestyles and colours can be specified after the keyword
-`\texttt{with}':
+`{\tt with}':
 
 \begin{verbatim}
 set arrow 1 from 0,0 to 1,1 with nohead \
@@ -75,9 +74,9 @@ linetype 1 c blue
 \end{verbatim}
 
 As in gnuplot, the coordinates for the start and end points of the arrow can be
-specified in a range of coordinate systems. `\texttt{first}', the default,
-measures the graph using the $x$- and $y$-axes. `\texttt{second}' uses the $x2$-
-and $y2$-axes. `\texttt{screen}' and `\texttt{graph}' both measure in centimetres
+specified in a range of coordinate systems. `{\tt first}', the default,
+measures the graph using the $x$- and $y$-axes. `{\tt second}' uses the $x2$-
+and $y2$-axes. `{\tt screen}' and `{\tt graph}' both measure in centimetres
 from the origin of the graph. In the following example, we use these
 specifiers, and specify coordinates using variables rather than doing so
 explicitly:
@@ -93,16 +92,14 @@ set arrow 1 from first  x0, first  x1 \
 \end{verbatim}
 
 In addition to these four options, which are those available in gnuplot, the
-syntax `\texttt{axis}\textit{n}' may also be used, to use the $n\,$th $x$- or
-$y$-axis -- for example, `\texttt{axis3}'.\index{set arrow command@\texttt{set
-arrow} command} This allows arrows to reference any arbitrary axis on plots
-which make use of large numbers of parallel axes (see
-Section~\ref{multiple_axes}).
+syntax `{\tt axis}\textit{n}' may also be used, to use the $n\,$th $x$- or
+$y$-axis -- for example, `{\tt axis3}'.\indcmd{set arrow} This allows arrows to
+reference any arbitrary axis on plots which make use of large numbers of
+parallel axes (see Section~\ref{multiple_axes}).
 
 \subsection{Text Labels}
 
-Text labels may be placed on plots using the \texttt{set label}
-command\index{set label command@\texttt{set label} command}. As with all
+Text labels may be placed on plots using the \indcmdt{set label}. As with all
 textual labels in PyXPlot, these are rendered in \LaTeX:
 
 \begin{verbatim}
@@ -118,7 +115,7 @@ unset label 1
 \end{verbatim}
 
 \noindent The positional coordinates for the text label, placed after the
-keyword `\texttt{at}', can be specified in any of the coordinate systems
+keyword `{\tt at}', can be specified in any of the coordinate systems
 described for arrows above. A rotation angle may optionally be specified after
 the keyword `{\tt rotate}', to rotate text counter-clockwise by a given
 angle, measured in degrees. For example, the following would produce
@@ -128,30 +125,33 @@ upward-running text:
 set label 1 'Hello World' at axis3 3.0, axis4 2.7 rotate 90
 \end{verbatim}
 
-\index{fontsize}\index{text!size}\index{set fontsize command@\texttt{set
-fontsize} command} The fontsize of these text labels can globally be set using
-the \texttt{set fontsize x} command. This applies not only to the \texttt{set
-label} command, but also to plot titles, axis labels, keys, etc. The value
-given should be an integer in the range $-4 \leq x \leq 5$. The default is
-zero, which corresponds to \LaTeX's \texttt{normalsize}; $-4$ corresponds to
-\texttt{tiny} and 5 to \texttt{Huge}.
+\index{fontsize}\index{text!size} The fontsize of these text labels can
+globally be set using the \indcmdt{set fontsize}. This applies not only to the
+{\tt set label} command, but also to plot titles, axis labels, keys, etc. The
+value given should be an integer in the range $-4 \leq x \leq 5$. The default
+is zero, which corresponds to \LaTeX's {\tt normalsize}; $-4$ corresponds to
+{\tt tiny} and 5 to {\tt Huge}.
 
-\index{text!colour}\index{colours!text}\index{set textcolour
-command@\texttt{set textcolour} command} The \texttt{set textcolour} command
-can be used to globally set the colour of all text output, and applies to all
-of the text that the \texttt{set fontsize} command does. It is especially
-useful when producing plots to be embedded in presentation slideshows, where
-bright text on a dark background may be desired. It should be followed either
-by an integer, to set a colour from the present palette, or by a colour name. A
-list of the recognised colour names can be found in Section~\ref{colour_names}.
-For example:
+\index{text!colour}\index{colours!text} The \indcmdt{set textcolour} can be
+used to globally set the colour of all text output, and applies to all of the
+text that the {\tt set fontsize} command does. It is especially useful when
+producing plots to be embedded in presentation slideshows, where bright text on
+a dark background may be desired. It should be followed either by an integer,
+to set a colour from the present palette, or by a colour name. A list of the
+recognised colour names can be found in Section~\ref{colour_names}.  For
+example:
 
 \begin{verbatim}
 set textcolour 2
 set textcolour blue
 \end{verbatim}
 
-\index{text!alignment}\index{alignment!text}\index{set texthalign command@\texttt{set texthalign} command}\index{set textvalign command@\texttt{set textvalign} command}By default, each label's specified position corresponds to its bottom left corner. This alignment may be changed with the \texttt{set texthalign} and \texttt{set textvalign} commands. The former takes the options \texttt{left}, \texttt{centre} or \texttt{right}, and the latter takes the options \texttt{bottom}, \texttt{centre} or \texttt{top}, for example:
+\index{text!alignment}\index{alignment!text}By default, each label's specified
+position corresponds to its bottom left corner. This alignment may be changed
+with the {\tt set texthalign}\indcmd{set texthalign} and {\tt set
+textvalign}\indcmd{set textvalign} commands. The former takes the options {\tt
+left}, {\tt centre} or {\tt right}, and the latter takes the options {\tt
+bottom}, {\tt centre} or {\tt top}, for example:
 
 \begin{verbatim}
 set texthalign right
@@ -176,8 +176,7 @@ unset nogrid
 
 \noindent By default, gridlines are drawn from the major and minor ticks of the
 $x$- and $y$-axes. However, the axes which should be used may be specified
-after the \texttt{set grid} command\index{grid}\index{set grid
-command@\texttt{set grid} command}:
+after the \indcmdt{set grid}\index{grid}:
 
 \begin{verbatim}
 set grid x2y2
@@ -196,12 +195,11 @@ axes via:
 unset grid x2x3
 \end{verbatim}
 
-The colours of gridlines can be controlled via the \texttt{set
-gridmajcolour}\index{grid!colour}\index{colours!grid}\index{set gridmajcolour
-command@\texttt{set gridmajcolour} command}\index{set gridmincolour
-command@\texttt{set gridmincolour} command} and \texttt{set gridmincolour}
-commands, which control the gridlines emanating from major and minor axis ticks
-respectively. An example would be:
+The colours of gridlines\index{grid!colour}\index{colours!grid} can be
+controlled via the {\tt set gridmajcolour}\indcmd{set gridmajcolour} and {\tt
+set gridmincolour}\indcmd{set gridmincolour} commands, which control the
+gridlines emanating from major and minor axis ticks respectively. An example
+would be:
 
 \begin{verbatim}
 set gridmincolour blue
@@ -210,11 +208,9 @@ set gridmincolour blue
 \noindent Any of the colour names listed in Section~\ref{colour_names} can be
 used.
 
-A related command is \texttt{set
-axescolour}\index{axes!colour}\index{colours!axes}\index{set
-axescolourcommand@\texttt{set axescolour} command}, which has a syntax similar
-to that above, and sets the colour of the graph's axes.
-\label{set_colours}
+A related command\index{axes!colour}\index{colours!axes} is {\tt set
+axescolour}\indcmd{set axescolour}, which has a syntax similar to that above,
+and sets the colour of the graph's axes.\label{set_colours}
 
 \section{LaTeX and PyXPlot}
 
@@ -222,17 +218,17 @@ to that above, and sets the colour of the graph's axes.
 \label{multiplot}
 \index{multiplot}
 
-Gnuplot has a plotting mode called ``multiplot'' which allows many graphs to be
+Gnuplot has a plotting mode called `multiplot' which allows many graphs to be
 plotted together, and display side-by-side. The basic syntax of this mode is
 reproduced in PyXPlot, but is hugely extended.
 
-The mode is entered by the command ``\texttt{set multiplot}''. This can be compared
-to taking a blank sheet of paper on which to place plots. Plots are then placed
-on that sheet of paper, as usual, with the \texttt{plot} command. The position
-of each plot is set using the \texttt{set origin} command, which takes a
-comma-separated $x,y$ coordinate pair, measured in centimetres. The following,
-for example, would plot a graph of $\sin(x)$ to the left of a plot of
-$\cos(x)$:\index{set origin command@\texttt{set origin} command}
+The mode is entered by the command {\tt set multiplot}\indcmd{set multiplot}.
+This can be compared to taking a blank sheet of paper on which to place plots.
+Plots are then placed on that sheet of paper, as usual, with the {\tt plot}
+command. The position of each plot is set using the \indcmdt{set origin}, which
+takes a comma-separated $x,y$ coordinate pair, measured in centimetres. The
+following, for example, would plot a graph of $\sin(x)$ to the left of a plot
+of $\cos(x)$:
 
 \begin{verbatim} 
 set multiplot
@@ -241,9 +237,8 @@ set origin 10,0
 plot cos(x)
 \end{verbatim}
 
-The multiplot page may subsequently be cleared with the \texttt{clear} command,
-and multiplot mode may be left using the ``\texttt{set nomultiplot}''
-command.\index{clear command@\texttt{clear} command}
+The multiplot page may subsequently be cleared with the \indcmdt{clear}, and
+multiplot mode may be left using the \indcmdt{set nomultiplot}.
 
 \subsection{Deleting, Moving and Changing Plots}
 
@@ -253,10 +248,8 @@ from zero each time the multiplot page is cleared. A number of commands exist
 for modifying plots after they have been placed on the page, selecting them by
 making reference to their reference numbers.
 
-Plots may be removed from the page with the \texttt{delete} command, and
-restored with the \texttt{undelete} command:\index{delete
-command@\texttt{delete} command}\index{undelete command@\texttt{undelete}
-command}
+Plots may be removed from the page with the \indcmdt{delete}, and restored with
+the \indcmdt{undelete}:
 
 \begin{verbatim} 
 delete <number>
@@ -264,19 +257,19 @@ undelete <number>
 \end{verbatim}
 
 The reference numbers of deleted plots are not reused until the page is
-cleared, as they may always be restored with the \texttt{undelete} command;
-plots which have been deleted simply do not appear.
+cleared, as they may always be restored with the \indcmdt{undelete}; plots
+which have been deleted simply do not appear.
 
-Plots may also be moved with the \texttt{move} command. For example, the
-following would move plot 23 to position (8,8) measured in centimetres:
+Plots may also be moved with the \indcmdt{move}. For example, the following
+would move plot 23 to position (8,8) measured in centimetres:
 
 \begin{verbatim} 
 move 23 to 8,8
 \end{verbatim}
 
-In multiplot mode, the \texttt{replot} command can be used to modify the last
-plot added to the page. For example, the following would change the title of
-the latest plot to ``foo'', and add a plot of $\cos(x)$ to it:
+In multiplot mode, the \indcmdt{replot} can be used to modify the last plot
+added to the page. For example, the following would change the title of the
+latest plot to `foo', and add a plot of $\cos(x)$ to it:
 
 \begin{verbatim} 
 set title 'foo'
@@ -284,8 +277,8 @@ replot cos(x)
 \end{verbatim}
 
 Additionally, it is possible to modify any plot on the page, by first selecting
-it with the \texttt{edit} command. Subsequently, the \texttt{replot} will act
-upon the selected plot. The following example would produce two plots, and then
+it with the \indcmdt{edit}. Subsequently, the \indcmdt{replot} will act upon
+the selected plot. The following example would produce two plots, and then
 change the colour of the text on the first:
 
 \begin{verbatim} 
@@ -298,21 +291,20 @@ set textcolour red
 replot        # ... and replot it.
 \end{verbatim}
 
-The \texttt{edit} command can also be used to view the settings which are
-applied to any plot on the multiplot page -- after executing ``edit 0'', the
-\texttt{show} command will show the settings applied to plot zero.
+The \indcmdt{edit} can also be used to view the settings which are applied to
+any plot on the multiplot page -- after executing {\tt edit~0}, the
+\indcmdt{show} will show the settings applied to plot zero.
 
-When a new plot is added to the page, \texttt{replot} always switches to act
+When a new plot is added to the page, {\tt replot} always switches to act
 upon this most recent plot.
 
-\index{refresh command@\texttt{refresh} command}\index{replotting}
-\index{replot command@\texttt{replot} command} The \texttt{refresh} command is
-rather similar to the \texttt{replot} command, but produces an exact copy of
-the latest display. This can be useful, for example, after changing the
-terminal type, to produce a second copy of a multiplot page in a different
-format. But the crucial difference between this command and \texttt{replot} is
-that it doesn't replot anything. Indeed, there could be only textual items and
-arrows on the present multiplot page, and no graphs \textit{to} replot.
+\index{replotting} The \indcmdt{refresh} is rather similar to the
+\indcmdt{replot}, but produces an exact copy of the latest display. This can be
+useful, for example, after changing the terminal type, to produce a second copy
+of a multiplot page in a different format. But the crucial difference between
+this command and {\tt replot} is that it doesn't replot anything. Indeed, there
+could be only textual items and arrows on the present multiplot page, and no
+graphs \textit{to} replot.
 
 \subsection{Linked Axes}
 
@@ -322,60 +314,59 @@ firstly, of course, if it is of intrinsic interest to ensure that they are on a
 common scale, but also because the two plots then do not both need their own
 axis labels, and space can be saved by one sharing the labels from the other.
 In PyXPlot, an axis which borrows its scale and labels from another is called a
-``linked axis''.
+`linked axis'.
 
 Such axes are declared by setting the label of the linked axis to a magic
-string such as ``\texttt{linkaxis 0}''\label{linked_axes}\index{axes!reserved
+string such as {\tt linkaxis 0}\label{linked_axes}\index{axes!reserved
 labels}\index{magic axis labels}. This magic label would set the axis to borrow
-its scale from an axis from plot zero. The general syntax is
-``\texttt{linkaxis} $n$ $m$'', where $n$ and $m$ are two integers, separated by
-a comma or whitespace. The first, $n$, indicates the plot from which to borrow
-an axis; the second, $m$, indicates whether to borrow the scale of axis $x1$,
-$x2$, $x3$, etc. By default, $m=1$. The linking will fail, and a warning
-result, if an attempt is made to link to an axis which doesn't exist.
+its scale from an axis from plot zero. The general syntax is `{\tt linkaxis}
+$n$ $m$', where $n$ and $m$ are two integers, separated by a comma or
+whitespace. The first, $n$, indicates the plot from which to borrow an axis;
+the second, $m$, indicates whether to borrow the scale of axis $x1$, $x2$,
+$x3$, etc. By default, $m=1$. The linking will fail, and a warning result, if
+an attempt is made to link to an axis which doesn't exist.
 
 \subsection{Text Labels, Arrows and Images}
 
-\label{text_command}\index{text command@\texttt{text} command} In addition to
-placing plots on the multiplot page, text labels may also be inserted
-independently of any plots, using the \texttt{text} command. This has the
-following syntax:
+\label{text_command} In addition to placing plots on the multiplot page, text
+labels may also be inserted independently of any plots, using the
+\indcmdt{text}. This has the following syntax:
 
 \begin{verbatim} 
 text 'This is some text' at x,y
 \end{verbatim}
 
-In this case, the string ``This is some text'' would be rendered at position
-$(x,y)$ on the multiplot. As with the \texttt{set label} command, a rotation
-angle may optionally be specified to rotate text labels through any given
-angle, measured in degrees counter-clockwise, for example:
+In this case, the string `This is some text' would be rendered at position
+$(x,y)$ on the multiplot. As with the \indcmdt{set label}, a rotation angle may
+optionally be specified to rotate text labels through any given angle, measured
+in degrees counter-clockwise, for example:
 
 \begin{verbatim} 
 text 'This is some text' at x,y rotate r
 \end{verbatim}
 
-The commands \texttt{set textcolour}, \texttt{set
-texthalign} and \texttt{set textvalign}, which have already been described in
-the context in the \texttt{set label} command, can also be used to set the
-colour and alignment of text produced with the \texttt{text} command.\index{set
-textcolour command@\texttt{set textcolour} command}\index{set texthalign
-command@\texttt{set texthalign} command}\index{set textvalign
-command@\texttt{set textvalign} command}. A useful application of this is to
+The commands {\tt set textcolour}, {\tt set
+texthalign} and {\tt set textvalign}, which have already been described in
+the context in the {\tt set label} command, can also be used to set the
+colour and alignment of text produced with the {\tt text} command.\index{set
+textcolour command@{\tt set textcolour} command}\index{set texthalign
+command@{\tt set texthalign} command}\index{set textvalign
+command@{\tt set textvalign} command}. A useful application of this is to
 produce centred headings at the top of multiplots.
 
 As with plots, each text item has a unique identification number, and can be
-moved around, deleted or undeleted with the \texttt{delete}, \texttt{undelete}
-and \texttt{move} commands.
-\index{delete command@\texttt{delete} command}
-\index{undelete command@\texttt{undelete} command}
+moved around, deleted or undeleted with the {\tt delete}, {\tt undelete}
+and {\tt move} commands.
+\index{delete command@{\tt delete} command}
+\index{undelete command@{\tt undelete} command}
 
-It should be noted that the \texttt{text} command can also be used outside of
+It should be noted that the {\tt text} command can also be used outside of
 the multiplot environment, to render a single piece of short text instead of a
 graph. One obvious application is to produce equations rendered as graphical
 files for inclusion in talks.
 
-\label{arrows} \index{arrow command@\texttt{arrow} command} Arrows may also be
-placed on multiplot pages, independently of any plots, using the \texttt{arrow}
+\label{arrows} \index{arrow command@{\tt arrow} command} Arrows may also be
+placed on multiplot pages, independently of any plots, using the {\tt arrow}
 command, which has syntax:
 
 \begin{verbatim} 
@@ -385,9 +376,9 @@ arrow from x,y to x,y
 As above, arrows receive unique identification numbers, and can be deleted and
 undeleted.
 
-The \texttt{arrow} command may be followed by the `\texttt{with}' keyword to
+The {\tt arrow} command may be followed by the `{\tt with}' keyword to
 specify to style of the arrow. The style keywords which are accepted are
-identical to those accepted by the \texttt{set arrow} command (see
+identical to those accepted by the {\tt set arrow} command (see
 Section~\ref{set_arrow}). For example:
 
 \begin{verbatim} 
@@ -395,7 +386,7 @@ arrow from x1,y1 to x2,y2 \
 with twohead colour red
 \end{verbatim}
 
-\index{jpeg command@\texttt{jpeg} command} Bitmap images in jpeg form may be
+\index{jpeg command@{\tt jpeg} command} Bitmap images in jpeg form may be
 placed on the multiplot using the {\tt jpeg} command.  This has syntax:
 
 \begin{verbatim}
@@ -407,7 +398,7 @@ specified, using the analogous {\tt height} modifier.  An optional angle can
 also be specified using the {\tt rotate} modifier; this causes the included
 image to be rotated counter-clockwise by a specified angle (in degrees).
 
-\index{eps command@\texttt{eps} command} Vector graphic images in eps format may
+\index{eps command@{\tt eps} command} Vector graphic images in eps format may
 be placed on to a multiplot using the {\tt eps} command, which has a syntax
 analogous to the {\tt jpeg} command.  However neither height nor width need be
 specified; in this case the image will be included at its native size.  For
@@ -426,9 +417,9 @@ $(3,2)$ cm from the origin, rotated counter-clockwise through 5 degrees.
 By default, whenever an item is added to a multiplot, or an existing item moved
 or replotted, the whole multiplot is replotted to show the change. This can be
 a time consuming process on large and complex multiplots. For this reason, the
-\texttt{set nodisplay}\index{set display command@\texttt{set display} command}
+{\tt set nodisplay}\index{set display command@{\tt set display} command}
 command is provided, which stops PyXPlot from producing any output. The
-\texttt{set display} command can subsequently be issued to return to normal
+{\tt set display} command can subsequently be issued to return to normal
 behaviour.
 
 This can be especially useful in scripts which produce large multiplots. There

@@ -44,9 +44,9 @@ exhaustive list; see Section~\ref{list_of_plotstyles} for such a list.}:
 \item linespoints -- a combination of both lines and points
 \end{itemize}
 
-When using the \texttt{points}, \texttt{linespoints} and \texttt{dots} plot
+When using the {\tt points}, {\tt linespoints} and {\tt dots} plot
 styles, the size of the plotted points or dots can be varied by using the
-\texttt{pointsize} modifier. In each case, the default value of these settings
+{\tt pointsize} modifier. In each case, the default value of these settings
 is $1.0$. For example, to represent data with large dots, the following would
 be used:
 
@@ -55,10 +55,10 @@ plot sin(x) with dots pointsize 10
 \end{verbatim}
 
 \noindent The width of lines can similarly be controlled with the
-\texttt{linewidth}\index{linewidth modifier@\texttt{linewidth} modifier}
+{\tt linewidth}\index{linewidth modifier@{\tt linewidth} modifier}
 modifier, and the width of the lines used to draw point symbols can be
-controlled with the \texttt{pointlinewidth}\index{pointlinewidth
-modifier@\texttt{pointlinewidth} modifier} modifier. For example:
+controlled with the {\tt pointlinewidth}\index{pointlinewidth
+modifier@{\tt pointlinewidth} modifier} modifier. For example:
 
 \begin{verbatim}
 plot sin(x) with points pointlinewidth 2
@@ -68,18 +68,18 @@ plot sin(x) with points pointlinewidth 2
 In addition to setting these parameters on a per-plot basis, their default values can also be changed. The command:
 
 \begin{verbatim}
-\texttt{set pointlinewidth 2}
+{\tt set pointlinewidth 2}
 \end{verbatim}
 
 \noindent will set the default linewidth used when drawing data points. Both
-here, and in the {\tt plot} command, the abbreviation \texttt{plw} is valid. 
+here, and in the {\tt plot} command, the abbreviation {\tt plw} is valid. 
 
 \subsection{Upper and Lower Limit Data Points}
 
 PyXPlot can plot datapoints using the standard upper- and lower-limit
 symbols.\index{lower-limit datapoints}\index{upper-limit datapoints} No special
 syntax is required for this; these symbols are pointtypes\footnote{The
-\texttt{pointtype} modifier was introduced in
+{\tt pointtype} modifier was introduced in
 Section~\ref{pointtype_modifier}.} 12 and 13 respectively, obtained as follows:
 
 \begin{verbatim}
@@ -91,7 +91,7 @@ plot 'lowerlimits.dat' with points pointtype 13
 \label{arrows_plot_style} 
 
 Data may be represented as arrows connecting two points on a plot by using the
-{\tt arrows} plot style\index{arrows plot style@\texttt{arrows} plot style}.
+{\tt arrows} plot style\index{arrows plot style@{\tt arrows} plot style}.
 This takes four columns of data, $x_1$, $y_1$, $x_2$, $y_2$, and for each data
 point draws an arrow from the point $(x_1,y_1)$ to $(x_2,y_2)$.  Three
 different kinds of arrows can be drawn: ones with normal arrow heads, ones with
@@ -104,7 +104,7 @@ plot 'datafile.dat' with arrows_nohead
 plot 'datafile.dat' with arrows_twohead
 \end{verbatim}
 
-The syntax `\texttt{with arrows}' is a shorthand for `\texttt{with
+The syntax `{\tt with arrows}' is a shorthand for `{\tt with
 arrows\_head}'. This plot style is analogous to the {\tt vectors} plot style in
 version~4 of gnuplot.
 
@@ -145,24 +145,24 @@ range of the errorbar.
 For clarity, a complete list of errorbar styles available in PyXPlot is given below:
 
 \begin{tabular}{p{2.5cm}p{7.5cm}}
-\texttt{yerrorbars} & Vertical errorbars; size drawn from the third data-column. \\
-\texttt{xerrorbars} & Horizontal errorbars; size drawn from the third data-column. \\
-\texttt{xyerrorbars} & Horizontal and vertical errorbars; sizes drawn from the third and fourth data-columns respectively.\\
-\texttt{errorbars} & Shorthand for \texttt{yerrorbars}. \\
+{\tt yerrorbars} & Vertical errorbars; size drawn from the third data-column. \\
+{\tt xerrorbars} & Horizontal errorbars; size drawn from the third data-column. \\
+{\tt xyerrorbars} & Horizontal and vertical errorbars; sizes drawn from the third and fourth data-columns respectively.\\
+{\tt errorbars} & Shorthand for {\tt yerrorbars}. \\
 \end{tabular}
 
 \begin{tabular}{p{2.5cm}p{7.5cm}}
-\texttt{yerrorrange} & Vertical errorbars; minimum drawn from the third data-column, maximum from the fourth.\\
-\texttt{xerrorrange} & Horizontal errorbars; minimum drawn from the third data-column, maximum from the fourth.\\
-\texttt{xyerrorrange} & Horizontal and vertical errorbars; horizontal minimum drawn from the third data-column, and maximum from the fourth; vertical minimum drawn from the fifth, and maximum from the sixth.\\
-\texttt{errorrange} & Shorthand for \texttt{yerrorrange}. \\
+{\tt yerrorrange} & Vertical errorbars; minimum drawn from the third data-column, maximum from the fourth.\\
+{\tt xerrorrange} & Horizontal errorbars; minimum drawn from the third data-column, maximum from the fourth.\\
+{\tt xyerrorrange} & Horizontal and vertical errorbars; horizontal minimum drawn from the third data-column, and maximum from the fourth; vertical minimum drawn from the fifth, and maximum from the sixth.\\
+{\tt errorrange} & Shorthand for {\tt yerrorrange}. \\
 \end{tabular}
 
 \subsection{Plotting Functions with Errorbars, Arrows, or More}
 
 In gnuplot, when a function (as opposed to a datafile) is plotted, only those
 plot styles which accept two columns of data can be used -- for example,
-\texttt{lines} or \texttt{points}. This means that it is not possible to plot a
+{\tt lines} or {\tt points}. This means that it is not possible to plot a
 function with errorbars. In PyXPlot, this is possible using the following
 syntax:
 
@@ -174,7 +174,7 @@ plot f(x):g(x) with yerrorbars
 as if a datafile had been supplied, containing values of $x$ in column 1,
 values of $f(x)$ in column 2, and values of $g(x)$ in column 3. This may be
 useful, for example, if $g(x)$ measures the intrinsic uncertainty in $f(x)$.
-The \texttt{using} modifier may also be used:
+The {\tt using} modifier may also be used:
 
 \begin{verbatim}
 plot f(x):g(x) using 2:3
@@ -191,16 +191,16 @@ it to change in a future release.}
 
 \section{Barcharts and Histograms}
 \label{barcharts}\index{bar charts}
-\index{steps plot style@\texttt{steps} plot style}
-\index{fsteps plot style@\texttt{fsteps} plot style}
-\index{histeps plot style@\texttt{histeps} plot style}
-\index{impulses plot style@\texttt{impulses} plot style}
-\index{set boxfrom command@\texttt{set boxfrom} command}
+\index{steps plot style@{\tt steps} plot style}
+\index{fsteps plot style@{\tt fsteps} plot style}
+\index{histeps plot style@{\tt histeps} plot style}
+\index{impulses plot style@{\tt impulses} plot style}
+\index{set boxfrom command@{\tt set boxfrom} command}
 
 \subsection{Basic Operation}
 
 As in gnuplot, bar charts and histograms can be produced using the
-\texttt{boxes}\index{boxes plot style@\texttt{boxes} plot style} plot style:
+{\tt boxes}\index{boxes plot style@{\tt boxes} plot style} plot style:
 
 \begin{verbatim} 
 plot 'datafile.dat' with boxes
@@ -209,10 +209,10 @@ plot 'datafile.dat' with boxes
 \noindent Horizontally, the interfaces between the bars are, by default, at the
 midpoints along the $x$-axis between the specified datapoints (see, for
 example, Figure~\ref{fig:ex_barchart2}a).  Alternatively, the widths of the
-bars may be set using the \texttt{set boxwidth} command. In this case, all of
+bars may be set using the {\tt set boxwidth} command. In this case, all of
 the bars will be centred upon their specified $x$-coordinates, and have total
-widths equalling that specified in the \texttt{set boxwidth}\index{set boxwidth
-command@\texttt{set boxwidth} command} command.  Consequently, there may be
+widths equalling that specified in the {\tt set boxwidth}\index{set boxwidth
+command@{\tt set boxwidth} command} command.  Consequently, there may be
 gaps between them, or they may overlap, as seen in
 Figure~\ref{fig:ex_barchart2}(c).
 
@@ -225,12 +225,12 @@ Figure~\ref{fig:ex_barchart2}(c).
 \end{figure}
 
 Having set a fixed box width, the default behaviour of scaling box widths
-automatically may be restored either with the \texttt{unset boxwidth} command,
+automatically may be restored either with the {\tt unset boxwidth} command,
 or by setting the boxwidth to a negative width.
 
 As a third alternative, it is also possible to specify different widths for
 each bar manually, in a column of the input datafile. To achieve this
-behaviour, the \texttt{wboxes}\index{wboxes plot style@\texttt{wboxes} plot
+behaviour, the {\tt wboxes}\index{wboxes plot style@{\tt wboxes} plot
 style} plot style should be used:
 
 \begin{verbatim} 
@@ -244,7 +244,7 @@ plot style in use.
 
 By default, the bars originate from the line $y=0$, as is normal for a
 histogram. However, should it be desired for the bars to start from a different
-vertical point, this may be achieved by using the \texttt{set boxfrom} command,
+vertical point, this may be achieved by using the {\tt set boxfrom} command,
 for example:
 
 \begin{verbatim} 
@@ -264,8 +264,8 @@ chart with the boxes starting from their default position of $y=0$.
 \label{fig:ex_barchart1}
 \end{figure}
 
-The bars may be filled using the \texttt{with fillcolour}\index{fillcolour
-modifier@\texttt{fillcolour} modifier} modifier, followed by the name of a
+The bars may be filled using the {\tt with fillcolour}\index{fillcolour
+modifier@{\tt fillcolour} modifier} modifier, followed by the name of a
 colour:
 
 \begin{verbatim} 
@@ -276,12 +276,12 @@ plot 'datafile.dat' with boxes fc 4
 \noindent Figures~\ref{fig:ex_barchart2}(c) and (d) demonstrate the use of
 filled bars.
 
-Finally, the \texttt{impulses} plot style, as in gnuplot, produces bars of zero
+Finally, the {\tt impulses} plot style, as in gnuplot, produces bars of zero
 width; see Figure~\ref{fig:ex_barchart1}(e) for an example.
 
 \subsection{Stacked Bar Charts}
 
-If several datapoints are supplied to the \texttt{boxes} or \texttt{wboxes}
+If several datapoints are supplied to the {\tt boxes} or {\tt wboxes}
 plot styles at a common $x$-coordinate, then the bars are stacked one above
 another into a stacked barchart. Consider the following datafile:
 
@@ -311,17 +311,17 @@ plot 'datafile.dat' with fsteps
 plot 'datafile.dat' with histeps
 \end{verbatim}
 
-When using the \texttt{steps} plot style, the datapoints specify the right-most
-edges of each step. When using the \texttt{fsteps} plot style, they specify the
-left-most edges of the steps. The \texttt{histeps} plot style works rather like
-the \texttt{boxes} plot style; the interfaces between the steps occur at the
+When using the {\tt steps} plot style, the datapoints specify the right-most
+edges of each step. When using the {\tt fsteps} plot style, they specify the
+left-most edges of the steps. The {\tt histeps} plot style works rather like
+the {\tt boxes} plot style; the interfaces between the steps occur at the
 horizontal midpoints between the datapoints.
 
 \section{Choosing which data to plot}
 \label{select_modifier} 
-As well as the \texttt{index}, \texttt{using} and \texttt{every} keywords which
+As well as the {\tt index}, {\tt using} and {\tt every} keywords which
 allow users to plot subsets of data from datafiles, PyXPlot also has a further
-modifier, {\tt switch}\index{select keyword@\texttt{select} keyword}. This can be used to
+modifier, {\tt switch}\index{select keyword@{\tt select} keyword}. This can be used to
 plot only those datapoints in a datafile which specify some given criterion. For
 example:
 
@@ -340,36 +340,36 @@ datafile for plotting.
 \section{Horizontally arranged datafiles}
 
 \index{horizontal datafiles}\index{datafiles!horizontal}\index{using rows
-modifier@\texttt{using rows} modifier}\index{using columns
-modifier@\texttt{using columns} modifier}\label{horizontal_datafiles} The
+modifier@{\tt using rows} modifier}\index{using columns
+modifier@{\tt using columns} modifier}\label{horizontal_datafiles} The
 command syntax for plotting columns of datafiles against one another was
 previously described in Section~\ref{plot_datafiles}.  In an extension of what
 is possible in gnuplot, PyXPlot also allows one to plot \textit{rows} of data
 against one another in horizontally-arranged datafiles.  For this, the keyword
-`\texttt{rows}' is placed after the \texttt{using} modifier:\index{rows
-keyword@\texttt{rows} keyword}
+`{\tt rows}' is placed after the {\tt using} modifier:\index{rows
+keyword@{\tt rows} keyword}
 
 \begin{verbatim}
 plot 'datafile.dat' index 1 using rows 1:2
 \end{verbatim}
 
-\noindent For completeness, the syntax `\texttt{using columns}' is also
+\noindent For completeness, the syntax `{\tt using columns}' is also
 accepted, to specify the default behaviour of plotting columns against one
-another:\index{columns keyword@\texttt{columns} keyword}
+another:\index{columns keyword@{\tt columns} keyword}
 
 \begin{verbatim}
 plot 'datafile.dat' index 1 using columns 1:2
 \end{verbatim}
 
 When plotting horizontally-arranged datafiles, the meanings of the
-\texttt{index} and \texttt{every} modifiers (see Section~\ref{plot_datafiles})
+{\tt index} and {\tt every} modifiers (see Section~\ref{plot_datafiles})
 are altered slightly. The former continues to refer to vertically-displaced
 blocks of data separated by two blank lines.  Blocks, as referenced in the
-\texttt{every} modifier, likewise continue to be vertically-displaced blocks of
+{\tt every} modifier, likewise continue to be vertically-displaced blocks of
 datapoints, separated by single blank lines. The row numbers passed to the
-\texttt{using} modifier are counted from the top of the current block.
+{\tt using} modifier are counted from the top of the current block.
 
-However, the line-numbers specified in the \texttt{every} modifier -- i.e.
+However, the line-numbers specified in the {\tt every} modifier -- i.e.
 variables $a$, $c$ and $e$ in the system introduced in
 Section~\ref{introduce_every} -- now refer to horizontal columns, rather than
 lines. For example:
@@ -386,7 +386,7 @@ values in every other column, between columns 3 and 9.
 
 By default, plots have only one $x$-axis and one $y$-axis. Further parallel
 axes can be added and configured via statements such as:\index{axes
-modifier@\texttt{axes} modifier}\index{set axis command@\texttt{set axis}
+modifier@{\tt axes} modifier}\index{set axis command@{\tt set axis}
 command}
 
 \begin{verbatim}
@@ -396,8 +396,8 @@ set axis x3
 \end{verbatim}
 
 \noindent In the top statement, a further-$x$ axis, called the $x3$-axis, is
-implicitly created by giving it a label. In the next, the \texttt{axes}
-modifier is used to tell the \texttt{plot} command to plot data using the
+implicitly created by giving it a label. In the next, the {\tt axes}
+modifier is used to tell the {\tt plot} command to plot data using the
 $x3$-axis. Here again, the axis would be implicitly created if it didn't
 already exist.  In the third statement, an $x3$-axis is explicitly created.
 
@@ -418,8 +418,8 @@ rule applies for $y$-axes, to the left and to the right.}
 \end{figure}
 
 As discussed in the previous chapter, the ranges of axes can be set either
-using the \texttt{set xrange} command\index{set xrange command@\texttt{set
-xrange} command}, or within the \texttt{plot} command. The following two
+using the {\tt set xrange} command\index{set xrange command@{\tt set
+xrange} command}, or within the {\tt plot} command. The following two
 statements would set equivalent ranges for the $x3$-axis:
 
 \begin{verbatim}
@@ -427,13 +427,13 @@ set x3range [-2:2]
 plot [:][:][:][:][-2:2] sin(x) axes x3y1
 \end{verbatim}
 
-\noindent As usual, the first two ranges specified in the \texttt{plot} command
+\noindent As usual, the first two ranges specified in the {\tt plot} command
 apply to the $x$- and $y$-axes. The next pair apply to the $x2$- and $y2$-axes,
 and so forth.
 
 \index{axes!removal}\index{removing axes}\index{hidden
 axes}\label{axis_removal} Having made axes with the above commands, they may
-subsequently be removed using the \texttt{unset axis} command as follows:
+subsequently be removed using the {\tt unset axis} command as follows:
 
 \begin{verbatim}
 unset axis x3
@@ -441,8 +441,8 @@ unset axis x3x5y3 y7
 \end{verbatim}
 
 \noindent The top statement, for example, would remove axis $x3$. The command
-\texttt{unset axis} on its own, with no axes specified, returns all axes to
-their default configuration.  The special case of \texttt{unset axis x1} does
+{\tt unset axis} on its own, with no axes specified, returns all axes to
+their default configuration.  The special case of {\tt unset axis x1} does
 not remove the first $x$-axis -- it cannot be removed -- but instead returns it
 to its default configuration.
 
@@ -455,18 +455,18 @@ unset x3label 'foo'
 \end{verbatim}
 
 \noindent If an $x3$-axis did not previously exist, then the first will have
-implicitly created one. This would need to be removed with the \texttt{unset
+implicitly created one. This would need to be removed with the {\tt unset
 axis x3} command if it was not desired.
 
 A subtly different task is that of removing labels from axes, or setting axes
 not to display. To achieve this, a number of special axis labels are used.
-Labelling an axis ``\texttt{nolabels}''\index{nolabels
-keyword@\texttt{nolabels} keyword} has the effect that no title or numerical
+Labelling an axis ``{\tt nolabels}''\index{nolabels
+keyword@{\tt nolabels} keyword} has the effect that no title or numerical
 labels are placed upon it. Labelling it\label{nolabelstics}
-``\texttt{nolabelstics}''\index{nolabelstics keyword@\texttt{nolabelstics}
+``{\tt nolabelstics}''\index{nolabelstics keyword@{\tt nolabelstics}
 keyword} is stronger still; this removes all tick marks from it as well
-(similar in effect to the \texttt{set noxtics} command; see below). Finally,
-labelling it ``\texttt{invisible}''\index{invisible keyword@\texttt{invisible}
+(similar in effect to the {\tt set noxtics} command; see below). Finally,
+labelling it ``{\tt invisible}''\index{invisible keyword@{\tt invisible}
 keyword} makes an axis completely invisible.
 
 Labels may be placed on such axes, by following the magic keywords above with a
@@ -482,12 +482,12 @@ set xlabel 'nolabels:Time'
 In the unlikely event of wanting
 to label a normal axis with one of these magic words\index{axes!reserved
 labels}\index{magic axis labels}, this may be achieved by prefixing the magic
-word with a space. There is one further magic axis label, \texttt{linkaxis},
+word with a space. There is one further magic axis label, {\tt linkaxis},
 which will be described in Section~\ref{linked_axes}.
 
 The ticks of axes can be configured to point either inward, towards the plot,
 as is the default, or outward towards the axis labels, or in both directions.
-This is achieved using the \texttt{set xticdir} command, for example:
+This is achieved using the {\tt set xticdir} command, for example:
 
 \begin{verbatim}
 set xticdir inward
@@ -495,10 +495,10 @@ set y2ticdir outward
 set x2ticdir both
 \end{verbatim}
 
-The position of ticks along each axis can be configured with the \texttt{set
-xtics}\index{set xtics command@\texttt{set xtics} command} command. The
-appearance of ticks along any axis can be turned off with the \texttt{set
-noxtics}\index{set noxtics command@\texttt{set noxtics} command} command. The
+The position of ticks along each axis can be configured with the {\tt set
+xtics}\index{set xtics command@{\tt set xtics} command} command. The
+appearance of ticks along any axis can be turned off with the {\tt set
+noxtics}\index{set noxtics command@{\tt set noxtics} command} command. The
 syntax for these is given below:
 
 \begin{verbatim}
@@ -513,16 +513,16 @@ set noxtics
 show xtics
 \end{verbatim}
 
-The keywords \texttt{inward}, \texttt{outward} and \texttt{both} alter the
-directions of the ticks, and have the same effect as in the \texttt{set
-xticdir} command. The keyword \texttt{axis} is an alias for \texttt{inward},
-and \texttt{border} an alias for \texttt{outward}, both provided for
-compatibility with gnuplot. If the keyword \texttt{autofreq} is given, the automatic
+The keywords {\tt inward}, {\tt outward} and {\tt both} alter the
+directions of the ticks, and have the same effect as in the {\tt set
+xticdir} command. The keyword {\tt axis} is an alias for {\tt inward},
+and {\tt border} an alias for {\tt outward}, both provided for
+compatibility with gnuplot. If the keyword {\tt autofreq} is given, the automatic
 placement of ticks on the axis is restored.
 
-If \texttt{<minimum>, <increment>, <maximum>} are specified, then ticks are
+If {\tt <minimum>, <increment>, <maximum>} are specified, then ticks are
 placed at evenly spaced intervals between the specified limits. In the case of
-logarithmic axes, \texttt{<increment>} is applied multiplicatively.
+logarithmic axes, {\tt <increment>} is applied multiplicatively.
 
 Alternatively, the final form allows ticks to be placed on an axis
 individually, and each given its own textual label.
@@ -560,7 +560,7 @@ set x4tics border autofreq
 
 
 All of the examples above are illustrated in Figure~\ref{fig:ex_axistics}.
-Minor tick marks can be placed on axes with the \texttt{set mxtics} command,
+Minor tick marks can be placed on axes with the {\tt set mxtics} command,
 which has the same syntax as above.
 
 \section{Keys and Legends}
@@ -568,8 +568,8 @@ which has the same syntax as above.
 By default, plots are displayed with legends in their top-right corners. The
 textual description of each dataset is drawn by default from the command used
 to plot it. Alternatively, the user may specify his own description for each
-dataset by following the \texttt{plot} command with the \texttt{title}
-modifier\index{title modifier@\texttt{title} modifier}, as follows:
+dataset by following the {\tt plot} command with the {\tt title}
+modifier\index{title modifier@{\tt title} modifier}, as follows:
 
 \begin{verbatim}
 plot sin(x) title 'A sine wave'
@@ -580,8 +580,8 @@ In the lower case, a blank title is specified, in which case PyXPlot makes no
 entry for this dataset in the legend. This is useful if it is desired to place
 some but not all datasets into the legend of a plot.  Alternatively, the
 production of the legend can be completely turned off for all datasets, by the
-command \texttt{set nokey}. The opposite effect can be achieved by the
-\texttt{set key}\index{set key@\texttt{set key} command} command.
+command {\tt set nokey}. The opposite effect can be achieved by the
+{\tt set key}\index{set key@{\tt set key} command} command.
 
 This latter command can also be used to dictate where on the plot the legend
 should be placed, using a syntax along the lines of:
@@ -591,9 +591,9 @@ set key top right
 \end{verbatim}
 
 The following recognised positioning keywords are self-explanatory:
-\texttt{top}, \texttt{bottom}, \texttt{left}, \texttt{right}, \texttt{xcentre}
-and \texttt{ycentre}. The word \texttt{outside} places the key outside the
-plot, on its right side. The words \texttt{below} and \texttt{above} places
+{\tt top}, {\tt bottom}, {\tt left}, {\tt right}, {\tt xcentre}
+and {\tt ycentre}. The word {\tt outside} places the key outside the
+plot, on its right side. The words {\tt below} and {\tt above} places
 legends below and above the plot respectively.
 
 In addition, two positional offset coordinates may be specified after such
@@ -607,8 +607,8 @@ set key bottom left 0.0 -0.5
 \noindent would display a key below the bottom left corner of the graph.
 
 By default, entries in the key are placed in a single vertical list. They can
-instead be arranged into a number of columns by means of the \texttt{set
-keycolumns} command.\index{set keycolumns command@\texttt{set keycolumns}
+instead be arranged into a number of columns by means of the {\tt set
+keycolumns} command.\index{set keycolumns command@{\tt set keycolumns}
 command} This should be followed by the integer number of desired columns, for
 example:
 
@@ -627,10 +627,10 @@ Figure~\ref{fig:ex_legends}.
 \label{fig:ex_legends}
 \end{figure}
 
-\section{The \texttt{linestyle} Keyword}
+\section{The {\tt linestyle} Keyword}
 
-At times, the string of style keywords placed after the \texttt{with} modifier
-in \texttt{plot} commands can grow rather unwieldy in its length. For clarity,
+At times, the string of style keywords placed after the {\tt with} modifier
+in {\tt plot} commands can grow rather unwieldy in its length. For clarity,
 frequently used plot styles can be stored as ``linestyles''; despite the name,
 this is true of styles involving points as well as lines. The syntax for
 setting a linestyle is:
@@ -640,7 +640,7 @@ set linestyle 2 points pointtype 3
 \end{verbatim}
 
 \noindent where the ``2'' is the identification number of the linestyle. In a
-subsequent \texttt{plot} statement, this linestyle can be recalled as follows:
+subsequent {\tt plot} statement, this linestyle can be recalled as follows:
 
 \begin{verbatim}
 plot sin(x) with linestyle 2
@@ -648,9 +648,9 @@ plot sin(x) with linestyle 2
 
 \section{Colour Plotting}
 
-\index{colours!setting for datasets} In the \texttt{with} clause of the plot
-command, the modifier \texttt{colour}, which can be abbreviated to
-`\texttt{c}', can be used to manually select the colour in which each dataset
+\index{colours!setting for datasets} In the {\tt with} clause of the plot
+command, the modifier {\tt colour}, which can be abbreviated to
+`{\tt c}', can be used to manually select the colour in which each dataset
 is to be plotted. It should be followed either by an integer, to set a colour
 from the present palette, or by a colour name. A list of valid colour names is
 given in Section~\ref{colour_names}. For example:
@@ -660,13 +660,13 @@ plot sin(x) with c 5
 plot sin(x) with colour blue
 \end{verbatim}
 
-\noindent The \texttt{colour} modifier can also be used when defining linestyles.
+\noindent The {\tt colour} modifier can also be used when defining linestyles.
 
-\index{colours!setting the palette}\index{set palette command@\texttt{set
+\index{colours!setting the palette}\index{set palette command@{\tt set
 palette} command} PyXPlot has a palette of colours which it assigns
 sequentially to datasets when colours are not manually assigned. This is also
-the palette to which integers passed to \texttt{set colour} refer -- the `5'
-above, for example. It may be set using the \texttt{set palette} command, which
+the palette to which integers passed to {\tt set colour} refer -- the `5'
+above, for example. It may be set using the {\tt set palette} command, which
 differs in syntax from gnuplot. It should be followed by a comma-separated list
 of colours, for example:
 
@@ -683,8 +683,8 @@ Section~\ref{colour_names}.
 \index{globbing}\index{wildcards}\index{datafiles!globbing}
 
 PyXPlot allows the wildcards `*' and `?' to be used both in the filenames of
-datafiles following the \texttt{plot} command, and also when specifying command
-files on the command line and with the \texttt{load} command. For example, the
+datafiles following the {\tt plot} command, and also when specifying command
+files on the command line and with the {\tt load} command. For example, the
 following would plot all datafiles in the current directory with a `.dat'
 suffix, using the same plot options:
 
@@ -698,12 +698,12 @@ causes the last used datafile to be used again.
 
 \section{Backing Up Over-Written Files}
 
-\index{set backup command@\texttt{set backup}
+\index{set backup command@{\tt set backup}
 command}\index{overwriting files}\index{backup files}\label{filebackup}
 
 By default, when plotting to a file, if the output filename matches that of
 an existing file, that file is overwritten. This behaviour may be changed with
-the \texttt{set backup} command, which has syntax:
+the {\tt set backup} command, which has syntax:
 
 \begin{verbatim}
 set backup

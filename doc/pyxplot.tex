@@ -23,13 +23,23 @@
 
 \documentclass[a4paper,onecolumn,11pt]{book}
 \usepackage[dvips]{graphicx}
-\usepackage{amssymb,amsmath,url,lscape,longtable,fancyvrb,makeidx,wasysym}
+\usepackage{amssymb,amsmath,bbding,url,lscape,longtable,fancyvrb,makeidx,wasysym}
 \makeindex
 \def\version{0.7.0}
 \def\reldate{January 2008}
 
-\def\dontdo{CROSS ICON} % Need to find proper icons for these.
-\def\dodo{TICK ICON}
+\newcommand\dontdo[1]{{\Large \XSolidBrush  }\begin{minipage}[t]{8cm}1\end{minipage}} % Need to find proper icons for these.
+\newcommand\dodo  [1]{{\Large \CheckmarkBold}\begin{minipage}[t]{8cm}1\end{minipage}}
+
+\newcommand\indcmd[1]{\index{#1 command@{\tt #1} command}} % Place commands in the index in typewriter face
+\newcommand\indmod[1]{\index{#1 modifier@{\tt #1} modifier}}
+\newcommand\indfun[1]{\index{#1 function@{\tt #1} function}}
+\newcommand\indps [1]{\index{#1 plot style@{\tt #1} plot style}\index{plot styles!#1@{\tt #1}}}
+
+\newcommand\indcmdt[1]{{\tt #1} command\indcmd{#1}}
+\newcommand\indmodt[1]{{\tt #1}\indmod{#1}}
+\newcommand\indfunt[1]{{\tt #1} function\indfun{#1}}
+\newcommand\indpst [1]{{\tt #1}\indps{#1}}
 
 \begin{document}
 
@@ -53,7 +63,7 @@
 \end{center}
 \vspace*{0.0cm}
 \begin{center}
-{\Large Dominic Ford, Ross Church \\ \vspace{2mm} Email: \noindent \texttt{coders@pyxplot.org.uk} \\ }
+{\Large Dominic Ford, Ross Church \\ \vspace{2mm} Email: \noindent {\tt coders@pyxplot.org.uk} \\ }
 \end{center}
 \vspace*{0.5cm}
 \begin{center}

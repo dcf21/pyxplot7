@@ -21,11 +21,11 @@
 
 % LaTeX source for the PyXPlot Users' Guide
 
-\chapter{The \texttt{fit} Command: Mathematical Details}
+\chapter{The {\tt fit} Command: Mathematical Details}
 \label{fit_math}
-\index{fit command@\texttt{fit} command}
+\index{fit command@{\tt fit} command}
 
-In this section, the mathematical details of the workings of the \texttt{fit}
+In this section, the mathematical details of the workings of the {\tt fit}
 command are described. This may be of interest in diagnosing its limitations,
 and also in understanding the various quantities that it outputs after a fit is
 found. This discussion must necessarily be a rather brief treatment of a large
@@ -49,7 +49,7 @@ $\sigma_\mathrm{data}$.
 
 Finally, I assume that there are $n_\mathrm{u}$ coefficients within the
 function $f()$ that we are able to vary, corresponding to those variable names
-listed after the \texttt{via} statement in the \texttt{fit} command. I shall
+listed after the {\tt via} statement in the {\tt fit} command. I shall
 call these coefficients $u_0$...$u_{n_\mathrm{u}-1}$, and refer to them
 collectively as $\mathbf{u}$.
 
@@ -164,7 +164,7 @@ A_{ij} = \nabla\nabla L = \left.\frac{\partial^2 L}{\partial u_i \partial u_j}\r
 \end{equation}
 \index{Hessian matrix}
 
-This is the Hessian matrix which is output by the \texttt{fit} command. In
+This is the Hessian matrix which is output by the {\tt fit} command. In
 general, an $n_\mathrm{u}$-dimensional Gaussian distribution such as that given
 by equation~(\ref{L_taylor_expand}) yields elliptical contours of
 equiprobability in parameter space, whose principal axes need not be aligned

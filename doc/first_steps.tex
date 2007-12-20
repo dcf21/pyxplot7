@@ -39,11 +39,11 @@ the web which will greatly supplement what is provided below.
 
 \section{Getting Started}
 
-The simplest way to start PyXPlot is to type ``\texttt{pyxplot}'' at a
-shell prompt to start an interactive session. A PyXPlot command-line prompt will
+The simplest way to start PyXPlot is to type `{\tt pyxplot}' at a shell
+prompt to start an interactive session. A PyXPlot command-line prompt will
 appear, into which commands can be typed. PyXPlot can be exited either by
-typing ``\texttt{exit}'', ``\texttt{quit}'', or by pressing CTRL-D.\index{exit
-command@\texttt{exit} command}\index{quit command@\texttt{quit} command}
+typing `{\tt exit}', `{\tt quit}', or by pressing
+CTRL-D.\indcmd{exit}\indcmd{quit}
 
 When plotting more complicated graphs, it will become preferable to store lists
 of commands in command scripts. These may be executed by passing the filename
@@ -56,7 +56,7 @@ pyxplot foo.ppl
 
 \noindent In this case, PyXPlot would exit immediately after finishing the
 execution of the commands in the file {\tt foo.ppl}. By convention, we suffix
-the filenames of PyXPlot command scripts with ``{\tt .ppl}'', though this is
+the filenames of PyXPlot command scripts with `{\tt .ppl}', though this is
 not strictly necessary. Several filenames may be passed on a single command
 line, indicating a series of scripts to be executed in sequence:
 
@@ -66,7 +66,7 @@ pyxplot foo1.ppl foo2.ppl foo3.ppl
 
 \noindent Wildcards can also be used; the following would execute all command
 scripts in the present working directory whose filenames end with a
-\texttt{.ppl} suffix:
+{\tt .ppl} suffix:
 
 \begin{verbatim}
 pyxplot *.ppl
@@ -81,24 +81,24 @@ pyxplot foo1.ppl - foo2.ppl
 \end{verbatim}
 
 \noindent This magic filename represents an interactive session, which
-commences after the execution of \texttt{foo1.ppl}, and should be terminated in
-the usual way after use, with the ``\texttt{exit}'' or ``\texttt{quit}''
-commands.  Afterwards, the command script \texttt{foo2.ppl} would execute.
+commences after the execution of {\tt foo1.ppl}, and should be terminated in
+the usual way after use, with the `{\tt exit}' or `{\tt quit}' commands.
+Afterwards, the command script {\tt foo2.ppl} would
+execute.\indcmd{exit}\indcmd{quit}
 
 From within an interactive session, it is possible to run a command script
-using the \texttt{load}\index{load command@\texttt{load} command} command:
+using the \indcmdt{load}:
 
 \begin{verbatim}
 pyxplot> load 'foo.ppl'
 \end{verbatim}
 
 \noindent This example would have the same effect as typing the contents of the
-file \texttt{foo.ppl} into the present session.
+file {\tt foo.ppl} into the present session.
 
 Usually a text editor is used to produce PyXPlot command scripts, but the
-\texttt{save}\index{save command@\texttt{save} command} command may also
-assist. This stores a history of the commands executed in the present
-interactive session to file.
+\indcmdt{save} may also assist. This stores a history of the commands executed
+in the present interactive session to file.
 
 Command files can include comment lines, which should begin with a hash
 character, for example:\index{comment lines}\index{command scripts!comment
@@ -122,24 +122,24 @@ be appended to the end of it.
 \section{First Plots}
 \label{first_plots}
 
-The basic workhorse command of PyXPlot is the \texttt{plot} command, which is
-used to produce all plots. The following simple example would plot the function
-$\sin(x)$:\index{plot command@\texttt{plot} command}
+The basic workhorse command of PyXPlot is the \indcmdt{\tt plot}, which is used
+to produce all plots. The following simple example would plot the function
+$\sin(x)$:
 
 \begin{verbatim}
 plot sin(x)
 \end{verbatim}
 
 \noindent It is also possible to plot data stored in files on disk. The
-following would plot data from a file `\texttt{data.dat}', taking the
+following would plot data from a file `{\tt data.dat}', taking the
 $x$-coordinate of each point from the first column of the datafile, and the
 $y$-coordinate from the second.  The datafile is assumed to be in plain text
-format\footnote{If the filename of a datafile ends with a \texttt{.gz} suffix,
+format\footnote{If the filename of a datafile ends with a {\tt .gz} suffix,
 it is assuming to be gzipped plaintext, and is decoded accordingly.}, with
 columns separated by whitespace and/or commas\footnote{This format is
 compatible with the Comma Separated Values (CSV) format produced by many
 applications, including Microsoft Excel.}\index{csv files}\index{spreadsheets,
-importing data from}\index{Microsoft Excel}:
+importing data from}\index{Microsoft Excel}\index{gzip}:
 
 \begin{verbatim}
 plot 'data.dat'
@@ -174,9 +174,8 @@ f(x) =
 
 \section{Printing Text}
 
-PyXPlot has a {\tt print} command\index{print command@\texttt{print} command}
-for displaying strings and the results of calculations to the terminal, for
-example:
+PyXPlot has a \indcmdt{print} for displaying strings and the results of
+calculations to the terminal, for example:
 
 \begin{verbatim}
 a=2
@@ -190,9 +189,10 @@ a=3
 print "The value of",a,"squared is",f(a)
 \end{verbatim}
 
-\noindent Values may also be substituted into strings using the \% operator,
-which works in a similar fashion to python string substitution. The list of
-values to be substituted into the string should be a ()-bracketed list:
+\noindent Values may also be substituted into strings using the \%
+operator\index{\% operator}, which works in a similar fashion to python string
+substitution\index{string substitution}. The list of values to be substituted
+into the string should be a ()-bracketed list:
 
 \begin{verbatim}
 print "The value of %d squared is %d."%(a,f(a))
@@ -237,25 +237,28 @@ taken when apostrophe and quote characters are used. The following command
 would raise an error, because the apostrophe would be interpreted as marking
 the end of the text label:
 
-\dontdo
+\dontdo{
 \begin{verbatim}
 set xlabel 'My plot's X axis'
 \end{verbatim}
+}
 
 \noindent The following would achieve the desired effect:
 
-\dodo
+\dodo{
 \begin{verbatim}
 set xlabel "My plot's X axis"
 \end{verbatim}
+}
 
 To make it possible to render \LaTeX\ strings containing both single and double
-quote characters -- for example, to put a German umlaut on the name ``J\"org''
-in the \LaTeX\ string ``\texttt{J$\backslash$"org's Data}'' -- PyXPlot
-recognises the backslash character to be an escape character when followed by
-either ' or " in a \LaTeX\ string. This is the \textit{only} case in which
-PyXPlot considers $\backslash$ an escape character. To render the example
-string above, one would type:
+quote characters -- for example, to put a German umlaut on the name `J\"org' in
+the \LaTeX\ string `{\tt J$\backslash$"org's Data}' -- PyXPlot recognises
+the backslash character to be an escape character when followed by either ' or
+" in a \LaTeX\ string. This is the \textit{only} case in which PyXPlot
+considers $\backslash$ an escape character. To render the example string above,
+one would type:\index{escape characters}\index{backslash
+character}\index{accented characters}
 
 \begin{verbatim}
 set xlabel "J\\"org's Data"
@@ -282,18 +285,18 @@ set notitle
 unset title
 \end{verbatim}
 
-The \texttt{unset} command\index{unset command@\texttt{unset} command} may be
-followed by almost any word that can follow the \texttt{set} command, such as
-\texttt{xlabel} or \texttt{title}, to return that setting to its default
-configuration. The \texttt{reset} command\index{reset command@\texttt{reset}
-command} restores all configurable parameters to their default states.
+The \indcmdt{unset} may be followed by almost any word that can follow the {\tt
+set} command, such as {\tt xlabel} or {\tt title}, to return that setting to
+its default configuration. The \indcmdt{reset} restores all configurable
+parameters to their default states.
 
 \section{Operators and Functions}
 
 As has already been seen above, some mathematical functions such as $\sin(x)$
 are pre-defined within PyXPlot. A list of all of PyXPlot's pre-defined
 functions is given in Table~\ref{functions_table}. A list of operators
-recognised by PyXPlot is given in Table~\ref{operators_table}.
+recognised by PyXPlot is given in
+Table~\ref{operators_table}.\index{functions!pre-defined}\index{operators}
 
 \begin{table}
 \begin{longtable}{|lp{8cm}|}
@@ -365,26 +368,26 @@ Return the hyperbolic tangent of $x$.\\
 \begin{table}
 \begin{longtable}{|lp{8cm}|}
 \hline
-\texttt{+} & Algebraic sum \\
-\texttt{-} & Algebraic subtraction \\
-\texttt{*} & Algebraic multiplication \\
-\texttt{**} & Algebraic exponentiation \\
-\texttt{/} & Algebraic division \\
-\texttt{\%} & Modulo operator \\
-\texttt{<<} & Left binary shift \\
-\texttt{>>} & Right binary shift \\
-\texttt{\&} & Binary and \\
-\texttt{|} & Binary or \\
-\texttt{\^{}} & Logical exclusive or \\
-\texttt{<} & Magnitude comparison \\
-\texttt{>} & Magnitude comparison \\
-\texttt{<=} & Magnitude comparison \\
-\texttt{>=} & Magnitude comparison \\
-\texttt{==} & Equality comparison \\
-\texttt{!=} & Equality comparison \\
-\texttt{<>} & Alias for \texttt{!=} \\
-\texttt{and} & Logical and \\
-\texttt{or} & Logical or \\
+{\tt +} & Algebraic sum \\
+{\tt -} & Algebraic subtraction \\
+{\tt *} & Algebraic multiplication \\
+{\tt **} & Algebraic exponentiation \\
+{\tt /} & Algebraic division \\
+{\tt \%} & Modulo operator \\
+{\tt <<} & Left binary shift \\
+{\tt >>} & Right binary shift \\
+{\tt \&} & Binary and \\
+{\tt |} & Binary or \\
+{\tt \^{}} & Logical exclusive or \\
+{\tt <} & Magnitude comparison \\
+{\tt >} & Magnitude comparison \\
+{\tt <=} & Magnitude comparison \\
+{\tt >=} & Magnitude comparison \\
+{\tt ==} & Equality comparison \\
+{\tt !=} & Equality comparison \\
+{\tt <>} & Alias for {\tt !=} \\
+{\tt and} & Logical and \\
+{\tt or} & Logical or \\
 \hline
 \end{longtable}
 \caption{A list of mathematical operators which PyXPlot recognises.}
@@ -396,14 +399,14 @@ Return the hyperbolic tangent of $x$.\\
 
 In the simple example of the previous section, we plotted the first column of a
 datafile against the second. It is also possible to plot any arbitrary column
-of a datafile against any other; the syntax for doing this is:
+of a datafile against any other; the syntax for doing this is:\indmod{using}
 
 \begin{verbatim}
 plot 'data.dat' using 3:5
 \end{verbatim}
 
 \noindent This example would plot the contents of the fifth column of the file
-\texttt{data.dat} on the vertical axis, against the the contents of the third
+{\tt data.dat} on the vertical axis, against the the contents of the third
 column on the horizontal axis. As mentioned above, columns in datafiles can be
 separated using whitespace and/or commas.  Algebraic expressions may also be
 used in place of column numbers, for example:
@@ -434,32 +437,32 @@ of datafiles against one another, in horizontally arranged datafiles.
 
 It is also possible to plot data from only selected lines within a datafile.
 When PyXPlot reads a datafile, it looks for any blank lines in the file. It
-divides the datafile up into ``data blocks'', each being separated by single
+divides the datafile up into `data blocks', each being separated by single
 blank lines. The first datablock is numbered 0, the next 1, and so on.
 \index{datafile format}
 
 When two or more blank lines are found together, the datafile is divided up
-into ``index blocks''. Thw first index block is numbered 0, the next 1, and so
+into `index blocks'. Thw first index block is numbered 0, the next 1, and so
 on. Each index block may be made up of a series of data blocks. To clarify
 this, a labelled example datafile is shown in Figure~\ref{sample_datafile}.
 
 \begin{figure}
 \begin{tabular}{p{2.2cm}l}
 \hline
-\texttt{0.0 \ 0.0} & Start of index 0, data block 0. \\
-\texttt{1.0 \ 1.0} & \\
-\texttt{2.0 \ 2.0} & \\
-\texttt{3.0 \ 3.0} & \\
+{\tt 0.0 \ 0.0} & Start of index 0, data block 0. \\
+{\tt 1.0 \ 1.0} & \\
+{\tt 2.0 \ 2.0} & \\
+{\tt 3.0 \ 3.0} & \\
                    & A single blank line marks the start of a new data block. \\
-\texttt{0.0 \ 5.0} & Start of index 0, data block 1. \\
-\texttt{1.0 \ 4.0} & \\
-\texttt{2.0 \ 2.0} & \\
+{\tt 0.0 \ 5.0} & Start of index 0, data block 1. \\
+{\tt 1.0 \ 4.0} & \\
+{\tt 2.0 \ 2.0} & \\
                    & A double blank line marks the start of a new index. \\
                    & ... \\
-\texttt{0.0 \ 1.0} & Start of index 1, data block 0. \\
-\texttt{1.0 \ 1.0} & \\
+{\tt 0.0 \ 1.0} & Start of index 1, data block 0. \\
+{\tt 1.0 \ 1.0} & \\
                    & A single blank line marks the start of a new data block. \\
-\texttt{0.0 \ 5.0} & Start of index 1, data block 1. \\
+{\tt 0.0 \ 5.0} & Start of index 1, data block 1. \\
                    & $<$etc$>$ \\
 \hline
 \end{tabular}
@@ -476,13 +479,11 @@ plot 'datafile' index 1
 \end{verbatim}
 
 \noindent To achieve the default behaviour of plotting all index blocks, the
-\texttt{index} modifier should be followed by a negative number.\index{index
-modifier@\texttt{index} modifier}
+{\tt index} modifier should be followed by a negative number.\indmod{index}
 
 It is also possible to specify which lines and/or data blocks to plot from
-within each index. To do so, the \texttt{every} modifier is used, which takes
-up to six values, separated by colons:\index{every modifier@\texttt{every}
-modifier}\label{introduce_every}
+within each index. To do so, the \indmodt{every} modifier is used, which takes
+up to six values, separated by colons:\label{introduce_every}
 
 \begin{verbatim}
 plot 'datafile' every a:b:c:d:e:f
@@ -511,7 +512,7 @@ plot 'datafile' index 1 every :::3
 data block; the second from the third line onwards within each data block.
 
 A final modifier for selecting which parts of a datafile are plotted is
-\texttt{select}, which plots only those data points which satisfy some given
+{\tt select}, which plots only those data points which satisfy some given
 criterion. This is described in Section~\ref{select_modifier}.
 
 \section{Directing Where Output Goes}
@@ -520,13 +521,12 @@ criterion. This is described in Section~\ref{select_modifier}.
 By default, when PyXPlot is used interactively, all plots are displayed on the
 screen. It is also possible to produce postscript output, to be read into other
 programs or embedded into \LaTeX\ documents, as well as a variety of other
-graphical formats. The \texttt{set terminal} command\index{set terminal
-command@\texttt{set terminal} command}\footnote{gnuplot users should note that
-the syntax of the \texttt{set terminal} command in PyXPlot is somewhat
-different from that which they are used to; see Section~\ref{set_terminal2}.}
-is used to specify the output format that is required, and the \texttt{set
-output} command\index{set output command@\texttt{set output} command} is used
-to specify the file to which output should be directed. For example,
+graphical formats. The \indcmdt{set terminal}\footnote{gnuplot users should
+note that the syntax of the {\tt set terminal} command in PyXPlot is
+somewhat different from that which they are used to; see
+Section~\ref{set_terminal2}.} is used to specify the output format that is
+required, and the \indcmdt{set output} is used to specify the file to which
+output should be directed. For example,
 
 \begin{verbatim}
 set terminal postscript
@@ -535,11 +535,11 @@ plot sin(x)
 \end{verbatim}
 
 \noindent would output a postscript plot of $\sin(x)$ to the file
-\texttt{myplot.eps}.
+{\tt myplot.eps}.
 
-The \texttt{set terminal} command can also be used to configure various output
-options within each supported file format.  For example, the following commands
-would produce black-and-white or colour output respectively:
+The \indcmdt{set terminal} can also be used to configure various output options
+within each supported file format.  For example, the following commands would
+produce black-and-white or colour output respectively:
 
 \begin{verbatim}
 set terminal monochrome
@@ -552,9 +552,10 @@ publications, the latter for preparing plots for colourful presentations.
 Both encapsulated and non-encapsulated postscript can be produced. The former
 is recommended for producing figures to embed into documents, the latter for
 plots which are to be printed without further processing. The
-\texttt{postscript} terminal produces the latter; the \texttt{eps} terminal
-should be used to produce the former.  Similarly the \texttt{pdf} terminal
-produces files in the portable document format (pdf) read by Adobe Acrobat:
+{\tt postscript} terminal produces the latter; the {\tt eps} terminal
+should be used to produce the former.  Similarly the {\tt pdf} terminal
+produces files in the portable document format (pdf)\index{pdf format} read by
+Adobe Acrobat\index{Adobe Acrobat}:
 
 \begin{verbatim}
 set terminal postscript
@@ -579,38 +580,35 @@ set terminal postscript colour
 set terminal gif monochrome
 \end{verbatim}
 
-To return to the default state of displaying plots on screen, the \texttt{x11}
+To return to the default state of displaying plots on screen, the {\tt x11}
 terminal should be selected:
 
 \begin{verbatim}
 set terminal x11
 \end{verbatim}
 
-For more details of the \texttt{set terminal} command, including how to produce
-gif and png images with transparent backgrounds, see
-Section~\ref{set_terminal2}.
+For more details of the \indcmdt{set terminal}, including how to produce gif
+and png images with transparent backgrounds, see Section~\ref{set_terminal2}.
 
-We finally note that, after changing terminals, the \texttt{replot} command is
-especially useful; it repeats the last \texttt{plot} command.\index{replot
-command@\texttt{replot} command} If any plot items are placed after it, they
-are added to the pre-existing plot.
+We finally note that, after changing terminals, the \indcmdt{replot} is
+especially useful; it repeats the last {\tt plot} command. If any plot items
+are placed after it, they are added to the pre-existing plot.
 
 \section{Data Styles}
 
-By default, data from files are plotted with points, and functions are plotted
+By default, data from files are plotted with points and functions are plotted
 with lines. However, either kinds of data can be plotted in a variety of ways.
 To plot a function with points, for example, the following syntax is
-used\footnote{Note that when a plot command contains both
-\texttt{using}/\texttt{every} modifiers, and the \texttt{with} modifier, the
-latter must come last.}\index{with modifier@\texttt{with} modifier}:
+used\footnote{Note that when a plot command contains {\tt using}, {\tt every}
+and {\tt with} modifiers, the {\tt with} modifier must come
+last.}\indmod{with}:
 
 \begin{verbatim}
 plot sin(x) with points
 \end{verbatim}
 
 \noindent The number of points displayed (i.e. the number of samples of the
-function) can be set as follows\index{set samples command@\texttt{set samples}
-command}:
+function) can be set as follows\indcmd{set samples}:
 
 \begin{verbatim}
 set samples 100
@@ -622,9 +620,9 @@ set samples 100
 plot 'data.dat' with lines
 \end{verbatim}
 
-A variety of other styles are available. \texttt{linespoints} combines both the
-\texttt{points} and \texttt{lines} styles, drawing lines through points.
-Errorbars can also be drawn, as follows:
+A variety of other styles are available. The \indpst{linespoints} plot style
+combines both the \indpst{points} and \indpst{lines} styles, drawing lines
+through points.  Errorbars can also be drawn, as follows:\indps{yerrorbars}
 
 \begin{verbatim}
 plot 'data.dat' with yerrorbars
@@ -633,7 +631,7 @@ plot 'data.dat' with yerrorbars
 \noindent In this case, three columns of data need to be specified: the $x$-
 and $y$-coordinates of each datapoint, plus the size of the vertical errorbar
 on that datapoint. By default, the first three columns of the datafile are
-used, but once again (see Section~\ref{plot_datafiles}), the \texttt{using}
+used, but once again (see Section~\ref{plot_datafiles}), the {\tt using}
 modifier can be used:
 
 \begin{verbatim}
@@ -645,13 +643,11 @@ Section~\ref{errorbars}. Other plot styles supported by PyXPlot are listed in
 Section~\ref{missing_features}, and their details can be found in many gnuplot
 tutorials. Bar charts will be discussed further in Section~\ref{barcharts}.
 
-The modifiers ``\texttt{pointtype}''\index{pointtype
-modifier@\texttt{pointtype} modifier} and ``\texttt{linetype}''\index{linetype
-modifier@\texttt{linetype} modifier}\label{pointtype_modifier}, which can be
-abbreviated to ``\texttt{pt}'' and ``\texttt{lt}'' respectively, can also be
-placed after the \texttt{with} modifier. Each should be followed by an integer.
-The former specifies what shape of points should be used to plot the dataset,
-and the latter whether a line should be continuous, dotted, dash-dotted, etc.
+The modifiers \indpst{pointtype} and \indpst{linetype}, which can be
+abbreviated to `{\tt pt}' and `{\tt lt}' respectively, can also be placed
+after the {\tt with} modifier. Each should be followed by an integer.  The
+former specifies what shape of points should be used to plot the dataset, and
+the latter whether a line should be continuous, dotted, dash-dotted, etc.
 Different integers correspond to different styles.
 
 The default plotting style referred to above can also be changed.  For example:
@@ -661,13 +657,12 @@ set style data lines
 \end{verbatim}
 
 \noindent would change the default style used for plotting data from files to
-lines.  Similarly the ``{\tt set style function}''\index{set style
-command@\texttt{set style} command} command changes the default style used when
-functions are plotted.
+lines.  Similarly the \indcmdt{set style function} changes the default style
+used when functions are plotted.
 
 \section{Setting Axis Ranges}
 
-In Section~\ref{first_plots}, the \texttt{set xlabel} configuration command was
+In Section~\ref{first_plots}, the {\tt set xlabel} configuration command was
 previously introduced for placing text labels on axes. In this section, the
 configuration of axes is extended to setting their ranges.
 
@@ -681,14 +676,13 @@ plot [-1:1][-2:2] sin(x)
 \end{verbatim}
 \label{plot_ranges}
 
-\noindent The ranges are specified immediately after the \texttt{plot}
-statement, with the syntax \texttt{[minimum:maximum]}.\footnote{An alternative
-valid syntax is to replace the colon with the word `to': \texttt{[minimum to
-maximum]}.} The first specified range applies to the $x$-axis, and the second
-to the $y$-axis.\footnote{As will be discussed in
-Section~\ref{ranges_multiaxes}, if further ranges are specified, they apply to
-the $x2$-axis, then the $y2$-axis, and so forth.} Any of the values can be
-omitted, for example:
+\noindent The ranges are specified immediately after the \indcmdt{plot}, with
+the syntax {\tt [minimum:maximum]}.\footnote{An alternative valid syntax is to
+replace the colon with the word `to': {\tt [minimum to maximum]}.} The first
+specified range applies to the $x$-axis, and the second to the
+$y$-axis.\footnote{As will be discussed in Section~\ref{ranges_multiaxes}, if
+further ranges are specified, they apply to the $x2$-axis, then the $y2$-axis,
+and so forth.} Any of the values can be omitted, for example:
 
 \begin{verbatim}
 plot [:][-2:2] sin(x)
@@ -696,9 +690,8 @@ plot [:][-2:2] sin(x)
 
 \noindent would only set a range on the $y$-axis.
 
-Alternatively, ranges can be set before the \texttt{plot} statement, using the
-\texttt{set xrange}\index{set xrange command@\texttt{set xrange} command}
-statement, for example:
+Alternatively, ranges can be set before the {\tt plot} statement, using the
+\indcmdt{set xrange}, for example:
 
 \begin{verbatim}
 set xrange [-2:2]
@@ -713,8 +706,7 @@ its default autoscaling behaviour:
 set xrange [-2:*]
 \end{verbatim}
 
-\noindent A similar effect may be obtained using the \texttt{set
-autoscale}\index{set autoscale command@\texttt{set autoscale} command} command,
+\noindent A similar effect may be obtained using the \indcmdt{set autoscale},
 which takes a list of the axes to which it is to apply. Both the upper and
 lower limits of these axes are set to scale automatically. If no list is
 supplied, then the command is applied to all axes.
@@ -724,11 +716,9 @@ set autoscale x y
 set autoscale
 \end{verbatim}
 
-Axes can be set to have logarithmic scales by using the \texttt{set
-logscale}\index{set logscale command@\texttt{set logscale} command} command,
-which also takes a list of axes to which it should apply. Its converse is
-\texttt{set nologscale}\index{set nologscale command@\texttt{set nologscale}
-command}:
+Axes can be set to have logarithmic scales by using the \indcmdt{set logscale},
+which also takes a list of axes to which it should apply. Its converse is {\tt
+set nologscale}\indcmd{set nologscale}:
 
 \begin{verbatim}
 set logscale
@@ -739,13 +729,13 @@ Further discussion of the configuration of axes can be found in
 Section~\ref{axis_extensions}.
 
 \section{Function Fitting}
-\index{fit command@\texttt{fit} command}
+\indcmd{fit command}
 \label{fit_command}
 
 It is possible to fit functional forms to data points read from files by using
-the \texttt{fit} command. A simple example might be:\footnote{In gnuplot, this
-example would have been written \texttt{fit f(x) ...}, rather than \texttt{fit
-f() ...}. This syntax is supported in PyXPlot, but is deprecated.}
+the \indcmdt{fit}. A simple example might be:\footnote{In gnuplot, this example
+would have been written {\tt fit f(x) ...}, rather than {\tt fit f() ...}. This
+syntax is supported in PyXPlot, but is deprecated.}
 
 \begin{verbatim}
 f(x) = a*x+b
@@ -754,10 +744,11 @@ fit f() 'datafile' index 1 using 2:3 via a,b
 
 The first line specifies the functional form which is to be used.  The
 coefficients within this function which are to be varied during the fitting
-process are listed after the keyword ``\texttt{via}'' in the {\tt fit} command.
-The keywords \texttt{index}, \texttt{every} and \texttt{using} have the same
-meanings here as in the plot command.\footnote{The \texttt{select} keyword, to
-be introduced in Section~\ref{select_modifier} can also be used.}
+process are listed after the keyword \indmodt{via} in the {\tt fit} command.
+The keywords \indmodt{index}, \indmodt{every} and
+\indmodt{using}\indmod{select} have the same meanings here as in the plot
+command.\footnote{The {\tt select} keyword, to be introduced in
+Section~\ref{select_modifier} can also be used.}
 
 This is useful for producing best-fit lines\index{best fit
 lines}\footnote{Another way of producing best-fit lines is to use a cubic
@@ -769,16 +760,16 @@ noting:
 \begin{itemize}
 \item When fitting a function of $n$ variables, at least $n+1$ columns (or
 rows -- see Section~\ref{horizontal_datafiles}) must be specified after the
-\texttt{using} modifier. By default, the first $n+1$ columns are used. These
+{\tt using} modifier. By default, the first $n+1$ columns are used. These
 correspond to the values of each of the $n$ inputs to the function, plus
 finally the value which the output from the function is aiming to match.
 \item If an additional column is specified, then this is taken to contain the
 standard error in the value that the output from the function is aiming to
 match, and can be used to weight the datapoints which are input into the
-\texttt{fit} command. 
+{\tt fit} command. 
 \item By default, the starting values for each of the fitting parameters is
 $1.0$. However, if the variables to be used in the fitting process are already
-set before the \texttt{fit} command is called, these initial values are used
+set before the {\tt fit} command is called, these initial values are used
 instead. For example, the following would use the initial values
 $\{a=100,b=50\}$:
 \begin{verbatim}
@@ -788,7 +779,7 @@ b = 50
 fit f() 'datafile' index 1 using 2:3 via a,b
 \end{verbatim}
 
-\item As with all numerical fitting procedures, the \texttt{fit} command comes
+\item As with all numerical fitting procedures, the {\tt fit} command comes
 with caveats. It uses a generic fitting algorithm, and may not work well with
 poorly behaved or ill-constrained problems. It works best when all of the
 values it is attempting to fit are of order unity. For example, in a problem
@@ -804,14 +795,14 @@ f(x) = 1e10*a*x
 fit f() 'datafile' via a
 \end{verbatim}
 
-\item A series of ranges may be specified after the \texttt{fit} command, using
-the same syntax as in the \texttt{plot} command, as described in
+\item A series of ranges may be specified after the {\tt fit} command, using
+the same syntax as in the {\tt plot} command, as described in
 Section~\ref{plot_ranges}. If ranges are specified then only datapoints falling
 within these ranges are used in the fitting process; the ranges refer to each
 of the $n$ variables of the fitted function in order.
 
 \item For those interested in the mathematical details, the workings of the
-\texttt{fit} command is discussed in more detail in Chapter~\ref{fit_math}.
+{\tt fit} command is discussed in more detail in Chapter~\ref{fit_math}.
 
 \end{itemize}
 
@@ -823,7 +814,7 @@ assessment of the probability distribution of the parameters.
 
 \section{Interactive Help}
 
-In addition to this Users' Guide, PyXPlot also has a \texttt{help} command,
+In addition to this Users' Guide, PyXPlot also has a \indcmdt{help},
 which provides a hierarchical source of information. Typing `help' alone gives a
 brief introduction to the help system, as well as a list of topics on which
 help is available. To display help on any given topic, type `help' followed by
@@ -841,14 +832,13 @@ words to the end of your help request -- an example might be:
 help commands help
 \end{verbatim}
 
-\noindent which would display help on the \texttt{help} command itself.
+\noindent which would display help on the {\tt help} command itself.
 
 \section{Shell Commands}
 
 Shell commands\index{shell commands!executing} may be executed directly from
-within PyXPlot by prefixing them with an {\tt !} character\index{!
-command@\texttt{!} command}. The remainder of the line is sent directly to the
-shell, for example:
+within PyXPlot by prefixing them with an {\tt !} character\indcmd{!}. The
+remainder of the line is sent directly to the shell, for example:
 
 \begin{verbatim}
 !ls -l
@@ -859,7 +849,7 @@ command on the same line.
 
 It is also possible to substitute the output of a shell command into a PyXPlot
 command. To do this, the shell command should be enclosed in back-quotes (`).
-For example:
+For example:\index{backquote character}\index{shell commands!substituting}
 
 \begin{verbatim}
 a=`ls -l *.ppl | wc -l`
@@ -869,43 +859,46 @@ print "The current directory contains %d PyXPlot scripts."%(a)
 It should be noted that back-quotes can only be used outside quotes. For
 example:
 
-\dontdo
+\dontdo{
 \begin{verbatim}
 set xlabel '`ls`'
 \end{verbatim}
+}
 
 \noindent will not work. The best way to do this would be:
 
-\dodo
+\dodo{
 \begin{verbatim}
 set xlabel `echo "'" ; ls ; echo "'"`
 \end{verbatim}
+}
 
 Note that it is not possible to change the current working directory by sending
 the cd command to a shell, as this command only changes the working directory
 of the shell in which the single command is executed:
 
-\dontdo
+\dontdo{
 \begin{verbatim} 
 !cd ..
 \end{verbatim}
+}
 
-PyXPlot has its own {\tt cd}\index{cd command@\texttt{cd} command} command for
-this purpose, as well as its own pwd\index{pwd command@\texttt{pwd} command}:
+PyXPlot has its own \indcmdt{cd} for this purpose, as well as its own
+\indcmdt{pwd}:
 
-\dodo
+\dodo{
 \begin{verbatim} 
 cd ..
 \end{verbatim}
+}
 
 \section{Differences Between PyXPlot and Gnuplot}
 \label{missing_features}
 
 Because PyXPlot is still work in progress, it does not implement all of the
 features of gnuplot. It currently does not implement any three-dimensional or
-surface plotting -- i.e. the {\tt splot}\index{splot command@\texttt{splot}
-command} of gnuplot. It also does not support the plotting of parametric
-functions.
+surface plotting -- i.e. the \indcmdt{splot} of gnuplot. It also does not
+support the plotting of parametric functions.
 
 Some of gnuplot's features have been significantly re-worked to improve upon
 their operation. The prime example is gnuplot's multiplot mode, which allows

@@ -24,6 +24,33 @@
 \chapter{ChangeLog}
 \index{ChangeLog}
 
+\subsection*{2008 Jan ??: PyXPlot 0.7.0}
+
+\subsubsection*{Summary:}
+
+Third PyXPlot beta-release. The code has undergone significant streamlining,
+and now runs approximately twice as fast as version 0.6.3 when handling large
+datafiles. Memory usage has also been radically reduced. Two new data
+processing commands have been introduced. The {\tt tabulate} command can be
+used to produce textual datafiles, allowing the user to read data in from
+files, apply some analysis, and then write the processed data back to file. The
+{\tt histogram} command can be used to estimate the frequency densities of sets
+of data points, either by binning them into a bar chart, or by fitting a
+functional form to their frequency density.
+
+\subsubsection*{Details -- New and Extended Commands:}
+
+\begin{itemize}
+\item {\tt tabulate}
+\item {\tt histogram}
+\end{itemize}
+
+\subsubsection*{Details -- Change of System Requirements:}
+
+\begin{itemize}
+\item Requirement of PyX version 0.9 updated to PyX version 0.10. Note that new versions of the PyX graphics library are not generally backwardly compatible.
+\end{itemize}
+
 \subsection*{2007 Feb 26: PyXPlot 0.6.3}
 
 \subsubsection*{Summary:}

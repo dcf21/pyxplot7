@@ -23,83 +23,54 @@
 
 \chapter{PyXPlot and the Outside World}
 
-This Chapter describes a few additional features of PyXPlot.
+This chapter describes PyXPlot as a UNIX program, and how it can be interfaced
+with other programs. 
 
-\section{The Commandline Environment}
-
-PyXPlot uses the GNU Readline command-line environment, which means that the up
-and down arrow keys can be used to repeat previously executed commands. Each
-user's command history is stored in his homespace in a history file called
-`\texttt{.pyxplot\_history}', allowing PyXPlot to remember command histories
-between sessions. Additionally, a \texttt{save} command is provided, allowing
-the user to save his command history from the present session to a text file;
-this has the following syntax:
-
-\begin{verbatim}
-save 'output_filename'
-\end{verbatim}
-
-The related \index{history command@\texttt{history} command} prints the history
-to the terminal.
+\section{Command Line Switches}
 
 From the shell command line, the PyXPlot accepts the following switches which
 modify its behaviour:\index{command line syntax}
 
 \begin{longtable}{p{3.5cm}p{8.5cm}}
-\texttt{-h --help} & Display a short help message listing the available command-line switches.\\
-\texttt{-v --version} & Display the current version number of PyXPlot.\\
-\texttt{-q --quiet} & Turn off the display of the welcome message on startup. \\
-\texttt{-V --verbose} & Display the welcome message on startup, as happens by default. \\
-\texttt{-c --colour} & Use colour highlighting\footnote{This will only function on terminals which support colour output.} to display output in green, warning messages in amber, and error messages in red.\footnote{The author apologies to those members of the population who are red/green colourblind, but draws their attention to the following sentence.} These colours can be changed in the \texttt{terminal} section of the configuration file; see Section~\ref{configuration} for more details. \\
-\texttt{-m --monochrome} & Do not use colour highlighting, as happens by default. \\
+{\tt -h --help} & Display a short help message listing the available command-line switches.\\
+{\tt -v --version} & Display the current version number of PyXPlot.\\
+{\tt -q --quiet} & Turn off the display of the welcome message on startup. \\
+{\tt -V --verbose} & Display the welcome message on startup, as happens by default. \\
+{\tt -c --colour} & Use colour highlighting\footnote{This will only function on terminals which support colour output.} to display output in green, warning messages in amber, and error messages in red.\footnote{The author apologies to those members of the population who are red/green colourblind, but draws their attention to the following sentence.} These colours can be changed in the {\tt terminal} section of the configuration file; see Section~\ref{configuration} for more details. \\
+{\tt -m --monochrome} & Do not use colour highlighting, as happens by default. \\
 \end{longtable}
 
-\section{Variables}
+\section{Command Histories}
 
-PyXPlot recognises two types of variables; numeric variables and string
-variables.  The former can be assigned a value using any valid mathematical
-expression, for example
+PyXPlot uses the GNU Readline command-line environment, which means that the up
+and down arrow keys can be used to repeat or modify previously executed
+commands. Each user's command history is stored in his homespace in a history
+file called {\tt .pyxplot\_history}, which allows PyXPlot to remember command
+histories between sessions. Additionally, a \indcmdt{save} is provided,
+allowing the user to save his command history from the present session to a
+text file; this has the following syntax:
 
 \begin{verbatim}
-a = 5.2 * sqrt(64)
+save 'output_filename.ppl'
 \end{verbatim}
 
-would assign the value 41.6 to the variable ``a''.  Numerical variables can
-subsequently be used in mathematical expressions themselves, for example:
+The related \indcmdt{history} outputs the history to the terminal. This outputs
+not only the history of the present session, but also commands entered in
+previous sessions, which can be up to several hundred lines long. It can
+optionally be followed by a number, to display the last $n$ commands, e.g.:
 
 \begin{verbatim}
-a=2*pi
-plot [0:1] sin(x) with lines
-\end{verbatim}
-
-String variables can be assigned to in an analogous manner by enclosing the
-string in quotation marks.  They can then be used wherever a string would be
-required, for example
-
-\begin{verbatim}
-plotname = "A very exciting graph"
-set title plotname
-\end{verbatim}
-
-String variables can also be modified using the search-and-replace string
-operator, =~.  This takes a regular expression in standard form and applies it
-to the relevent string.  For example:
-
-\begin{verbatim}
-twister="seven silver soda syphons"
-twister =~ s/s/th/
-print twister
+history 20
 \end{verbatim}
 
 \section{Formatting and Terminals}
 \label{set_terminal2}
 
-In this section I shall outline the new and modified commands for controlling
-the graphic output format of PyXPlot.
+In this section, we outline commands for controlling the graphic output format
+of PyXPlot.
 
-The widths of plots may be set be means of two commands -- \texttt{set
-size}\index{set size command@\texttt{set size} command} and \texttt{set
-width}\index{set width command@\texttt{set width} command}. Both are
+The widths of plots may be set be means of two commands -- {\tt set
+size}\indcmd{set size} and {\tt set width}\indcmd{set width}. Both are
 equivalent, and should be followed by the desired width measured in
 centimetres, for example:
 
@@ -107,35 +78,31 @@ centimetres, for example:
 set width 20
 \end{verbatim}
 
-The \texttt{set size} command can also be used to set the aspect ratio of plots
-by following it with the keyword \texttt{ratio}\index{set size ratio
-command@\texttt{set size ratio} command}. The number which follows should be
-the desired ratio of height to width. The following, for example would produce
-plots three times as high as they are wide:
+The {\tt set size} command can also be used to set the aspect ratio of plots by
+following it with the keyword {\tt ratio}\indcmd{set size ratio}. The number
+which follows should be the desired ratio of height to width. The following,
+for example would produce plots three times as high as they are wide:
 
 \begin{verbatim}
 set size ratio 3.0
 \end{verbatim}
 
-The command \texttt{set size noratio} returns to PyXPlot's default aspect ratio
-of the golden ratio, i.e. $\left((1+\sqrt{5})/2\right)^{-1}$, which matches
-that of a sheet of A4 paper\footnote{Of less practical significance, it has
-been in use since the time of the Pythagoreans, and is seen repeatedly in the
-architecture of the Parthenon.}.  The special command \texttt{set size
-square}\index{set size square command@\texttt{set size square} command} sets
-the aspect ratio to unity.
+The command {\tt set size noratio} returns to PyXPlot's default aspect ratio of
+the golden ratio, i.e.\ $\left((1+\sqrt{5})/2\right)^{-1}$\footnote{This aspect
+ratio has been used by artists since the time of the Pythagoreans, and is seen
+repeatedly in the architecture of the Parthenon.}. The special command {\tt set
+size square}\indcmd{set size square} sets the aspect ratio to unity.
 
-If the \texttt{enlarge} modifier is used with the {\tt set terminal} command
-then the whole plot is enlarged or, in the case of large plots, shrunk to the
-current paper size (minus a small margin).  The aspect ratio of the plot is
-preserved.  This is perhaps most useful when preparing a plot to send to a
-printer with the postscript terminal.
+If the {\tt enlarge} modifier is used with the \indcmdt{set terminal} then the
+whole plot is enlarged, or, in the case of large plots, shrunk, to the current
+paper size, minus a small margin. The aspect ratio of the plot is preserved.
+This is most useful when preparing a plot to send to a printer with the
+postscript terminal.
 
-In Section~\ref{directing_output} I described how the \texttt{set terminal}
-command\index{set terminal command@\texttt{set terminal} command} can be used
-to produce plots in various graphic formats. In addition, I here describe how
-the way in which plots are displayed on the screen can be changed. The default
-terminal, \texttt{X11}, is used to send output to screen.
+In Section~\ref{directing_output} we described how the \indcmdt{set terminal}
+can be used to produce plots in various graphic formats. In addition, the way
+in which plots are displayed on the screen can be changed. Output is sent to
+the screen using the default terminal, {\tt X11}.
 
 By default, each time a new plot is generated, if the previous plot is still
 open on the display, the X11 terminal will replace it with the new one, thus
@@ -143,7 +110,7 @@ keeping only one plot window open at a time. This has the advantage that the
 desktop does not become flooded with plot windows.
 
 If this behaviour is not desired, old plots can be kept visible when plotting
-further graphs by using the the \texttt{X11\_multiwindow} terminal: \index{X11
+further graphs by using the the {\tt X11\_multiwindow} terminal: \index{X11
 terminal}\index{multiple windows}
 
 \begin{verbatim} 
@@ -160,14 +127,13 @@ plot sin(x)
 plot cos(x)  <-- first plot window remains
 \end{verbatim}
 
-As an additional option, the \texttt{X11\_persist} terminal keeps plot windows
+As an additional option, the {\tt X11\_persist} terminal keeps plot windows
 open after PyXPlot exits; the above two terminals close all plot windows upon
 exit.
 
-\index{set terminal command@\texttt{set terminal} command} As there are many
-changes to the options accepted by the \texttt{set terminal} command in
-comparison to those understood by gnuplot, the syntax of PyXPlot's command is
-given below, followed by a list of the recognised settings:
+As there are many changes to the options accepted by the {\tt set terminal}
+command in comparison to those understood by gnuplot, the syntax of PyXPlot's
+command is given below, followed by a list of the recognised settings:
 
 \begin{verbatim} 
 set terminal { X11_singlewindow | X11_multiwindow | X11_persist |
@@ -180,70 +146,70 @@ set terminal { X11_singlewindow | X11_multiwindow | X11_persist |
 \end{verbatim}
 
 \begin{longtable}{p{3cm}p{9cm}}
-\texttt{x11\_singlewindow} & Displays plots on the screen (in X11 windows, using ghostview). Each time a new plot is generated, it replaces the old one, preventing the desktop from becoming flooded with old plots.\footnote{The author is aware of a bug, that this terminal can occasionally go blank when a new plot is generated. This is a known bug in ghostview, and can be worked around by selecting File $\to$ Reload within the ghostview window.} \textbf{[default when running interactively; see below]}\\
+{\tt x11\_singlewindow} & Displays plots on the screen (in X11 windows, using ghostview). Each time a new plot is generated, it replaces the old one, preventing the desktop from becoming flooded with old plots.\footnote{The author is aware of a bug, that this terminal can occasionally go blank when a new plot is generated. This is a known bug in ghostview, and can be worked around by selecting File $\to$ Reload within the ghostview window.} {\bf [default when running interactively; see below]}\\
 \end{longtable} % WHY IS THIS NECESSARY??
 \begin{longtable}{p{3cm}p{9cm}}
-\texttt{x11\_multiwindow} & As above, but each new plot appears in a new window, and the old plots remain visible. As many plots as may be desired can be left on the desktop simultaneously.\\
-\texttt{x11\_persist} & As above, but plot windows remain open after PyXPlot closes.\\
-\texttt{postscript} & Sends output to a postscript file. The filename for this file should be set using \texttt{set output}. \textbf{[default when running non-interactively; see below]}\index{postscript output}\\
-\texttt{eps} & As above, but produces encapsulated postscript.\index{encapsulated postscript}\index{postscript!encapsulated}\\
-\texttt{pdf} & As above, but produces pdf output.\index{pdf output}\\
-\texttt{gif} & Sends output to a gif image file; as above, the filename should be set using \texttt{set output}.\index{gif output}\\
-\texttt{png} & As above, but produces a png image.\index{png output}\\
-\texttt{jpg} & As above, but produces a jpeg image.\index{jpeg output}\\
-\texttt{colour} & Allows datasets to be plotted in colour. Automatically they will be displayed in a series of different colours, or alternatively colours may be specified using the \texttt{with colour} plot modifier (see below). \textbf{[default]}\index{colour output}\\
-\texttt{color} & Equivalent to the above; provided for users of nationalities which can't spell. \smiley \\
-\texttt{monochrome} & Opposite to the above; all datasets will be plotted in black.\index{monochrome output}\\
-\texttt{portrait} & Sets plots to be displayed in upright (normal) orientation. \textbf{[default]}\index{portrait orientation}\\
-\texttt{landscape} & Opposite of the above; produces side-ways plots. Not very useful when displayed on the screen, but you fit more on a sheet of paper that way around.\index{landscape orientation}\\
-\texttt{invert} & Modifier for the gif, png and jpg terminals; produces output with inverted colours.\footnote{This terminal setting is useful for producing plots to embed in talk slideshows, which often contain bright text on a dark background. It only works when producing bitmapped output, though a similar effect can be achieved in postscript using the \texttt{set textcolour} and \texttt{set axescolour} commands (see Section~\ref{set_colours}).}\index{colours!inverting}\\
-\texttt{noinvert} & Modifier for the gif, png and jpg terminals; opposite to the above. \textbf{[default]}\\
-\texttt{transparent} & Modifier for the gif and png terminals; produces output with a transparent background.\index{transparent terminal}\index{gif output!transparency}\index{png output!transparency}\\
-\texttt{solid} & Modifier for the gif and png terminals; opposite to the above. \textbf{[default]}\\
-\texttt{enlarge} & Enlarge or shrink contents to fit the current paper
+{\tt x11\_multiwindow} & As above, but each new plot appears in a new window, and the old plots remain visible. As many plots as may be desired can be left on the desktop simultaneously.\\
+{\tt x11\_persist} & As above, but plot windows remain open after PyXPlot closes.\\
+{\tt postscript} & Sends output to a postscript file. The filename for this file should be set using {\tt set output}. {\bf [default when running non-interactively; see below]}\index{postscript output}\\
+{\tt eps} & As above, but produces encapsulated postscript.\index{encapsulated postscript}\index{postscript!encapsulated}\\
+{\tt pdf} & As above, but produces pdf output.\index{pdf output}\\
+{\tt gif} & Sends output to a gif image file; as above, the filename should be set using {\tt set output}.\index{gif output}\\
+{\tt png} & As above, but produces a png image.\index{png output}\\
+{\tt jpg} & As above, but produces a jpeg image.\index{jpeg output}\\
+{\tt colour} & Allows datasets to be plotted in colour. Automatically they will be displayed in a series of different colours, or alternatively colours may be specified using the {\tt with colour} plot modifier (see below). {\bf [default]}\index{colour output}\\
+{\tt color} & Equivalent to the above; provided for users of nationalities which can't spell. \smiley \\
+{\tt monochrome} & Opposite to the above; all datasets will be plotted in black.\index{monochrome output}\\
+{\tt portrait} & Sets plots to be displayed in upright (normal) orientation. {\bf [default]}\index{portrait orientation}\\
+{\tt landscape} & Opposite of the above; produces side-ways plots. Not very useful when displayed on the screen, but you fit more on a sheet of paper that way around.\index{landscape orientation}\\
+{\tt invert} & Modifier for the gif, png and jpg terminals; produces output with inverted colours.\footnote{This terminal setting is useful for producing plots to embed in talk slideshows, which often contain bright text on a dark background. It only works when producing bitmapped output, though a similar effect can be achieved in postscript using the {\tt set textcolour} and {\tt set axescolour} commands (see Section~\ref{set_colours}).}\index{colours!inverting}\\
+{\tt noinvert} & Modifier for the gif, png and jpg terminals; opposite to the above. {\bf [default]}\\
+{\tt transparent} & Modifier for the gif and png terminals; produces output with a transparent background.\index{transparent terminal}\index{gif output!transparency}\index{png output!transparency}\\
+{\tt solid} & Modifier for the gif and png terminals; opposite to the above. {\bf [default]}\\
+{\tt enlarge} & Enlarge or shrink contents to fit the current paper
 size.\index{enlarging output}\\
-\texttt{noenlarge} & Do not enlarge output; opposite to the above. \textbf{[default]}\\
+{\tt noenlarge} & Do not enlarge output; opposite to the above. {\bf [default]}\\
 \end{longtable}
 \label{terminals}
 
-The default terminal is normally \texttt{x11\_singlewindow}, matching
+The default terminal is normally {\tt x11\_singlewindow}, matching
 approximately the behaviour of gnuplot. However, there is an exception to this.
 When PyXPlot is used non-interactively -- i.e. one or more command scripts are
 specified on the command line, and PyXPlot exits as soon as it finishes
-executing them -- the \texttt{x11\_singlewindow} is not a very sensible
+executing them -- the {\tt x11\_singlewindow} is not a very sensible
 terminal to use. Any plot window would close as soon as PyXPlot exited. The
-default terminal in this case changes to \texttt{postscript}.
+default terminal in this case changes to {\tt postscript}.
 
 One exception to this is when the special `--' filename is specified in a list
 of command scripts on the command line, to produce an interactive terminal
 between running a series of scripts. In this case, PyXPlot detects that the
 session will be interactive, and defaults to the usual
-\texttt{x11\_singlewindow} terminal.
+{\tt x11\_singlewindow} terminal.
 
-An additional exception is on machines where the \texttt{DISPLAY} environment
-variable\index{display environment variable@\texttt{DISPLAY} environment
+An additional exception is on machines where the {\tt DISPLAY} environment
+variable\index{display environment variable@{\tt DISPLAY} environment
 variable} is not set. In this case, PyXPlot detects that it has access to no
-X-terminal on which to display plots, and defaults to the \texttt{postscript}
+X-terminal on which to display plots, and defaults to the {\tt postscript}
 terminal.
 
-The \texttt{gif}, \texttt{png} and \texttt{jpg} terminals result in some loss
+The {\tt gif}, {\tt png} and {\tt jpg} terminals result in some loss
 of quality, since the plot has to be sampled into a bitmapped graphic format.
 By default, this sampling is performed at 300 dpi, though this may be changed
-using the command \texttt{set dpi <value>}. Alternatively, it may be changed
-using the \texttt{DPI} option in the \texttt{settings} section of a
+using the command {\tt set dpi <value>}. Alternatively, it may be changed
+using the {\tt DPI} option in the {\tt settings} section of a
 configuration file (see Section~\ref{configuration}).\index{set dpi
-command@\texttt{set dpi} command}\index{resolution of bitmap
+command@{\tt set dpi} command}\index{resolution of bitmap
 output}\index{image resolution}
 
 \section{Paper Sizes}
 
 By default, when the postscript terminal produces printable, i.e. not
 encapsulated, output, the paper size for this output is read from your system
-locale settings. It may be changed, however, with the \texttt{set
-papersize}\index{set papersize command@\texttt{set papersize} command} command,
+locale settings. It may be changed, however, with the {\tt set
+papersize}\index{set papersize command@{\tt set papersize} command} command,
 which may be followed either by the name of a recognised paper size, or by the
-dimensions of a user-defined size, specified as a \texttt{height},
-\texttt{width} pair, both being measured in millimetres. For example:
+dimensions of a user-defined size, specified as a {\tt height},
+{\tt width} pair, both being measured in millimetres. For example:
 
 \begin{verbatim}
 set papersize a4
@@ -256,7 +222,7 @@ A list of recognised paper size names is given in Figure~\ref{paper_sizes}.
 \tiny \center
 \begin{tabular}{|rrr|rrr|}
 \hline
-\textbf{Name} & \textbf{$h$/mm} & \textbf{$w$/mm} & \textbf{Name} & \textbf{$h$/mm} & \textbf{$w$/mm} \\
+{\bf Name} & {\bf $h$/mm} & {\bf $w$/mm} & {\bf Name} & {\bf $h$/mm} & {\bf $w$/mm} \\
 \hline
                        2a0 &   1681 &   1189 &           medium &    584 &    457 \\
                        4a0 &   2378 &   1681 &          monarch &    267 &    184 \\
@@ -324,8 +290,8 @@ international\_businesscard &     85 &     53 &       swedish\_g2 &    677 &    
                     letter &    279 &    216 &  us\_businesscard &     89 &     51 \\
 \hline
 \end{tabular}
-\caption{A list of all of the named paper sizes recognised by the \texttt{set papersize}\index{set
-papersize command@\texttt{set papersize} command} command, with their heights, $h$, and widths, $w$, measured in millimetres.}
+\caption{A list of all of the named paper sizes recognised by the {\tt set papersize}\index{set
+papersize command@{\tt set papersize} command} command, with their heights, $h$, and widths, $w$, measured in millimetres.}
 \label{paper_sizes}
 \end{figure}
 
@@ -335,33 +301,71 @@ PyXPlot includes a simple tool for watching command script files, and executing
 them whenever they are modified. This may be useful when developing a command
 script, if one wants to make small modifications to it, and see the results in
 a semi-live fashion. This tool is invoked by calling the
-\texttt{pyxplot\_watch}\index{pyxplot\_watch}\index{watching scripts} command
-from a shell prompt. The command-line syntax of \texttt{pyxplot\_watch} is
+{\tt pyxplot\_watch}\index{pyxplot\_watch}\index{watching scripts} command
+from a shell prompt. The command-line syntax of {\tt pyxplot\_watch} is
 similar to that of PyXPlot itself, for example:
 
 \begin{verbatim}
 pyxplot_watch script
 \end{verbatim}
 
-\noindent would set \texttt{pyxplot\_watch} to watch the command script file
-\texttt{script}. One difference, however, is that if multiple script files are
+\noindent would set {\tt pyxplot\_watch} to watch the command script file
+{\tt script}. One difference, however, is that if multiple script files are
 specified on the command line, they are watched and executed independently,
 \textit{not} sequentially, as PyXPlot itself would do. Wildcard characters can
-also be used to set \texttt{pyxplot\_watch} to watch multiple
-files.\footnote{Note that \texttt{pyxplot\_watch *.script} and
-\texttt{pyxplot\_watch $\backslash$*.script} will behave differently in most
+also be used to set {\tt pyxplot\_watch} to watch multiple
+files.\footnote{Note that {\tt pyxplot\_watch *.script} and
+{\tt pyxplot\_watch $\backslash$*.script} will behave differently in most
 UNIX shells.  In the first case, the wildcard is expanded by your shell, and a
-list of files passed to \texttt{pyxplot\_watch}. Any files matching the
-wildcard, created after running \texttt{pyxplot\_watch}, will not be picked up.
-In the latter case, the wildcard is expanded by \texttt{pyxplot\_watch} itself,
+list of files passed to {\tt pyxplot\_watch}. Any files matching the
+wildcard, created after running {\tt pyxplot\_watch}, will not be picked up.
+In the latter case, the wildcard is expanded by {\tt pyxplot\_watch} itself,
 which \textit{will} pick up any newly created files.}
 
 This is especially useful when combined with GhostView's watch facility. For
-example, suppose that a script \texttt{foo} produces postscript output
-\texttt{foo.ps}. The following two commands could be used to give a live view
+example, suppose that a script {\tt foo} produces postscript output
+{\tt foo.ps}. The following two commands could be used to give a live view
 of the result of executing this script:
 
 \begin{verbatim}
 gv --watch foo.ps &
 pyxplot_watch foo
 \end{verbatim}
+
+\section{Variables}
+
+PyXPlot recognises two types of variables; numeric variables and string 
+variables.  The former can be assigned a value using any valid mathematical
+expression, for example
+
+\begin{verbatim}
+a = 5.2 * sqrt(64)
+\end{verbatim}
+
+would assign the value 41.6 to the variable ``a''.  Numerical variables can
+subsequently be used in mathematical expressions themselves, for example:
+
+\begin{verbatim}
+a=2*pi
+plot [0:1] sin(x) with lines
+\end{verbatim}
+
+String variables can be assigned to in an analogous manner by enclosing the
+string in quotation marks.  They can then be used wherever a string would be
+required, for example
+
+\begin{verbatim}
+plotname = "A very exciting graph"
+set title plotname
+\end{verbatim}
+
+String variables can also be modified using the search-and-replace string
+operator, =~.  This takes a regular expression in standard form and applies it
+to the relevent string.  For example:
+
+\begin{verbatim}
+twister="seven silver soda syphons"
+twister =~ s/s/th/
+print twister
+\end{verbatim}
+

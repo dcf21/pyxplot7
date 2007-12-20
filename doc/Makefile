@@ -45,10 +45,10 @@ $(EPSDIR)/%.eps: $(EXAMPLEDIR)/%.ppl
 	echo "Making postscript documentation..."
 	dvips -Pcmz -Pamz $< -o $@ > /dev/null 2> /dev/null
 
-%.dvi: %.tex
+pyxplot.dvi: appearance.tex changelog.tex configuration.tex first_steps.tex fit_maths.tex functions.tex introduction.tex misc.tex plotting.tex pyxplot.tex reference.tex
 	echo "Compiling documentation..."
-	latex $< > /dev/null 2> /dev/null
-	latex $< > /dev/null 2> /dev/null
-	latex $< > /dev/null 2> /dev/null
+	latex pyxplot.tex > /dev/null 2> /dev/null
+	latex pyxplot.tex > /dev/null 2> /dev/null
+	latex pyxplot.tex > /dev/null 2> /dev/null
 	makeindex pyxplot.idx > /dev/null 2> /dev/null
-	latex $< > /dev/null 2> /dev/null
+	latex pyxplot.tex > /dev/null 2> /dev/null
