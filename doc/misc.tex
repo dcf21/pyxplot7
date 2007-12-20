@@ -192,24 +192,22 @@ variable} is not set. In this case, PyXPlot detects that it has access to no
 X-terminal on which to display plots, and defaults to the {\tt postscript}
 terminal.
 
-The {\tt gif}, {\tt png} and {\tt jpg} terminals result in some loss
-of quality, since the plot has to be sampled into a bitmapped graphic format.
-By default, this sampling is performed at 300 dpi, though this may be changed
-using the command {\tt set dpi <value>}. Alternatively, it may be changed
-using the {\tt DPI} option in the {\tt settings} section of a
-configuration file (see Section~\ref{configuration}).\index{set dpi
-command@{\tt set dpi} command}\index{resolution of bitmap
-output}\index{image resolution}
+The {\tt gif}, {\tt png} and {\tt jpg} terminals result in some loss of
+quality, since the plot has to be sampled into a bitmapped graphic format.  By
+default, this sampling is performed at 300 dpi, though this may be changed
+using the command {\tt set dpi <value>}. Alternatively, it may be changed using
+the {\tt DPI} option in the {\tt settings} section of a configuration file (see
+Section~\ref{configuration}).\indcmd{set dpi} \index{bitmap
+output!resolution}\index{image resolution}
 
 \section{Paper Sizes}
 
 By default, when the postscript terminal produces printable, i.e. not
 encapsulated, output, the paper size for this output is read from your system
-locale settings. It may be changed, however, with the {\tt set
-papersize}\index{set papersize command@{\tt set papersize} command} command,
+locale settings. It may be changed, however, with \indcmdt{set papersize},
 which may be followed either by the name of a recognised paper size, or by the
-dimensions of a user-defined size, specified as a {\tt height},
-{\tt width} pair, both being measured in millimetres. For example:
+dimensions of a user-defined size, specified as a {\tt height}, {\tt width}
+pair, both being measured in millimetres. For example:
 
 \begin{verbatim}
 set papersize a4
@@ -290,8 +288,8 @@ international\_businesscard &     85 &     53 &       swedish\_g2 &    677 &    
                     letter &    279 &    216 &  us\_businesscard &     89 &     51 \\
 \hline
 \end{tabular}
-\caption{A list of all of the named paper sizes recognised by the {\tt set papersize}\index{set
-papersize command@{\tt set papersize} command} command, with their heights, $h$, and widths, $w$, measured in millimetres.}
+\caption{A list of all of the named paper sizes recognised by the \indcmdt{set
+papersize}, with their heights, $h$, and widths, $w$, measured in millimetres.}
 \label{paper_sizes}
 \end{figure}
 
@@ -306,11 +304,11 @@ from a shell prompt. The command-line syntax of {\tt pyxplot\_watch} is
 similar to that of PyXPlot itself, for example:
 
 \begin{verbatim}
-pyxplot_watch script
+pyxplot_watch script.ppl
 \end{verbatim}
 
 \noindent would set {\tt pyxplot\_watch} to watch the command script file
-{\tt script}. One difference, however, is that if multiple script files are
+{\tt script.ppl}. One difference, however, is that if multiple script files are
 specified on the command line, they are watched and executed independently,
 \textit{not} sequentially, as PyXPlot itself would do. Wildcard characters can
 also be used to set {\tt pyxplot\_watch} to watch multiple
@@ -320,16 +318,16 @@ UNIX shells.  In the first case, the wildcard is expanded by your shell, and a
 list of files passed to {\tt pyxplot\_watch}. Any files matching the
 wildcard, created after running {\tt pyxplot\_watch}, will not be picked up.
 In the latter case, the wildcard is expanded by {\tt pyxplot\_watch} itself,
-which \textit{will} pick up any newly created files.}
+which {\it will} pick up any newly created files.}
 
-This is especially useful when combined with GhostView's watch facility. For
-example, suppose that a script {\tt foo} produces postscript output
-{\tt foo.ps}. The following two commands could be used to give a live view
-of the result of executing this script:
+This is especially useful when combined with GhostView's\index{Ghostview} watch
+facility. For example, suppose that a script {\tt foo.ppl} produces postscript
+output {\tt foo.ps}. The following two commands could be used to give a live
+view of the result of executing this script:
 
 \begin{verbatim}
 gv --watch foo.ps &
-pyxplot_watch foo
+pyxplot_watch foo.ppl
 \end{verbatim}
 
 \section{Variables}
@@ -342,7 +340,7 @@ expression, for example
 a = 5.2 * sqrt(64)
 \end{verbatim}
 
-would assign the value 41.6 to the variable ``a''.  Numerical variables can
+would assign the value 41.6 to the variable {\tt a}.  Numerical variables can
 subsequently be used in mathematical expressions themselves, for example:
 
 \begin{verbatim}
@@ -355,12 +353,12 @@ string in quotation marks.  They can then be used wherever a string would be
 required, for example
 
 \begin{verbatim}
-plotname = "A very exciting graph"
+plotname = "The Growth of a Rabbit Population"
 set title plotname
 \end{verbatim}
 
 String variables can also be modified using the search-and-replace string
-operator, =~.  This takes a regular expression in standard form and applies it
+operator, =$\sim$.  This takes a regular expression in standard form and applies it
 to the relevent string.  For example:
 
 \begin{verbatim}

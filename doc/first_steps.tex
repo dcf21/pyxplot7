@@ -39,11 +39,10 @@ the web which will greatly supplement what is provided below.
 
 \section{Getting Started}
 
-The simplest way to start PyXPlot is to type `{\tt pyxplot}' at a shell
-prompt to start an interactive session. A PyXPlot command-line prompt will
-appear, into which commands can be typed. PyXPlot can be exited either by
-typing `{\tt exit}', `{\tt quit}', or by pressing
-CTRL-D.\indcmd{exit}\indcmd{quit}
+The simplest way to start PyXPlot is to type `{\tt pyxplot}' at a shell prompt
+to start an interactive session. A PyXPlot command-line prompt will appear,
+into which commands can be typed. PyXPlot can be exited either by typing
+\indcmdts{exit}, \indcmdts{quit}, or by pressing CTRL-D.
 
 When plotting more complicated graphs, it will become preferable to store lists
 of commands in command scripts. These may be executed by passing the filename
@@ -82,9 +81,8 @@ pyxplot foo1.ppl - foo2.ppl
 
 \noindent This magic filename represents an interactive session, which
 commences after the execution of {\tt foo1.ppl}, and should be terminated in
-the usual way after use, with the `{\tt exit}' or `{\tt quit}' commands.
-Afterwards, the command script {\tt foo2.ppl} would
-execute.\indcmd{exit}\indcmd{quit}
+the usual way after use, with the \indcmdts{exit} or \indcmdts{quit} commands.
+Afterwards, the command script {\tt foo2.ppl} would execute.
 
 From within an interactive session, it is possible to run a command script
 using the \indcmdt{load}:
@@ -122,8 +120,8 @@ be appended to the end of it.
 \section{First Plots}
 \label{first_plots}
 
-The basic workhorse command of PyXPlot is the \indcmdt{\tt plot}, which is used
-to produce all plots. The following simple example would plot the function
+The basic workhorse command of PyXPlot is the \indcmdt{plot}, which is used to
+produce all plots. The following simple example would plot the function
 $\sin(x)$:
 
 \begin{verbatim}
@@ -717,8 +715,8 @@ set autoscale
 \end{verbatim}
 
 Axes can be set to have logarithmic scales by using the \indcmdt{set logscale},
-which also takes a list of axes to which it should apply. Its converse is {\tt
-set nologscale}\indcmd{set nologscale}:
+which also takes a list of axes to which it should apply. Its converse is
+\indcmdts{set nologscale}:
 
 \begin{verbatim}
 set logscale
@@ -729,7 +727,6 @@ Further discussion of the configuration of axes can be found in
 Section~\ref{axis_extensions}.
 
 \section{Function Fitting}
-\indcmd{fit command}
 \label{fit_command}
 
 It is possible to fit functional forms to data points read from files by using
@@ -837,7 +834,7 @@ help commands help
 \section{Shell Commands}
 
 Shell commands\index{shell commands!executing} may be executed directly from
-within PyXPlot by prefixing them with an {\tt !} character\indcmd{!}. The
+within PyXPlot by prefixing them with an \indcmdts{!} character. The
 remainder of the line is sent directly to the shell, for example:
 
 \begin{verbatim}

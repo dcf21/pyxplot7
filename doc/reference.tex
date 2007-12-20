@@ -26,7 +26,7 @@
 This chapter contains an alphabetically ordered list of all the commands that
 PyXPlot understands.
 
-\section{arrow}\index{arrow command@{\tt arrow} command}
+\section{arrow}\indcmd{arrow}
 
 \begin{verbatim}
 arrow [from] <x>, <y> [to] <x>, <y> [with <option> ... ]
@@ -58,7 +58,7 @@ reference to these numbers, they can later be deleted and undeleted with the
 delete 2
 \end{verbatim}
 
-\section{cd}\index{cd command@{\tt cd} command}
+\section{cd}\indcmd{cd}
 
 \begin{verbatim}
 cd <directory>
@@ -72,7 +72,7 @@ cd foo
 \end{verbatim}
 
 
-\section{clear}\index{clear command@{\tt clear} command}
+\section{clear}\indcmd{clear}
 
 \begin{verbatim}
 clear
@@ -85,7 +85,7 @@ useful; it removes the current plot to leave a blank page.
 The {\tt clear} command should not be followed by any parameters.
 
 
-\section{delete}\index{delete command@{\tt delete} command}
+\section{delete}\indcmd{delete}
 
 \begin{verbatim}
 delete <plot number>, ...
@@ -106,7 +106,7 @@ delete 1,2,3
 Having been deleted, multiplot items can be restored using the {\tt undelete}
 command.
 
-\section{edit}\index{edit command@{\tt edit} command}
+\section{edit}\indcmd{edit}
 
 \begin{verbatim}
 edit <plot number>
@@ -147,7 +147,7 @@ existing plots; simply call the {\tt plot} command rather than the {\tt replot}
 command to do this.
 
 
-\section{eps}\index{eps command@{\tt eps} command}
+\section{eps}\indcmd{eps}
 
 \begin{verbatim}
 eps '<filename>' [at <x>, <y>] [rotate <angle>] [width <width>]
@@ -164,7 +164,7 @@ native file width will be used.  The {\tt eps} command is perhaps most useful in
 multiplot mode, where included files can be combined with plots, text labels,
 etc.
 
-\section{exit}\index{exit command@{\tt exit} command}
+\section{exit}\indcmd{exit}
 
 \begin{verbatim}
 exit
@@ -180,7 +180,7 @@ interactive mode, CTRL-C terminates the current command, if one is running.
 When running a script, CTRL-C terminates execution of it.
 
 
-\section{fit}\index{fit command@{\tt fit} command}
+\section{fit}\indcmd{fit}
 
 \begin{verbatim}
 fit [<range specifier> ...] <function> '<datafile>'
@@ -205,7 +205,7 @@ estimating the gradients of datasets.  The syntax is essentially identical to
 the used by gnuplot, though a few points are worth noting, which are outlined
 in Section~\ref{fit_command}.
 
-\section{help}\index{help command@{\tt help} command}
+\section{help}\indcmd{help}
 
 \begin{verbatim}
 help [<topic> [<sub-topic> ... ] ]
@@ -235,7 +235,7 @@ under {\tt datafile}.  Other categories are self-explanatory.
 
 To exit any help page, press the `{\tt q}' key.
 
-\section{histogram}\index{histogram command@{\tt histogram} command}
+\section{histogram}\indcmd{histogram}
 
 \begin{verbatim}
 histogram [range specification] <function name> '<datafile>' 
@@ -267,7 +267,7 @@ histogram [0:21] trigibins() 'data.dat' bins (0,1,3,6,10,15,21)
 
 \noindent would only bin data between 0 and 21, into the user-specified bins.
 
-\section{history}\index{history command@{\tt history} command}
+\section{history}\indcmd{history}
 
 \begin{verbatim}
 history [N]
@@ -277,7 +277,7 @@ The {\tt history} command prints the current command-line history to the
 terminal.  The optional parameter, N, if supplied, causes only the first N lines
 to be printed.
 
-\section{jpeg}\index{jpeg command@{\tt jpeg} command}
+\section{jpeg}\indcmd{jpeg}
 
 \begin{verbatim}
 jpeg '<filename>' [at <x>, <y>] [rotate <angle>] [width <width>]
@@ -293,7 +293,7 @@ the width or height respectively in cm that the resulting image should be.  The
 {\tt jpeg} command is perhaps most useful in multiplot mode, where images can be
 combined with plots, text labels, etc.
 
-\section{load}\index{load command@{\tt load} command}
+\section{load}\indcmd{load}
 
 \begin{verbatim}
 load '<filename>'
@@ -317,7 +317,7 @@ load '*.script'
 \end{verbatim}
 
 
-\section{move}\index{move command@{\tt move} command}
+\section{move}\indcmd{move}
 
 \begin{verbatim}
 move <plot number> to <x>, <y>
@@ -337,7 +337,7 @@ centimetres). If this item were a plot, the end result would be the same as if
 the command {\tt set origin 8,8} had been called before it had originally been
 plotted.
 
-\section{!}\index{! command@! command}
+\section{!}\indcmd{!}
 
 \begin{verbatim}
 ! <shell command>
@@ -366,7 +366,7 @@ set xlabel '`ls`'
 \end{verbatim}
 
 
-\section{plot}\index{plot command@{\tt plot} command}
+\section{plot}\indcmd{plot}
 
 \begin{verbatim}
 plot [<range specifier> ...] ('<filename>'|<function>)
@@ -473,7 +473,7 @@ plot sin(x) with colour blue, cos(x) with linetype 2
 \end{verbatim}
 
 
-\section{print}\index{print command@{\tt print} command}
+\section{print}\indcmd{print}
 
 \begin{verbatim}
 print <expression>
@@ -490,7 +490,7 @@ print a
 \noindent would print the value of the variable $a$.
 
 
-\section{pwd}\index{pwd command@{\tt pwd} command}
+\section{pwd}\indcmd{pwd}
 
 \begin{verbatim}
 pwd
@@ -499,7 +499,7 @@ pwd
 The {\tt pwd} command prints the location of the current working directory.
 
 
-\section{?}\index{? command@{\tt ?} command}
+\section{?}\indcmd{?}
 
 \begin{verbatim}
 ? [<help option> ... ]
@@ -508,7 +508,7 @@ The {\tt pwd} command prints the location of the current working directory.
 The {\tt ?} symbol is a shortcut to the {\tt help} command.
 
 
-\section{quit}\index{quit command@{\tt quit} command}
+\section{quit}\indcmd{quit}
 
 \begin{verbatim}
 quit
@@ -524,7 +524,7 @@ interactive mode, CTRL-C terminates the current command, if one is running.
 When running a script, CTRL-C terminates execution of it.
 
 
-\section{refresh}\index{refresh command@{\tt refresh} command}
+\section{refresh}\indcmd{refresh}
 
 \begin{verbatim}
 refresh
@@ -541,7 +541,7 @@ necessarily even be any plots; there might perhaps only be textual items and
 arrows.
 
 
-\section{replot}\index{replot command@{\tt replot} command}
+\section{replot}\indcmd{replot}
 
 \begin{verbatim}
 replot [<plot number>]
@@ -574,7 +574,7 @@ replot sin(x) axes x2y1 with linespoints
 
 \noindent will add a plot of the function $\sin(x)$ to the current plot.
 
-\section{reset}\index{reset command@{\tt reset} command}
+\section{reset}\indcmd{reset}
 
 \begin{verbatim}
 reset
@@ -584,7 +584,7 @@ The {\tt reset} command returns the values of all settings that have been
 changed with the {\tt set} command back to their default values.
 
 
-\section{save}\index{save command@{\tt save} command}
+\section{save}\indcmd{save}
 
 \begin{verbatim}
 save '<filename>'
@@ -602,7 +602,7 @@ save 'foo'
 \noindent would save a command history into the file named `{\tt foo}'.
 
 
-\section{set}\index{set command@{\tt set} command}
+\section{set}\indcmd{set}
 
 \begin{verbatim}
 set <option> <value>
@@ -636,7 +636,7 @@ the current values of settings, and the {\tt unset} command, which returns
 settings to their default values. Section~\ref{config_files} describes how
 commonly used settings can be saved into a configuration file.
 
-\subsection{arrow}\index{set arrow command@{\tt set arrow} command}
+\subsection{arrow}\indcmd{set arrow}
 
 \begin{verbatim}
 set arrow <arrow number> from [<co-ordinate>] <x>,
@@ -688,7 +688,7 @@ set arrow 2 from first 0, second 2.5 to axis3 0,
 
 
 
-\subsection{autoscale}\index{set autoscale command@{\tt set autoscale} command}
+\subsection{autoscale}\indcmd{set autoscale}
 
 \begin{verbatim}
 set autoscale <axis>[<axis>... ] 
@@ -710,7 +710,7 @@ set autoscale x1y3
 \end{verbatim}
 
 
-\subsection{axescolour}\index{set axescolour command@{\tt set axescolour} command}
+\subsection{axescolour}\indcmd{set axescolour}
 
 \begin{verbatim}
 set axescolour <colour>
@@ -726,7 +726,7 @@ set axescolour blue
 Section~\ref{colour_names} can be used.
  
 
-\subsection{axis}\index{set axis command@{\tt set axis} command}
+\subsection{axis}\indcmd{set axis}
 
 \begin{verbatim}
 set axis <axis>, ...
@@ -778,7 +778,7 @@ the {\tt unset axis} command restores these axes to their default
 configurations, removing any set titles or ranges that they might have been
 given.
 
-\subsection{backup}\index{set backup command@{\tt set backup} command}
+\subsection{backup}\indcmd{set backup}
 
 \begin{verbatim}
 set backup
@@ -795,7 +795,7 @@ the existing file would be renamed `{\tt out.ps~}' to save it from being overwri
 The setting may be turned off via {\tt set nobackup}.
 
 
-\subsection{bar}\index{set bar command@{\tt set bar} command}
+\subsection{bar}\indcmd{set bar}
 
 \begin{verbatim}
 set bar ( large | small | <barsize> )
@@ -811,7 +811,7 @@ set bar 2
 \noindent sets the bars to be twice the size of the points.  The options `{\tt large}' and
 `{\tt small}' are equivalent to 1 (the default) and 0 (no bar) respectively.
 
-\subsection{binorigin}\index{set binorigin command@{\tt set binorigin} command}
+\subsection{binorigin}\indcmd{set binorigin}
 
 \begin{verbatim}
 set binorigin <bin origin>
@@ -820,7 +820,7 @@ set binorigin <bin origin>
 The {\tt binorigin} setting changes the position on the $x$ axis where
 the bins used by the histogram command originate from.
 
-\subsection{binwidth}\index{set binwidth command@{\tt set binorigin} command}
+\subsection{binwidth}\indcmd{set binwidth}
 
 \begin{verbatim}
 set binwidth <bin width>
@@ -829,7 +829,7 @@ set binwidth <bin width>
 The {\tt binwidth} setting changes the width of the bins used by the histogram
 command.
 
-\subsection{boxfrom}\index{set boxfrom command@{\tt set boxfrom} command}
+\subsection{boxfrom}\indcmd{set boxfrom}
 
 \begin{verbatim}
 set boxfrom <value>
@@ -847,7 +847,7 @@ set boxfrom 2
 \noindent which would make the boxes of a barchart emanate vertically from the line $y=2$.
 
 
-\subsection{boxwidth}\index{set boxwidth command@{\tt set boxwidth} command}
+\subsection{boxwidth}\indcmd{set boxwidth}
 
 \begin{verbatim}
 set boxwidth <width>
@@ -874,11 +874,11 @@ specified $x$-positions, such that their interfaces occur at the horizontal
 midpoints between them.
 
 
-\subsection{data style}\index{set data style command@{\tt set data style} command}
+\subsection{data style}\indcmd{set data style}
 
 See `{\tt set style data}'.
 
-\subsection{display}\index{set display command@{\tt set display} command}
+\subsection{display}\indcmd{set display}
 
 \begin{verbatim}
 set [no]display
@@ -904,7 +904,7 @@ refresh
 \end{verbatim}
 
 
-\subsection{dpi}\index{set dpi command@{\tt set dpi} command}
+\subsection{dpi}\indcmd{set dpi}
 
 \begin{verbatim}
 set dpi <value>
@@ -922,7 +922,7 @@ set dpi 100
 \noindent sets the output to a resolution of 100 dots per inch. Higher dpi
 values yield better quality images, but larger file sizes.
 
-\subsection{fontsize}\index{set fontsize command@{\tt set fontsize} command}
+\subsection{fontsize}\indcmd{set fontsize}
 
 \begin{verbatim}
 set fontsize <value>
@@ -946,11 +946,11 @@ sizes can be specified directly in the \LaTeX\ text of labels, for example:
 set xlabel '\Large This is a BIG label'
 \end{verbatim}
 
-\subsection{function style}\index{set function style command@{\tt set function style} command}
+\subsection{function style}\indcmd{set function style}
 
 See `{\tt set style function}'.
 
-\subsection{grid}\index{set grid command@{\tt set grid} command}
+\subsection{grid}\indcmd{set grid}
 
 \begin{verbatim}
 set [no]grid <axis> ...
@@ -990,7 +990,7 @@ set grid x1x2x3
 \end{verbatim}
 
 
-\subsection{gridmajcolour}\index{set gridmajcolour command@{\tt set gridmajcolour} command}
+\subsection{gridmajcolour}\indcmd{set gridmajcolour}
 
 \begin{verbatim}
 set gridmajcolour <colour>
@@ -1010,7 +1010,7 @@ colour names listed in Section~\ref{colour_names} can be used.
 See also the {\tt set gridmincolour} command.
 
 
-\subsection{gridmincolour}\index{set gridmincolour command@{\tt set gridmincolour} command}
+\subsection{gridmincolour}\indcmd{set gridmincolour}
 
 \begin{verbatim}
 set gridmincolour <colour>
@@ -1032,7 +1032,7 @@ See also the set gridmajcolour command.
 \end{verbatim}
 
 
-\subsection{key}\index{set key command@{\tt set key} command}
+\subsection{key}\indcmd{set key}
 
 \begin{verbatim}
 set key [ <position> ... ] [<xoffset>, <yoffset>]
@@ -1079,7 +1079,7 @@ set key bottom left 0.0, -0.5
 \noindent would display a key below the bottom left corner of the graph.
 
 
-\subsection{keycolumns}\index{set keycolumns command@{\tt set keycolumns} command}
+\subsection{keycolumns}\indcmd{set keycolumns}
 
 \begin{verbatim}
 set keycolumns <value>
@@ -1097,7 +1097,7 @@ set keycolumns 3
 \end{verbatim}
 
 
-\subsection{label}\index{set label command@{\tt set label} command}
+\subsection{label}\indcmd{set label}
 
 \begin{verbatim}
 set label <label number> '<text>' [<co-ordinate>] <x>,
@@ -1149,7 +1149,7 @@ set label 1 'Hello' 1.2, 2.5 rotate 90
 \end{verbatim}
 
 
-\subsection{linestyle}\index{set linestyle command@{\tt set linestyle} command}
+\subsection{linestyle}\indcmd{set linestyle}
 
 \begin{verbatim}
 set linestyle <style number> <style specifier> ...
@@ -1172,7 +1172,7 @@ plot sin(x) with linestyle 2
 \end{verbatim}
 
 
-\subsection{linewidth}\index{set linewidth command@{\tt set linewidth} command}
+\subsection{linewidth}\indcmd{set linewidth}
 
 \begin{verbatim}
 set linewidth <value>
@@ -1195,7 +1195,7 @@ plot sin(x) with lines linewidth 5.0
 \end{verbatim}
 
 
-\subsection{logscale}\index{set logscale command@{\tt set logscale} command}
+\subsection{logscale}\indcmd{set logscale}
 
 \begin{verbatim}
 set logscale [<axis> ... ] <base>
@@ -1244,7 +1244,7 @@ unset log x1y2
 Optionally, a base may be specified at the end of the {\tt set logscale}
 command, to produce axes labelled in logarithms to arbitrary bases.
 
-\subsection{multiplot}\index{set multiplot command@{\tt set multiplot} command}
+\subsection{multiplot}\indcmd{set multiplot}
 
 \begin{verbatim}
 set multiplot
@@ -1260,15 +1260,15 @@ set multiplot
 be plotted together and displayed side-by-side. See Section~\ref{multiplot} for
 a full discussion of multiplot mode.
 
-\subsection{mxtics}\index{set mxtics command@{\tt set mxtics} command}
+\subsection{mxtics}\indcmd{set mxtics}
 
 See {\tt set xtics}.
 
-\subsection{mytics}\index{set mytics command@{\tt set mytics} command}
+\subsection{mytics}\indcmd{set mytics}
 
 See {\tt set xtics}.
 
-\subsection{noarrow}\index{set noarrow command@{\tt set noarrow} command}
+\subsection{noarrow}\indcmd{set noarrow}
 
 \begin{verbatim}
 set noarrow [<arrow number>]
@@ -1291,7 +1291,7 @@ set noarrow 2
 the arrow to be removed when it was initially set using the {\tt set arrow}
 command.
 
-\subsection{noaxis}\index{set noaxis command@{\tt set noaxis} command}
+\subsection{noaxis}\indcmd{set noaxis}
 
 \begin{verbatim}
 set noaxis <axis specification>, ...
@@ -1302,17 +1302,17 @@ should be followed by a comma-separated lists of axes, which are to be removed
 from the current axis configuration.
 
 
-\subsection{nobackup}\index{set nobackup command@{\tt set nobackup} command}
+\subsection{nobackup}\indcmd{set nobackup}
 
 See {\tt backup}.
 
 
-\subsection{nodisplay}\index{set nodisplay command@{\tt set nodisplay} command}
+\subsection{nodisplay}\indcmd{set nodisplay}
 
 See {\tt display}.
 
 
-\subsection{nogrid}\index{set nogrid command@{\tt set nogrid} command}
+\subsection{nogrid}\indcmd{set nogrid}
 
 \begin{verbatim}
 set norgrid [<axis> ... ]
@@ -1328,7 +1328,7 @@ set nogrid x1 y2
 \end{verbatim}
 
 
-\subsection{nokey}\index{set nokey command@{\tt set nokey} command}
+\subsection{nokey}\indcmd{set nokey}
 
 \begin{verbatim}
 set nokey
@@ -1338,7 +1338,7 @@ Issuing the command {\tt set nokey} causes plots to be generated with no legend.
 See the command {\tt set key} for more details.
 
 
-\subsection{nolabel}\index{set nolabel command@{\tt set nolabel} command}
+\subsection{nolabel}\indcmd{set nolabel}
 
 \begin{verbatim}
 set nolabel [<label number> ... ]
@@ -1362,7 +1362,7 @@ set nolabel 2
 the label to be removed when it was initially set using the {\tt set label}
 command.
 
-\subsection{nolinestyle}\index{set nolinestyle command@{\tt set nolinestyle} command}
+\subsection{nolinestyle}\indcmd{set nolinestyle}
 
 \begin{verbatim}
 set nolinestyle <style number>
@@ -1378,7 +1378,7 @@ set nolinestyle 3
 linestyle} for more details.
 
 
-\subsection{nologscale}\index{set nologscale command@{\tt set nologscale} command}
+\subsection{nologscale}\indcmd{set nologscale}
 
 \begin{verbatim}
 set nologscale [<axis> ... ]
@@ -1402,7 +1402,7 @@ set nologscale x1 y2
 This would cause the first $x$- and second $y$-axes to be scaled linearly.
 
 
-\subsection{nomultiplot}\index{set nomultiplot command@{\tt set nomultiplot} command}
+\subsection{nomultiplot}\indcmd{set nomultiplot}
 
 \begin{verbatim}
 set nomultiplot
@@ -1415,7 +1415,7 @@ graphs on their own; multiplot mode is used to produce galleries of many plots
 side-by-side.
 
 
-\subsection{notitle}\index{set notitle command@{\tt set notitle} command}
+\subsection{notitle}\indcmd{set notitle}
 
 \begin{verbatim}
 set notitle
@@ -1425,7 +1425,7 @@ Issuing the command {\tt set notitle} will cause graphs to be produced with no
 title at the top.
 
 
-\subsection{noxtics}\index{set noxtics command@{\tt set noxtics} command}
+\subsection{noxtics}\indcmd{set noxtics}
 
 \begin{verbatim}
 set no<axis specification>tics
@@ -1433,12 +1433,12 @@ set no<axis specification>tics
 
 This command causes graphs to be produced with no tick marks along their $x$-axes.
 
-\subsection{noytics}\index{set noytics command@{\tt set noytics} command}
+\subsection{noytics}\indcmd{set noytics}
 
 See {\tt set noxtics}.
 
 
-\subsection{origin}\index{set origin command@{\tt set origin} command}
+\subsection{origin}\indcmd{set origin}
 
 \begin{verbatim}
 set origin <x>, <y>
@@ -1456,7 +1456,7 @@ multiplot page. The {\tt set origin} command is of little use outside multiplot
 mode.
 
 
-\subsection{output}\index{set output command@{\tt set output} command}
+\subsection{output}\indcmd{set output}
 
 \begin{verbatim}
 set output '<filename>'
@@ -1473,7 +1473,7 @@ set output 'myplot.eps'
 \noindent causes the output to be written to the file `{\tt myplot.eps}'.
 
 
-\subsection{palette}\index{set palette command@{\tt set palette} command}
+\subsection{palette}\indcmd{set palette}
 
 \begin{verbatim}
 set palette <colour>, [<colour> ... ]
@@ -1508,7 +1508,7 @@ in blue. Upon reaching the fourth, the palette would cycle back to red.
 
 Any of the recognised colour names listed in Section~\ref{colour_names} can be used.
 
-\subsection{papersize}\index{set papersize command@{\tt set papersize} command}
+\subsection{papersize}\indcmd{set papersize}
 
 \begin{verbatim}
 set papersize (size|<x>, <y>)
@@ -1527,7 +1527,7 @@ set papersize 200,100
 
 A list of recognised papersizes can be found in Figure~\ref{paper_sizes}.
 
-\subsection{pointlinewidth}\index{set pointlinewidth command@{\tt set pointlinewidth} command}
+\subsection{pointlinewidth}\indcmd{set pointlinewidth}
 
 \begin{verbatim}
 set pointlinewidth <value>
@@ -1544,7 +1544,7 @@ set pointlinewidth 20
 
 Note that `{\tt pointlinewidth}' can be abbreviated as `{\tt plw}'.
 
-\subsection{pointsize}\index{set pointsize command@{\tt set pointsize} command}
+\subsection{pointsize}\indcmd{set pointsize}
 
 \begin{verbatim}
 set pointsize <value>
@@ -1560,13 +1560,13 @@ set pointsize 1.5
 
 \noindent would cause points to be plotted 1.5 times the default size.
 
-\subsection{preamble}\index{set preamble command@{\tt set preamble} command}
+\subsection{preamble}\indcmd{set preamble}
 
 The {\tt preamble} setting changes the preamble that is prepended to each item of
 text rendered using \LaTeX{}.  This allows, for example, different packages to
 be loaded by default and user-defined macros to be set up.
 
-\subsection{samples}\index{set samples command@{\tt set samples} command}
+\subsection{samples}\indcmd{set samples}
 
 The {\tt samples} setting determines the number of values along the $x$-axis at
 which functions are evaluated when they are plotted. For example:
@@ -1583,7 +1583,7 @@ When functions are plotted with the {\tt points} plot style, this also affects
 the number of points plotted.
 
 
-\subsection{size}\index{set size command@{\tt set size} command}
+\subsection{size}\indcmd{set size}
 
 \begin{verbatim}
 set size (<width>|ratio <ratio>|noratio|square)
@@ -1653,7 +1653,7 @@ set size square
 \noindent sets PyXPlot to produce square plots, i.e. with unit aspect ratio. Other aspect
 ratios can be set with the {\tt set size ratio} command.
 
-\subsection{style}\index{set style command@{\tt set style} command}
+\subsection{style}\indcmd{set style}
 
 \begin{verbatim}
 set style { data | function } <style modifier> ...
@@ -1672,7 +1672,7 @@ set style function lines linestyle 1
 \noindent would cause datafiles to be plotted by default using points and
 functions using lines with the first defined linestyle.
  
-\subsection{terminal}\index{set terminal command@{\tt set terminal} command}
+\subsection{terminal}\indcmd{set terminal}
 
 \begin{verbatim}
 set terminal <terminal type> [<option> ... ]
@@ -1865,7 +1865,7 @@ plot is generated it replaces the old one, preventing the desktop from becoming
 flooded with old plots. This terminal is the default when running
 interactively.
 
-\subsection{textcolour}\index{set textcolour command@{\tt set textcolour} command}
+\subsection{textcolour}\indcmd{set textcolour}
 
 \begin{verbatim}
 set textcolour <colour>
@@ -1882,7 +1882,7 @@ set textcolour red
 legends, etc. to be rendered in red. Any of the recognised colour names listed
 in Section~\ref{colour_names} can be used.
 
-\subsection{texthalign}\index{set texthalign command@{\tt set texthalign} command}
+\subsection{texthalign}\indcmd{set texthalign}
 
 \begin{verbatim}
 set texthalign ( left | centre | right )
@@ -1899,7 +1899,7 @@ set texthalign centre
 set texthalign right
 \end{verbatim}
 
-\subsection{textvalign}\index{set textvalign command@{\tt set textvalign} command}
+\subsection{textvalign}\indcmd{set textvalign}
 
 \begin{verbatim}
 set textvalign ( bottom | center | top )
@@ -1916,7 +1916,7 @@ set textvalign centre
 set textvalign top
 \end{verbatim}
 
-\subsection{title}\index{set title command@{\tt set title} command}
+\subsection{title}\indcmd{set title}
 
 \begin{verbatim}
 set title '<title>'
@@ -1936,7 +1936,7 @@ way to remove a title, having set one, is via:
 set title ''
 \end{verbatim}
    
-\subsection{width}\index{set width command@{\tt set width} command}
+\subsection{width}\indcmd{set width}
 
 \begin{verbatim}
 set width <value>
@@ -1952,7 +1952,7 @@ set width 10
 {\tt jpg} and {\tt png}) this setting, in conjunction with the {\tt dpi}
 setting, controls the number of pixels across the final image.
 
-\subsection{xlabel}\index{set xlabel command@{\tt set xlabel} command}
+\subsection{xlabel}\indcmd{set xlabel}
 
 \begin{verbatim}
 set xlabel '<text>'
@@ -1982,7 +1982,7 @@ set y2label 'foo'
 \end{verbatim}
 
 
-\subsection{xrange}\index{set xrange command@{\tt set xrange} command}
+\subsection{xrange}\indcmd{set xrange}
 
 \begin{verbatim}
 set x[<axisnumber>]range '<text>'
@@ -2014,7 +2014,7 @@ set xrange [:10]
 \noindent would set the $x$-axis to have an upper limit of 10, but an
 automatically-scaling lower-limit.
 
-\subsection{xticdir}\index{set xticdir command@{\tt set xticdir} command}
+\subsection{xticdir}\indcmd{set xticdir}
 
 \begin{verbatim}
 set (x|y)[<axisnumber>]ticdir (inward|outward|both)
@@ -2046,7 +2046,7 @@ set yticdir inward
 set y10ticdir both
 \end{verbatim}
 
-\subsection{xtics}\index{set xtics command@{\tt set xtics} command}
+\subsection{xtics}\indcmd{set xtics}
 
 \begin{verbatim}
 set [m]x[<axisnumber>]tics 
@@ -2095,26 +2095,26 @@ set x2tics ("a" 2, "b" 3)
 `b' respectively.
 
 
-\subsection{ylabel}\index{set ylabel command@{\tt set ylabel} command}
+\subsection{ylabel}\indcmd{set ylabel}
 
 See {\tt xlabel}.
 
 
-\subsection{yrange}\index{set yrange command@{\tt set yrange} command}
+\subsection{yrange}\indcmd{set yrange}
 
 See {\tt xrange}.
    
 
-\subsection{yticdir}\index{set yticdir command@{\tt set yticdir} command}
+\subsection{yticdir}\indcmd{set yticdir}
 
 See {\tt xticdir}.
 
 
-\subsection{ytics}\index{set ytics command@{\tt set ytics} command}
+\subsection{ytics}\indcmd{set ytics}
 
 See {\tt xtics}.
 
-\section{show}\index{show command@{\tt show} command}
+\section{show}\indcmd{show}
 
 \begin{verbatim}
 show ( all | settings | axes | variables | functions |
@@ -2142,7 +2142,7 @@ currently defined variables. And finally, {\tt show functions} lists all of the
 current user-defined functions.
 
 
-\section{spline}\index{spline command@{\tt spline} command}
+\section{spline}\indcmd{spline}
 
 \begin{verbatim}
 spline [<range specification>] <function name> '<filename>' 
@@ -2168,7 +2168,7 @@ plot} command to select which parts of the datafile should be used; see the
 Note that trying to generate splines of multi-valued functions will not, in
 general, produce useful results.
 
-\section{tabulate}\index{tabulate command@{\tt tabulate} command}
+\section{tabulate}\indcmd{tabulate}
 
 \begin{verbatim}
 tabulate [<range specification>] ( <expression> | <filename> )
@@ -2214,7 +2214,7 @@ set output 'filtered.dat'
 tabulate 'plot.1' u 3:6:9 select (asin($4)>0)
 \end{verbatim}
 
-\section{text}\index{text command@{\tt text} command}
+\section{text}\indcmd{text}
 
 \begin{verbatim}
 text '<text string>' [at <x>, <y>] [rotate <angle>]
@@ -2248,7 +2248,7 @@ consisting simply of one single text item. This can be useful for importing
 Powerpoint which are incapable of producing such neat mathematical notation
 by themselves.
 
-\section{undelete}\index{undelete command@{\tt undelete} command}
+\section{undelete}\indcmd{undelete}
 
 \begin{verbatim}
 undelete <item number>, ...
@@ -2266,7 +2266,7 @@ undelete 1
 
 \noindent will cause the previously item numbered {\tt 1} to reappear.
   
-\section{unset}\index{unset command@{\tt unset} command}
+\section{unset}\indcmd{unset}
 
 \begin{verbatim}
 unset <setting>

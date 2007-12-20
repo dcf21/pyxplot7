@@ -41,8 +41,9 @@ example would be:
 set arrow 1 from 0,0 to 1,1
 \end{verbatim}
 
-\noindent The number `1' immediately following `set arrow' specifies an identification
-number for the arrow, allowing it to be subsequently removed via:
+\noindent The number {\tt 1} immediately following \indcmdts{set arrow}
+specifies an identification number for the arrow, allowing it to be
+subsequently removed via:
 
 \begin{verbatim}
 unset arrow 1
@@ -148,10 +149,9 @@ set textcolour blue
 
 \index{text!alignment}\index{alignment!text}By default, each label's specified
 position corresponds to its bottom left corner. This alignment may be changed
-with the {\tt set texthalign}\indcmd{set texthalign} and {\tt set
-textvalign}\indcmd{set textvalign} commands. The former takes the options {\tt
-left}, {\tt centre} or {\tt right}, and the latter takes the options {\tt
-bottom}, {\tt centre} or {\tt top}, for example:
+with the \indcmdts{set texthalign} and \indcmdts{set textvalign} commands. The
+former takes the options {\tt left}, {\tt centre} or {\tt right}, and the
+latter takes the options {\tt bottom}, {\tt centre} or {\tt top}, for example:
 
 \begin{verbatim}
 set texthalign right
@@ -196,10 +196,9 @@ unset grid x2x3
 \end{verbatim}
 
 The colours of gridlines\index{grid!colour}\index{colours!grid} can be
-controlled via the {\tt set gridmajcolour}\indcmd{set gridmajcolour} and {\tt
-set gridmincolour}\indcmd{set gridmincolour} commands, which control the
-gridlines emanating from major and minor axis ticks respectively. An example
-would be:
+controlled via the \indcmdts{set gridmajcolour} and \indcmdts{set
+gridmincolour} commands, which control the gridlines emanating from major and
+minor axis ticks respectively. An example would be:
 
 \begin{verbatim}
 set gridmincolour blue
@@ -208,9 +207,9 @@ set gridmincolour blue
 \noindent Any of the colour names listed in Section~\ref{colour_names} can be
 used.
 
-A related command\index{axes!colour}\index{colours!axes} is {\tt set
-axescolour}\indcmd{set axescolour}, which has a syntax similar to that above,
-and sets the colour of the graph's axes.\label{set_colours}
+A related command\index{axes!colour}\index{colours!axes} is \indcmdts{set
+axescolour}, which has a syntax similar to that above, and sets the colour of
+the graph's axes.\label{set_colours}
 
 \section{LaTeX and PyXPlot}
 
@@ -222,13 +221,13 @@ Gnuplot has a plotting mode called `multiplot' which allows many graphs to be
 plotted together, and display side-by-side. The basic syntax of this mode is
 reproduced in PyXPlot, but is hugely extended.
 
-The mode is entered by the command {\tt set multiplot}\indcmd{set multiplot}.
-This can be compared to taking a blank sheet of paper on which to place plots.
-Plots are then placed on that sheet of paper, as usual, with the {\tt plot}
-command. The position of each plot is set using the \indcmdt{set origin}, which
-takes a comma-separated $x,y$ coordinate pair, measured in centimetres. The
-following, for example, would plot a graph of $\sin(x)$ to the left of a plot
-of $\cos(x)$:
+The mode is entered by the command \indcmdts{set multiplot}.  This can be
+compared to taking a blank sheet of paper on which to place plots.  Plots are
+then placed on that sheet of paper, as usual, with the {\tt plot} command. The
+position of each plot is set using the \indcmdt{set origin}, which takes a
+comma-separated $x,y$ coordinate pair, measured in centimetres. The following,
+for example, would plot a graph of $\sin(x)$ to the left of a plot of
+$\cos(x)$:
 
 \begin{verbatim} 
 set multiplot
@@ -345,29 +344,23 @@ in degrees counter-clockwise, for example:
 text 'This is some text' at x,y rotate r
 \end{verbatim}
 
-The commands {\tt set textcolour}, {\tt set
-texthalign} and {\tt set textvalign}, which have already been described in
-the context in the {\tt set label} command, can also be used to set the
-colour and alignment of text produced with the {\tt text} command.\index{set
-textcolour command@{\tt set textcolour} command}\index{set texthalign
-command@{\tt set texthalign} command}\index{set textvalign
-command@{\tt set textvalign} command}. A useful application of this is to
+The commands \indcmdts{set textcolour}, \indcmdts{set texthalign} and
+\indcmdts{set textvalign}, which have already been described in the context in
+the {\tt set label} command, can also be used to set the colour and alignment
+of text produced with the \indcmdt{text}.  A useful application of this is to
 produce centred headings at the top of multiplots.
 
 As with plots, each text item has a unique identification number, and can be
-moved around, deleted or undeleted with the {\tt delete}, {\tt undelete}
-and {\tt move} commands.
-\index{delete command@{\tt delete} command}
-\index{undelete command@{\tt undelete} command}
+moved around, deleted or undeleted with the \indcmdts{delete},
+\indcmdts{undelete} and \indcmdts{move} commands.
 
-It should be noted that the {\tt text} command can also be used outside of
-the multiplot environment, to render a single piece of short text instead of a
+It should be noted that the \indcmdt{text} can also be used outside of the
+multiplot environment, to render a single piece of short text instead of a
 graph. One obvious application is to produce equations rendered as graphical
-files for inclusion in talks.
+files for inclusion in talks.\index{presentations}
 
-\label{arrows} \index{arrow command@{\tt arrow} command} Arrows may also be
-placed on multiplot pages, independently of any plots, using the {\tt arrow}
-command, which has syntax:
+\label{arrows} Arrows may also be placed on multiplot pages, independently of
+any plots, using the \indcmdt{arrow}, which has syntax:
 
 \begin{verbatim} 
 arrow from x,y to x,y
@@ -376,18 +369,18 @@ arrow from x,y to x,y
 As above, arrows receive unique identification numbers, and can be deleted and
 undeleted.
 
-The {\tt arrow} command may be followed by the `{\tt with}' keyword to
-specify to style of the arrow. The style keywords which are accepted are
-identical to those accepted by the {\tt set arrow} command (see
-Section~\ref{set_arrow}). For example:
+The \indcmdt{arrow} may be followed by the \indmodt{with} keyword to specify to
+style of the arrow. The style keywords which are accepted are identical to
+those accepted by the {\tt set arrow} command (see Section~\ref{set_arrow}).
+For example:
 
 \begin{verbatim} 
 arrow from x1,y1 to x2,y2 \
 with twohead colour red
 \end{verbatim}
 
-\index{jpeg command@{\tt jpeg} command} Bitmap images in jpeg form may be
-placed on the multiplot using the {\tt jpeg} command.  This has syntax:
+Bitmap images in jpeg form may be placed on the multiplot using the
+\indcmdt{jpeg}.  This has syntax:
 
 \begin{verbatim}
 jpeg 'filename' at x,y width w
@@ -398,11 +391,10 @@ specified, using the analogous {\tt height} modifier.  An optional angle can
 also be specified using the {\tt rotate} modifier; this causes the included
 image to be rotated counter-clockwise by a specified angle (in degrees).
 
-\index{eps command@{\tt eps} command} Vector graphic images in eps format may
-be placed on to a multiplot using the {\tt eps} command, which has a syntax
-analogous to the {\tt jpeg} command.  However neither height nor width need be
-specified; in this case the image will be included at its native size.  For
-example:
+Vector graphic images in eps format may be placed on to a multiplot using the
+\indcmdt{eps}, which has a syntax analogous to the {\tt jpeg} command.  However
+neither height nor width need be specified; in this case the image will be
+included at its native size.  For example:
 
 \begin{verbatim}
 eps 'filename' at 3,2 rotate 5
@@ -417,10 +409,9 @@ $(3,2)$ cm from the origin, rotated counter-clockwise through 5 degrees.
 By default, whenever an item is added to a multiplot, or an existing item moved
 or replotted, the whole multiplot is replotted to show the change. This can be
 a time consuming process on large and complex multiplots. For this reason, the
-{\tt set nodisplay}\index{set display command@{\tt set display} command}
-command is provided, which stops PyXPlot from producing any output. The
-{\tt set display} command can subsequently be issued to return to normal
-behaviour.
+{\tt set nodisplay} command is provided, which stops PyXPlot from producing any
+output. The \indcmdt{set display} can subsequently be issued to return to
+normal behaviour.
 
 This can be especially useful in scripts which produce large multiplots. There
 is no point in producing output at each step in the construction of a large
