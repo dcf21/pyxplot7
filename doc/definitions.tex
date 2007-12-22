@@ -27,8 +27,11 @@
 \def\reldate{January 2008}
 
 % Put ticks and crosses next to code examples
-\newenvironment{dontdo}{{\Large \XSolidBrush  }\begin{minipage}[t]{8cm}\begin{verbatim}}{\end{verbatim}\end{minipage}}
-\newenvironment{dodo}  {{\Large \CheckmarkBold}\begin{minipage}[t]{8cm}\begin{verbatim}}{\end{verbatim}\end{minipage}}
+\newlength{\dontdowidth}
+\setlength{\dontdowidth}{\textwidth}
+\addtolength{\dontdowidth}{-2.5cm}
+\newenvironment{dontdo}{\vspace{3mm}\noindent\begin{tabular}{p{1cm}p{\dontdowidth}}\noindent{\Large \XSolidBrush  }&\noindent\tt}{\end{tabular}\vspace{3mm}}
+\newenvironment{dodo}  {\vspace{3mm}\noindent\begin{tabular}{p{1cm}p{\dontdowidth}}\noindent{\Large \CheckmarkBold}&\noindent\tt}{\end{tabular}\vspace{3mm}}
 
 \newcommand\indcmd[1]{\index{#1 command@{\tt #1} command}} % Place commands in the index in typewriter face
 \newcommand\indmod[1]{\index{#1 modifier@{\tt #1} modifier}}

@@ -22,6 +22,7 @@
 % LaTeX source for the PyXPlot Users' Guide
 
 \chapter{PyXPlot and the Outside World}
+\label{gnuplot_ext_first}
 
 This chapter describes PyXPlot as a UNIX program, and how it can be interfaced
 with other programs. 
@@ -42,13 +43,14 @@ modify its behaviour:\index{command line syntax}
 
 \section{Command Histories}
 
-PyXPlot uses the GNU Readline command-line environment, which means that the up
-and down arrow keys can be used to repeat or modify previously executed
-commands. Each user's command history is stored in his homespace in a history
-file called {\tt .pyxplot\_history}, which allows PyXPlot to remember command
-histories between sessions. Additionally, a \indcmdt{save} is provided,
-allowing the user to save his command history from the present session to a
-text file; this has the following syntax:
+When PyXPlot is used interactively, its command-line environment is based upon
+the GNU Readline Library.  This means that the up and down arrow keys can be
+used to repeat or modify previously executed commands. Each user's command
+history is stored in his homespace in a history file called {\tt
+.pyxplot\_history}, which allows PyXPlot to remember command histories between
+sessions. Additionally, a \indcmdt{save} is provided, allowing the user to save
+his command history from the present session to a text file; this has the
+following syntax:
 
 \begin{verbatim}
 save 'output_filename.ppl'
@@ -66,52 +68,24 @@ history 20
 \section{Formatting and Terminals}
 \label{set_terminal2}
 
-In this section, we outline commands for controlling the graphic output format
-of PyXPlot.
+In this section, we describe the commands used to control the format of the
+graphic output produced by PyXPlot. This continues the discussion from
+Section~\ref{directing_output} of how the \indcmdt{set terminal} can be used to
+produce plots in various graphic formats, such as postscript files, jpeg
+images, etc.
 
-The widths of plots may be set be means of two commands -- {\tt set
-size}\indcmd{set size} and {\tt set width}\indcmd{set width}. Both are
-equivalent, and should be followed by the desired width measured in
-centimetres, for example:
+Many of these {\it terminals} -- the word we use to describe an output format
+-- accept additional parameters which configure the exact appearance of the
+output produced.  For example, the default terminal, {\tt X11}, which displays
+plots on the screen, has such settings. By default, each time a new plot is
+generated, if the previous plot is still open on the display, the old plot is
+replaced with the new one. This way, only one plot window is open at any one
+time.  This behaviour has the advantage that the desktop does not become
+flooded with plot windows.
 
-\begin{verbatim}
-set width 20
-\end{verbatim}
-
-The {\tt set size} command can also be used to set the aspect ratio of plots by
-following it with the keyword {\tt ratio}\indcmd{set size ratio}. The number
-which follows should be the desired ratio of height to width. The following,
-for example would produce plots three times as high as they are wide:
-
-\begin{verbatim}
-set size ratio 3.0
-\end{verbatim}
-
-The command {\tt set size noratio} returns to PyXPlot's default aspect ratio of
-the golden ratio, i.e.\ $\left((1+\sqrt{5})/2\right)^{-1}$\footnote{This aspect
-ratio has been used by artists since the time of the Pythagoreans, and is seen
-repeatedly in the architecture of the Parthenon.}. The special command {\tt set
-size square}\indcmd{set size square} sets the aspect ratio to unity.
-
-If the {\tt enlarge} modifier is used with the \indcmdt{set terminal} then the
-whole plot is enlarged, or, in the case of large plots, shrunk, to the current
-paper size, minus a small margin. The aspect ratio of the plot is preserved.
-This is most useful when preparing a plot to send to a printer with the
-postscript terminal.
-
-In Section~\ref{directing_output} we described how the \indcmdt{set terminal}
-can be used to produce plots in various graphic formats. In addition, the way
-in which plots are displayed on the screen can be changed. Output is sent to
-the screen using the default terminal, {\tt X11}.
-
-By default, each time a new plot is generated, if the previous plot is still
-open on the display, the X11 terminal will replace it with the new one, thus
-keeping only one plot window open at a time. This has the advantage that the
-desktop does not become flooded with plot windows.
-
-If this behaviour is not desired, old plots can be kept visible when plotting
-further graphs by using the the {\tt X11\_multiwindow} terminal: \index{X11
-terminal}\index{multiple windows}
+If this is not desired, however -- for example if you want to compare two plots
+-- old graphs can be kept visible when plotting further graphs by using the the
+{\tt X11\_multiwindow} terminal:\index{X11 terminal}\index{multiple windows}
 
 \begin{verbatim} 
 set terminal X11_singlewindow
@@ -131,6 +105,12 @@ As an additional option, the {\tt X11\_persist} terminal keeps plot windows
 open after PyXPlot exits; the above two terminals close all plot windows upon
 exit.
 
+If the {\tt enlarge} modifier is used with the \indcmdt{set terminal} then the
+whole plot is enlarged, or, in the case of large plots, shrunk, to the current
+paper size, minus a small margin. The aspect ratio of the plot is preserved.
+This is most useful with the {\tt postscript} terminal, when preparing a plot
+to send directly to a printer.
+
 As there are many changes to the options accepted by the {\tt set terminal}
 command in comparison to those understood by \gnuplot, the syntax of PyXPlot's
 command is given below, followed by a list of the recognised settings:
@@ -146,9 +126,7 @@ set terminal { X11_singlewindow | X11_multiwindow | X11_persist |
 \end{verbatim}
 
 \begin{longtable}{p{3cm}p{9cm}}
-{\tt x11\_singlewindow} & Displays plots on the screen (in X11 windows, using \ghostview). Each time a new plot is generated, it replaces the old one, preventing the desktop from becoming flooded with old plots.\footnote{The author is aware of a bug, that this terminal can occasionally go blank when a new plot is generated. This is a known bug in \ghostview, and can be worked around by selecting File $\to$ Reload within the \ghostview\ window.} {\bf [default when running interactively; see below]}\\
-\end{longtable} % WHY IS THIS NECESSARY??
-\begin{longtable}{p{3cm}p{9cm}}
+{\tt x11\_singlewindow} & Displays plots on the screen (in X11 windows, using \ghostview). Each time a new plot is generated, it replaces the old one, to prevent the desktop from becoming flooded with old plots.\footnote{The author is aware of a bug, that this terminal can occasionally go blank when a new plot is generated. This is a known bug in \ghostview, and can be worked around by selecting File $\to$ Reload within the \ghostview\ window.} {\bf [default when running interactively; see below]}\\
 {\tt x11\_multiwindow} & As above, but each new plot appears in a new window, and the old plots remain visible. As many plots as may be desired can be left on the desktop simultaneously.\\
 {\tt x11\_persist} & As above, but plot windows remain open after PyXPlot closes.\\
 {\tt postscript} & Sends output to a postscript file. The filename for this file should be set using {\tt set output}. {\bf [default when running non-interactively; see below]}\index{postscript output}\\
@@ -177,10 +155,10 @@ approximately the behaviour of \gnuplot. However, there is an exception to this.
 When PyXPlot is used non-interactively -- i.e. one or more command scripts are
 specified on the command line, and PyXPlot exits as soon as it finishes
 executing them -- the {\tt x11\_singlewindow} is not a very sensible
-terminal to use. Any plot window would close as soon as PyXPlot exited. The
+terminal to use: any plot window would close as soon as PyXPlot exited. The
 default terminal in this case changes to {\tt postscript}.
 
-One exception to this is when the special `--' filename is specified in a list
+This rule does not apply when the special `--' filename is specified in a list
 of command scripts on the command line, to produce an interactive terminal
 between running a series of scripts. In this case, PyXPlot detects that the
 session will be interactive, and defaults to the usual
@@ -192,29 +170,36 @@ variable} is not set. In this case, PyXPlot detects that it has access to no
 X-terminal on which to display plots, and defaults to the {\tt postscript}
 terminal.
 
-The {\tt gif}, {\tt png} and {\tt jpg} terminals result in some loss of
+The {\tt gif}, {\tt png} and {\tt jpg} terminals result in some loss of image
 quality, since the plot has to be sampled into a bitmapped graphic format.  By
-default, this sampling is performed at 300 dpi, though this may be changed
-using the command {\tt set dpi <value>}. Alternatively, it may be changed using
-the {\tt DPI} option in the {\tt settings} section of a configuration file (see
-Section~\ref{configuration}).\indcmd{set dpi} \index{bitmap
-output!resolution}\index{image resolution}
+default, this sampling is performed at $300\,\mathrm{dpi}$, though this may be
+changed using the command {\tt set dpi <value>}. Alternatively, it may be
+changed using the {\tt DPI} option in the {\tt settings} section of a
+configuration file (see Section~\ref{configuration}).\indcmd{set dpi}
+\index{bitmap output!resolution}\index{image resolution}
 
 \section{Paper Sizes}
 
-By default, when the postscript terminal produces printable, i.e. not
-encapsulated, output, the paper size for this output is read from your system
-locale settings. It may be changed, however, with \indcmdt{set papersize},
-which may be followed either by the name of a recognised paper size, or by the
-dimensions of a user-defined size, specified as a {\tt height}, {\tt width}
-pair, both being measured in millimetres. For example:
+By default, when the postscript terminal produces printable, i.e.\ not
+encapsulated, output, the paper size for this output is read from the user's
+system locale settings. It may be changed, however, with \indcmdt{set
+papersize}, which may be followed either by the name of a recognised paper
+size, or by the dimensions of a user-defined size, specified as a {\tt height},
+{\tt width} pair, both being measured in millimetres. For example:
 
 \begin{verbatim}
 set papersize a4
 set papersize 100,100
 \end{verbatim}
 
-A list of recognised paper size names is given in Figure~\ref{paper_sizes}.
+\noindent A list of recognised paper size names is given in
+Figure~\ref{paper_sizes}.\footnote{For everything that you ever wanted to know
+about international paper sizes, see Marcus Kuhn's excellent treatise:
+\url{http://www.cl.cam.ac.uk/~mgk25/iso-paper.html}. If you still want to know
+more, then Wikipedia has a good article on the Swedish extensions to this
+system and the Japanese B-series:
+\url{http://en.wikipedia.org/wiki/Paper_size}.}\index{Kuhn, Marcus}\index{paper
+sizes}
 
 \begin{figure}
 \tiny \center
@@ -295,13 +280,13 @@ papersize}, with their heights, $h$, and widths, $w$, measured in millimetres.}
 
 \section{Script Watching: pyxplot\_watch}
 
-PyXPlot includes a simple tool for watching command script files, and executing
+PyXPlot includes a simple tool for watching command script files and executing
 them whenever they are modified. This may be useful when developing a command
-script, if one wants to make small modifications to it, and see the results in
-a semi-live fashion. This tool is invoked by calling the
-{\tt pyxplot\_watch}\index{pyxplot\_watch}\index{watching scripts} command
-from a shell prompt. The command-line syntax of {\tt pyxplot\_watch} is
-similar to that of PyXPlot itself, for example:
+script, if one wants to make small modifications to it and see the results in a
+semi-live fashion. This tool is invoked by calling the {\tt
+pyxplot\_watch}\index{pyxplot\_watch}\index{watching scripts} command from a
+shell prompt. The command-line syntax of {\tt pyxplot\_watch} is similar to
+that of PyXPlot itself, for example:
 
 \begin{verbatim}
 pyxplot_watch script.ppl
@@ -332,38 +317,107 @@ pyxplot_watch foo.ppl
 
 \section{Variables}
 
-PyXPlot recognises two types of variables; numeric variables and string 
-variables.  The former can be assigned a value using any valid mathematical
-expression, for example
+As has already been hinted at in Section~\ref{string_subs_op}, PyXPlot
+recognises two types of variables: numeric variables and string variables.  The
+former can be assigned using any valid mathematical expression. For example:
 
 \begin{verbatim}
 a = 5.2 * sqrt(64)
 \end{verbatim}
 
-would assign the value 41.6 to the variable {\tt a}.  Numerical variables can
+\noindent would assign the value 41.6 to the variable {\tt a}.  Numerical variables can
 subsequently be used in mathematical expressions themselves, for example:
 
 \begin{verbatim}
 a=2*pi
-plot [0:1] sin(x) with lines
+plot [0:1] sin(a*x)
 \end{verbatim}
 
-String variables can be assigned to in an analogous manner by enclosing the
-string in quotation marks.  They can then be used wherever a string would be
-required, for example
+\noindent String variables can be assigned in an analogous manner, by enclosing
+the string in quotation marks. They can then be used wherever a quoted string
+could be used, for example as a filename or a plot title, as
+in:\index{variables!string}
 
 \begin{verbatim}
 plotname = "The Growth of a Rabbit Population"
 set title plotname
 \end{verbatim}
 
-String variables can also be modified using the search-and-replace string
-operator, =$\sim$.  This takes a regular expression in standard form and applies it
-to the relevent string.  For example:
+String variables can be modified using the search-and-replace string
+operator\index{string operators!search and replace}\footnote{Programmers with
+experience of {\tt perl} will recognise this syntax.}, =$\sim$\index{=$\sim$
+operator}, which takes a regular expression with a syntax similar to that
+expected by the shell command {\tt sed}\index{sed shell command@{\tt sed} shell
+command} and applies it to the relevent string.\footnote{Regular expression
+syntax is a massive subject, and is beyond the scope of this manual. The
+official GNU documentation for the {\tt sed} command is heavy reading, but
+there are many more accessible tutorials on the web.}\index{regular
+expressions} For example:
 
 \begin{verbatim}
 twister="seven silver soda syphons"
 twister =~ s/s/th/
 print twister
 \end{verbatim}
+
+Note that only the {\tt s} (substitute) command of {\tt sed} is implemented in
+PyXPlot. Any character can be used in place of the {\tt /} characters in the
+above example, for example:
+
+\begin{verbatim}
+twister =~ s@s@th@
+\end{verbatim}
+
+\noindent Flags can be passed, as in {\tt sed} or {\tt perl}, for example:
+
+\begin{verbatim}
+twister =~ s@s@th@g
+\end{verbatim}
+
+\noindent Table~\ref{re_flags} lists all of the regular expression flags
+recognised by the =$\sim$ operator.
+
+\begin{table}
+\begin{tabular}{p{2cm}p{10.5cm}}
+\hline
+{\tt g} & Replace {\it all} matches of the pattern; by default, only the first match is replaced. \\
+{\tt i} & Perform case-insensitive matching, such that expressions like {\tt [A-Z]} will match lowercase letters, too. \\
+{\tt l} & Make {\tt $\backslash$w}, {\tt $\backslash$W}, {\tt $\backslash$b}, {\tt $\backslash$B}, {\tt $\backslash$s} and {\tt $\backslash$S} dependent on the current locale. \\
+{\tt m} & When specified, the pattern character {\tt \^{}} matches the beginning of the string and the beginning of each line immediately following each newline. The pattern character {\tt \$} matches at the end of the string and the end of each line immediately preceding each newline. By default, {\tt \^{}} matches only the beginning of the string, and {\tt \$} only the end of the string and immediately before the newline, if present, at the end of the string. \\
+{\tt s} & Make the {\tt .} special character match any character at all, including a newline; without this flag, {\tt .} will match anything except a newline. \\
+{\tt u} & Make {\tt $\backslash$w}, {\tt $\backslash$W}, {\tt $\backslash$b}, {\tt $\backslash$B}, {\tt $\backslash$s} and {\tt $\backslash$S} dependent on the Unicode character properties database. \\
+{\tt x} & This flag allows the user to write regular expressions that look nicer. Whitespace within the pattern is ignored, except when in a character class or preceded by an unescaped backslash. When a line contains a {\tt \#}, neither in a character class or preceded by an unescaped backslash, all characters from the leftmost such {\tt \#} through the end of the line are ignored. \\
+\hline
+\end{tabular}
+\caption{A list of the flags accepted by the =$\sim$ operator. Most are rarely used, but the {\tt g} flag is very useful. This table is adapted from Guido van Rossum's\index{van Rossum, Guido} {\it Python Library Reference}\index{Python Library Reference}: \protect\url{http://docs.python.org/lib/node46.html}.}
+\label{re_flags}
+\end{table}
+
+Strings may also be put together using the string substitution operator, {\tt
+\%}\index{\% operator@{\tt \%} operator}, which works in a similar fashion to
+Python string substitution operator\index{string operators!substitution}. This
+is described in detail in Section~\ref{string_subs_op}.
+
+One common practical application of these string operators is to label plots
+with the title of the data file being plotted, as in:
+
+\begin{verbatim}
+filename="data_file.dat"
+title="A plot of the data in {\tt %s}."%(filename)
+title=~s/_/\_/g # Underscore is a reserved character in LaTeX
+set title title
+plot filename
+\end{verbatim}
+
+\section{The \indcmdt{exec}}
+
+The \indcmdt{exec} can be used to execute PyXPlot commands contained within
+string variables. For example:
+
+\begin{verbatim}
+terminal="eps"
+exec "set terminal %s"%(terminal)
+\end{verbatim}
+
+It can also be used to write obfuscated PyXPlot scripts.
 

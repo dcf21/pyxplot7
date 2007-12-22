@@ -27,11 +27,12 @@
 In this chapter, we provide a brief overview of the basic operation of PyXPlot,
 essentially covering those areas of syntax which are borrowed directly from
 \gnuplot. Users who are already familiar with \gnuplot\ may wish to skim or
-skip this chapter, though Section~\ref{sec:latex_incompatibility}, describing
-the use of \LaTeX\ to render text, and Section~\ref{missing_features},
-detailing which parts of \gnuplot's interface are and are not supported in
-PyXPlot, may be of interest. In the following chapters, we shall go on to
-describe the ways in which PyXPlot extends \gnuplot's interface.
+skip this chapter, though Section~\ref{sec:latex_incompatibility}, which
+describes the use of \LaTeX\ to render text, and
+Section~\ref{missing_features}, which details those parts of \gnuplot's
+interface are and are not supported by PyXPlot, may be of interest. In the
+following chapters, we shall go on to describe the ways in which PyXPlot
+extends \gnuplot's interface.
 
 Describing \gnuplot's interface in its entirety is a substantial task, and what
 follows is only an overview; novice users can find many excellent tutorials on
@@ -44,20 +45,23 @@ to start an interactive session. A PyXPlot command-line prompt will appear,
 into which commands can be typed. PyXPlot can be exited either by typing
 \indcmdts{exit}, \indcmdts{quit}, or by pressing CTRL-D.
 
-When plotting more complicated graphs, it will become preferable to store lists
-of commands in command scripts. These may be executed by passing the filename
-of the command script to PyXPlot on the shell command line, for
-example:\index{command line syntax}
+As you begin to plot increasingly complicated graphs, the number of commands
+require to set them up and plot them will grow.  It will soon become
+preferable, instead of typing these commands into an interactive session, to
+store lists of commands as scripts, which are simply text files containing
+PyXPlot commands. These may be executed by passing the filename of the command
+script to PyXPlot on the shell command line, for example:\index{command-line
+syntax}
 
 \begin{verbatim}
 pyxplot foo.ppl
 \end{verbatim}
 
-\noindent In this case, PyXPlot would exit immediately after finishing the
-execution of the commands in the file {\tt foo.ppl}. By convention, we suffix
-the filenames of PyXPlot command scripts with `{\tt .ppl}', though this is
-not strictly necessary. Several filenames may be passed on a single command
-line, indicating a series of scripts to be executed in sequence:
+\noindent In this case, PyXPlot would execute all of the commands in the file
+{\tt foo.ppl} and then exit immediately afterwards.  By convention, we suffix
+the filenames of PyXPlot command scripts with `{\tt .ppl}', though this is not
+strictly necessary. Several filenames may be passed on a single command line,
+indicating a series of scripts to be executed in sequence:
 
 \begin{verbatim}
 pyxplot foo1.ppl foo2.ppl foo3.ppl
@@ -129,7 +133,7 @@ plot sin(x)
 \end{verbatim}
 
 \noindent It is also possible to plot data stored in files on disk. The
-following would plot data from a file `{\tt data.dat}', taking the
+following would plot data from a file {\tt data.dat}, taking the
 $x$-coordinate of each point from the first column of the datafile, and the
 $y$-coordinate from the second.  The datafile is assumed to be in plain text
 format\footnote{If the filename of a datafile ends with a {\tt .gz} suffix,
@@ -171,6 +175,7 @@ f(x) =
 \end{verbatim}
 
 \section{Printing Text}
+\label{string_subs_op}
 
 PyXPlot has a \indcmdt{print} for displaying strings and the results of
 calculations to the terminal, for example:
@@ -187,10 +192,15 @@ a=3
 print "The value of",a,"squared is",f(a)
 \end{verbatim}
 
-\noindent Values may also be substituted into strings using the \%
-operator\index{\% operator}, which works in a similar fashion to python string
-substitution\index{string substitution}. The list of values to be substituted
-into the string should be a ()-bracketed list:
+\noindent Values may also be substituted into strings using the {\tt \%}
+operator\index{\% operator@{\tt \%} operator}, which works in a similar fashion
+to Python string substitution operator\index{string
+operators!substitution}\footnote{For a description of this, see Guido van
+Rossum's\index{van Rossum, Guido} {\it Python Library Reference}\index{Python
+Library Reference}: \url{http://docs.python.org/lib/typesseq-strings.html}}.
+The list of values to be substituted into the string should be a ()-bracketed
+list\footnote{Unlike in Python, the brackets are obligatory; {\tt '\%d'\%2} is
+{\it not} valid in PyXPlot.}:
 
 \begin{verbatim}
 print "The value of %d squared is %d."%(a,f(a))
@@ -337,6 +347,15 @@ min($x$,$y$,...)&
 Return the least of the numerical values supplied.\\
 modf($x$)&
 Return the fractional and integer parts of $x$.  Both results carry the sign of $x$.  The integer part is returned as a real.\\
+\hline
+\end{longtable}
+\caption{A list of mathematical functions which are pre-defined within PyXPlot (contd.\ in Table~\ref{functions_table2}).}
+\label{functions_table}
+\end{table}
+
+\begin{table}
+\begin{longtable}{|lp{8cm}|}
+\hline
 pow($x,y$)&
 Return $x^y$.\\
 radians($x$)&
@@ -355,8 +374,8 @@ tanh($x$)&
 Return the hyperbolic tangent of $x$.\\
 \hline
 \end{longtable}
-\caption{A list of mathematical functions which are pre-defined within PyXPlot.}
-\label{functions_table}
+\caption{A list of mathematical functions which are pre-defined within PyXPlot (contd.\ from Table~\ref{functions_table}).}
+\label{functions_table2}
 \end{table}
 
 \begin{table}
@@ -406,7 +425,7 @@ separated using whitespace and/or commas.  Algebraic expressions may also be
 used in place of column numbers, for example:
 
 \begin{verbatim}
-plot 'datafile' using (3+$1+$2):(2+$3)
+plot 'data.dat' using (3+$1+$2):(2+$3)
 \end{verbatim}
 
 \noindent In such expressions, column numbers are prefixed by dollar signs, to
@@ -414,8 +433,6 @@ distinguish them from numerical constants. The example above would plot the sum
 of the values in the first two columns of the datafile, plus three, on the
 horizontal axis, against two plus the value in the third column on the vertical
 axis. A more advanced example might be:
-
-\newpage % One day when I understand LaTeX better I might understand why I need this line...
 
 \begin{verbatim}
 plot 'data.dat' using 3.0:$($2)
@@ -431,13 +448,13 @@ of datafiles against one another, in horizontally arranged datafiles.
 
 It is also possible to plot data from only selected lines within a datafile.
 When PyXPlot reads a datafile, it looks for any blank lines in the file. It
-divides the datafile up into `data blocks', each being separated by single
-blank lines. The first datablock is numbered 0, the next 1, and so on.
-\index{datafile format}
+divides the datafile up into {\it data blocks}, each being separated from the
+next by a single blank line. The first datablock is numbered~0, the next~1, and
+so on.  \index{datafile format}
 
 When two or more blank lines are found together, the datafile is divided up
-into `index blocks'. Thw first index block is numbered 0, the next 1, and so
-on. Each index block may be made up of a series of data blocks. To clarify
+into {\it index blocks}. The first index block is numbered~0, the next~1, and
+so on. Each index block may be made up of a series of data blocks. To clarify
 this, a labelled example datafile is shown in Figure~\ref{sample_datafile}.
 
 \begin{figure}
@@ -483,7 +500,7 @@ up to six values, separated by colons:\label{introduce_every}
 plot 'datafile' every a:b:c:d:e:f
 \end{verbatim}
 
-The values have the following meanings:
+\noindent The values have the following meanings:
 
 \begin{longtable}{p{1.0cm}p{10.5cm}}
 $a$ & Plot data only from every $a\,$th line in datafile. \\
@@ -504,6 +521,8 @@ plot 'datafile' index 1 every :::3
 
 \noindent The first would plot only every other data point from every third
 data block; the second from the third line onwards within each data block.
+
+\newpage % One day when I understand LaTeX better I might understand why I need this line...
 
 A final modifier for selecting which parts of a datafile are plotted is
 {\tt select}, which plots only those data points which satisfy some given
@@ -588,6 +607,40 @@ We finally note that, after changing terminals, the \indcmdt{replot} is
 especially useful; it repeats the last {\tt plot} command. If any plot items
 are placed after it, they are added to the pre-existing plot.
 
+\section{Setting the Size of Output}
+
+The widths of plots may be set be means of two commands -- {\tt set
+size}\indcmd{set size} and {\tt set width}\indcmd{set width}. Both are
+equivalent, and should be followed by the desired width measured in
+centimetres, for example:
+
+\begin{verbatim}
+set width 20
+\end{verbatim}
+
+The {\tt set size} command can also be used to set the aspect ratio of plots by
+following it with the keyword {\tt ratio}\indcmd{set size ratio}. The number
+which follows should be the desired ratio of height to width. The following,
+for example would produce plots three times as high as they are wide:
+
+\begin{verbatim}
+set size ratio 3.0
+\end{verbatim}
+
+The command {\tt set size noratio} returns to PyXPlot's default aspect ratio of
+the golden ratio\footnote{Artists have used this aspect ratio since ancient
+times. The Pythagoreans observed its frequent occurance in geometry, and
+Phidias (490\,-–\,430~{\scriptsize BC}) used it repeatedly in the architecture
+of the Parthenon. Renaissance artists such as Dal\'i, in keeping with their
+discipleship to classical aesthetics in many areas, often used the ratio.
+Leonardi Da Vinci observed that many bodily proportions closely approximate the
+golden ratio. Some even went so far as to suggest that the ratio had a divine
+origin (e.g.\ Pacioli~1509). As for the authors of this present work, we do
+assert that plots with golden aspect ratios are pleasing to the eye, but we
+leave the ponderance of the theological significance as an exercise for the
+reader.}, i.e.\ $\left((1+\sqrt{5})/2\right)^{-1}$. The special command {\tt
+set size square}\indcmd{set size square} sets the aspect ratio to unity.
+
 \section{Data Styles}
 
 By default, data from files are plotted with points and functions are plotted
@@ -601,14 +654,15 @@ last.}\indmod{with}:
 plot sin(x) with points
 \end{verbatim}
 
-\noindent The number of points displayed (i.e. the number of samples of the
+\noindent The number of points displayed (i.e.\ the number of samples of the
 function) can be set as follows\indcmd{set samples}:
 
 \begin{verbatim}
 set samples 100
 \end{verbatim}
 
-\noindent Likewise, datafiles can be plotted with lines:
+\noindent Likewise, datafiles can be plotted with a line connecting the data
+points:
 
 \begin{verbatim}
 plot 'data.dat' with lines
@@ -616,15 +670,15 @@ plot 'data.dat' with lines
 
 A variety of other styles are available. The \indpst{linespoints} plot style
 combines both the \indpst{points} and \indpst{lines} styles, drawing lines
-through points.  Errorbars can also be drawn, as follows:\indps{yerrorbars}
+through points. Errorbars can also be drawn as follows:\indps{yerrorbars}
 
 \begin{verbatim}
 plot 'data.dat' with yerrorbars
 \end{verbatim}
 
 \noindent In this case, three columns of data need to be specified: the $x$-
-and $y$-coordinates of each datapoint, plus the size of the vertical errorbar
-on that datapoint. By default, the first three columns of the datafile are
+and $y$-coordinates of each data point, plus the size of the vertical errorbar
+on that data point. By default, the first three columns of the datafile are
 used, but once again (see Section~\ref{plot_datafiles}), the {\tt using}
 modifier can be used:
 
@@ -632,17 +686,17 @@ modifier can be used:
 plot 'data.dat' using 2:3:7 with yerrorbars
 \end{verbatim}
 
-More details of the errorbars plot style can be found in
+More details of the {\tt errorbars} plot style can be found in
 Section~\ref{errorbars}. Other plot styles supported by PyXPlot are listed in
-Section~\ref{missing_features}, and their details can be found in many
+Section~\ref{list_of_plotstyles}, and their details can be found in many
 \gnuplot\ tutorials. Bar charts will be discussed further in
 Section~\ref{barcharts}.
 
 The modifiers \indpst{pointtype} and \indpst{linetype}, which can be
-abbreviated to `{\tt pt}' and `{\tt lt}' respectively, can also be placed
-after the {\tt with} modifier. Each should be followed by an integer.  The
-former specifies what shape of points should be used to plot the dataset, and
-the latter whether a line should be continuous, dotted, dash-dotted, etc.
+abbreviated to {\tt pt} and {\tt lt} respectively, can also be placed after the
+{\tt with} modifier. Each should be followed by an integer.  The former
+specifies what shape of points should be used to plot the dataset, and the
+latter whether a line should be continuous, dotted, dash-dotted, etc.
 Different integers correspond to different styles.
 
 The default plotting style referred to above can also be changed.  For example:
@@ -652,7 +706,7 @@ set style data lines
 \end{verbatim}
 
 \noindent would change the default style used for plotting data from files to
-lines.  Similarly the \indcmdt{set style function} changes the default style
+lines. Similarly, the \indcmdt{set style function} changes the default style
 used when functions are plotted.
 
 \section{Setting Axis Ranges}
@@ -662,7 +716,7 @@ previously introduced for placing text labels on axes. In this section, the
 configuration of axes is extended to setting their ranges.
 
 By default, PyXPlot automatically scales axes to some sensible range which
-contains all of the plotted data. However, it is also possible for the user to
+contains all of the plotted data. However, it is possible for the user to
 override this and set his own range.\index{axes!setting ranges} This can be
 done directly from the plot command, for example:
 
@@ -673,8 +727,8 @@ plot [-1:1][-2:2] sin(x)
 
 \noindent The ranges are specified immediately after the \indcmdt{plot}, with
 the syntax {\tt [minimum:maximum]}.\footnote{An alternative valid syntax is to
-replace the colon with the word `to': {\tt [minimum to maximum]}.} The first
-specified range applies to the $x$-axis, and the second to the
+replace the colon with the word {\tt to}: {\tt [minimum to maximum]}.} The
+first specified range applies to the $x$-axis, and the second to the
 $y$-axis.\footnote{As will be discussed in Section~\ref{ranges_multiaxes}, if
 further ranges are specified, they apply to the $x2$-axis, then the $y2$-axis,
 and so forth.} Any of the values can be omitted, for example:
@@ -746,7 +800,7 @@ Section~\ref{select_modifier} can also be used.}
 
 This is useful for producing best-fit lines\index{best fit
 lines}\footnote{Another way of producing best-fit lines is to use a cubic
-spline; more details in given in Section~\ref{spline_command}}, and also has
+spline; more details are given in Section~\ref{spline_command}}, and also has
 applications for estimating the gradients of datasets.  The syntax is
 essentially identical to that used by \gnuplot, though a few points are worth
 noting:
@@ -808,18 +862,18 @@ assessment of the probability distribution of the parameters.
 
 \section{Interactive Help}
 
-In addition to this Users' Guide, PyXPlot also has a \indcmdt{help},
-which provides a hierarchical source of information. Typing `help' alone gives a
-brief introduction to the help system, as well as a list of topics on which
-help is available. To display help on any given topic, type `help' followed by
-the name of the topic. For example:
+In addition to this {\it Users' Guide}, PyXPlot also has a \indcmdt{help},
+which provides a hierarchical source of information. Typing {\tt help} alone
+gives a brief introduction to the help system, as well as a list of topics on
+which help is available. To display help on any given topic, type {\tt help}
+followed by the name of the topic. For example:
 
 \begin{verbatim}
 help commands
 \end{verbatim}
 
 \noindent provides information on PyXPlot's commands. Some topics have
-subtopics, which are listed at the end of each page. To view them, add further
+sub-topics, which are listed at the end of each page. To view them, add further
 words to the end of your help request -- an example might be:
 
 \begin{verbatim}
@@ -838,8 +892,12 @@ remainder of the line is sent directly to the shell, for example:
 !ls -l
 \end{verbatim}
 
-Semi-colons cannot be used to place further PyXPlot commands after a shell
-command on the same line.
+\noindent Semi-colons cannot be used to place further PyXPlot commands after a
+shell command on the same line.
+
+\begin{dontdo}
+!ls -l ; set key top left
+\end{dontdo}
 
 It is also possible to substitute the output of a shell command into a PyXPlot
 command. To do this, the shell command should be enclosed in back-quotes (`).
@@ -864,8 +922,8 @@ set xlabel `echo "'" ; ls ; echo "'"`
 \end{dodo}
 
 Note that it is not possible to change the current working directory by sending
-the cd command to a shell, as this command only changes the working directory
-of the shell in which the single command is executed:
+the {\tt cd} command to a shell, as this command would only change the working
+directory of the shell in which the single command is executed:
 
 \begin{dontdo}
 !cd ..
