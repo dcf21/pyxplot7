@@ -202,7 +202,7 @@ same meanings as in the {\tt plot} command.
 
 This is useful for producing best-fit lines and also has applications for
 estimating the gradients of datasets.  The syntax is essentially identical to
-the used by gnuplot, though a few points are worth noting, which are outlined
+the used by \gnuplot, though a few points are worth noting, which are outlined
 in Section~\ref{fit_command}.
 
 \section{help}\indcmd{help}
@@ -1129,7 +1129,7 @@ set label 1 'Hello' first 0, second 0
 \end{verbatim}
 
 As can be seen, the name of the desired coordinate system precedes the position
-value in that coordinate system. Following gnuplot's nomenclature, the
+value in that coordinate system. Following \gnuplot's nomenclature, the
 coordinate system {\tt first} the default, measures the graph using the $x$- and
 $y$-axes. {\tt second} uses the $x2$- and $y2$-axes.  {\tt screen} and {\tt
 graph} both measure in centimetres from the origin of the graph.  The syntax
@@ -1846,21 +1846,21 @@ terminals to produce output with a transparent background.
 
 \subsubsection{X11\_multiwindow}\index{set terminal command!X11\_multiwindow modifier@{\tt X11\_multiwindow} modifier}
 
-Displays plots on the screen (in X11 windows, using ghostview). Each time a new
+Displays plots on the screen (in X11 windows, using \ghostview). Each time a new
 plot is generated it appears in a new window, and the old plots remain visible.
 As many plots as may be desired can be left on the desktop simultaneously.
 
 \subsubsection{X11\_persist}\index{set terminal command!X11\_persist
 modifier@{\tt X11\_persist} modifier}
 
-Displays plots on the screen in X11 windows, using ghostview.  Each time a new
+Displays plots on the screen in X11 windows, using \ghostview.  Each time a new
 plot is generated it appears in a new window, and the old plots remain visible.
 When PyXPlot is exited the windows remain in place until they are closed
 manually.
 
 \subsubsection{X11\_singlewindow}\index{set terminal command!X11\_singlewindow modifier@{\tt X11\_singlewindow} modifier}
 
-Displays plots on the screen (in X11 windows, using ghostview). Each time a new
+Displays plots on the screen (in X11 windows, using \ghostview). Each time a new
 plot is generated it replaces the old one, preventing the desktop from becoming
 flooded with old plots. This terminal is the default when running
 interactively.

@@ -1,0 +1,46 @@
+% DEFINITIONS.TEX
+%
+% The documentation in this file is part of PyXPlot
+% <http://www.pyxplot.org.uk>
+%
+% Copyright (C) 2006-7 Dominic Ford <coders@pyxplot.org.uk>
+%               2008   Ross Church
+%
+% $Id$
+%
+% PyXPlot is free software; you can redistribute it and/or modify it under the
+% terms of the GNU General Public License as published by the Free Software
+% Foundation; either version 2 of the License, or (at your option) any later
+% version.
+%
+% You should have received a copy of the GNU General Public License along with
+% PyXPlot; if not, write to the Free Software Foundation, Inc., 51 Franklin
+% Street, Fifth Floor, Boston, MA  02110-1301, USA
+
+% ----------------------------------------------------------------------------
+
+% LaTeX source for the PyXPlot Users' Guide
+
+% This file contains a list of macro definitions used in the manual
+
+\def\version{0.7.0}
+\def\reldate{January 2008}
+
+\newcommand\dontdo[1]{{\Large \XSolidBrush  }\begin{minipage}[t]{8cm}1\end{minipage}} % Put ticks and crosses next to code examples
+\newcommand\dodo  [1]{{\Large \CheckmarkBold}\begin{minipage}[t]{8cm}1\end{minipage}}
+
+\newcommand\indcmd[1]{\index{#1 command@{\tt #1} command}} % Place commands in the index in typewriter face
+\newcommand\indmod[1]{\index{#1 modifier@{\tt #1} modifier}}
+\newcommand\indfun[1]{\index{#1 function@{\tt #1} function}}
+\newcommand\indps [1]{\index{#1 plot style@{\tt #1} plot style}\index{plot styles!#1@{\tt #1}}}
+
+\newcommand\indcmdt [1]{{\tt #1} command\indcmd{#1}} % As above, but also insert command name in text
+\newcommand\indcmdts[1]{{\tt #1}\indcmd{#1}}
+\newcommand\indmodt [1]{{\tt #1}\indmod{#1}}
+\newcommand\indfunt [1]{{\tt #1}\indfun{#1}}
+\newcommand\indpst  [1]{{\tt #1}\indps{#1}}
+
+\newcommand\gnuplot{Gnuplot} % Names of software packages where there's controversy over capitalisation
+\newcommand\ghostview{Ghostview}
+\newcommand\imagemagick{ImageMagick}
+

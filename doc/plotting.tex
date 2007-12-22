@@ -24,7 +24,7 @@
 \chapter{Advanced Plotting}
 
 In this chapter, we continue to explore the various options of the {\tt plot}
-command. Specifically, we turn to those aspects which differ from gnuplot's
+command. Specifically, we turn to those aspects which differ from \gnuplot's
 {\tt plot} command.
 
 \section{A Tour of PyXPlot's Plot Styles}
@@ -104,14 +104,14 @@ plot 'datafile.dat' with arrows_twohead
 
 The syntax `{\tt with arrows}' is a shorthand for `{\tt with arrows\_head}'.
 This plot style is analogous to the \indpst{vectors} plot style in Version~4 of
-Gnuplot.
+\gnuplot.
 
 \subsection{Error Bars}
 
 \index{errorbars}\label{errorbars}
-In Gnuplot, when one used errorbars, one could either specify the size of the
+In \gnuplot, when one used errorbars, one could either specify the size of the
 errorbar, or the min/max range of the errorbar. Both of these usages shared a
-common syntax, and gnuplot's behaviour depended upon the number of data columns
+common syntax, and \gnuplot's behaviour depended upon the number of data columns
 provided:
 
 \begin{verbatim}
@@ -158,7 +158,7 @@ For clarity, a complete list of errorbar styles available in PyXPlot is given be
 
 \subsection{Plotting Functions with Errorbars, Arrows, or More}
 
-In gnuplot, when a function (as opposed to a datafile) is plotted, only those
+In \gnuplot, when a function (as opposed to a datafile) is plotted, only those
 plot styles which accept two columns of data can be used -- for example,
 {\tt lines} or {\tt points}. This means that it is not possible to plot a
 function with errorbars. In PyXPlot, this is possible using the following
@@ -196,7 +196,7 @@ it to change in a future release.}
 
 \subsection{Basic Operation}
 
-As in gnuplot, bar charts and histograms can be produced using the
+As in \gnuplot, bar charts and histograms can be produced using the
 \indpst{boxes} plot style:
 
 \begin{verbatim} 
@@ -270,7 +270,7 @@ plot 'datafile.dat' with boxes fc 4
 \noindent Figures~\ref{fig:ex_barchart2}(c) and (d) demonstrate the use of
 filled bars.
 
-Finally, the \indpst{impulses} plot style, as in gnuplot, produces bars of zero
+Finally, the \indpst{impulses} plot style, as in \gnuplot, produces bars of zero
 width; see Figure~\ref{fig:ex_barchart1}(e) for an example.
 
 \subsection{Stacked Bar Charts}
@@ -297,7 +297,7 @@ The plot styles met so far plot data as solid bars, with left, right and top
 sides all drawn. Data may also be plotted with {\it steps}, with the left and
 right sides of each bar omitted. Some examples are shown in
 Figures~\ref{fig:ex_barchart1}(a), (c) and (d).  As is illustrated in these
-panels, three flavours of steps are available, exactly as in gnuplot:
+panels, three flavours of steps are available, exactly as in \gnuplot:
 
 \begin{verbatim}
 plot 'datafile.dat' with steps 
@@ -336,7 +336,7 @@ datafile for plotting.
 modifier@{\tt using rows} modifier}\index{using columns modifier@{\tt using
 columns} modifier}\label{horizontal_datafiles} The command syntax for plotting
 columns of datafiles against one another was previously described in
-Section~\ref{plot_datafiles}.  In an extension of what is possible in gnuplot,
+Section~\ref{plot_datafiles}.  In an extension of what is possible in \gnuplot,
 PyXPlot also allows one to plot {\it rows} of data against one another in
 horizontally-arranged datafiles.  For this, the keyword {\tt rows} is placed
 after the {\tt using} modifier:\index{rows keyword@{\tt rows} keyword}
@@ -392,7 +392,7 @@ modifier is used to tell the {\tt plot} command to plot data using the
 $x3$-axis. Here again, the axis would be implicitly created if it didn't
 already exist.  In the third statement, an $x3$-axis is explicitly created.
 
-Unlike gnuplot, which allowed only a maximum of two parallel axes to be added
+Unlike \gnuplot, which allowed only a maximum of two parallel axes to be added
 to plots, PyXPlot allows an unlimited number of axes to be used. Odd-numbered
 $x$-axes appear below the plot, and even numbered $x$-axes above it; a similar
 rule applies for $y$-axes, to the left and to the right. This is illustrated in
@@ -505,7 +505,7 @@ The keywords {\tt inward}, {\tt outward} and {\tt both} alter the
 directions of the ticks, and have the same effect as in the {\tt set
 xticdir} command. The keyword {\tt axis} is an alias for {\tt inward},
 and {\tt border} an alias for {\tt outward}, both provided for
-compatibility with gnuplot. If the keyword {\tt autofreq} is given, the automatic
+compatibility with \gnuplot. If the keyword {\tt autofreq} is given, the automatic
 placement of ticks on the axis is restored.
 
 If {\tt <minimum>, <increment>, <maximum>} are specified, then ticks are
@@ -653,7 +653,7 @@ plot sin(x) with colour blue
 assigns sequentially to datasets when colours are not manually assigned. This
 is also the palette to which integers passed to {\tt set colour} refer -- the
 {\tt 5} above, for example. It may be set using the \indcmdt{set palette},
-which differs in syntax from gnuplot. It should be followed by a
+which differs in syntax from \gnuplot. It should be followed by a
 comma-separated list of colours, for example:
 
 \begin{verbatim}
@@ -679,7 +679,7 @@ plot '*.dat' with linewidth 2
 \end{verbatim}
 
 In the legend, full filenames are displayed, allowing the datafiles to be
-distinguished.  As in gnuplot, a blank filename passed to the plot command
+distinguished.  As in \gnuplot, a blank filename passed to the plot command
 causes the last used datafile to be used again.
 
 \section{Backing Up Over-Written Files}

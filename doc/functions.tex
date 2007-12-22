@@ -30,7 +30,7 @@ analysis and data processing within PyXPlot.
 \index{function splicing}
 \index{splicing functions}
 
-In PyXPlot, as in gnuplot, user-defined functions may be declared on the
+In PyXPlot, as in \gnuplot, user-defined functions may be declared on the
 command line:
 
 \begin{verbatim}
@@ -141,7 +141,7 @@ spline f() 'datafile' index 1 using 2:3
 
 The function $f(x)$ now becomes a special function, representing a spline fit
 to the given datafile. It can be plotted or otherwise used in exactly the same
-way as any other function. This approach is more flexible than gnuplot's
+way as any other function. This approach is more flexible than \gnuplot's
 syntax, as the spline $f(x)$ can subsequently be spliced together with other
 functions (see the previous section), or used in any mathematical operation.
 The following code snippet, for example, would fit splines through two
@@ -164,8 +164,8 @@ spline f() 'datafile1' smooth 1.0
 \noindent where the value $1.0$ determines the degree of smoothing to apply;
 the higher the value, the more smoothing is applied. The default behaviour is
 not to smooth at all (equivalent to {\tt smooth 0.0}); a value of $1.0$
-corresponds to the default amount of smoothing applied in the
-gnuplot {\tt acsplines} plot style.
+corresponds to the default amount of smoothing applied in \gnuplot's {\tt
+acsplines} plot style.
 
 \section{Tabulating Functions and Slicing Data Files}
 

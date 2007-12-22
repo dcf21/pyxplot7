@@ -31,7 +31,7 @@
 The ability to represent data visually, usually as some form of graph, is a
 cornerstone requirement for any scientific or mathematical computing project.
 Historically, the most widely used open-source programme has been {\sc
-gnuplot}\index{gnuplot}, the principal attraction of which is its easy-to-use
+\gnuplot}\index{gnuplot}, the principal attraction of which is its easy-to-use
 command-line interface, which allows data files to be turned into graphs within
 seconds. Its main rival has been {\sc pgplot}\index{pgplot}, which is somewhat
 more flexible, but much less easy to use; it can only be called from within a
@@ -45,7 +45,7 @@ SuperMongo}\index{SuperMongo}.  These can typically produce prettier results
 than their free counterparts, but carry with them considerable price tags and
 licensing restrictions.
 
-Both gnuplot and pgplot were developed in the mid 1980s. At that time, the
+Both \gnuplot\ and pgplot were developed in the mid 1980s. At that time, the
 quality of their output seemed state-of-the-art. But this is less true today.
 In most journal articles today, the text and equations are rendered with a high
 degree of professionalism by the \LaTeX\ typesetting system. But all to often,
@@ -54,20 +54,20 @@ presentations: graph axes are often poorly labelled or illegible.
 
 In the early 2000s, several new free graphing packages emerged, among them {\sc
 MatPlotLib}\index{MatPlotLib} and {\sc PyX}\index{PyX}.  These have
-significantly improved upon the quality of the plots produced by gnuplot and
+significantly improved upon the quality of the plots produced by \gnuplot\ and
 pgplot. However, both are libraries which can be called from within the python
 programming language, rather than stand-alone plotting packages. They are not
-as easy to use as gnuplot.  For visualising data at speed, gnuplot remains the
+as easy to use as \gnuplot.  For visualising data at speed, \gnuplot\ remains the
 best option.
 
-{\sc PyXPlot} aims to fill this gap. Like gnuplot, it is a stand-alone
+{\sc PyXPlot} aims to fill this gap. Like \gnuplot, it is a stand-alone
 command-line graphing package. For ease of use, its interface is based heavily
-upon that of gnuplot, so users don't need to learn a whole new scripting
+upon that of \gnuplot, so users don't need to learn a whole new scripting
 language. However, it uses the PyX graphics library to produce its output,
-allowing it to bring the quality of gnuplot's output up-to-date.  The
+allowing it to bring the quality of \gnuplot's output up-to-date.  The
 command-line interface has also been extended into a more fully-featured vector
 graphics and data processing package.  Where we are aware of
-frequently-repeated complaints about gnuplot's interface, we have tried to put
+frequently-repeated complaints about \gnuplot's interface, we have tried to put
 them right.  For example, all text is now rendered automatically in the \LaTeX\
 typesetting environment, making it straightforward to label graphs with
 mathematical expressions. The ``multiplot'' environment has been essentially
@@ -76,7 +76,7 @@ other basic vector graphics around them.  For some samples of the results of
 which PyXPlot is capable, the reader is referred to the project
 website\footnote{\url{http://www.pyxplot.org.uk/}}.
 
-The command-line interface of gnuplot is very flexible: it can be controlled
+The command-line interface of \gnuplot\ is very flexible: it can be controlled
 interactively, by typing commands into a terminal, or it can read a list of
 commands in from a file, or it can receive commands through a UNIX pipe from
 another process. These modes of use are all possible in PyXPlot too.  But we
@@ -92,19 +92,19 @@ compare it with newer data, remembering how to use a hurriedly written program
 can prove tricky -- especially if the program was originally written by someone
 else. But a simple datafile is quite straightforward to plot.
 
-The similarity of the interface to that of gnuplot is such that simple scripts
-written for gnuplot should work with PyXPlot with minimal modification; gnuplot
+The similarity of the interface to that of \gnuplot\ is such that simple scripts
+written for \gnuplot\ should work with PyXPlot with minimal modification; \gnuplot\
 users should be able to get started very quickly.  However, PyXPlot is still
-work in progress, and some of gnuplot's features are still missing.  A detailed
+work in progress, and some of \gnuplot's features are still missing.  A detailed
 list of which features are supported can be found in
 Section~\ref{missing_features}. The new features which have been added to the
 interface are described in the remainder of this manual.
 
-A brief overview of gnuplot's interface is provided for novice users in
-Chapter~\ref{gnuplot_intro}. However, the attention of past gnuplot users is
+A brief overview of \gnuplot's interface is provided for novice users in
+Chapter~\ref{gnuplot_intro}. However, the attention of past \gnuplot\ users is
 drawn to one of the key changes to the interface -- namely that all textual
 labels on plots are now rendered using the \LaTeX\ typesetting environment. This
-does unfortunately introduce some incompatibility with gnuplot, since some
+does unfortunately introduce some incompatibility with \gnuplot, since some
 strings which were valid before are no longer valid (see
 Section~\ref{sec:latex_incompatibility} for more details). For example:
 
@@ -114,7 +114,7 @@ set xlabel 'x^2'
 \end{verbatim}
 }
 
-\noindent would have been valid in gnuplot, but now needs to be written in
+\noindent would have been valid in \gnuplot, but now needs to be written in
 \LaTeX\ mathmode as:
 
 \dodo{
@@ -139,9 +139,9 @@ packages (not included) be installed:\index{system requirements}
 
 \vspace{0.5cm}
 \begin{tabular}{ll}
-python  & (Version 2.3 or later)\index{python} \\
-latex   & (Used for all textual labels) \\
-convert & (ImageMagick; needed for the gif, png and jpg terminals)\index{ImageMagick} \\
+python       & (Version 2.3 or later)\index{python} \\
+latex        & (Used for all textual labels) \\
+\imagemagick & (needed for the gif, png and jpg terminals)\index{ImageMagick} \\
 \end{tabular}
 \vspace{0.5cm}
 
@@ -152,7 +152,7 @@ recommended:\indcmd{fit}\indcmd{spline}
 
 \vspace{0.5cm}
 \begin{tabular}{ll} 
-scipy   & (Python Scientific Library)\index{scipy} \\
+scipy        & (Python Scientific Library)\index{scipy} \\
 \end{tabular}
 \vspace{0.5cm}
 
@@ -161,7 +161,7 @@ to use the X11 terminal, i.e.\ to display plots on screen, without it:
 
 \vspace{0.5cm}
 \begin{tabular}{ll}
-gv      & (Ghostview; used for the X11 terminal)\index{Ghostview} \\
+\ghostview   & (used for the X11 terminal)\index{Ghostview} \\
 \end{tabular}
 \vspace{0.5cm}
 

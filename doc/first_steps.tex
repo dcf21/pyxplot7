@@ -26,14 +26,14 @@
 
 In this chapter, we provide a brief overview of the basic operation of PyXPlot,
 essentially covering those areas of syntax which are borrowed directly from
-gnuplot. Users who are already familiar with gnuplot may wish to skim or skip
-this chapter, though Section~\ref{sec:latex_incompatibility}, describing the
-use of \LaTeX\ to render text, and Section~\ref{missing_features}, detailing
-which parts of gnuplot's interface are and are not supported in PyXPlot, may be
-of interest. In the following chapters, we shall go on to describe the ways in
-which PyXPlot extends gnuplot's interface.
+\gnuplot. Users who are already familiar with \gnuplot\ may wish to skim or
+skip this chapter, though Section~\ref{sec:latex_incompatibility}, describing
+the use of \LaTeX\ to render text, and Section~\ref{missing_features},
+detailing which parts of \gnuplot's interface are and are not supported in
+PyXPlot, may be of interest. In the following chapters, we shall go on to
+describe the ways in which PyXPlot extends \gnuplot's interface.
 
-Describing gnuplot's interface in its entirety is a substantial task, and what
+Describing \gnuplot's interface in its entirety is a substantial task, and what
 follows is only an overview; novice users can find many excellent tutorials on
 the web which will greatly supplement what is provided below.
 
@@ -519,7 +519,7 @@ criterion. This is described in Section~\ref{select_modifier}.
 By default, when PyXPlot is used interactively, all plots are displayed on the
 screen. It is also possible to produce postscript output, to be read into other
 programs or embedded into \LaTeX\ documents, as well as a variety of other
-graphical formats. The \indcmdt{set terminal}\footnote{gnuplot users should
+graphical formats. The \indcmdt{set terminal}\footnote{Gnuplot users should
 note that the syntax of the {\tt set terminal} command in PyXPlot is
 somewhat different from that which they are used to; see
 Section~\ref{set_terminal2}.} is used to specify the output format that is
@@ -638,8 +638,9 @@ plot 'data.dat' using 2:3:7 with yerrorbars
 
 More details of the errorbars plot style can be found in
 Section~\ref{errorbars}. Other plot styles supported by PyXPlot are listed in
-Section~\ref{missing_features}, and their details can be found in many gnuplot
-tutorials. Bar charts will be discussed further in Section~\ref{barcharts}.
+Section~\ref{missing_features}, and their details can be found in many
+\gnuplot\ tutorials. Bar charts will be discussed further in
+Section~\ref{barcharts}.
 
 The modifiers \indpst{pointtype} and \indpst{linetype}, which can be
 abbreviated to `{\tt pt}' and `{\tt lt}' respectively, can also be placed
@@ -730,9 +731,9 @@ Section~\ref{axis_extensions}.
 \label{fit_command}
 
 It is possible to fit functional forms to data points read from files by using
-the \indcmdt{fit}. A simple example might be:\footnote{In gnuplot, this example
-would have been written {\tt fit f(x) ...}, rather than {\tt fit f() ...}. This
-syntax is supported in PyXPlot, but is deprecated.}
+the \indcmdt{fit}. A simple example might be:\footnote{In \gnuplot, this
+example would have been written {\tt fit f(x) ...}, rather than {\tt fit f()
+...}. This syntax is supported in PyXPlot, but is deprecated.}
 
 \begin{verbatim}
 f(x) = a*x+b
@@ -751,7 +752,7 @@ This is useful for producing best-fit lines\index{best fit
 lines}\footnote{Another way of producing best-fit lines is to use a cubic
 spline; more details in given in Section~\ref{spline_command}}, and also has
 applications for estimating the gradients of datasets.  The syntax is
-essentially identical to that used by gnuplot, though a few points are worth
+essentially identical to that used by \gnuplot, though a few points are worth
 noting:
 
 \begin{itemize}
@@ -889,20 +890,20 @@ cd ..
 \end{verbatim}
 }
 
-\section{Differences Between PyXPlot and Gnuplot}
+\section{Differences Between PyXPlot and \gnuplot}
 \label{missing_features}
 
 Because PyXPlot is still work in progress, it does not implement all of the
-features of gnuplot. It currently does not implement any three-dimensional or
-surface plotting -- i.e. the \indcmdt{splot} of gnuplot. It also does not
+features of \gnuplot. It currently does not implement any three-dimensional or
+surface plotting -- i.e. the \indcmdt{splot} of \gnuplot. It also does not
 support the plotting of parametric functions.
 
-Some of gnuplot's features have been significantly re-worked to improve upon
-their operation. The prime example is gnuplot's multiplot mode, which allows
+Some of \gnuplot's features have been significantly re-worked to improve upon
+their operation. The prime example is \gnuplot's multiplot mode, which allows
 multiple graphs to be placed side-by-side. While we retain a similar syntax, we
 have made it significantly more flexible. The use of dual axes is another
 example: PyXPlot now places no limit on the number of parallel horizontal and
 vertical axes which may be drawn on a graph.
 
-These extensions to gnuplot's interface are described in detail in the
+These extensions to \gnuplot's interface are described in detail in the
 following chapters.

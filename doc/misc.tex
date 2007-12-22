@@ -132,7 +132,7 @@ open after PyXPlot exits; the above two terminals close all plot windows upon
 exit.
 
 As there are many changes to the options accepted by the {\tt set terminal}
-command in comparison to those understood by gnuplot, the syntax of PyXPlot's
+command in comparison to those understood by \gnuplot, the syntax of PyXPlot's
 command is given below, followed by a list of the recognised settings:
 
 \begin{verbatim} 
@@ -146,7 +146,7 @@ set terminal { X11_singlewindow | X11_multiwindow | X11_persist |
 \end{verbatim}
 
 \begin{longtable}{p{3cm}p{9cm}}
-{\tt x11\_singlewindow} & Displays plots on the screen (in X11 windows, using ghostview). Each time a new plot is generated, it replaces the old one, preventing the desktop from becoming flooded with old plots.\footnote{The author is aware of a bug, that this terminal can occasionally go blank when a new plot is generated. This is a known bug in ghostview, and can be worked around by selecting File $\to$ Reload within the ghostview window.} {\bf [default when running interactively; see below]}\\
+{\tt x11\_singlewindow} & Displays plots on the screen (in X11 windows, using \ghostview). Each time a new plot is generated, it replaces the old one, preventing the desktop from becoming flooded with old plots.\footnote{The author is aware of a bug, that this terminal can occasionally go blank when a new plot is generated. This is a known bug in \ghostview, and can be worked around by selecting File $\to$ Reload within the \ghostview\ window.} {\bf [default when running interactively; see below]}\\
 \end{longtable} % WHY IS THIS NECESSARY??
 \begin{longtable}{p{3cm}p{9cm}}
 {\tt x11\_multiwindow} & As above, but each new plot appears in a new window, and the old plots remain visible. As many plots as may be desired can be left on the desktop simultaneously.\\
@@ -173,7 +173,7 @@ size.\index{enlarging output}\\
 \label{terminals}
 
 The default terminal is normally {\tt x11\_singlewindow}, matching
-approximately the behaviour of gnuplot. However, there is an exception to this.
+approximately the behaviour of \gnuplot. However, there is an exception to this.
 When PyXPlot is used non-interactively -- i.e. one or more command scripts are
 specified on the command line, and PyXPlot exits as soon as it finishes
 executing them -- the {\tt x11\_singlewindow} is not a very sensible
@@ -320,10 +320,10 @@ wildcard, created after running {\tt pyxplot\_watch}, will not be picked up.
 In the latter case, the wildcard is expanded by {\tt pyxplot\_watch} itself,
 which {\it will} pick up any newly created files.}
 
-This is especially useful when combined with GhostView's\index{Ghostview} watch
-facility. For example, suppose that a script {\tt foo.ppl} produces postscript
-output {\tt foo.ps}. The following two commands could be used to give a live
-view of the result of executing this script:
+This is especially useful when combined with \ghostview's\index{Ghostview}
+watch facility. For example, suppose that a script {\tt foo.ppl} produces
+postscript output {\tt foo.ps}. The following two commands could be used to
+give a live view of the result of executing this script:
 
 \begin{verbatim}
 gv --watch foo.ps &

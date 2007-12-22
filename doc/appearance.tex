@@ -26,7 +26,7 @@
 \section{Adding Arrows, Text Labels, and More}
 
 This section describes how to put arrows and text labels on plots; the syntax
-is similar to that used by gnuplot, but slightly changed. It is now possible,
+is similar to that used by \gnuplot, but slightly changed. It is now possible,
 for example, to set the linestyles and colours with which arrows should be
 drawn.  Also covered is how to put grids onto plots, and how to change the size
 and colour of textual labels on plots.
@@ -34,8 +34,8 @@ and colour of textual labels on plots.
 \subsection{Arrows}
 
 \label{set_arrow}\index{arrows} Arrows may be placed on plots using the
-\indcmdt{set arrow}, which has similar syntax to that used by gnuplot. A simple
-example would be:
+\indcmdt{set arrow}, which has similar syntax to that used by \gnuplot. A
+simple example would be:
 
 \begin{verbatim}
 set arrow 1 from 0,0 to 1,1
@@ -74,8 +74,8 @@ set arrow 1 from 0,0 to 1,1 with nohead \
 linetype 1 c blue
 \end{verbatim}
 
-As in gnuplot, the coordinates for the start and end points of the arrow can be
-specified in a range of coordinate systems. `{\tt first}', the default,
+As in \gnuplot, the coordinates for the start and end points of the arrow can
+be specified in a range of coordinate systems. `{\tt first}', the default,
 measures the graph using the $x$- and $y$-axes. `{\tt second}' uses the $x2$-
 and $y2$-axes. `{\tt screen}' and `{\tt graph}' both measure in centimetres
 from the origin of the graph. In the following example, we use these
@@ -92,7 +92,7 @@ set arrow 1 from first  x0, first  x1 \
             with nohead
 \end{verbatim}
 
-In addition to these four options, which are those available in gnuplot, the
+In addition to these four options, which are those available in \gnuplot, the
 syntax `{\tt axis}\textit{n}' may also be used, to use the $n\,$th $x$- or
 $y$-axis -- for example, `{\tt axis3}'.\indcmd{set arrow} This allows arrows to
 reference any arbitrary axis on plots which make use of large numbers of

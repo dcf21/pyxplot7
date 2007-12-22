@@ -25,22 +25,7 @@
 \usepackage[dvips]{graphicx}
 \usepackage{amssymb,amsmath,bbding,url,lscape,longtable,fancyvrb,makeidx,wasysym}
 \makeindex
-\def\version{0.7.0}
-\def\reldate{January 2008}
-
-\newcommand\dontdo[1]{{\Large \XSolidBrush  }\begin{minipage}[t]{8cm}1\end{minipage}} % Need to find proper icons for these.
-\newcommand\dodo  [1]{{\Large \CheckmarkBold}\begin{minipage}[t]{8cm}1\end{minipage}}
-
-\newcommand\indcmd[1]{\index{#1 command@{\tt #1} command}} % Place commands in the index in typewriter face
-\newcommand\indmod[1]{\index{#1 modifier@{\tt #1} modifier}}
-\newcommand\indfun[1]{\index{#1 function@{\tt #1} function}}
-\newcommand\indps [1]{\index{#1 plot style@{\tt #1} plot style}\index{plot styles!#1@{\tt #1}}}
-
-\newcommand\indcmdt [1]{{\tt #1} command\indcmd{#1}}
-\newcommand\indcmdts[1]{{\tt #1}\indcmd{#1}}
-\newcommand\indmodt [1]{{\tt #1}\indmod{#1}}
-\newcommand\indfunt [1]{{\tt #1}\indfun{#1}}
-\newcommand\indpst  [1]{{\tt #1}\indps{#1}}
+\input{definitions}
 
 \begin{document}
 
