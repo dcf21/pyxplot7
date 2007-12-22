@@ -108,20 +108,16 @@ does unfortunately introduce some incompatibility with \gnuplot, since some
 strings which were valid before are no longer valid (see
 Section~\ref{sec:latex_incompatibility} for more details). For example:
 
-\dontdo{
-\begin{verbatim}
+\begin{dontdo}
 set xlabel 'x^2'
-\end{verbatim}
-}
+\end{dontdo}
 
 \noindent would have been valid in \gnuplot, but now needs to be written in
 \LaTeX\ mathmode as:
 
-\dodo{
-\begin{verbatim}
+\begin{dodo}
 set xlabel '$x^2$'
-\end{verbatim}
-}
+\end{dodo}
 
 \noindent The nuisance of this incompatibility is surely far outweighed by the
 power that \LaTeX\ brings, however. For users with no prior knowledge of

@@ -235,19 +235,15 @@ taken when apostrophe and quote characters are used. The following command
 would raise an error, because the apostrophe would be interpreted as marking
 the end of the text label:
 
-\dontdo{
-\begin{verbatim}
+\begin{dontdo}
 set xlabel 'My plot's X axis'
-\end{verbatim}
-}
+\end{dontdo}
 
 \noindent The following would achieve the desired effect:
 
-\dodo{
-\begin{verbatim}
+\begin{dodo}
 set xlabel "My plot's X axis"
-\end{verbatim}
-}
+\end{dodo}
 
 To make it possible to render \LaTeX\ strings containing both single and double
 quote characters -- for example, to put a German umlaut on the name `J\"org' in
@@ -857,38 +853,30 @@ print "The current directory contains %d PyXPlot scripts."%(a)
 It should be noted that back-quotes can only be used outside quotes. For
 example:
 
-\dontdo{
-\begin{verbatim}
+\begin{dontdo}
 set xlabel '`ls`'
-\end{verbatim}
-}
+\end{dontdo}
 
 \noindent will not work. The best way to do this would be:
 
-\dodo{
-\begin{verbatim}
+\begin{dodo}
 set xlabel `echo "'" ; ls ; echo "'"`
-\end{verbatim}
-}
+\end{dodo}
 
 Note that it is not possible to change the current working directory by sending
 the cd command to a shell, as this command only changes the working directory
 of the shell in which the single command is executed:
 
-\dontdo{
-\begin{verbatim} 
+\begin{dontdo}
 !cd ..
-\end{verbatim}
-}
+\end{dontdo}
 
 PyXPlot has its own \indcmdt{cd} for this purpose, as well as its own
 \indcmdt{pwd}:
 
-\dodo{
-\begin{verbatim} 
+\begin{dodo}
 cd ..
-\end{verbatim}
-}
+\end{dodo}
 
 \section{Differences Between PyXPlot and \gnuplot}
 \label{missing_features}
