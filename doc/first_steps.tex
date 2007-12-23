@@ -134,9 +134,9 @@ plot sin(x)
 
 \noindent It is also possible to plot data stored in files on disk. The
 following would plot data from a file {\tt data.dat}, taking the
-$x$-coordinate of each point from the first column of the datafile, and the
-$y$-coordinate from the second.  The datafile is assumed to be in plain text
-format\footnote{If the filename of a datafile ends with a {\tt .gz} suffix,
+$x$-coordinate of each point from the first column of the \datafile, and the
+$y$-coordinate from the second.  The \datafile\ is assumed to be in plain text
+format\footnote{If the filename of a \datafile\ ends with a {\tt .gz} suffix,
 it is assuming to be gzipped plaintext, and is decoded accordingly.}, with
 columns separated by whitespace and/or commas\footnote{This format is
 compatible with the Comma Separated Values (CSV) format produced by many
@@ -322,7 +322,7 @@ Return the hyperbolic cosine of $x$.\\
 degrees($x$)&
 Convert angle $x$ from radians to degrees.\\
 erf($x$)&
-Return the error function, i.e. the Gaussian (normal) distribution function.\\
+Return the error function, i.e.\ the Gaussian (normal) distribution function.\\
 exp($x$)&
 Return $e$ raised to the power of $x$.\\
 fabs($x$)&
@@ -407,12 +407,12 @@ Return the hyperbolic tangent of $x$.\\
 \label{operators_table}
 \end{table}
 
-\section{Plotting Datafiles}
+\section{Plotting \Datafile s}
 \label{plot_datafiles}
 
 In the simple example of the previous section, we plotted the first column of a
-datafile against the second. It is also possible to plot any arbitrary column
-of a datafile against any other; the syntax for doing this is:\indmod{using}
+\datafile\ against the second. It is also possible to plot any arbitrary column
+of a \datafile\ against any other; the syntax for doing this is:\indmod{using}
 
 \begin{verbatim}
 plot 'data.dat' using 3:5
@@ -420,7 +420,7 @@ plot 'data.dat' using 3:5
 
 \noindent This example would plot the contents of the fifth column of the file
 {\tt data.dat} on the vertical axis, against the the contents of the third
-column on the horizontal axis. As mentioned above, columns in datafiles can be
+column on the horizontal axis. As mentioned above, columns in \datafile s can be
 separated using whitespace and/or commas.  Algebraic expressions may also be
 used in place of column numbers, for example:
 
@@ -430,7 +430,7 @@ plot 'data.dat' using (3+$1+$2):(2+$3)
 
 \noindent In such expressions, column numbers are prefixed by dollar signs, to
 distinguish them from numerical constants. The example above would plot the sum
-of the values in the first two columns of the datafile, plus three, on the
+of the values in the first two columns of the \datafile, plus three, on the
 horizontal axis, against two plus the value in the third column on the vertical
 axis. A more advanced example might be:
 
@@ -438,24 +438,24 @@ axis. A more advanced example might be:
 plot 'data.dat' using 3.0:$($2)
 \end{verbatim}
 
-\noindent This would place all of the datapoints on the line $x=3$, meanwhile
+\noindent This would place all of the \datapoint s on the line $x=3$, meanwhile
 drawing their vertical positions from the value of some column $n$ in the
-datafile, where the value of $n$ is itself read from the second column of the
-datafile.
+\datafile, where the value of $n$ is itself read from the second column of the
+\datafile.
 
 Later, in Section~\ref{horizontal_datafiles}, I shall discuss how to plot rows
-of datafiles against one another, in horizontally arranged datafiles.
+of \datafile s against one another, in horizontally arranged \datafile s.
 
-It is also possible to plot data from only selected lines within a datafile.
-When PyXPlot reads a datafile, it looks for any blank lines in the file. It
-divides the datafile up into {\it data blocks}, each being separated from the
+It is also possible to plot data from only selected lines within a \datafile.
+When PyXPlot reads a \datafile, it looks for any blank lines in the file. It
+divides the \datafile\ up into {\it data blocks}, each being separated from the
 next by a single blank line. The first datablock is numbered~0, the next~1, and
 so on.  \index{datafile format}
 
-When two or more blank lines are found together, the datafile is divided up
+When two or more blank lines are found together, the \datafile\ is divided up
 into {\it index blocks}. The first index block is numbered~0, the next~1, and
 so on. Each index block may be made up of a series of data blocks. To clarify
-this, a labelled example datafile is shown in Figure~\ref{sample_datafile}.
+this, a labelled example \datafile\ is shown in Figure~\ref{sample_datafile}.
 
 \begin{figure}
 \begin{tabular}{p{2.2cm}l}
@@ -477,16 +477,16 @@ this, a labelled example datafile is shown in Figure~\ref{sample_datafile}.
                    & $<$etc$>$ \\
 \hline
 \end{tabular}
-\caption{An example PyXPlot datafile -- the datafile is shown in the two left-hand columns, and commands are shown to the right.}
+\caption{An example PyXPlot \datafile\ -- the \datafile\ is shown in the two left-hand columns, and commands are shown to the right.}
 \label{sample_datafile}
 \end{figure}
 
-By default, when a datafile is plotted, all data blocks in all index blocks are
+By default, when a \datafile\ is plotted, all data blocks in all index blocks are
 plotted. To plot only the data from one index block, the following syntax may
 be used:
 
 \begin{verbatim}
-plot 'datafile' index 1
+plot 'data.dat' index 1
 \end{verbatim}
 
 \noindent To achieve the default behaviour of plotting all index blocks, the
@@ -497,13 +497,13 @@ within each index. To do so, the \indmodt{every} modifier is used, which takes
 up to six values, separated by colons:\label{introduce_every}
 
 \begin{verbatim}
-plot 'datafile' every a:b:c:d:e:f
+plot 'data.dat' every a:b:c:d:e:f
 \end{verbatim}
 
 \noindent The values have the following meanings:
 
 \begin{longtable}{p{1.0cm}p{10.5cm}}
-$a$ & Plot data only from every $a\,$th line in datafile. \\
+$a$ & Plot data only from every $a\,$th line in \datafile. \\
 $b$ & Plot only data from every $b\,$th block within each index block. \\
 $c$ & Plot only from line $c$ onwards within each block. \\
 $d$ & Plot only data from block $d$ onwards within each index block. \\
@@ -515,17 +515,17 @@ $f$ & Plot only up to the $f\,$th block within each index block. \\
 both be valid statements:
 
 \begin{verbatim}
-plot 'datafile' index 1 every 2:3
-plot 'datafile' index 1 every :::3
+plot 'data.dat' index 1 every 2:3
+plot 'data.dat' index 1 every :::3
 \end{verbatim}
 
-\noindent The first would plot only every other data point from every third
+\noindent The first would plot only every other \datapoint\ from every third
 data block; the second from the third line onwards within each data block.
 
 \newpage % One day when I understand LaTeX better I might understand why I need this line...
 
-A final modifier for selecting which parts of a datafile are plotted is
-{\tt select}, which plots only those data points which satisfy some given
+A final modifier for selecting which parts of a \datafile\ are plotted is
+{\tt select}, which plots only those \datapoint s which satisfy some given
 criterion. This is described in Section~\ref{select_modifier}.
 
 \section{Directing Where Output Goes}
@@ -661,7 +661,7 @@ function) can be set as follows\indcmd{set samples}:
 set samples 100
 \end{verbatim}
 
-\noindent Likewise, datafiles can be plotted with a line connecting the data
+\noindent Likewise, \datafile s can be plotted with a line connecting the data
 points:
 
 \begin{verbatim}
@@ -677,8 +677,8 @@ plot 'data.dat' with yerrorbars
 \end{verbatim}
 
 \noindent In this case, three columns of data need to be specified: the $x$-
-and $y$-coordinates of each data point, plus the size of the vertical errorbar
-on that data point. By default, the first three columns of the datafile are
+and $y$-coordinates of each \datapoint, plus the size of the vertical errorbar
+on that \datapoint. By default, the first three columns of the \datafile\ are
 used, but once again (see Section~\ref{plot_datafiles}), the {\tt using}
 modifier can be used:
 
@@ -780,22 +780,22 @@ Section~\ref{axis_extensions}.
 \section{Function Fitting}
 \label{fit_command}
 
-It is possible to fit functional forms to data points read from files by using
+It is possible to fit functional forms to \datapoint s read from files by using
 the \indcmdt{fit}. A simple example might be:\footnote{In \gnuplot, this
 example would have been written {\tt fit f(x) ...}, rather than {\tt fit f()
 ...}. This syntax is supported in PyXPlot, but is deprecated.}
 
 \begin{verbatim}
 f(x) = a*x+b
-fit f() 'datafile' index 1 using 2:3 via a,b
+fit f() 'data.dat' index 1 using 2:3 via a,b
 \end{verbatim}
 
 The first line specifies the functional form which is to be used.  The
 coefficients within this function which are to be varied during the fitting
-process are listed after the keyword \indmodt{via} in the {\tt fit} command.
-The keywords \indmodt{index}, \indmodt{every} and
+process are listed after the keyword \indkeyt{via} in the {\tt fit} command.
+The modifiers \indmodt{index}, \indmodt{every} and
 \indmodt{using}\indmod{select} have the same meanings here as in the plot
-command.\footnote{The {\tt select} keyword, to be introduced in
+command.\footnote{The {\tt select} modifier, to be introduced in
 Section~\ref{select_modifier} can also be used.}
 
 This is useful for producing best-fit lines\index{best fit
@@ -813,7 +813,7 @@ correspond to the values of each of the $n$ inputs to the function, plus
 finally the value which the output from the function is aiming to match.
 \item If an additional column is specified, then this is taken to contain the
 standard error in the value that the output from the function is aiming to
-match, and can be used to weight the datapoints which are input into the
+match, and can be used to weight the \datapoint s which are input into the
 {\tt fit} command. 
 \item By default, the starting values for each of the fitting parameters is
 $1.0$. However, if the variables to be used in the fitting process are already
@@ -824,7 +824,7 @@ $\{a=100,b=50\}$:
 f(x) = a*x+b
 a = 100
 b = 50
-fit f() 'datafile' index 1 using 2:3 via a,b
+fit f() 'data.dat' index 1 using 2:3 via a,b
 \end{verbatim}
 
 \item As with all numerical fitting procedures, the {\tt fit} command comes
@@ -834,18 +834,18 @@ values it is attempting to fit are of order unity. For example, in a problem
 where $a$ was of order $10^{10}$, the following might fail:
 \begin{verbatim}
 f(x) = a*x
-fit f() 'datafile' via a
+fit f() 'data.dat' via a
 \end{verbatim}
 However, better results might be achieved if $a$ were artificially made of
 order unity, as in the following script:
 \begin{verbatim}
 f(x) = 1e10*a*x
-fit f() 'datafile' via a
+fit f() 'data.dat' via a
 \end{verbatim}
 
 \item A series of ranges may be specified after the {\tt fit} command, using
 the same syntax as in the {\tt plot} command, as described in
-Section~\ref{plot_ranges}. If ranges are specified then only datapoints falling
+Section~\ref{plot_ranges}. If ranges are specified then only \datapoint s falling
 within these ranges are used in the fitting process; the ranges refer to each
 of the $n$ variables of the fitted function in order.
 
@@ -941,7 +941,7 @@ cd ..
 
 Because PyXPlot is still work in progress, it does not implement all of the
 features of \gnuplot. It currently does not implement any three-dimensional or
-surface plotting -- i.e. the \indcmdt{splot} of \gnuplot. It also does not
+surface plotting -- i.e.\ the \indcmdt{splot} of \gnuplot. It also does not
 support the plotting of parametric functions.
 
 Some of \gnuplot's features have been significantly re-worked to improve upon

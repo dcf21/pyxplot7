@@ -23,19 +23,21 @@
 
 \chapter{Labelling Plots and Producing Galleries}
 
-\section{Adding Arrows, Text Labels, and More}
+So far, we have talked exclusively about how to plot data in PyXPlot. In this
+chapter, we turn to discuss how to label graphs and place simple vector
+graphics around them.
+
+\section{Adding Arrows and Text Labels to Plots}
 
 This section describes how to put arrows and text labels on plots; the syntax
-is similar to that used by \gnuplot, but slightly changed. It is now possible,
-for example, to set the linestyles and colours with which arrows should be
-drawn.  Also covered is how to put grids onto plots, and how to change the size
-and colour of textual labels on plots.
+is similar, though not identical, to that used by \gnuplot; PyXPlot extends
+\gnuplot's syntax to make it possible to to set the colours and styles of
+arrows and text labels.
 
 \subsection{Arrows}
 
 \label{set_arrow}\index{arrows} Arrows may be placed on plots using the
-\indcmdt{set arrow}, which has similar syntax to that used by \gnuplot. A
-simple example would be:
+\indcmdt{set arrow}. A simple example would be:
 
 \begin{verbatim}
 set arrow 1 from 0,0 to 1,1
@@ -43,7 +45,7 @@ set arrow 1 from 0,0 to 1,1
 
 \noindent The number {\tt 1} immediately following \indcmdts{set arrow}
 specifies an identification number for the arrow, allowing it to be
-subsequently removed via:
+subsequently removed via the command:
 
 \begin{verbatim}
 unset arrow 1
@@ -55,19 +57,18 @@ unset arrow 1
 set noarrow 1
 \end{verbatim}
 
-In PyXPlot, this syntax is extended; the {\tt set arrow} command can be
-followed by the keyword `{\tt with}', to specify the style of the arrow. For
-example, the specifiers `{\tt nohead}', `{\tt head}' and
-`{\tt twohead}', after the keyword `{\tt with}', can be used to make
-arrows with no arrow heads, normal arrow heads, or two arrow heads.
-`{\tt twoway}' is an alias for `{\tt twohead}'.  For example:
+The {\tt set arrow} command can be followed by the keyword {\tt with} to
+specify the style of the arrow. For example, the keywords \indkeyt{nohead},
+\indkeyt{head} and \indkeyt{twohead}, placed after the keyword {\tt with}, can
+be used to generate arrows with no arrow heads, normal arrow heads, or two
+arrow heads.  \indkeyt{twoway} is an alias for \indkeyt{twohead}.  For example:
 
 \begin{verbatim}
 set arrow 1 from 0,0 to 1,1 with nohead
 \end{verbatim}
 
-In addition, linestyles and colours can be specified after the keyword
-`{\tt with}':
+\noindent Line types and colours can also be specified after the keyword {\tt
+with}:
 
 \begin{verbatim}
 set arrow 1 from 0,0 to 1,1 with nohead \
@@ -75,12 +76,13 @@ linetype 1 c blue
 \end{verbatim}
 
 As in \gnuplot, the coordinates for the start and end points of the arrow can
-be specified in a range of coordinate systems. `{\tt first}', the default,
-measures the graph using the $x$- and $y$-axes. `{\tt second}' uses the $x2$-
-and $y2$-axes. `{\tt screen}' and `{\tt graph}' both measure in centimetres
-from the origin of the graph. In the following example, we use these
-specifiers, and specify coordinates using variables rather than doing so
-explicitly:
+be specified in a range of coordinate systems. The co-ordinate system to be
+used should be specified immediately before the co-ordinate value. The default
+system, \indcot{first} measures the graph using the $x$- and $y$-axes. The
+\indcot{second} system uses the $x2$- and $y2$-axes. The \indcot{screen} and
+\indcot{graph} systems both measure in centimetres from the origin of the
+graph. In the following example, we use these specifiers, and specify
+coordinates using variables rather than doing so explicitly:
 
 \begin{verbatim}
 x0 = 0.0
@@ -93,7 +95,7 @@ set arrow 1 from first  x0, first  x1 \
 \end{verbatim}
 
 In addition to these four options, which are those available in \gnuplot, the
-syntax `{\tt axis}\textit{n}' may also be used, to use the $n\,$th $x$- or
+syntax `\indcot{axis{\it n}}' may also be used, to use the $n\,$th $x$- or
 $y$-axis -- for example, `{\tt axis3}'.\indcmd{set arrow} This allows arrows to
 reference any arbitrary axis on plots which make use of large numbers of
 parallel axes (see Section~\ref{multiple_axes}).
@@ -107,31 +109,30 @@ textual labels in PyXPlot, these are rendered in \LaTeX:
 set label 1 'Hello World' at 0,0
 \end{verbatim}
 
-As in the previous section, the number `1' is a reference number, which allows
-the label to be removed by either of the following two commands:
+As in the previous section, the number {\tt 1} is a reference number, which
+allows the label to be removed by either of the following two commands:
 
 \begin{verbatim}
 set nolabel 1
 unset label 1
 \end{verbatim}
 
-\noindent The positional coordinates for the text label, placed after the
-keyword `{\tt at}', can be specified in any of the coordinate systems
-described for arrows above. A rotation angle may optionally be specified after
-the keyword `{\tt rotate}', to rotate text counter-clockwise by a given
-angle, measured in degrees. For example, the following would produce
-upward-running text:
+\noindent The positional coordinates for the text label, placed after the {\tt
+at} keyword, can be specified in any of the coordinate systems described for
+arrows above. A rotation angle may optionally be specified after the keyword
+\indkeyt{rotate}, to rotate text counter-clockwise by a given angle, measured
+in degrees. For example, the following would produce upward-running text:
 
 \begin{verbatim}
 set label 1 'Hello World' at axis3 3.0, axis4 2.7 rotate 90
 \end{verbatim}
 
-\index{fontsize}\index{text!size} The fontsize of these text labels can
-globally be set using the \indcmdt{set fontsize}. This applies not only to the
-{\tt set label} command, but also to plot titles, axis labels, keys, etc. The
-value given should be an integer in the range $-4 \leq x \leq 5$. The default
-is zero, which corresponds to \LaTeX's {\tt normalsize}; $-4$ corresponds to
-{\tt tiny} and 5 to {\tt Huge}.
+\index{fontsize}\index{text!size} The fontsize of these text labels can be set
+globally using the \indcmdt{set fontsize}. This applies not only to the {\tt
+set label} command, but also to plot titles, axis labels, keys, etc. The value
+given should be an integer in the range $-4 \leq x \leq 5$. The default is
+zero, which corresponds to \LaTeX's {\tt normalsize}; $-4$ corresponds to {\tt
+tiny} and 5 to {\tt Huge}.
 
 \index{text!colour}\index{colours!text} The \indcmdt{set textcolour} can be
 used to globally set the colour of all text output, and applies to all of the
@@ -150,15 +151,16 @@ set textcolour blue
 \index{text!alignment}\index{alignment!text}By default, each label's specified
 position corresponds to its bottom left corner. This alignment may be changed
 with the \indcmdts{set texthalign} and \indcmdts{set textvalign} commands. The
-former takes the options {\tt left}, {\tt centre} or {\tt right}, and the
-latter takes the options {\tt bottom}, {\tt centre} or {\tt top}, for example:
+former takes the options \indkeyt{left}, \indkeyt{centre} or \indkeyt{right},
+and the latter takes the options \indkeyt{bottom}, \indkeyt{centre} or
+\indkeyt{top}, for example:
 
 \begin{verbatim}
 set texthalign right
 set textvalign top
 \end{verbatim}
 
-\subsection{Gridlines}
+\section{Gridlines}
 
 Gridlines may be placed on a plot and subsequently removed via the statements:
 
@@ -184,8 +186,8 @@ set grid x x2y2
 \end{verbatim}
 
 \noindent The top example would connect the gridlines to the ticks of the $x2$-
-and $y2$- axes, whilst the lower would draw gridlines from both the $x$- and
-the $x2$-axes.
+and $y2$-axes, whilst the lower would draw gridlines from both the $x$- and the
+$x2$-axes.
 
 If one of the specified axes does not exist, then no gridlines will be drawn in
 that direction.  Gridlines can subsequently be removed selectively from some
@@ -211,23 +213,21 @@ A related command\index{axes!colour}\index{colours!axes} is \indcmdts{set
 axescolour}, which has a syntax similar to that above, and sets the colour of
 the graph's axes.\label{set_colours}
 
-\section{LaTeX and PyXPlot}
-
 \section{Multi-plotting}
 \label{multiplot}
 \index{multiplot}
 
-Gnuplot has a plotting mode called `multiplot' which allows many graphs to be
-plotted together, and display side-by-side. The basic syntax of this mode is
-reproduced in PyXPlot, but is hugely extended.
+Gnuplot has a plotting mode called {\it multiplot} which allows many graphs to
+be plotted together and displayed side-by-side. The basic syntax of this mode
+is reproduced in PyXPlot, but it is hugely extended.
 
 The mode is entered by the command \indcmdts{set multiplot}.  This can be
 compared to taking a blank sheet of paper on which to place plots.  Plots are
 then placed on that sheet of paper, as usual, with the {\tt plot} command. The
 position of each plot is set using the \indcmdt{set origin}, which takes a
-comma-separated $x,y$ coordinate pair, measured in centimetres. The following,
-for example, would plot a graph of $\sin(x)$ to the left of a plot of
-$\cos(x)$:
+comma-separated $(x,y)$ coordinate pair, measured in centimetres. The
+following, for example, would plot a graph of $\sin(x)$ to the left of a plot
+of $\cos(x)$:
 
 \begin{verbatim} 
 set multiplot
@@ -260,7 +260,7 @@ cleared, as they may always be restored with the \indcmdt{undelete}; plots
 which have been deleted simply do not appear.
 
 Plots may also be moved with the \indcmdt{move}. For example, the following
-would move plot 23 to position (8,8) measured in centimetres:
+would move plot 23 to position $(8,8)$ measured in centimetres:
 
 \begin{verbatim} 
 move 23 to 8,8
@@ -294,16 +294,8 @@ The \indcmdt{edit} can also be used to view the settings which are applied to
 any plot on the multiplot page -- after executing {\tt edit~0}, the
 \indcmdt{show} will show the settings applied to plot zero.
 
-When a new plot is added to the page, {\tt replot} always switches to act
-upon this most recent plot.
-
-\index{replotting} The \indcmdt{refresh} is rather similar to the
-\indcmdt{replot}, but produces an exact copy of the latest display. This can be
-useful, for example, after changing the terminal type, to produce a second copy
-of a multiplot page in a different format. But the crucial difference between
-this command and {\tt replot} is that it doesn't replot anything. Indeed, there
-could be only textual items and arrows on the present multiplot page, and no
-graphs \textit{to} replot.
+When a new plot is added to the page, the \indcmdt{replot} always switches to
+act upon this most recent plot.
 
 \subsection{Linked Axes}
 
@@ -313,7 +305,7 @@ firstly, of course, if it is of intrinsic interest to ensure that they are on a
 common scale, but also because the two plots then do not both need their own
 axis labels, and space can be saved by one sharing the labels from the other.
 In PyXPlot, an axis which borrows its scale and labels from another is called a
-`linked axis'.
+{\it linked axis}.
 
 Such axes are declared by setting the label of the linked axis to a magic
 string such as {\tt linkaxis 0}\label{linked_axes}\index{axes!reserved
@@ -336,9 +328,9 @@ text 'This is some text' at x,y
 \end{verbatim}
 
 In this case, the string `This is some text' would be rendered at position
-$(x,y)$ on the multiplot. As with the \indcmdt{set label}, a rotation angle may
-optionally be specified to rotate text labels through any given angle, measured
-in degrees counter-clockwise, for example:
+$(x,y)$ on the multiplot. As with the \indcmdt{set label}, a rotation angle
+may optionally be specified to rotate text labels through any given angle,
+measured in degrees counter-clockwise, for example:\indkey{rotate}
 
 \begin{verbatim} 
 text 'This is some text' at x,y rotate r
@@ -379,17 +371,18 @@ arrow from x1,y1 to x2,y2 \
 with twohead colour red
 \end{verbatim}
 
-Bitmap images in jpeg form may be placed on the multiplot using the
+Bitmap images in jpeg format may be placed on the multiplot using the
 \indcmdt{jpeg}.  This has syntax:
 
 \begin{verbatim}
 jpeg 'filename' at x,y width w
 \end{verbatim}
 
-As an alternative to the {\tt width} modifier the height of the image can be
-specified, using the analogous {\tt height} modifier.  An optional angle can
-also be specified using the {\tt rotate} modifier; this causes the included
-image to be rotated counter-clockwise by a specified angle (in degrees).
+As an alternative to the \indkeyt{width} keyword the height of the image can be
+specified, using the analogous \indkeyt{height} keyword.  An optional angle can
+also be specified using the \indkeyt{rotate} keyword; this causes the included
+image to be rotated counter-clockwise by a specified angle, measured in
+degrees.
 
 Vector graphic images in eps format may be placed on to a multiplot using the
 \indcmdt{eps}, which has a syntax analogous to the {\tt jpeg} command.  However
@@ -401,7 +394,7 @@ eps 'filename' at 3,2 rotate 5
 \end{verbatim}
 
 \noindent will place the eps file with its bottom-left corner at position
-$(3,2)$ cm from the origin, rotated counter-clockwise through 5 degrees.
+$(3,2)$\,cm from the origin, rotated counter-clockwise through 5 degrees.
 
 \subsection{Speed Issues}
 \label{set_display}
@@ -409,7 +402,7 @@ $(3,2)$ cm from the origin, rotated counter-clockwise through 5 degrees.
 By default, whenever an item is added to a multiplot, or an existing item moved
 or replotted, the whole multiplot is replotted to show the change. This can be
 a time consuming process on large and complex multiplots. For this reason, the
-{\tt set nodisplay} command is provided, which stops PyXPlot from producing any
+\indcmdt{set nodisplay} is provided, which stops PyXPlot from producing any
 output. The \indcmdt{set display} can subsequently be issued to return to
 normal behaviour.
 
@@ -423,5 +416,43 @@ set nodisplay
 [...prepare large multiplot...]
 set display
 refresh
+\end{verbatim}
+
+\subsection{The \indcmdt{refresh}}
+
+\index{replotting} The \indcmdt{refresh} is rather similar to the
+\indcmdt{replot}, but produces an exact copy of the latest display. This can be
+useful, for example, after changing the terminal type, to produce a second copy
+of a multiplot page in a different format. But the crucial difference between
+this command and {\tt replot} is that it doesn't replot anything. Indeed, there
+could be only textual items and arrows on the present multiplot page, and no
+graphs {\it to} replot.
+
+\section{LaTeX and PyXPlot}
+
+The \indcmdt{text} can straightforwardly be used to render simple one-line
+\LaTeX\index{latex} strings, but sometimes the need arises to place more
+substantial blocks of text onto a plot. For this purpose, it can be useful to
+use the \LaTeX\ {\tt parbox} or {\tt minipage} environments\footnote{Remember,
+any valid \LaTeX\ string can be passed to the \indcmdt{text} and \indcmdt{set
+label}.} For example:
+
+\begin{verbatim} 
+text '\parbox[t]{6cm}{\setlength{\parindent}{1cm} \
+\noindent There once was a lady from Hyde, \\ \
+Who ate a green apple and died, \\ \
+\indent While her lover lamented, \\ \
+\indent The apple fermented, \\ \
+and made cider inside her inside.}'
+\end{verbatim}
+
+If unusual mathematical symbols are required, for example those in the {\tt
+amsmath} package\index{amsmath package@{\tt amsmath} package}, such a package
+can be loaded using the \indcmdt{set preamble}. For example:
+
+\begin{verbatim} 
+set preamble \usepackage{marvosym}
+text "{\Huge\Dontwash\ \NoIroning\ \NoTumbler}$\;$ Don't \
+wash, iron or tumble-dry this plot."
 \end{verbatim}
 

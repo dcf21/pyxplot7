@@ -188,12 +188,12 @@ fit [<range specifier> ...] <function> '<datafile>'
     via <variable>[, <variable>, ...]
 \end{verbatim}
 
-The {\tt fit} command may be used to fit functional forms to data points in
-datafiles. A simple example might be:
+The {\tt fit} command may be used to fit functional forms to \datapoint s in
+\datafile s. A simple example might be:
 
 \begin{verbatim}
 f(x) = a*x+b
-fit f(x) 'datafile' index 1 using 2:3 via a,b
+fit f(x) 'data.dat' index 1 using 2:3 via a,b
 \end{verbatim}
 
 \noindent The coefficients to be varied are listed after the keyword `{\tt
@@ -230,7 +230,7 @@ help commands help
 
 Information is arranged with general information about PyXPlot under the heading
 {\tt about}, and information about PyXPlot's commands under {\tt commands}.
-Information about the format that input datafiles should take can be found
+Information about the format that input \datafile s should take can be found
 under {\tt datafile}.  Other categories are self-explanatory.
 
 To exit any help page, press the `{\tt q}' key.
@@ -245,7 +245,7 @@ histogram [range specification] <function name> '<datafile>'
      [bins (x1, x2, ...)]
 \end{verbatim}
 
-The {\tt histogram} command takes a datafile and counts the number of points in
+The {\tt histogram} command takes a \datafile\ and counts the number of points in
 various bins, producing a function the area under which is equal to the number
 of points for each bin.  The width and starting position of the bins can be
 specified using the {\tt binwidth} and {\tt binorigin} modifiers, or a
@@ -258,7 +258,7 @@ histogram f() 'output.dat' u 2 binwidth 2
 
 \noindent produces a function $f()$, which contains the the data in the second
 column of the {\tt output.dat} file binned into bins of width 2.  A range
-specifier can be used to restrict the set of data in the datafile that is to be
+specifier can be used to restrict the set of data in the \datafile\ that is to be
 binned; for example:
 
 \begin{verbatim}
@@ -396,23 +396,23 @@ plot [-pi:pi] sin(x)
 \noindent which would plot the function $\sin(x)$ across some default range of
 values on the $x$-axis.
 
-Datafiles may also be plotted as well as functions, in which case the filename
-of the datafile to be plotted should be enclosing in apostrophes. An example of
+\Datafile s may also be plotted as well as functions, in which case the filename
+of the \datafile\ to be plotted should be enclosing in apostrophes. An example of
 this syntax would be:
 
 \begin{verbatim}
-plot 'datafile' with points
+plot 'data.dat' with points
 \end{verbatim}
 
-\noindent which would plot the file called `{\tt datafile}'.  Section
+\noindent which would plot the file called `{\tt data.dat}'.  Section
 \ref{plot_datafiles} should be studied for further details of the format that is
-expected of input datafiles, and how PyXPlot may be directed to plot only
-certain portions of datafiles.
+expected of input \datafile s, and how PyXPlot may be directed to plot only
+certain portions of \datafile s.
 
 In plots which have multiple parallel axes -- for example, an $x$-axis along its
 lower edge and an $x2$-axis along its upper edge -- the pair of axes against
 which data should be plotted should be specified using the modifier {\tt axes}
-following the name of the function or datafile to be plotted, for example:
+following the name of the function or \datafile\ to be plotted, for example:
 
 \begin{verbatim}
 plot sin(x) axes x2y1
@@ -444,12 +444,12 @@ As well as plot styles, the {\tt with} modifier can also be followed by the
 following keywords:
 
 \begin{description}
-\item[{\tt linetype}] -- specifies the linetype (e.g. dotted) used by the lines plot style. 
+\item[{\tt linetype}] -- specifies the linetype (e.g.\ dotted) used by the lines plot style. 
 \item[{\tt linewidth}] -- specifies the width of line, in pt, used by the lines plot style.
-\item[{\tt pointsize}] -- specifies the size of datapoints, relative to the
+\item[{\tt pointsize}] -- specifies the size of \datapoint s, relative to the
 default size, used by the points plot style. 
 \item[{\tt pointlinewidth}] -- as above, but specifies the linewidth, in pt,
-used to render the crosses, circles, etc, used to mark datapoints. 
+used to render the crosses, circles, etc, used to mark \datapoint s. 
 \item[{\tt linestyle}] -- this can be used in conjunction with the {\tt set linestyle} command to save default plot styles. 
 \item[{\tt colour}] -- specifies the colour used to plot the dataset, either by
 one of the recognised colour names or by an integer,
@@ -548,7 +548,7 @@ replot [<plot number>]
 \end{verbatim}
 
 In single plot mode, the {\tt replot} command causes the most recent plot
-command to be re-run.  This can be useful to replot a datafile which has changed
+command to be re-run.  This can be useful to replot a \datafile\ which has changed
 in the meantime, but also to change some aspect of a plot within PyXPlot itself.
 Usages of the {\tt set} command between the original {\tt plot} command and the
 calling of the {\tt replot} command are applied to the new plot. For example:
@@ -564,8 +564,8 @@ item which was added to the multiplot page, and causes that to be replotted. It
 is possible to change this behaviour by first calling the {\tt edit} command, in
 which case any given plot within a multiplot can be modified and replotted.
 
-Specifying a function or datafile after the {\tt replot} command causes that
-function or data file to be added to the plot. The syntax here is the same as
+Specifying a function or \datafile\ after the {\tt replot} command causes that
+function or \datafile\ to be added to the plot. The syntax here is the same as
 for the {\tt plot} command.  For example:
 
 \begin{verbatim}
@@ -837,7 +837,7 @@ set boxfrom <value>
 
 The `{\tt boxfrom}' setting alters PyXPlot's behaviour when plotting bar charts.
 It changes the horizontal line (vertical point; $y$-axis value) from which the
-boxes of bar charts appear to emanate.  The default value is zero (i.e. boxes
+boxes of bar charts appear to emanate.  The default value is zero (i.e.\ boxes
 extend from the line of the $y$-axis). An example of its syntax would be:
 
 \begin{verbatim}
@@ -998,7 +998,7 @@ set gridmajcolour <colour>
 
 The `{\tt gridmajcolour}' setting changes the colour that is used to plot the
 gridlines (see the {\tt set grid} command) which are associated with the major
-ticks of axes (i.e. major gridlines). For example:
+ticks of axes (i.e.\ major gridlines). For example:
 
 \begin{verbatim}
 set gridmajcolour purple
@@ -1018,7 +1018,7 @@ set gridmincolour <colour>
 
 The {\tt gridmincolour} setting changes the colour that is used to plot the
 gridlines (see the {\tt set grid} command) which are associated with the minor
-ticks of axes (i.e. minor gridlines). For example:
+ticks of axes (i.e.\ minor gridlines). For example:
 
 \begin{verbatim}
 set gridmincolour purple
@@ -1534,7 +1534,7 @@ set pointlinewidth <value>
 \end{verbatim}
 
 The `{\tt pointlinewidth}' setting changes the width of the lines that are used to
-plot datapoints.  For instance:
+plot \datapoint s.  For instance:
 
 \begin{verbatim}
 set pointlinewidth 20
@@ -1650,7 +1650,7 @@ The command:
 set size square
 \end{verbatim}
 
-\noindent sets PyXPlot to produce square plots, i.e. with unit aspect ratio. Other aspect
+\noindent sets PyXPlot to produce square plots, i.e.\ with unit aspect ratio. Other aspect
 ratios can be set with the {\tt set size ratio} command.
 
 \subsection{style}\indcmd{set style}
@@ -1669,7 +1669,7 @@ set style data points
 set style function lines linestyle 1
 \end{verbatim}
 
-\noindent would cause datafiles to be plotted by default using points and
+\noindent would cause \datafile s to be plotted by default using points and
 functions using lines with the first defined linestyle.
  
 \subsection{terminal}\indcmd{set terminal}
@@ -2150,7 +2150,7 @@ spline [<range specification>] <function name> '<filename>'
        [using <using specification>]
 \end{verbatim}
 
-The {\tt spline} command fits a spline to a datafile. A special function is
+The {\tt spline} command fits a spline to a \datafile. A special function is
 created that represents the spline fit and can be used in the same way as any
 other user-defined function. For example:
 
@@ -2160,9 +2160,9 @@ spline f() 'data.1'
 
 \noindent would create a function $f(x)$ that is a fit to the data in the file {\tt
 data.1}. By default, the {\tt spline} command uses the first two columns of a
-data file in a manner analogous to the plot command. The {\tt index}, {\tt
+\datafile\ in a manner analogous to the plot command. The {\tt index}, {\tt
 every} and {\tt using} modifiers can be used in the same way as in the {\tt
-plot} command to select which parts of the datafile should be used; see the
+plot} command to select which parts of the \datafile\ should be used; see the
 {\tt datafile} section for more details.
 
 Note that trying to generate splines of multi-valued functions will not, in
@@ -2178,7 +2178,7 @@ tabulate [<range specification>] ( <expression> | <filename> )
 \end{verbatim}
 
 The {\tt tabulate} commands produces a text file containing the values of a
-function at a set of points.  For example, to produce a data file called {\tt
+function at a set of points.  For example, to produce a \datafile\ called {\tt
 sine.dat} with the principal values of the sine function:
 
 \begin{verbatim}
@@ -2190,7 +2190,7 @@ The format statement used to print the output file is chosen automatically with
 integers and small numbers treated differently.  If desired, however, a format
 statement may be specified using the {\tt with format} specifier; it should be a
 standard Python format string.  If there are not enough columns available in the
-supplied format statement it will be repeated for each line of the data file.
+supplied format statement it will be repeated for each line of the \datafile.
 
 The {\tt index}, {\tt every}, {\tt using} and {\tt select} modifiers work in the
 same way as for the {\tt plot} command.  For example multiple functions may be
@@ -2201,17 +2201,17 @@ tabulate [0:2*pi] sin(x):cos(x):tan(x) u 1:2:3:4
 \end{verbatim}
 
 The {\tt samples} setting can be used to control the number of points that are
-inserted into the data file.  If the $x$-axis is set to be logarithmic then the
+inserted into the \datafile.  If the $x$-axis is set to be logarithmic then the
 points at which the functions are evaluated are spaced logarithmically.
 
-The {\tt tabulate} command can also be used to select portions of data files.
-For example, to print the third, sixth and ninth columns of the datafile {\tt
-plot.1}, but only when the arcsine of the value in the fourth column is
+The {\tt tabulate} command can also be used to select portions of \datafile s.
+For example, to print the third, sixth and ninth columns of the \datafile\ {\tt
+data.dat}, but only when the arcsine of the value in the fourth column is
 positive:
 
 \begin{verbatim}
 set output 'filtered.dat'
-tabulate 'plot.1' u 3:6:9 select (asin($4)>0)
+tabulate 'data.dat' u 3:6:9 select (asin($4)>0)
 \end{verbatim}
 
 \section{text}\indcmd{text}
@@ -2226,10 +2226,10 @@ single plot mode, in a way that is described below. As always in PyXPlot, the
 text is rendered using \LaTeX. An example would be:
 
 \begin{verbatim}
-text 'Hello world' at 0,2
+text 'Hello World!' at 0,2
 \end{verbatim}
 
-\noindent which would render the text `Hello world' at position $(0,2)$,
+\noindent which would render the text `Hello World!' at position $(0,2)$,
 measured in centimetres. The alignment of the text item with respect to this
 position can be set using the {\tt set texthalign} and {\tt set textvalign}
 commands.
