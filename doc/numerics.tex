@@ -38,10 +38,10 @@ command line:
 f(x) = x*sin(x)
 \end{verbatim}
 
-\noindent It is also possible to declare functions which are only valid over a
-certain range of argument space. For example, the following function would only
-be valid in the range $-2<x<2$:\footnote{The syntax {\tt [-2:2]} can also be
-written {\tt [-2 to 2]}.}
+\noindent It is also possible to declare functions which are valid only over
+certain ranges of argument space. For example, the following function would
+only be valid within the range $-2<x<2$:\footnote{The syntax {\tt [-2:2]} can
+also be written {\tt [-2 to 2]}.}
 
 \begin{verbatim}
 f(x)[-2:2] = x*sin(x)
@@ -55,9 +55,9 @@ f(a,b,c)[-1:1][-1:1][-1:1] = a+b+c
 \end{verbatim}
 
 If an attempt is made to evaluate a function outside of its specified range,
-then an error results. This may be useful, for example, for plotting a
-function, but not continuing it outside some specified range. The following
-would print the function $\sin(x)$, but only in the range $-2<x<7$:
+then an error results. This may be useful, for example, for plotting a function
+only within some specified range. The following would plot the function
+$\sin(x)$, but only in the range $-2<x<7$:
 
 \begin{verbatim}
 f(x)[-2:7] = sin(x)
@@ -79,9 +79,9 @@ with the {\tt select} keyword; see Section~\ref{select_modifier}.
 It is possible to make multiple declarations of the same function, over
 different regions of argument space; if there is an overlap in the valid
 argument space for multiple definitions, then later declarations take
-precedence. This makes it possible to use different functional forms for a
-function in different parts of parameter space, and is especially useful when
-fitting a function to data, if different functional forms are to be spliced
+precedence. This makes it possible to use different functional forms for
+functions in different parts of parameter space, and is especially useful when
+fitting functions to data, if different functional forms are to be spliced
 together to fit different regimes in the data.
 
 Another application of function splicing is to work with functions which do not
@@ -96,7 +96,7 @@ f(x)[0:] = 1
 
 \noindent The following example would define $f(x)$ to follow the Fibonacci
 sequence, though it is not at all computationally efficient, and it is
-inadvisable to evaluate it for $x>8$:
+inadvisable to evaluate it for $x\gtrsim8$:
 
 \begin{verbatim}
 f(x) = 1
@@ -118,53 +118,49 @@ plot [0:8] f(x)
 \label{spline_command}
 \index{best fit lines}
 
-% The following is largely wrong, and hence commented out
-%Gnuplot allows data to be interpolated using its {\tt csplines} plot style,
-%for example:\index{csplines plot style@{\tt csplines} plot
-%style}\index{acsplines plot style@{\tt acsplines} plot style}
-%
-%\begin{verbatim}
-%plot 'datafile' with smooth csplines
-%plot 'datafile' with smooth acsplines
-%\end{verbatim}
-%
-%\noindent where the upper statement fits a spline through all of the
-%datapoints, and the lower applies some smoothing to the data first. This syntax
-%is supported in PyXPlot but deprecated.  A similar effect can be achieved with
-%the new, more powerful, {\tt spline} command\index{spline
-%command@{\tt spline} command}. This has a syntax similar to that of the
-%{\tt fit} command, for example:
-The \indcmdt{spline} fits a spline through data from a file.  For example:
+Gnuplot allows data to be interpolated using its \indpst{csplines} plot style,
+for example:\indps{acsplines}
 
 \begin{verbatim}
-spline f() 'datafile' index 1 using 2:3
+plot 'data.dat' with csplines
+plot 'data.dat' with acsplines
 \end{verbatim}
 
-The function $f(x)$ now becomes a special function, representing a spline fit
-to the given datafile. It can be plotted or otherwise used in exactly the same
-way as any other function. This approach is more flexible than \gnuplot's
-syntax, as the spline $f(x)$ can subsequently be spliced together with other
-functions (see the previous section), or used in any mathematical operation.
-The following code snippet, for example, would fit splines through two
-datasets, and then plot the interpolated differences between them, regardless,
-for example, of whether the two datasets were sampled at exactly the same $x$
-coordinates:
+\noindent where the upper statement fits a spline through all of the
+datapoints, and the lower applies some smoothing to the data first. This syntax
+also is supported in PyXPlot, though splines may also be fit through data using
+a new, more powerful, \indcmdt{spline}. This has a syntax similar to that of
+the \indcmdt{fit}, for example:
 
 \begin{verbatim}
-spline f() 'datafile1'
-spline g() 'datafile2'
+spline f() 'data.dat' index 1 using 2:3
+\end{verbatim}
+
+\noindent In this example, the function $f(x)$ now becomes a special function,
+representing a spline fit to the given datafile. It can be plotted or otherwise
+used in exactly the same way as any other function. This approach is more
+flexible than \gnuplot's syntax, as the spline $f(x)$ can subsequently be
+spliced together with other functions (see the previous section), or used in
+any mathematical operation.  The following code snippet, for example, would fit
+splines through two datasets, and then plot the interpolated differences
+between them, regardless, for example, of whether the two datasets were sampled
+at exactly the same $x$ co-ordinates:
+
+\begin{verbatim}
+spline f() 'data1.dat'
+spline g() 'data2.dat'
 plot f(x)-g(x)
 \end{verbatim}
 
 Smoothed splines can also be produced:
 
 \begin{verbatim}
-spline f() 'datafile1' smooth 1.0
+spline f() 'data1.dat' smooth 1.0
 \end{verbatim}
 
 \noindent where the value $1.0$ determines the degree of smoothing to apply;
 the higher the value, the more smoothing is applied. The default behaviour is
-not to smooth at all (equivalent to {\tt smooth 0.0}); a value of $1.0$
+not to smooth at all -- equivalent to {\tt smooth 0.0} -- and a value of $1.0$
 corresponds to the default amount of smoothing applied in \gnuplot's {\tt
 acsplines} plot style.
 
@@ -215,12 +211,19 @@ tabulate 'input.dat' u 3:6:9 select (asin($4)>0)
 \end{verbatim}
 
 \noindent The \indmodt{select}, \indmodt{using} and \indmodt{every} modifiers
-operate in the same manner as with the {\tt plot} command.  The format
-statement used to print the output file is chosen automatically with integers
-and small numbers treated differently.  If desired, however, a format statement
-may be specified using the {\tt with format} specifier; it should be a standard
-Python format string.  If there are not enough columns available in the
-supplied format statement it will be repeated for each line of the data file.
+operate in the same manner as with the {\tt plot} command.  The format used in
+each column of the output file is chosen automatically with integers and small
+numbers treated intelligently to produce output which preserves accuracy, but
+is also easily human-readable. If desired, however, a format statement may be
+specified using the {\tt with format} specifier. The syntax for this is similar
+to that expected by the Python string substitution operator ({\tt \%})\index{\%
+operator@{\tt \%} operator}\index{string operators!substitution}\footnote{Note
+that this operator can also be used within PyXPlot; see
+Section~\ref{string_subs_op} for details.}. If there are not enough columns
+present in the supplied format statement it will be repeated in a cyclic
+fashion.
+
+!!! WTF !!! PROVIDE EXAMPLE !!! WTF !!!
 
 \section{Numerical Integration and Differentiation}
 
@@ -228,10 +231,10 @@ supplied format statement it will be repeated for each line of the data file.
 performing numerical integration and differentiation of expressions:
 \indfunt{int\_dx()} and \indfunt{diff\_dx()}. In each case, the `{\tt x}' may
 be replaced with any valid one-letter variable name, to integrate or
-differentiate with respect to any given variable.
+differentiate with respect to that dummy variable.
 
 The function {\tt int\_dx()} takes three parameters -- firstly the
-expression to be integrated, which should be placed in quotes, as a string,
+expression to be integrated, which should be placed in quotes as a string,
 followed by the minimum and maximum integration limits. For example, the
 following would plot the integral of the function $\sin(x)$:
 
@@ -239,12 +242,13 @@ following would plot the integral of the function $\sin(x)$:
 plot int_dt('sin(t)',0,x)
 \end{verbatim} 
 
-The function {\tt diff\_dx()} takes two obligatory parameters plus two
-further optional parameters. The first is the expression to be differentiated,
-followed by the point at which the differential should be evaluated, following
-by optional parameters $\epsilon_1$ and $\epsilon_2$, which are described
-below.  The following example would evaluate the differential of the function
-$\cos(x)$ with respect to $x$ at $x=1.0$:
+The function {\tt diff\_dx()} takes two obligatory parameters plus two further
+optional parameters. The first is the expression to be differentiated, which,
+as above, should be placed in quotes as a string, followed by the point at
+which the differential should be evaluated, followed by optional parameters
+$\epsilon_1$ and $\epsilon_2$ which are described below.  The following example
+would evaluate the differential of the function $\cos(x)$ with respect to $x$
+at $x=1.0$:
 
 \begin{verbatim}
 print diff_dx('cos(x)', 1.0)
@@ -270,16 +274,17 @@ routine.\index{scipy}
 \section{Histograms}
 
 The \indcmdt{histogram} takes data from a datafile and bins it, producing a
-function that represents a histogram of the supplied data.  A histogram is
-defined as a function consisting of discrete intervals, the area under which is
-equal to the number of points binned in that interval.  For example:
+function that represents the frequency distribution of the supplied data.  A
+histogram is defined as a function consisting of discrete intervals, the area
+under each of which is equal to the number of points binned in that interval
+divided by its width.  For example:
 
 \begin{verbatim}
 histogram f() 'input.dat'
 \end{verbatim}
 
 \noindent would bin the points in the first column of the file {\tt input.dat}
-into bins of unit width and produce a function $f()$, the value of which at a
+into bins of unit width and produce a function $f()$, the value of which at any
 given point was equal to the number of items in the bin at that point.
 
 Three modifiers can be supplied to the {\tt histogram} command. The {\tt
@@ -294,8 +299,8 @@ histogram g() 'input.dat' bins (1, 2, 4)
 \noindent would bin the points in the first column of the file {\tt input.dat}
 into two bins, $x=1\to 2$ and $x=2\to 4$.
 
-A range can be supplied immediately following the command according to the
-usual syntax; only points that fall in that range will then be binned.  In the
-same way as for the {\tt plot} command, the \indmodt{index}, \indmodt{every},
-\indmodt{using} and \indmodt{select} modifiers can also be used to bin
-different portions of a datafile.
+A range can be supplied immediately following the command, using the same
+syntax as in the {\tt plot} and {\tt fit} commands; only points that fall in
+that range will then be binned.  In the same way as for the {\tt plot} command,
+the \indmodt{index}, \indmodt{every}, \indmodt{using} and \indmodt{select}
+modifiers can also be used to bin different portions of a datafile.

@@ -95,6 +95,8 @@ AUTOASPECT=ON
 AXESCOLOUR=Black
 BACKUP=OFF
 BAR=1.0
+BINORIGIN=0
+BINWIDTH=1
 BOXFROM=0
 BOXWIDTH=0
 COLOUR=ON
@@ -123,6 +125,7 @@ OUTPUT=
 POINTLINEWIDTH=1.0
 POINTSIZE=1.0 
 SAMPLES=250
+TERMANTIALIAS=ON
 TERMINVERT=OFF
 TERMTRANSPARENT=OFF
 TERMTYPE=X11_singlewindow
@@ -167,7 +170,7 @@ with a list of possible values for each:
 
                Sets the aspect ratio of plots.
                \\
-{\tt AUTOASPECT} & {\bf Possible values:} ON / OFF
+{\tt AUTOASPECT} & {\bf Possible values:} {\tt ON} / {\tt OFF}
 
                {\bf Analogous set command:} {\tt set size ratio}
 
@@ -179,11 +182,11 @@ with a list of possible values for each:
 
                Sets the colour of axis lines and ticks.
                \\
-{\tt BACKUP} & {\bf Possible values:} ON / OFF
+{\tt BACKUP} & {\bf Possible values:} {\tt ON} / {\tt OFF}
 
                {\bf Analogous set command:} \indcmdts{set backup}
 
-               When this switch is set to `ON', and plot output is being directed to file, attempts to write output over existing files cause a copy of the existing file to be preserved, with a tilda after its old filename (see Section~\ref{filebackup}).
+               When this switch is set to `{\tt ON}', and plot output is being directed to file, attempts to write output over existing files cause a copy of the existing file to be preserved, with a tilda after its old filename (see Section~\ref{filebackup}).
                \\
 {\tt BAR}     & {\bf Possible values:}  Any floating-point number.
 
@@ -195,13 +198,13 @@ with a list of possible values for each:
 
                {\bf Analogous set command:} \indcmdts{set binorigin}
 
-               Sets the point along the $x$ axis from which the bins used by the {\tt histogram} command originate.
+               Sets the point along the $x$ axis from which the bins used by the \indcmdt{histogram} originate.
                \\
 {\tt BINWIDTH} & {\bf Possible values:} Any floating-point number
 
                {\bf Analogous set command:} \indcmdts{set binwidth}
 
-               Sets the widths of the bins used by the {\tt histogram} command.
+               Sets the widths of the bins used by the \indcmdt{histogram}.
                \\
 {\tt BOXFROM} & {\bf Possible values:} Any floating-point number.
 
@@ -215,11 +218,11 @@ with a list of possible values for each:
 
                Sets the default width of boxes on barcharts. If negative, then the boxes have automatically selected widths, so that the interfaces between bars occur at the horizontal midpoints between the specified datapoints.
                \\
-{\tt COLOUR} & {\bf Possible values:} ON / OFF
+{\tt COLOUR} & {\bf Possible values:} {\tt ON} / {\tt OFF}
 
                {\bf Analogous set command:} \indcmdts{set terminal}
 
-               Sets whether output should be colour (ON) or monochrome (OFF).
+               Sets whether output should be colour ({\tt ON}) or monochrome ({\tt OFF}).
                \\
 {\tt DATASTYLE} & {\bf Possible values:} Any plot style. 
 
@@ -227,11 +230,11 @@ with a list of possible values for each:
                    
                Sets the plot style used by default when plotting \datafile s.
                \\
-{\tt DISPLAY} & {\bf Possible values:} ON / OFF
+{\tt DISPLAY} & {\bf Possible values:} {\tt ON} / {\tt OFF}
 
                {\bf Analogous set command:} \indcmdts{set display}
 
-               When set to `ON', no output is produced until the \indcmdt{set display} is issued. This is useful for speeding up scripts which produce large multiplots; see Section~\ref{set_display} for more details.
+               When set to `{\tt ON}', no output is produced until the \indcmdt{set display} is issued. This is useful for speeding up scripts which produce large multiplots; see Section~\ref{set_display} for more details.
                \\
 {\tt DPI} & {\bf Possible values:} Any floating-point number.
 
@@ -239,11 +242,11 @@ with a list of possible values for each:
 
                Sets the sampling quality used, in dots per inch, when output is sent to a bitmapped terminal (the jpeg/gif/png terminals).
                \\
-{\tt ENLARGE} & {\bf Possible values:} ON / OFF
+{\tt ENLARGE} & {\bf Possible values:} {\tt ON} / {\tt OFF}
 
                {\bf Analogous set command:} \indcmdts{set terminal}
                    
-               When set to `ON' output is enlarged or shrunk to fit the current paper size.
+               When set to `{\tt ON}' output is enlarged or shrunk to fit the current paper size.
                \\
 
 {\tt FONTSIZE} & {\bf Possible values:} Integers in the range $-4 \to 5$.
@@ -258,7 +261,7 @@ with a list of possible values for each:
 
                Sets the plot style used by default when plotting functions.
                \\
-{\tt GRID} & {\bf Possible values:} ON / OFF
+{\tt GRID} & {\bf Possible values:} {\tt ON} / {\tt OFF}
 
                {\bf Analogous set command:} \indcmdts{set grid}
 
@@ -288,7 +291,7 @@ with a list of possible values for each:
 
                Sets the colour of minor grid lines.
                \\
-{\tt KEY} & {\bf Possible values:} ON / OFF
+{\tt KEY} & {\bf Possible values:} {\tt ON} / {\tt OFF}
 
                {\bf Analogous set command:} \indcmdts{set key}
 
@@ -318,11 +321,11 @@ with a list of possible values for each:
 
                Sets the vertical offset, in approximate graph-heights, that should be applied to the legend, relative to its default position, as set by {\tt KEYPOS}.
                \\
-{\tt LANDSCAPE} & {\bf Possible values:} ON / OFF
+{\tt LANDSCAPE} & {\bf Possible values:} {\tt ON} / {\tt OFF}
 
                {\bf Analogous set command:} \indcmdts{set terminal}
 
-               Sets whether output is in portrait orientation (OFF), or landscape orientation (ON).
+               Sets whether output is in portrait orientation ({\tt OFF}), or landscape orientation ({\tt ON}).
                \\
 {\tt LINEWIDTH} & {\bf Possible values:} Any floating-point number.
 
@@ -330,7 +333,7 @@ with a list of possible values for each:
 
                Sets the width of lines on plots, as a  multiple of the default.
                \\
-{\tt MULTIPLOT} & {\bf Possible values:} ON / OFF
+{\tt MULTIPLOT} & {\bf Possible values:} {\tt ON} / {\tt OFF}
 
                {\bf Analogous set command:} \indcmdts{set multiplot}
 
@@ -360,6 +363,12 @@ with a list of possible values for each:
 
                Sets the height of the papersize for postscript output in millimetres.
                \\
+{\tt PAPER\_NAME} & {\bf Possible values:} A string matching any of the papersizes listed in Table~\ref{paper_sizes}.
+
+               {\bf Analogous set command:} \indcmdts{set papersize}
+
+               Sets the papersize for postscript output to one of the pre-defined papersizes listed in Table~\ref{paper_sizes}.
+               \\
 {\tt PAPER\_WIDTH} & {\bf Possible values:} Any floating-point number.
 
                {\bf Analogous set command:} \indcmdts{set papersize}
@@ -384,17 +393,23 @@ with a list of possible values for each:
 
                Sets the number of samples (datapoints) to be evaluated along the $x$-axis when plotting a function.
                \\
-{\tt TERMINVERT} & {\bf Possible values:} ON / OFF
+{\tt TERMANTIALIAS} & {\bf Possible values:} {\tt ON} / {\tt OFF}
 
                {\bf Analogous set command:} \indcmdts{set terminal}
 
-               Sets whether jpeg/gif/png output has normal colours (OFF), or inverted colours (ON).
+               Sets whether jpeg/gif/png output is antialiased, i.e.\ whether colour boundaries are smoothed to disguise the effects of pixelisation.
                \\
-{\tt TERMTRANSPARENT} & {\bf Possible values:} ON / OFF
+{\tt TERMINVERT} & {\bf Possible values:} {\tt ON} / {\tt OFF}
 
                {\bf Analogous set command:} \indcmdts{set terminal}
 
-               Sets whether jpeg/gif/png output has transparent background (ON), or solid background (OFF).
+               Sets whether jpeg/gif/png output has normal colours ({\tt OFF}), or inverted colours ({\tt ON}).
+               \\
+{\tt TERMTRANSPARENT} & {\bf Possible values:} {\tt ON} / {\tt OFF}
+
+               {\bf Analogous set command:} \indcmdts{set terminal}
+
+               Sets whether jpeg/gif/png output has transparent background ({\tt ON}), or solid background ({\tt OFF}).
                \\
 {\tt TERMTYPE} & {\bf Possible values:} {\tt X11\_singlewindow},
 
@@ -456,7 +471,7 @@ parameters in the {\tt terminal} section of the above configuration file,
 with a list of possible values for each:
 
 \begin{longtable}{p{3.4cm}p{9cm}}
-{\tt COLOUR} & {\bf Possible values:} ON / OFF
+{\tt COLOUR} & {\bf Possible values:} {\tt ON} / {\tt OFF}
 
                {\bf Analogous command-line switches:} {\tt -c}, {\tt --colour}, {\tt -m}, {\tt --monochrome}
 
@@ -480,7 +495,7 @@ with a list of possible values for each:
 
                As above, but sets the colour in which PyXPlot displays its warning messages.
                \\
-{\tt SPLASH} & {\bf Possible values:} ON / OFF
+{\tt SPLASH} & {\bf Possible values:} {\tt ON} / {\tt OFF}
 
                {\bf Analogous command-line switches:} {\tt -q}, {\tt --quiet}, {\tt -V}, {\tt --verbose}
 
