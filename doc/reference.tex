@@ -26,317 +26,6 @@
 This chapter contains an alphabetically ordered list of all the commands that
 PyXPlot understands.
 
-\section{arrow}\indcmd{arrow}
-
-\begin{verbatim}
-arrow [from] <x>, <y> [to] <x>, <y> [with <option> ... ]
-\end{verbatim}
-
-Arrows may be placed on multiplot pages independently of any plots using the
-{\tt arrow} command, which has syntax:
-
-\begin{verbatim}
-arrow from x,y to x,y
-\end{verbatim}
-
-The arrow command may be followed by the `{\tt with}' keyword to specify to
-style of the arrow. The style keywords which are accepted are `{\tt nohead}',
-`{\tt head}' (default) or `{\tt twohead}', in addition to keywords such as `{\tt
-colour}', `{\tt linewidth}' or `{\tt linetype}', which have the same syntax and
-meaning as they do in the plot command. An example would be:
-
-\begin{verbatim}
-arrow from x,y to x,y with twohead linetype 2 colour blue
-\end{verbatim}
-
-Arrows receive unique identification numbers which count sequentially from one,
-and which are output to the terminal after the arrow command is called. By
-reference to these numbers, they can later be deleted and undeleted with the
-{\tt delete} and {\tt undelete} commands respectively. For example:
-
-\begin{verbatim}
-delete 2
-\end{verbatim}
-
-\section{cd}\indcmd{cd}
-
-\begin{verbatim}
-cd <directory>
-\end{verbatim}
-
-PyXPlot's {\tt cd} command is very similar to the shell cd command; it can be used to
-change the current working directory. For example:
-
-\begin{verbatim}
-cd foo
-\end{verbatim}
-
-
-\section{clear}\indcmd{clear}
-
-\begin{verbatim}
-clear
-\end{verbatim}
-
-In multiplot mode the {\tt clear} command removes all current plots, arrows and
-text objects from the working page. In single plot mode it is not especially
-useful; it removes the current plot to leave a blank page.
-
-The {\tt clear} command should not be followed by any parameters.
-
-
-\section{delete}\indcmd{delete}
-
-\begin{verbatim}
-delete <plot number>, ...
-\end{verbatim}
-
-The {\tt delete} command is part of the multiplot environment; it removes
-plots, arrows or text items from a multiplot page. The desired items should be
-identified using a comma-separated list of their reference numbers, which count
-sequentially from zero for the first item created on a multiplot page, and are
-displayed on the terminal when items are created.  For example:
-
-\begin{verbatim}
-delete 1,2,3
-\end{verbatim}
-
-\noindent removes item numbers 1, 2 and 3.
-
-Having been deleted, multiplot items can be restored using the {\tt undelete}
-command.
-
-\section{edit}\indcmd{edit}
-
-\begin{verbatim}
-edit <plot number>
-\end{verbatim}
-
-The {\tt edit} command is part of the multiplot environment; it allows one to
-modify the properties of any plot on a multiplot. The desired plot should be
-identified using the reference number which it was given when it was created
-using the {\tt plot} command; it would have been displayed on the terminal at
-that time. For example, consider the following command sequence:
-
-\begin{verbatim}
-edit 1
-set textcolour red
-replot
-\end{verbatim}
-
-Here, the {\tt edit} command sets the following {\tt set textcolour} command to
-affect the plot with reference number 1 -- the first plot which would have been
-placed on the multiplot. The {\tt set textcolour red} command then affects this
-plot, although does not take effect until the {\tt replot} command is called.
-
-The {\tt edit} command also has the effect of resetting all of PyXPlot's plot
-settings to those used to produce the chosen plot, and so in conjunction with
-the {\tt show} command, can be used to inspect as well as modify the settings of
-any plot on a multiplot page. For example:
-
-\begin{verbatim}
-edit 1
-show textcolour
-\end{verbatim}
-
-\noindent would show the text colour used in plot 1.
-
-Having issued the {\tt edit} command, no further command needs to be issued to
-return to a state of adding plots to a multiplot rather than editing the
-existing plots; simply call the {\tt plot} command rather than the {\tt replot}
-command to do this.
-
-
-\section{eps}\indcmd{eps}
-
-\begin{verbatim}
-eps '<filename>' [at <x>, <y>] [rotate <angle>] [width <width>]
-                 [height <height>]
-\end{verbatim}
-
-The {\tt eps} command places an eps format file into the current plot.  The
-{\tt at} modifier can be used to specify the position of the bottom-left corner
-of the file, otherwise it is placed at the origin.  If the {\tt rotate} modifier
-is used the image is rotated by the specified angle counter-clockwise.  Either
-the {\tt width} or {\tt height} can be specified, followed by the width or
-height respectively in cm that the resulting image should be; otherwise the
-native file width will be used.  The {\tt eps} command is perhaps most useful in
-multiplot mode, where included files can be combined with plots, text labels,
-etc.
-
-\section{exit}\indcmd{exit}
-
-\begin{verbatim}
-exit
-\end{verbatim}
-
-The {\tt exit} command can be used to quit PyXPlot. If multiple command files,
-or a mixture of command files and interactive sessions, are specified on the
-command line, then PyXPlot moves onto the next command-line item after receiving
-the {\tt exit} command.
-
-PyXPlot may also be quit be pressing CTRL-D or via the {\tt quit} command. In
-interactive mode, CTRL-C terminates the current command, if one is running.
-When running a script, CTRL-C terminates execution of it.
-
-
-\section{fit}\indcmd{fit}
-
-\begin{verbatim}
-fit [<range specifier> ...] <function> '<datafile>'
-    [index <index specifier>] [using <using specifier>]
-    via <variable>[, <variable>, ...]
-\end{verbatim}
-
-The {\tt fit} command may be used to fit functional forms to \datapoint s in
-\datafile s. A simple example might be:
-
-\begin{verbatim}
-f(x) = a*x+b
-fit f(x) 'data.dat' index 1 using 2:3 via a,b
-\end{verbatim}
-
-\noindent The coefficients to be varied are listed after the keyword `{\tt
-via}'; the keywords `{\tt index}', `{\tt every}' and `{\tt using}' have the
-same meanings as in the {\tt plot} command.
-
-This is useful for producing best-fit lines and also has applications for
-estimating the gradients of datasets.  The syntax is essentially identical to
-the used by \gnuplot, though a few points are worth noting, which are outlined
-in Section~\ref{fit_command}.
-
-\section{help}\indcmd{help}
-
-\begin{verbatim}
-help [<topic> [<sub-topic> ... ] ]
-\end{verbatim}
-
-The {\tt help} command provides an easily-navigable source of information which
-is supplementary to that in this manual.  To obtain information on any
-particular topic, type {\tt help} followed by the name of the topic. For
-example:
-
-\begin{verbatim}
-help commands
-\end{verbatim}
-
-\noindent provides information on PyXPlot's commands. Some topics have subtopics; these
-are listed at the end of each help page. To view them, add further words to the
-end of your help request -- an example might be:
-
-\begin{verbatim}
-help commands help
-\end{verbatim}
-
-Information is arranged with general information about PyXPlot under the heading
-{\tt about}, and information about PyXPlot's commands under {\tt commands}.
-Information about the format that input \datafile s should take can be found
-under {\tt datafile}.  Other categories are self-explanatory.
-
-To exit any help page, press the `{\tt q}' key.
-
-\section{histogram}\indcmd{histogram}
-
-\begin{verbatim}
-histogram [range specification] <function name> '<datafile>' 
-     [using <using specifier>] [select <select specifier>]
-     [index <index specifier>] [every <every specifier>]
-     [binwidth <bin width>] [binorigin <bin origin>]
-     [bins (x1, x2, ...)]
-\end{verbatim}
-
-The {\tt histogram} command takes a \datafile\ and counts the number of points in
-various bins, producing a function the area under which is equal to the number
-of points for each bin.  The width and starting position of the bins can be
-specified using the {\tt binwidth} and {\tt binorigin} modifiers, or a
-user-supplied set of bins can be used with the {\tt bins} modifier.  For
-example:
-
-\begin{verbatim}
-histogram f() 'output.dat' u 2 binwidth 2
-\end{verbatim}
-
-\noindent produces a function $f()$, which contains the the data in the second
-column of the {\tt output.dat} file binned into bins of width 2.  A range
-specifier can be used to restrict the set of data in the \datafile\ that is to be
-binned; for example:
-
-\begin{verbatim}
-histogram [0:21] trigibins() 'data.dat' bins (0,1,3,6,10,15,21)
-\end{verbatim}
-
-\noindent would only bin data between 0 and 21, into the user-specified bins.
-
-\section{history}\indcmd{history}
-
-\begin{verbatim}
-history [N]
-\end{verbatim}
-
-The {\tt history} command prints the current command-line history to the
-terminal.  The optional parameter, N, if supplied, causes only the first N lines
-to be printed.
-
-\section{jpeg}\indcmd{jpeg}
-
-\begin{verbatim}
-jpeg '<filename>' [at <x>, <y>] [rotate <angle>] [width <width>]
-                  [height <height>]
-\end{verbatim}
-
-The {\tt jpeg} command places a jpeg format bitmap image into the current plot.
-The {\tt at} modifier can be used to specify the position of the bottom-left
-corner of the image, otherwise it is placed at the origin.  If the {\tt rotate}
-modifier is used the image is rotated by the specified angle counter-clockwise.
-Either the {\tt width} or {\tt height} modifier should be specified, followed by
-the width or height respectively in cm that the resulting image should be.  The
-{\tt jpeg} command is perhaps most useful in multiplot mode, where images can be
-combined with plots, text labels, etc.
-
-\section{load}\indcmd{load}
-
-\begin{verbatim}
-load '<filename>'
-\end{verbatim}
-
-The {\tt load} command executes a PyXPlot command script file, just as if its
-contents had been typed into the current terminal. For example:
-
-\begin{verbatim}
-load 'foo'
-\end{verbatim}
-
-\noindent would have the same effect as typing the contents of the file foo
-into the present session.
-
-Wildcards can be used in the load command, in which case \textit{all}
-command files matching the given wildcard are executed, for example:
-
-\begin{verbatim}
-load '*.script'
-\end{verbatim}
-
-
-\section{move}\indcmd{move}
-
-\begin{verbatim}
-move <plot number> to <x>, <y>
-\end{verbatim}
-
-The {\tt move} command is part of the multiplot environment; it can be used to
-move items around on a multiplot page. The desired item to be moved should be
-identified using the reference number which it was given when it was created;
-it would have been displayed on the terminal at that time. For example:
-
-\begin{verbatim}
-move 23 to 8,8
-\end{verbatim}
-  
-\noindent This would move multiplot item 23 to position 8,8 (measured in
-centimetres). If this item were a plot, the end result would be the same as if
-the command {\tt set origin 8,8} had been called before it had originally been
-plotted.
-
 \section{!}\indcmd{!}
 
 \begin{verbatim}
@@ -365,6 +54,315 @@ the following would \textit{not} work:
 set xlabel '`ls`'
 \end{verbatim}
 
+\section{arrow}\indcmd{arrow}
+
+\begin{verbatim}
+arrow [from] <x>, <y> [to] <x>, <y> [with <option> ... ]
+\end{verbatim}
+
+Arrows may be placed on multiplot pages independently of any plots using the
+{\tt arrow} command, which has the syntax:
+
+\begin{verbatim}
+arrow from x,y to x,y
+\end{verbatim}
+
+The {\tt arrow} command may be followed by the \indmodt{with} keyword to
+specify to style of the arrow. The style keywords which are accepted are
+\indkeyt{nohead}, \indkeyt{head} (default) or \indkeyt{twohead}, in addition to
+keywords such as \indkeyt{colour}, \indkeyt{linewidth} or \indkeyt{linetype},
+which have the same syntax and meaning as in the {\tt plot} command. An example
+would be:
+
+\begin{verbatim}
+arrow from x,y to x,y with twohead linetype 2 colour blue
+\end{verbatim}
+
+Arrows receive unique multiplot identification numbers which count sequentially
+from one, and which are output to the terminal after the {\tt arrow} command is
+called. By reference to these numbers, they can later be deleted and undeleted
+with the {\tt delete} and {\tt undelete} commands respectively.
+
+\section{cd}\indcmd{cd}
+
+\begin{verbatim}
+cd <directory>
+\end{verbatim}
+
+PyXPlot's {\tt cd} command is very similar to the shell cd command; it can be used to
+change the current working directory. For example:
+
+\begin{verbatim}
+cd foo
+\end{verbatim}
+
+\section{clear}\indcmd{clear}
+
+\begin{verbatim}
+clear
+\end{verbatim}
+
+In multiplot mode, the {\tt clear} command removes all current plots, arrows
+and text objects from the working page. In single plot mode it is not
+especially useful; it removes the current plot to leave a blank page.
+
+The {\tt clear} command should not be followed by any parameters.
+
+\section{delete}\indcmd{delete}
+
+\begin{verbatim}
+delete <plot number>, ...
+\end{verbatim}
+
+The {\tt delete} command is part of the multiplot environment; it removes
+plots, arrows or text items from a multiplot page. The desired items should be
+identified using a comma-separated list of their reference numbers, which count
+sequentially from zero for the first item created on a multiplot page, and are
+displayed on the terminal when items are created.  For example:
+
+\begin{verbatim}
+delete 1,2,3
+\end{verbatim}
+
+\noindent would remove item numbers 1, 2 and 3.
+
+Having been deleted, multiplot items can be restored using the {\tt undelete}
+command.
+
+\section{edit}\indcmd{edit}
+
+\begin{verbatim}
+edit <plot number>
+\end{verbatim}
+
+The {\tt edit} command is part of the multiplot environment; it allows one to
+modify the properties of any plot on a multiplot. The desired plot should be
+identified using the reference number which it was given when it was created
+using the {\tt plot} command; it would have been displayed on the terminal at
+that time. For example, consider the following command sequence:
+
+\begin{verbatim}
+edit 1
+set textcolour red
+replot
+\end{verbatim}
+
+\noindent Here, the {\tt edit} command is used to select the plot with
+reference number~1. The {\tt set textcolour red} command which follows then
+changes the settings of this plot, taking effect when the {\tt replot} command
+is called.
+
+The {\tt edit} command also has the effect of resetting all of PyXPlot's plot
+settings to those used to produce the chosen plot, and so in conjunction with
+the {\tt show} command, can be used to inspect as well as modify the settings of
+any plot on a multiplot page. For example:
+
+\begin{verbatim}
+edit 1
+show textcolour
+\end{verbatim}
+
+\noindent would show the text colour used in plot 1.
+
+Having issued the {\tt edit} command, no further command needs to be issued to
+return to a state of adding plots to a multiplot rather than editing the
+existing plots; simply call the {\tt plot} command rather than the {\tt replot}
+command to do this.
+
+
+\section{eps}\indcmd{eps}
+
+\begin{verbatim}
+eps '<filename>' [at <x>, <y>] [rotate <angle>] [width <width>]
+                 [height <height>]
+\end{verbatim}
+
+The {\tt eps} command inserts an image into the current multiplot from an
+encapsulated postscript (eps) file.  The {\tt at} modifier can be used to
+specify where the bottom-left corner of the image should be placed; if it is
+not, then the image is placed at the origin. The {\tt rotate} modifier can be
+used to rotate the image by any angle, measured in degrees counter-clockwise.
+The {\tt width} or {\tt height} modifiers can be used to specify the width or
+height with which the image should be rendered; both should be specified in
+centimetres. If neither is specified then the image will be rendered with the
+native dimensions specified within the postscript.  The {\tt eps} command is
+often useful in multiplot mode, allowing postscript images to be combined with
+plots, text labels, etc.
+
+\section{exit}\indcmd{exit}
+
+\begin{verbatim}
+exit
+\end{verbatim}
+
+The {\tt exit} command can be used to quit PyXPlot. If multiple command files,
+or a mixture of command files and interactive sessions, were specified on
+PyXPlot's command line, then PyXPlot moves onto the next command-line item
+after receiving the {\tt exit} command.
+
+PyXPlot may also be quit be pressing CTRL-D or via the {\tt quit} command. In
+interactive mode, CTRL-C terminates the current command, if one is running.
+When running a script, CTRL-C terminates execution of it.
+
+
+\section{fit}\indcmd{fit}
+
+\begin{verbatim}
+fit [<range specifier> ...] <function> '<datafile>'
+    [index <index specifier>] [using <using specifier>]
+    via <variable>[, <variable>, ...]
+\end{verbatim}
+
+The {\tt fit} command may be used to fit functional forms to \datapoint s in
+\datafile s. A simple example might be:
+
+\begin{verbatim}
+f(x) = a*x+b
+fit f(x) 'data.dat' index 1 using 2:3 via a,b
+\end{verbatim}
+
+\noindent The coefficients to be varied are listed after the keyword
+\indkeyt{via} keyword; the modifiers \indmodt{index}, \indmodt{every} and
+\indmodt{using} have the same meanings as in the {\tt plot} command.
+
+This is useful for producing best-fit lines and also has applications for
+estimating the gradients of datasets.  The syntax is essentially identical to
+the used by \gnuplot, though a few points, outlined in
+Section~\ref{fit_command}, are worth noting.
+
+\section{help}\indcmd{help}
+
+\begin{verbatim}
+help [<topic> [<sub-topic> ... ] ]
+\end{verbatim}
+
+The {\tt help} command provides an hierachical source of information which
+is supplementary to that in this manual.  To obtain information on any
+particular topic, type {\tt help} followed by the name of the topic. For
+example:
+
+\begin{verbatim}
+help commands
+\end{verbatim}
+
+\noindent provides information on PyXPlot's commands. Some topics have
+sub-topics; these are listed at the end of each help page. To view them, add
+further words to the end of your help request -- an example might be:
+
+\begin{verbatim}
+help commands help
+\end{verbatim}
+
+Information is arranged with general information about PyXPlot under the heading
+{\tt about} and information about PyXPlot's commands under {\tt commands}.
+Information about the format that input \datafile s should take can be found
+under {\tt datafile}.  Other categories are self-explanatory.
+
+To exit any help page, press the {\tt q} key.
+
+\section{histogram}\indcmd{histogram}
+
+\begin{verbatim}
+histogram [range specification] <function name> '<datafile>' 
+     [using <using specifier>] [select <select specifier>]
+     [index <index specifier>] [every <every specifier>]
+     [binwidth <bin width>] [binorigin <bin origin>]
+     [bins (x1, x2, ...)]
+\end{verbatim}
+
+The {\tt histogram} command takes a \datafile\ and counts the number of points in
+various bins, producing a function the area under which is equal to the number
+of points for each bin.  The width and starting position of the bins can be
+specified using the {\tt binwidth} and {\tt binorigin} modifiers, or a
+user-supplied set of bins can be used with the {\tt bins} modifier.  For
+example:
+
+\begin{verbatim}
+histogram f() 'output.dat' u 2 binwidth 2
+\end{verbatim}
+
+\noindent produces a function $f()$, which contains the the data in the second
+column of the {\tt output.dat} file binned into bins of width 2.  A range
+specifier can be used to restrict the set of data in the \datafile\ that is to be
+binned; for example:
+
+\begin{verbatim}
+histogram [0:10] f() 'data.dat' bins (0,1,3,6,10)
+\end{verbatim}
+
+\noindent would only bin data between~0 and~10, and would do so into the
+user-specified bins.
+
+\section{history}\indcmd{history}
+
+\begin{verbatim}
+history [N]
+\end{verbatim}
+
+The {\tt history} command outputs the current command-line history to the
+terminal.  The optional parameter, {\tt N}, if supplied, causes only the first
+$N$ lines to be printed.
+
+\section{jpeg}\indcmd{jpeg}
+
+\begin{verbatim}
+jpeg '<filename>' [at <x>, <y>] [rotate <angle>] [width <width>]
+                  [height <height>]
+\end{verbatim}
+
+The {\tt jpeg} command inserts an image into the current multiplot from a jpeg
+file in disk.  The {\tt at} modifier can be used to specify where the
+bottom-left corner of the image should be placed; if it is not, then the image
+is placed at the origin. The {\tt rotate} modifier can be used to rotate the
+image by any angle, measured in degrees counter-clockwise.  The {\tt width} or
+{\tt height} modifiers can be used to specify the width or height with which
+the image should be rendered; both should be specified in centimetres. If
+neither is specified then the image will be rendered with the native dimensions
+specified within the jpeg file (if any). The {\tt jpeg} command is often useful
+in multiplot mode, allowing postscript images to be combined with plots, text
+labels, etc.
+
+\section{load}\indcmd{load}
+
+\begin{verbatim}
+load '<filename>'
+\end{verbatim}
+
+The {\tt load} command executes a PyXPlot command script file, just as if its
+contents had been typed into the current terminal. For example:
+
+\begin{verbatim}
+load 'foo'
+\end{verbatim}
+
+\noindent would have the same effect as typing the contents of the file {\tt
+foo} into the present session.
+
+Wildcards can be used in the load command, in which case {\it all} command
+files matching the given wildcard are executed, for example:
+
+\begin{verbatim}
+load '*.script'
+\end{verbatim}
+
+\section{move}\indcmd{move}
+
+\begin{verbatim}
+move <plot number> to <x>, <y>
+\end{verbatim}
+
+The {\tt move} command is part of the multiplot environment; it can be used to
+move items around on a multiplot page. The item to be moved should be specified
+using the reference number which it was given when it was created; it would
+have been displayed on the terminal at that time. For example:
+
+\begin{verbatim}
+move 23 to 8,8
+\end{verbatim}
+  
+\noindent This would move multiplot item~23 to position $(8,8)$ centimetres. If
+this item were a plot, the end result would be the same as if the command {\tt
+set origin 8,8} had been called before it had originally been plotted.
 
 \section{plot}\indcmd{plot}
 
