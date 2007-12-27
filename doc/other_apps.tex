@@ -231,15 +231,18 @@ text '\Large \textbf{Talk Overview}' at x*50, y*92
 text "\parbox[t]{9cm}{\begin{itemize} \
  \item Teaching cats to use their head voices. \
  \item The Suzuki Method, as adapted to cats. \
- \item Case Study I: {\it Wachet auf, das Katzenfutter ist angerichtet!}, BWV~140. \
+ \item Case Study I: {\it Wachet auf, das Katzenfutter \
+                          ist angerichtet!}, BWV~140. \
  \item Rhythmical Devices: Synchronised Purring. \
- \item Case Study II: {\it Was eine Katze will, das g'scheh' allzeit}, BWV~92. \
+ \item Case Study II: {\it Was eine Katze will, das \
+                           g'scheh' allzeit}, BWV~92. \
  \item Conclusion. \
  \end{itemize} \
 } " at x*50 , y*60
 
 set textcol cyan
-text '{\bf With thanks to my collaborator, Pebbles Poofslop.}' at x*50,y*15
+text '{\bf With thanks to my collaborator, \
+           Pebbles Poofslop.}' at x*50,y*15
 
 load 'scripts/slide_finish'
 \end{verbatim}
@@ -249,7 +252,7 @@ following script into the file {\tt scripts/0003}:
 set output 'slides/0003.gif'
 load 'scripts/slide_init'
 
-text '\Large \textbf{The Results of Our Model}' at x*50, y*92
+text '\Large \bf The Results of Our Model' at x*50, y*92
 set axescolour yellow ; set nogrid
 set origin x*17.5, y*20 ; set width x*70
 set xrange [0.01:0.7]
@@ -259,8 +262,8 @@ set ylabel '$f(x)$'
 set palette Red, Green, Orange, Purple
 
 set key top left
-plot x t 'Model 1', exp(x)-1 t 'Model 2', log(x+1) t 'Model 3', \
-     sin(x) t 'Model 4'
+plot x t 'Model 1', exp(x)-1 t 'Model 2', \
+     log(x+1) t 'Model 3', sin(x) t 'Model 4'
 
 load 'scripts/slide_finish'
 \end{verbatim}
