@@ -211,19 +211,25 @@ tabulate 'input.dat' u 3:6:9 select (asin($4)>0)
 \end{verbatim}
 
 \noindent The \indmodt{select}, \indmodt{using} and \indmodt{every} modifiers
-operate in the same manner as with the {\tt plot} command.  The format used in
-each column of the output file is chosen automatically with integers and small
-numbers treated intelligently to produce output which preserves accuracy, but
-is also easily human-readable. If desired, however, a format statement may be
-specified using the {\tt with format} specifier. The syntax for this is similar
-to that expected by the Python string substitution operator ({\tt \%})\index{\%
-operator@{\tt \%} operator}\index{string operators!substitution}\footnote{Note
-that this operator can also be used within PyXPlot; see
-Section~\ref{string_subs_op} for details.}. If there are not enough columns
-present in the supplied format statement it will be repeated in a cyclic
-fashion.
+operate in the same manner as with the {\tt plot} command.
 
-!!! WTF !!! PROVIDE EXAMPLE !!! WTF !!!
+The format used in each column of the output file is chosen automatically with
+integers and small numbers treated intelligently to produce output which
+preserves accuracy, but is also easily human-readable. If desired, however, a
+format statement may be specified using the {\tt with format} specifier. The
+syntax for this is similar to that expected by the Python string substitution
+operator ({\tt \%})\index{\% operator@{\tt \%} operator}\index{string
+operators!substitution}\footnote{Note that this operator can also be used
+within PyXPlot; see Section~\ref{string_subs_op} for details.}.  For example,
+to tabulate the values of $x^2$ to very many significant figures one could use:
+
+\begin{verbatim}
+tabulate x**2 with format "%27.20e"
+\end{verbatim}
+
+If there are not enough columns present in the supplied format statement it
+will be repeated in a cyclic fashion; e.g. in the example above the single
+supplied format is used for both columns.
 
 \section{Numerical Integration and Differentiation}
 
@@ -276,8 +282,8 @@ routine.\index{scipy}
 The \indcmdt{histogram} takes data from a datafile and bins it, producing a
 function that represents the frequency distribution of the supplied data.  A
 histogram is defined as a function consisting of discrete intervals, the area
-under each of which is equal to the number of points binned in that interval
-divided by its width.  For example:
+under each of which is equal to the number of points binned in that interval.
+For example:
 
 \begin{verbatim}
 histogram f() 'input.dat'

@@ -270,10 +270,10 @@ histogram [range specification] <function name> '<datafile>'
      [bins (x1, x2, ...)]
 \end{verbatim}
 
-The {\tt histogram} command takes a \datafile\ and counts the number of points in
-various bins, producing a function the area under which is equal to the number
-of points for each bin.  The width and starting position of the bins can be
-specified using the {\tt binwidth} and {\tt binorigin} modifiers, or a
+The {\tt histogram} command takes a \datafile\ and counts the number of points
+in various bins, producing a function the area under which is equal to the
+number of points for each bin.  The width and starting position of the bins can
+be specified using the {\tt binwidth} and {\tt binorigin} modifiers, or a
 user-supplied set of bins can be used with the {\tt bins} modifier.  For
 example:
 
@@ -2211,6 +2211,25 @@ positive:
 set output 'filtered.dat'
 tabulate 'data.dat' u 3:6:9 select (asin($4)>0)
 \end{verbatim}
+
+
+The format used in each column of the output file is chosen automatically with
+integers and small numbers treated intelligently to produce output which
+preserves accuracy, but is also easily human-readable. If desired, however, a
+format statement may be specified using the {\tt with format} specifier. The
+syntax for this is similar to that expected by the Python string substitution
+operator ({\tt \%})\index{\% operator@{\tt \%} operator}\index{string
+operators!substitution}\footnote{Note that this operator can also be used
+within PyXPlot; see Section~\ref{string_subs_op} for details.}.  For example,
+to tabulate the values of $x^2$ to very many significant figures one could use:
+
+\begin{verbatim}
+tabulate x**2 with format "%27.20e"
+\end{verbatim}
+
+If there are not enough columns present in the supplied format statement it
+will be repeated in a cyclic fashion; e.g. in the example above the single
+supplied format is used for both columns.
 
 \section{text}\indcmd{text}
 
