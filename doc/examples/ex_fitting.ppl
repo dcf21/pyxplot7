@@ -1,11 +1,11 @@
-# EX_FUNCSPLICE1.PPL
+# EX_FITTING.PPL
 #
 # The code in this file is part of PyXPlot
 # <http://www.pyxplot.org.uk>
 #
 # Copyright (C) 2006-7 Dominic Ford <coders@pyxplot.org.uk>
 #
-# $Id$
+# $Id: $
 #
 # PyXPlot is free software; you can redistribute it and/or modify it under the
 # terms of the GNU General Public License as published by the Free Software
@@ -25,12 +25,10 @@ reset
 load "examples/fig_init.ppl"
 
 # Set output destination
-set output "examples/eps/ex_funcsplice1.eps"
+set output "examples/eps/ex_fitting.eps"
 
 # Main body of figure script
-set xrange [-5:10]
-set yrange [-0.5:1]
-set xlabel "$x$"
-set ylabel "$y$"
-f(x)[-2:7] = sin(x)/x
-plot f(x)
+f(x) = a1*sin(x) + a3*sin(3*x) + a5*sin(5*x)
+fit f() 'examples/ex_fitting.dat' via a1, a3, a5
+set xlabel '$x$' ; set ylabel '$y$'
+plot 'examples/ex_fitting.dat' title 'data' with points pointsize 2, f(x) title 'Fitted function' with lines

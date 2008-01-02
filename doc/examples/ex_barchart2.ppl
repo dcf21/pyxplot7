@@ -40,36 +40,38 @@ set yrange [0:1.1]
 set nokey
 
 # Plot 0 (bottom left)
+set origin 0*width, 0*width*gold_ratio
 set xlabel 'x'
+set ylabel 'y'
+set label 1 '(c)' 8.2,0.9
+plot 'examples/ex_barchart2.dat' with wboxes
+
+# Plot 1 (top left)
+set origin 0*width, 1*width*gold_ratio
+set xlabel 'linkaxis 0'
 set ylabel 'y'
 set label 1 '(a)' 8.2,0.9
 plot 'examples/ex_barchart2.dat' with boxes
 
-# Plot 1 (bottom right)
+# Plot 2 (bottom right)
 set origin 1*width, 0*width*gold_ratio
 set xlabel 'x'
 set ylabel 'linkaxis 0'
-set label 1 '(b)' 8.2,0.9
-plot 'examples/ex_barchart2.dat' with wboxes
-
-# Plot 2 (top left)
-set origin 0*width, 1*width*gold_ratio
-set xlabel 'linkaxis 0'
-set ylabel 'y'
-set boxwidth 0.4
-set label 1 '(c)' 8.2,0.9
-plot 'examples/ex_barchart2.dat' with boxes fc 2
-
-# Plot 3 (top right)
-set origin 1*width, 1*width*gold_ratio
-set xlabel 'linkaxis 1'
-set ylabel 'linkaxis 2'
 set boxwidth 0.0
 set boxfrom 0.5
 set samples 40
 set label 1 '(d)' 8.2,0.9
 plot sin(x)*sin(x) with boxes fc 3 c 1, \
      cos(x)*cos(x) with boxes fc 2 c 1 
+
+# Plot 1 (top right)
+set origin 1*width, 1*width*gold_ratio
+set xlabel 'linkaxis 1'
+set ylabel 'linkaxis 2'
+set boxwidth 0.4
+unset boxfrom
+set label 1 '(b)' 8.2,0.9
+plot 'examples/ex_barchart2.dat' with boxes fc 2
 
 # Now that we are finished preparing multiplot,
 # turn display on

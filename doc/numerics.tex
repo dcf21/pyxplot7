@@ -57,10 +57,10 @@ f(a,b,c)[-1:1][-1:1][-1:1] = a+b+c
 If an attempt is made to evaluate a function outside of its specified range,
 then an error results. This may be useful, for example, for plotting a function
 only within some specified range. The following would plot the function
-$\sin(x)$, but only in the range $-2<x<7$:
+$\sinc(x)$, but only in the range $-2<x<7$:
 
 \begin{verbatim}
-f(x)[-2:7] = sin(x)
+f(x)[-2:7] = sin(x)/x
 plot f(x)
 \end{verbatim}
 
@@ -68,7 +68,7 @@ plot f(x)
 \begin{center}
 \includegraphics{examples/eps/ex_funcsplice1.eps}
 \end{center}
-\caption{A simple example of the use of function splicing to truncate the function $\sin(x)$ at $x=-2$ and $x=7$. See details in the text.}
+\caption{A simple example of the use of function splicing to truncate the function $\sinc(x)$ at $x=-2$ and $x=7$. See details in the text.}
 \label{fig:ex_funcsplice1}
 \end{figure}
 

@@ -1,0 +1,71 @@
+# EX_MAP.PPL
+#
+# The code in this file is part of PyXPlot
+# <http://www.pyxplot.org.uk>
+#
+# Copyright (C) 2006-7 Dominic Ford <coders@pyxplot.org.uk>
+#
+# $Id: $
+#
+# PyXPlot is free software; you can redistribute it and/or modify it under the
+# terms of the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any later
+# version.
+#
+# You should have received a copy of the GNU General Public License along with
+# PyXPlot; if not, write to the Free Software Foundation, Inc., 51 Franklin
+# Street, Fifth Floor, Boston, MA  02110-1301, USA
+
+# ----------------------------------------------------------------------------
+
+# This script produces a figure for the PyXPlot Users' Guide
+
+# Call common initialisation script
+reset
+load "examples/fig_init.ppl"
+set term colour
+
+# Set output destination
+set output "examples/eps/ex_map.eps"
+
+# Main body of figure script
+se width 20
+
+# We want a plot without axes, key or grid
+set nokey
+set xlabel 'invisible'
+set ylabel 'invisible'
+set x2label 'invisible'
+set y2label 'invisible'
+set nogrid
+
+# Labels for the states
+set label 1 '{\large \sf \itshape Western Australia}' 117, -28
+set label 2 '{\large \sf \itshape South Australia}' 130, -29.5
+set label 3 '{\large \sf \itshape Northern Territory}' 129.5, -20.5
+set label 4 '{\large \sf \itshape Queensland}' 141,-24
+set label 5 '{\large \sf \itshape New South Wales}' 142,-32.5
+set label 6 '{\large \sf \itshape Victoria}' 139,-41
+set arrow 6 from 141,-40 to 142, -37 with nohead
+set label 7 '{\large \sf \itshape Tasmania}' 149,-42
+set arrow 7 from 149, -41.5 to 146.5, -41.75 with nohead
+set label 8 '{\large \sf \itshape Capital Territory}' 151,-37
+set arrow 8 from 151, -36.25 to 149, -36 with nohead
+
+# Labels for the cities
+set label 10 '{\sf Perth}' 116.5, -32.4
+set label 11 '{\sf Adelaide}' 136, -38
+set arrow 11 from 137.5,-37.2 to 138.601, -34.929
+set label 12 '{\sf Darwin}' 131, -13.5
+set label 13 '{\sf Brisbane}' 149, -27.5
+set label 14 '{\sf Sydney}' 151.5, -34.5
+set label 15 '{\sf Melbourne}' 143, -37.3
+set label 16 '{\sf Hobart}' 147.5, -44.25
+set label 17 '{\sf Canberra}' 145, -35.25
+
+# A big label saying "Australia"
+set label 20 '{\Huge \sf \itshape Australia}' 117,-42
+
+# Plot the coastline and cities
+plot [][-45:]'examples/ex_map_1.dat.gz' every ::1 with lines, \
+     'examples/ex_map_2.dat' with points pointtype 10 pointsize 2

@@ -5,7 +5,7 @@
 #
 # Copyright (C) 2006-7 Dominic Ford <coders@pyxplot.org.uk>
 #
-# $Id: Makefile 5 2007-02-22 09:43:42Z dcf21 $
+# $Id$
 #
 # PyXPlot is free software; you can redistribute it and/or modify it under the
 # terms of the GNU General Public License as published by the Free Software
@@ -28,7 +28,16 @@ load "examples/fig_init.ppl"
 set output "examples/eps/ex_axislab.eps"
 
 # Main body of figure script
-set xlabel "This is the X axis"
-set ylabel "This is the Y axis"
-set title "A plot of sin(x)"
-plot sin(x)
+g   = 9.81    # Acceleration due to gravity
+d2r = pi/180  # Convert degrees to radians
+h(x,theta,v) = x*tan(theta*d2r) - .5*g*x**2/(v**2*cos(theta*d2r)**2)
+set xlabel "$x/{\rm m}$"
+set ylabel "$h/{\rm m}$"
+set xrange [0:20]
+set yrange [0:]
+set key below
+set title 'Trajectories of rockets fired with speed $v$ and \
+angle $\theta$'
+plot h(x,30,10) title "$\theta=30^o;\qquad v=10\,{\rm m\,s^{-1}}$", \
+     h(x,60,10) title "$\theta=60^o;\qquad v=10\,{\rm m\,s^{-1}}$", \
+     h(x,60,15) title "$\theta=60^o;\qquad v=15\,{\rm m\,s^{-1}}$"

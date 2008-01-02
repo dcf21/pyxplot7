@@ -210,34 +210,33 @@ print "The %s of f(%f) is %d."%("value",sqrt(2),f(sqrt(2)))
 \section{Axis Labels and Titles}
 \label{sec:latex_incompatibility}
 
-Labels can be added to the two axes of a plot, and a title put at the top:
+Labels can be added to the two axes of a plot, and a title put at the top.
+Labels should be placed between either single (') or double (") quotes.  For
+example:
 
 \begin{verbatim}
-set xlabel 'This is the X axis'
-set ylabel 'This is the Y axis'
-set title 'A plot of sin(x)'
-plot sin(x)
+set xlabel "$x/{\rm m}$"
+set ylabel "$h/{\rm m}$"
+set title 'Trajectories of rockets fired with speed $v$ and \
+angle $\theta$'
 \end{verbatim}
 
 \begin{figure}
 \begin{center}
 \includegraphics{examples/eps/ex_axislab.eps}
 \end{center}
-\caption{A simple first plot with axis labels. See the text for more details.}
+\caption{A plot of the trajectories of rockets fired with different initial
+velocities.  The key demonstrates the use of \LaTeX to render mathematical
+symbols attractively.  The full PyXPlot script used to generate this figure is
+available on the PyXPlot website at XXX.}
 \label{fig:ex_axislab}
 \end{figure}
 
-\noindent The output from a simple example is shown in
-Figure~\ref{fig:ex_axislab}. All text labels should be placed between either
-single (') or double (") quotes. They are rendered using \LaTeX, and so any
-\LaTeX\ commands can be used, for example to put equations on axes:
-
-\begin{verbatim}
-set xlabel '$\frac{x^2}{c^2}$'
-\end{verbatim}
-
-\noindent As a caveat, however, this does mean that care needs to be taken to
-escape any of \LaTeX's reserved characters -- i.e.:
+\noindent The output produced by these commands is shown in
+Figure~\ref{fig:ex_axislab}.  Note that the labels and title (and indeed all
+text labels in the PyXPlot system) are rendered using \LaTeX, and so any
+\LaTeX\ commands can be used.  As a caveat, however, this does mean that care
+needs to be taken to escape any of \LaTeX's reserved characters -- i.e.:
 $\backslash$~\&~\%~\#~\{~\}~\$~\_~\^{} or $\sim$.
 
 Because of the use of quotes to delimit text labels, special care needs to be
@@ -797,7 +796,45 @@ process are listed after the keyword \indkeyt{via} in the {\tt fit} command.
 The modifiers \indmodt{index}, \indmodt{every} and
 \indmodt{using}\indmod{select} have the same meanings here as in the plot
 command.\footnote{The {\tt select} modifier, to be introduced in
-Section~\ref{select_modifier} can also be used.}
+Section~\ref{select_modifier} can also be used.}  For example, given the
+following data file which contains a sampled square wave, entitled
+``square.dat'':
+
+\begin{verbatim}
+    0.314159          1
+    0.942478          1
+    1.570796          1
+    2.199115          1
+    2.827433          1
+    3.455752         -1
+    4.084070         -1
+    4.712389         -1
+    5.340708         -1
+    5.969026         -1
+\end{verbatim}
+
+\noindent the following script fits a truncated Fourier series to it.  The
+output can be found in Figure~\ref{fig:ex_fitting}.
+
+\begin{verbatim}
+f(x) = a1*sin(x) + a3*sin(3*x) + a5*sin(5*x)
+fit f() 'square.dat' via a1, a3, a5
+set xlabel '$x$' ; set ylabel '$y$'
+plot 'square.dat' title 'data' with points pointsize 2, \
+     f(x) title 'Fitted function' with lines
+\end{verbatim}
+
+\begin{figure}
+\begin{center}
+\includegraphics{examples/eps/ex_fitting.eps}
+\end{center}
+\caption{The output from a script that fits a truncated Fourier series to a
+sampled square wave.  Even with only three terms the Gibbs pheonomenon is
+becoming apparent (see \protect\url{http://en.wikipedia.org/wiki/Gibbs_phenomenon} for
+an explanation).} 
+\label{fig:ex_fitting}
+\end{figure}
+
 
 This is useful for producing best-fit lines\index{best fit
 lines}\footnote{Another way of producing best-fit lines is to use a cubic
