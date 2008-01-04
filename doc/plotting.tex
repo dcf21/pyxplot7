@@ -335,6 +335,18 @@ Table~\ref{operators_table}.  The select modifier has many applications, for
 example, plotting two-dimensional slices from three-dimensional datasets and
 plotting subsets of \datapoint s from \datafile s.
 
+When plotting using the \indpst{lines}, the default behaviour is for the lines
+plotted not to be broken if a set of datapoints are removed by the select
+modifier.  However, this functionality is sometimes useful.  To cause the
+plotted line to break when points are removed the \indmodt{discontinuous}\ is
+supplied.  For example:
+
+\begin{verbatim}
+plot sin(x) select ($1>0) discontinuous
+\end{verbatim}
+
+plots a disconnected set of peaks from the sine function.
+
 \section{Horizontally arranged \Datafile s}
 
 \index{horizontal datafiles}\index{datafiles!horizontal}\index{using rows
