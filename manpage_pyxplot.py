@@ -62,9 +62,11 @@ Full documentation can be found in:
 .SH AUTHOR
 %s.
 .SH CREDITS
-Thanks to Joerg Lehmann and Andre Wobst for writing the PyX graphics library
-for python, upon which this software is heavily built, and also to Ross Church
-for his many useful comments and suggestions during its development.
+Thanks to Joerg Lehmann, Andre Wobst and Michael Schindler for writing the PyX
+graphics library for python, upon which this software is heavily built.  Thanks
+must also go to all of the users who have got in touch with us by email since
+PyXPlot was first released on the web. Your feedback and suggestions have been
+gratefully received.
 .SH "SEE ALSO"
 .BR pyxplot_watch (1), gnuplot (1)
 """%(description,docpath,author))

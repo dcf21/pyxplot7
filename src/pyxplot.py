@@ -44,7 +44,7 @@ import os
 import sys
 import glob
 import signal
-from math import *
+import math
 import re
 
 try: import readline
@@ -651,8 +651,8 @@ def directive_set_unset(userinput):
 
   elif (userinput['directive'] == "set") and (userinput['set_option'] == "papersize"): # set papersize
      if ('x_size' in userinput):
-      h = fabs(userinput['x_size'])
-      w = fabs(userinput['y_size'])
+      h = math.fabs(userinput['x_size'])
+      w = math.fabs(userinput['y_size'])
       gp_settings.settings_global['PAPER_HEIGHT'] = h
       gp_settings.settings_global['PAPER_WIDTH']  = w
       gp_settings.settings_global['PAPER_NAME']   = gp_postscript.get_papername(h,w)
@@ -705,7 +705,11 @@ def directive_set_unset(userinput):
 
   elif (userinput['directive'] == "set") and (userinput['set_option'] == "size"): # set size | set width
      if 'width'   in userinput: gp_settings.settings['WIDTH']  = userinput['width']
-     if 'ratio'   in userinput: gp_settings.settings['AUTOASPECT'] = 'OFF' ; gp_settings.settings['ASPECT'] = userinput['ratio']
+     if 'ratio'   in userinput:
+      if (math.fabs(userinput['ratio'])<1e-4) or (math.fabs(userinput['ratio'])>1e4):
+       gp_error("Error: Aspect ratio of %e requested. That would be a very long thin plot. Perhaps you didn't mean that?"%userinput['ratio'])
+      else:
+       gp_settings.settings['AUTOASPECT'] = 'OFF' ; gp_settings.settings['ASPECT'] = userinput['ratio']
      if 'square'  in userinput: gp_settings.settings['AUTOASPECT'] = 'OFF' ; gp_settings.settings['ASPECT'] = 1.0
      if 'noratio' in userinput: gp_settings.settings['AUTOASPECT'] = 'ON'
 

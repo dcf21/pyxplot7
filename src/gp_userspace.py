@@ -23,7 +23,9 @@ import math
 import re
 import random
 
-try: import scipy.integrate
+try:
+  import scipy.integrate
+  import scipy.special
 except: SCIPY_ABSENT = True
 else: SCIPY_ABSENT = False
 
@@ -60,6 +62,13 @@ math_functions={"acos":math.acos,
 "tan":math.tan,
 "tanh":math.tanh,
 }
+
+if not SCIPY_ABSENT:
+ math_functions['erf']=lambda x:scipy.special.erf(x)
+ math_functions['gamma']=lambda x:scipy.special.gamma(x)
+else:
+ def scipy_raise(*x): raise ValueError,"The use of the erf() and gamma() functions requires the scipy module for python, which is not installed. Please install and try again."
+ math_functions['erf']=math_functions['gamma']=scipy_raise
 
 # Make wrappers for integral/differential functions
 for dummy in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ':
