@@ -32,6 +32,8 @@ import gp_math
 import gp_version
 import gp_postscript
 import gp_ticker
+import gp_userspace
+import gp_histogram
 
 import os
 import sys
@@ -1040,6 +1042,15 @@ def plot_function(multiplot_number,g,axes,settings,linestyles,plotwords,vars,plo
   # Finally compute raster
   if (axes['x'][axis_x]['SETTINGS']['LOG'] == 'ON'): xrast = gp_math.lograst(minimum, maximum, settings['SAMPLES'])
   else:                                              xrast = gp_math.linrast(minimum, maximum, settings['SAMPLES'])
+
+  # If we are plotting a histogram we want a special raster that gives us a single point, in the right place, for each bin
+  if (plotwords['style'] == "boxes"):
+   test = re.match(r"^\s*([A-Za-z]\w*)\s*\(.*\)", functions[0])
+   if (test != None):
+    plotfunc = test.group(1)
+    for funcname in gp_userspace.functions:
+     if ((gp_userspace.functions[funcname]['histogram']==True) and (plotfunc==funcname)):  # If the function that we're using is a historgram
+      xrast = gp_histogram.histrast(minimum, maximum, axes['x'][axis_x]['SETTINGS']['LOG'], funcname)
 
   # Now evaluate functions
   totalgrid = gp_datafile.gp_function_datagrid(xrast, functions, xname, usingrowcol, using, select_criteria, select_cont, every, vars, plotwords['style'], verb_errors=verb_errors)

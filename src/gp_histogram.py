@@ -184,3 +184,26 @@ def histcount(bins, datagrid, binrange):
   for i in range(1,len(bins)):
    counts[i] = float(counts[i]) / float(bins[i]-bins[i-1])
   return counts
+
+# HISTRAST(): Generate a raster suitable for plotting a histogram, consisting of a single point at the centre of each box
+
+def histrast(minimum, maximum, logscale, funcname):
+ ranges = []  # List of all the ranges for which the histogram function has a bin defined
+ raster = []
+ for definition in gp_userspace.functions[funcname]['defn']:
+  ranges.append(definition['ranges'][0])
+ 
+ if (logscale == 'ON'):    # We are plotting the histogram on a logrithmic scale
+  for range in ranges:
+   if (range[0] == None): continue
+   minr = float(min(range))
+   maxr = float(max(range))
+   if (minr <= 0): continue   # Skip bins that extend beyond x=0
+   raster.append(sqrt(minr*maxr))
+ else:  # linear scale
+  for range in ranges:
+   if (range[0] == None): continue
+   minr = float(min(range))
+   maxr = float(max(range))
+   raster.append(0.5*(minr+maxr))
+ return raster
