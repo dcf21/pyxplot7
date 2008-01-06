@@ -137,6 +137,8 @@ def multiplot_plot(linestyles,vars,settings,multiplot_plotdesc):
   successful_plot_operations   = {} # Make a list of which plots have anything plotted on them.
   unsuccessful_plot_operations = {} # A list of any plot operations which in some way produced an error
 
+  data_tables = {} # Contains data to be plotted on each multiplot item; indexed by multiplot number
+
   if not "OFF" in [ x['deleted'] for x in multiplot_plotdesc ]:
    gp_warning("Nothing to plot!")
    return unsuccessful_plot_operations
@@ -177,7 +179,7 @@ def multiplot_plot(linestyles,vars,settings,multiplot_plotdesc):
    # If we have some autoscaling axes on this plot, we need to check out the range of the data, otherwise not.
    if ((any_autoscaling_axes == 1) and (Mdeleted != 'ON')):
     g = None # We have no graph.... yet
-    plot_dataset_toplevel(multiplot_number,g,Mplotlist,Msettings,Maxes_this,linestyles,vars,False)
+    data_tables[multiplot_number] = dataset_tabulate_axes_autoscale(multiplot_number,Mplotlist,Msettings,Maxes_this,linestyles,vars)
 
   # Step 2: Propagate range information from linked axes to their parent axes.
   # Repeat twice, as if plots B and C both link to A, and plot B causes plot A's scale to change, we want to
@@ -251,7 +253,7 @@ def multiplot_plot(linestyles,vars,settings,multiplot_plotdesc):
       g = plot_dataset_makeaxes_setupplot(multiplot_number, Msettings, Mkey, Maxes_this)
       if (Mdeleted != 'ON'): # Don't plot items which have been deleted -- we do make plot object above, to anchor axes which may be linked.
         if (g == None): continue                                                                            # Ooops... *That* didn't really work....
-        plot_dataset_toplevel(multiplot_number,g,Mplotlist,Msettings,Maxes_this,linestyles,vars,True) # Now do plotting proper.
+        plot_tabulated_data(g,Mplotlist,data_tables[multiplot_number]) # Now do plotting proper.
    
         # We now transfer graph onto our multiplot canvas, and draw arrows/labels on top of it as required
         multiplot_canvas.insert(g)
@@ -767,48 +769,51 @@ def plot_dataset_makeaxes_setupplot(multiplot_number, Msettings, Mkey, Maxes_thi
 
  return g
 
-# PLOT_DATASET_TOPLEVEL():
+# DATASET_TABULATE_AXES_AUTOSCALE():
 
-def plot_dataset_toplevel(multiplot_number,g,Mplotlist,Msettings,Maxes_this,linestyles,vars,plotting):
+def dataset_tabulate_axes_autoscale(multiplot_number,Mplotlist,Msettings,Maxes_this,linestyles,vars):
   global linecount, ptcount, colourcnt
 
   # Counts number of lines/pointsets plotted, so that we can cycle styles
-  verb_errors = plotting
+  verb_errors = True
   colourcnt = 1
   linecount = 1
   ptcount   = 1
 
-  # If we plotting, rather than doing a dry-run, just plot everything here and now
-  if plotting:
-   for plotitem in Mplotlist:
+  data_tables = [None for i in range(len(Mplotlist))]
+
+  # Tabulate / autoscale using datafiles first, to get an idea of the range of the x-axis
+  # Tabulate / autoscale using functions second, sampling them over the range that we have now determined
+  for [filename_in,handler] in [ [True,tabulate_datafile] , [False,tabulate_function] ]:
+   for i in range(len(Mplotlist)):
+    plotitem=Mplotlist[i]
+    if ('filename' in plotitem)==filename_in:
      try:
-      if 'filename' in plotitem:
-       plot_datafile(multiplot_number,g,Maxes_this,Msettings,linestyles,plotitem,vars,plotting,verb_errors)
-      else:
-       plot_function(multiplot_number,g,Maxes_this,Msettings,linestyles,plotitem,vars,plotting,verb_errors)
+      data_tables[i] = handler(multiplot_number,g,Maxes_this,Msettings,linestyles,plotitem,vars,verb_errors)
+      if (data_tables[i] != None):
+       for data_table in data_tables[i]:
+        [datagrid_cpy,axes,axis_x,axis_y,stylestr,description,verb_errors] = [data_table[j] for j in ['datagrid_cpy','axes','axis_x','axis_y','stylestr','description','verb_errors']]
+        axes_autoscale(datagrid_cpy,axes,axis_x,axis_y,stylestr,description,verb_errors)
      except KeyboardInterrupt: raise
-     except:
-      if (verb_errors): gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
-   return
+     except: pass
 
-  # Plot datafiles first, to get an idea of the range of the x-axis
-  for plotitem in Mplotlist:
-   if 'filename' in plotitem:
-    try:
-     plot_datafile(multiplot_number,g,Maxes_this,Msettings,linestyles,plotitem,vars,plotting,verb_errors)
-    except KeyboardInterrupt: raise
-    except: pass
+  return data_tables
 
-  # Plot functions second, sampling them over the range that we have now determined
-  for plotitem in Mplotlist:
-   if 'filename' not in plotitem:
-    try:
-     plot_function(multiplot_number,g,Maxes_this,Msettings,linestyles,plotitem,vars,plotting,verb_errors)
-    except KeyboardInterrupt: raise
-    except: pass
+# PLOT_TABULATED_DATA():
+def plot_tabulated_data(g,Mplotlist,data_tables):
+ for i in range(len(Mplotlist)):
+  plotitem=Mplotlist[i]
+  try:
+   if (data_tables[i] != None):
+    for data_table in data_tables[i]:
+     [datagrid_cpy,axes,axis_x,axis_y,dx,dxmin,dy,dymin,localtitle,stylelist,description,verb_errors] = [data_table[j] for j in ['datagrid_cpy','axes','axis_x','axis_y','dx','dxmin','dy','dymin','localtitle','stylelist','description','verb_errors']]
+     plot_dataset(g,datagrid_cpy,axes,axis_x,axis_y,dx,dxmin,dy,dymin,localtitle,stylelist,description,verb_errors)
+  except KeyboardInterrupt: raise
+  except: 
+   gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
 
-# PLOT_DATAFILE(): Plot datapoints listed in datafile
-def plot_datafile(multiplot_number,g,axes,settings,linestyles,plotwords,vars,plotting,verb_errors):
+# TABULATE_DATAFILE(): Take datapoints listed in datafile and turn them into a grid of data to pass to PyX
+def tabulate_datafile(multiplot_number,g,axes,settings,linestyles,plotwords,vars,verb_errors):
   global last_datafile_filename
 
   # Input datafile filename
@@ -881,6 +886,8 @@ def plot_datafile(multiplot_number,g,axes,settings,linestyles,plotwords,vars,plo
 
   if (len(datafiles) > 10) and (not verb_errors):
    gp_warning("Plotting %d datafiles... this may take a little while..."%len(datafiles))
+
+  tabulated_datasets = [] # If datafiles are being globbed with a wildcard, may have several separate datasets to plot
   for datafile in datafiles: # Plot each datafile in turn
    try:
 
@@ -902,13 +909,13 @@ def plot_datafile(multiplot_number,g,axes,settings,linestyles,plotwords,vars,plo
     for data_section in range(1,len(datafile_totalgrid)): # Loop over data sections within index, plotting each as a separate line 
       [rows, columns, datagrid] = datafile_totalgrid[data_section]
  
-      # Plot dataset
+      # Tabulate dataset
       if (data_section == 1): repeat = 0 # Are we to use same style as previous lump of data we plotted?
       else                  : repeat = 1
-      plot_dataset(multiplot_number,g,axes,axis_x,axis_y,plotwords,settings,title_this,datagrid,rows,columns,"datafile '%s'"%datafile,repeat,plotting,verb_errors)
+      tabulated_datasets.append(tabulate_dataset(multiplot_number,axes,axis_x,axis_y,plotwords,settings,title_this,datagrid,rows,columns,"datafile '%s'"%datafile,repeat,verb_errors))
    except:
     if (verb_errors): gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
-  return
+  return tabulated_datasets
 
 # GLOBWITHUSERPATH(): Takes a glob result, e.g. /home/dcf21/datafile.dat, and the filename which the user supplied,
 # perhaps ~dcf21/dat*.dat, and make a result like ~dcf21/datafile.dat.
@@ -939,8 +946,8 @@ def gwup_canmatch(globbit, userbit, gpos=0, upos=0):
       return True
   return False
 
-# PLOT_FUNCTION(): Plot a function
-def plot_function(multiplot_number,g,axes,settings,linestyles,plotwords,vars,plotting,verb_errors):
+# TABULATE_FUNCTION(): Take a function which the user has requested to plot, and produce a grid of data to pass to PyX
+def tabulate_function(multiplot_number,axes,settings,linestyles,plotwords,vars,verb_errors):
   global using_use_warned
 
   if plotwords['expression_list:'] == []: return
@@ -1055,12 +1062,12 @@ def plot_function(multiplot_number,g,axes,settings,linestyles,plotwords,vars,plo
   # Now evaluate functions
   totalgrid = gp_datafile.gp_function_datagrid(xrast, functions, xname, usingrowcol, using, select_criteria, select_cont, every, vars, plotwords['style'], verb_errors=verb_errors)
 
-  # Plot dataset
+  # Tabulate a dataset
   for data_section in range(1,len(totalgrid)): # Loop over data sections within index, plotting each as a separate line 
    [rows, columns, datagrid] = totalgrid[data_section]
    if (data_section == 1): repeat = 0 # Are we to use same style as previous lump of data we plotted?
    else                  : repeat = 1
-   plot_dataset(multiplot_number,g,axes,axis_x,axis_y,plotwords,settings,title,datagrid,rows,columns,"function '%s'"%function_str,repeat,plotting,verb_errors)
+   return [tabulate_dataset(multiplot_number,axes,axis_x,axis_y,plotwords,settings,title,datagrid,rows,columns,"function '%s'"%function_str,repeat,verb_errors)]
 
 # WITH_WORDS_CLEANUP(): Take a dictionary of style words, and clean up by: (i)
 # Replacing colour numbers with colour names as necessary, and (ii)
@@ -1163,10 +1170,9 @@ def plot_linewidth(width):
   defaultlinewidth = 0.02 * unit.w_cm
   return style.linewidth(defaultlinewidth * width)
 
-# PLOT_DATASET(): Plot a datagrid
+# TABULATE_DATASET(): Takes a request to plot a datafile/function and converts it into a list of datapoints and a PyX plot style
 
-def plot_dataset(multiplot_number,g,axes,axis_x,axis_y,plotwords,settings,title,datagrid,rows,columns,description,repeat,plotting,verb_errors):
-  global successful_plot_operations
+def tabulate_dataset(multiplot_number,axes,axis_x,axis_y,plotwords,settings,title,datagrid,rows,columns,description,repeat,verb_errors):
   global linecount, ptcount, colourcnt
 
   stylestr = plotwords['style']
@@ -1207,7 +1213,7 @@ def plot_dataset(multiplot_number,g,axes,axis_x,axis_y,plotwords,settings,title,
      stacked_bars[-1-i].append([prev_x,prev_y]+prev_addons)
     if (len(stacked_bars) > 1):
      for dataset in stacked_bars:
-      plot_dataset(multiplot_number,g,axes,axis_x,axis_y,plotwords,settings,title,dataset,len(dataset),columns,description,0,plotting,verb_errors)
+      tabulate_dataset(multiplot_number,axes,axis_x,axis_y,plotwords,settings,title,dataset,len(dataset),columns,description,0,verb_errors)
      return
 
   try:
@@ -1344,7 +1350,7 @@ def plot_dataset(multiplot_number,g,axes,axis_x,axis_y,plotwords,settings,title,
        lineattrs=[ gp_settings.linestyle_list[(plotwords['linetype']-1)%len(gp_settings.linestyle_list)], lw, colour ]
        if (fillcolset != None): lineattrs.extend([fillcolset])
        fromvalue = settings['BOXFROM']
-       if plotting: # The below is probably actually only necessary on log axes, where if fromvalue is <= 0, badness happens
+       if True: # was plotting. The below is probably actually only necessary on log axes, where if fromvalue is <= 0, badness happens
         if fromvalue < axes['y'][axis_y]['MIN_RANGE']: fromvalue = axes['y'][axis_y]['MIN_RANGE']
         if fromvalue > axes['y'][axis_y]['MAX_RANGE']: fromvalue = axes['y'][axis_y]['MAX_RANGE']
        stylelist.append(graph.style.histogram(lineattrs=lineattrs, steps=0, fillable=1, fromvalue=fromvalue))
@@ -1392,67 +1398,21 @@ def plot_dataset(multiplot_number,g,axes,axis_x,axis_y,plotwords,settings,title,
     if (len(datagrid_cpy) != 0): datagrid_cpy_list.append(datagrid_cpy)
     if (len(datagrid_cpy_list) == 0): return # No data to plot!
 
-    for datagrid_cpy in datagrid_cpy_list:
-     if (localtitle != None): successful_plot_operations[multiplot_number] = 'ON' # Only count datasets which will put an entry into the key
-     if (not plotting):
-      for i in range(len(datagrid_cpy)):
-       # First time around, we recalculate data bounding box
-       xaxis_min = gp_math.min( axes['x'][axis_x]['SETTINGS']['MIN'] , axes['x'][axis_x]['SETTINGS']['MAX'] )
-       xaxis_max = gp_math.max( axes['x'][axis_x]['SETTINGS']['MIN'] , axes['x'][axis_x]['SETTINGS']['MAX'] )
-       yaxis_min = gp_math.min( axes['y'][axis_y]['SETTINGS']['MIN'] , axes['y'][axis_y]['SETTINGS']['MAX'] )
-       yaxis_max = gp_math.max( axes['y'][axis_y]['SETTINGS']['MIN'] , axes['y'][axis_y]['SETTINGS']['MAX'] )
+    return {'datagrid_cpy':datagrid_cpy,
+            'axes':axes,
+            'axis_x':axis_x,
+            'axis_y':axis_y,
+            'dx':dx,
+            'dxmin':dxmin,
+            'dy':dy,
+            'dymin':dymin,
+            'localtitle':localtitle,
+            'stylelist':stylelist,
+            'stylestr':stylestr,
+            'description':description,
+            'verb_errors':verb_errors
+            }
 
-       xpoints = [datagrid_cpy[i][0]]
-       ypoints = [datagrid_cpy[i][1]]
-       if   (stylestr == 'xerrorbars'  ): xpoints.extend([datagrid_cpy[i][0]-datagrid_cpy[i][2],datagrid_cpy[i][0]+datagrid_cpy[i][2]])
-       elif (stylestr == 'yerrorbars'  ): ypoints.extend([datagrid_cpy[i][1]-datagrid_cpy[i][2],datagrid_cpy[i][1]+datagrid_cpy[i][2]])
-       elif (stylestr == 'xerrorrange' ): xpoints.extend([datagrid_cpy[i][2]                   ,datagrid_cpy[i][3]                   ])
-       elif (stylestr == 'yerrorrange' ): ypoints.extend([datagrid_cpy[i][2]                   ,datagrid_cpy[i][3]                   ])
-       elif (stylestr == 'xyerrorbars' ):
-                                          xpoints.extend([datagrid_cpy[i][0]-datagrid_cpy[i][2],datagrid_cpy[i][0]+datagrid_cpy[i][2]])
-                                          ypoints.extend([datagrid_cpy[i][1]-datagrid_cpy[i][3],datagrid_cpy[i][1]+datagrid_cpy[i][3]])
-       elif (stylestr == 'xyerrorrange'):
-                                          xpoints.extend([datagrid_cpy[i][2]                   ,datagrid_cpy[i][3]                   ])
-                                          ypoints.extend([datagrid_cpy[i][4]                   ,datagrid_cpy[i][5]                   ])
-       elif (stylestr in ['wboxes', 'boxes', 'impulses']):
-                                          xpoints.extend([datagrid_cpy[i][0]-datagrid_cpy[i][2],datagrid_cpy[i][0]+datagrid_cpy[i][2]])
-                                          ypoints.extend([settings['BOXFROM']                                        ])
-
-       # First the x-bounding-box
-       # Is datapoint within range of y-axis? If not, don't use it to recalculate x-bounding-box
-       if (((yaxis_min == None) or (ypoints[0] >= yaxis_min)) and
-           ((yaxis_max == None) or (ypoints[0] <= yaxis_max))     ):
-        for xpoint in xpoints:
-         if ((axes['x'][axis_x]['SETTINGS']['LOG'] != 'ON') or (xpoint > 0)): # Don't count negative points on log axes
-          if (axes['x'][axis_x]['SETTINGS']['MIN'] == None): # Only modify bounding boxes that we are autoscaling
-           if ((axes['x'][axis_x]['MIN_USED'] == None) or (axes['x'][axis_x]['MIN_USED'] > xpoint)): axes['x'][axis_x]['MIN_USED'] = xpoint
-          if (axes['x'][axis_x]['SETTINGS']['MAX'] == None): # Only modify bounding boxes that we are autoscaling
-           if ((axes['x'][axis_x]['MAX_USED'] == None) or (axes['x'][axis_x]['MAX_USED'] < xpoint)): axes['x'][axis_x]['MAX_USED'] = xpoint
-
-       # Second the y-bounding-box
-       # Is datapoint within range of x-axis? If not, don't use it to recalculate y-bounding-box
-       if (((xaxis_min == None) or (xpoints[0] >= xaxis_min)) and
-           ((xaxis_max == None) or (xpoints[0] <= xaxis_max))     ):
-        for ypoint in ypoints:
-         if ((axes['y'][axis_y]['SETTINGS']['LOG'] != 'ON') or (ypoint > 0)): # Don't count negative points on log axes
-          if (axes['y'][axis_y]['SETTINGS']['MIN'] == None): # Only modify bounding boxes that we are autoscaling
-           if ((axes['y'][axis_y]['MIN_USED'] == None) or (axes['y'][axis_y]['MIN_USED'] > ypoint)): axes['y'][axis_y]['MIN_USED'] = ypoint
-          if (axes['y'][axis_y]['SETTINGS']['MAX'] == None): # Only modify bounding boxes that we are autoscaling
-           if ((axes['y'][axis_y]['MAX_USED'] == None) or (axes['y'][axis_y]['MAX_USED'] < ypoint)): axes['y'][axis_y]['MAX_USED'] = ypoint
-     else: # First time around, we quit here and don't actually plot anything
-      # Second time around, we actually plot data
-      x_axisname = axes['x'][axis_x]['LINKINFO']['AXISPYXNAME']
-      y_axisname = axes['y'][axis_y]['LINKINFO']['AXISPYXNAME']
-      x_set = x_axisname+"=1,"
-      y_set = y_axisname+"=2,"
-      if (dx != None): dx_set = "d"+x_axisname+"=dx,"
-      else           : dx_set = ""
-      if (dy != None): dy_set = "d"+y_axisname+"=dy,"
-      else           : dy_set = ""
-      if (dxmin != None): dx_set = x_axisname+"min=dxmin,"+x_axisname+"max=dxmax,"
-      if (dymin != None): dy_set = y_axisname+"min=dymin,"+y_axisname+"max=dymax,"
-      exec "g.plot(graph.data.points(datagrid_cpy,"+x_set+y_set+dx_set+dy_set+"title=localtitle),styles=stylelist)"
-      localtitle = None # Only put a title on one dataset
   except KeyboardInterrupt: raise
   except:
     if (verb_errors):
@@ -1460,6 +1420,92 @@ def plot_dataset(multiplot_number,g,axes,axis_x,axis_y,plotwords,settings,title,
       gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
       return # Error
   return
+
+# AXES_AUTOSCALE: Take the output from the above function and see if any autoscaling axes need extending to accommodate it
+
+def axes_autoscale(datagrid_cpy,axes,axis_x,axis_y,stylestr,description,verb_errors):
+ global successful_plot_operations
+ try:
+  for datagrid_cpy in datagrid_cpy_list:
+   if (localtitle != None): successful_plot_operations[multiplot_number] = 'ON' # Only count datasets which will put an entry into the key
+   for i in range(len(datagrid_cpy)):
+    # First time around, we recalculate data bounding box
+    xaxis_min = gp_math.min( axes['x'][axis_x]['SETTINGS']['MIN'] , axes['x'][axis_x]['SETTINGS']['MAX'] )
+    xaxis_max = gp_math.max( axes['x'][axis_x]['SETTINGS']['MIN'] , axes['x'][axis_x]['SETTINGS']['MAX'] )
+    yaxis_min = gp_math.min( axes['y'][axis_y]['SETTINGS']['MIN'] , axes['y'][axis_y]['SETTINGS']['MAX'] )
+    yaxis_max = gp_math.max( axes['y'][axis_y]['SETTINGS']['MIN'] , axes['y'][axis_y]['SETTINGS']['MAX'] )
+
+    xpoints = [datagrid_cpy[i][0]]
+    ypoints = [datagrid_cpy[i][1]]
+    if   (stylestr == 'xerrorbars'  ): xpoints.extend([datagrid_cpy[i][0]-datagrid_cpy[i][2],datagrid_cpy[i][0]+datagrid_cpy[i][2]])
+    elif (stylestr == 'yerrorbars'  ): ypoints.extend([datagrid_cpy[i][1]-datagrid_cpy[i][2],datagrid_cpy[i][1]+datagrid_cpy[i][2]])
+    elif (stylestr == 'xerrorrange' ): xpoints.extend([datagrid_cpy[i][2]                   ,datagrid_cpy[i][3]                   ])
+    elif (stylestr == 'yerrorrange' ): ypoints.extend([datagrid_cpy[i][2]                   ,datagrid_cpy[i][3]                   ])
+    elif (stylestr == 'xyerrorbars' ):
+                                       xpoints.extend([datagrid_cpy[i][0]-datagrid_cpy[i][2],datagrid_cpy[i][0]+datagrid_cpy[i][2]])
+                                       ypoints.extend([datagrid_cpy[i][1]-datagrid_cpy[i][3],datagrid_cpy[i][1]+datagrid_cpy[i][3]])
+    elif (stylestr == 'xyerrorrange'):
+                                       xpoints.extend([datagrid_cpy[i][2]                   ,datagrid_cpy[i][3]                   ])
+                                       ypoints.extend([datagrid_cpy[i][4]                   ,datagrid_cpy[i][5]                   ])
+    elif (stylestr in ['wboxes', 'boxes', 'impulses']):
+                                       xpoints.extend([datagrid_cpy[i][0]-datagrid_cpy[i][2],datagrid_cpy[i][0]+datagrid_cpy[i][2]])
+                                       ypoints.extend([settings['BOXFROM']                                        ])
+
+    # First the x-bounding-box
+    # Is datapoint within range of y-axis? If not, don't use it to recalculate x-bounding-box
+    if (((yaxis_min == None) or (ypoints[0] >= yaxis_min)) and
+        ((yaxis_max == None) or (ypoints[0] <= yaxis_max))     ):
+     for xpoint in xpoints:
+      if ((axes['x'][axis_x]['SETTINGS']['LOG'] != 'ON') or (xpoint > 0)): # Don't count negative points on log axes
+       if (axes['x'][axis_x]['SETTINGS']['MIN'] == None): # Only modify bounding boxes that we are autoscaling
+        if ((axes['x'][axis_x]['MIN_USED'] == None) or (axes['x'][axis_x]['MIN_USED'] > xpoint)): axes['x'][axis_x]['MIN_USED'] = xpoint
+       if (axes['x'][axis_x]['SETTINGS']['MAX'] == None): # Only modify bounding boxes that we are autoscaling
+        if ((axes['x'][axis_x]['MAX_USED'] == None) or (axes['x'][axis_x]['MAX_USED'] < xpoint)): axes['x'][axis_x]['MAX_USED'] = xpoint
+
+    # Second the y-bounding-box
+    # Is datapoint within range of x-axis? If not, don't use it to recalculate y-bounding-box
+    if (((xaxis_min == None) or (xpoints[0] >= xaxis_min)) and
+        ((xaxis_max == None) or (xpoints[0] <= xaxis_max))     ):
+     for ypoint in ypoints:
+      if ((axes['y'][axis_y]['SETTINGS']['LOG'] != 'ON') or (ypoint > 0)): # Don't count negative points on log axes
+       if (axes['y'][axis_y]['SETTINGS']['MIN'] == None): # Only modify bounding boxes that we are autoscaling
+        if ((axes['y'][axis_y]['MIN_USED'] == None) or (axes['y'][axis_y]['MIN_USED'] > ypoint)): axes['y'][axis_y]['MIN_USED'] = ypoint
+       if (axes['y'][axis_y]['SETTINGS']['MAX'] == None): # Only modify bounding boxes that we are autoscaling
+        if ((axes['y'][axis_y]['MAX_USED'] == None) or (axes['y'][axis_y]['MAX_USED'] < ypoint)): axes['y'][axis_y]['MAX_USED'] = ypoint
+
+ except KeyboardInterrupt: raise
+ except:
+  if (verb_errors):
+   gp_error("Failed while plotting %s:"%description)
+   gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
+   return # Error
+ return
+
+# PLOT_DATASET(): Take a datagrid and a list of PyX plot styles and actually send it to PyX for plotting
+
+def plot_dataset(g,datagrid_cpy,axes,axis_x,axis_y,dx,dxmin,dy,dymin,localtitle,stylelist,description,verb_errors):
+ try:
+  for datagrid_cpy in datagrid_cpy_list:
+   x_axisname = axes['x'][axis_x]['LINKINFO']['AXISPYXNAME']
+   y_axisname = axes['y'][axis_y]['LINKINFO']['AXISPYXNAME']
+   x_set = x_axisname+"=1,"
+   y_set = y_axisname+"=2,"
+   if (dx != None): dx_set = "d"+x_axisname+"=dx,"
+   else           : dx_set = ""
+   if (dy != None): dy_set = "d"+y_axisname+"=dy,"
+   else           : dy_set = ""
+   if (dxmin != None): dx_set = x_axisname+"min=dxmin,"+x_axisname+"max=dxmax,"
+   if (dymin != None): dy_set = y_axisname+"min=dymin,"+y_axisname+"max=dymax,"
+   exec "g.plot(graph.data.points(datagrid_cpy,"+x_set+y_set+dx_set+dy_set+"title=localtitle),styles=stylelist)"
+   localtitle = None # Only put a title on one dataset
+ except KeyboardInterrupt: raise
+ except:
+  if (verb_errors):
+   gp_error("Failed while plotting %s:"%description)
+   gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
+   return # Error
+ return
+
 
 # WRITE_OUTPUT(): Moves output from file "infile" to file "outfile", possibly backing up any file which might be over-written
 
