@@ -42,12 +42,12 @@ ERRORS_MAX = 4
 def gp_dataread(datafile, index, usingrowcol, using_list, select_criterion, select_cont, every_list, vars, style, verb_errors=True, firsterror=None):
   # Open input datafile; if filename ends in .gz, open it with gunzip
   if (re.search(r"\.gz$",datafile) != None): f = gzip.open(os.path.join(gp_settings.cwd, os.path.expanduser(datafile)),"r") 
-  elif datafile=="-"                       : f = sys.stdin
+  elif datafile=="-"                       : f = sys.stdin.readlines()
   else                                     : f = open(os.path.join(gp_settings.cwd, os.path.expanduser(datafile)),"r")
 
   datagrid = make_datagrid(iterate_file(f), "of file %s"%datafile, "line ", index, usingrowcol, using_list, select_criterion, select_cont, every_list, vars, style, verb_errors, firsterror=None)
 
-  if f!=sys.stdin: f.close()
+  if datafile!="-": f.close()
   return datagrid
 
 # GP_FUNCTION_DATAGRID(): Evaluate a (set of) function(s), producing a grid of values

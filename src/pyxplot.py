@@ -42,8 +42,10 @@ import gp_plot
 
 import os
 import sys
+import stat
 import glob
 import signal
+import time
 import math
 import re
 
@@ -1266,6 +1268,18 @@ def main_loop(commandparams):
 # MAIN ENTRY POINT
 
 # Store path to user's cwd ; but put LaTeX's junk in /tmp for tidiness
+for i in range(5):
+ if os.path.exists(gp_settings.tempdir):
+  if ((not os.path.isdir(gp_settings.tempdir)) or (not (os.stat(gp_settings.tempdir)[stat.ST_UID] == os.getuid()))):
+   gp_error("Fatal Error: Security error whilst trying to create temporary directory")
+   sys.exit(0)
+  else:
+   break
+ time.sleep(1)
+if not os.path.exists(gp_settings.tempdir):
+ gp_error("Fatal Error: Timed out while waiting for temporary directory to appear")
+ sys.exit(0)
+
 gp_settings.cwd = os.getcwd()
 os.chdir(gp_settings.tempdir)
 

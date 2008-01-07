@@ -789,13 +789,13 @@ def dataset_tabulate_axes_autoscale(multiplot_number,Mplotlist,Msettings,Maxes_t
     plotitem=Mplotlist[i]
     if ('filename' in plotitem)==filename_in:
      try:
-      data_tables[i] = handler(multiplot_number,g,Maxes_this,Msettings,linestyles,plotitem,vars,verb_errors)
+      data_tables[i] = handler(multiplot_number,Maxes_this,Msettings,linestyles,plotitem,vars,verb_errors)
       if (data_tables[i] != None):
        for data_table in data_tables[i]:
-        [datagrid_cpy,axes,axis_x,axis_y,stylestr,description,verb_errors] = [data_table[j] for j in ['datagrid_cpy','axes','axis_x','axis_y','stylestr','description','verb_errors']]
-        axes_autoscale(datagrid_cpy,axes,axis_x,axis_y,stylestr,description,verb_errors)
+        [datagrid_cpy_list,axes,axis_x,axis_y,localtitle,stylestr,description,verb_errors] = [data_table[j] for j in ['datagrid_cpy_list','axes','axis_x','axis_y','localtitle','stylestr','description','verb_errors']]
+        axes_autoscale(multiplot_number,Msettings,datagrid_cpy_list,axes,axis_x,axis_y,localtitle,stylestr,description,verb_errors)
      except KeyboardInterrupt: raise
-     except: pass
+     except ValueError: pass
 
   return data_tables
 
@@ -806,14 +806,14 @@ def plot_tabulated_data(g,Mplotlist,data_tables):
   try:
    if (data_tables[i] != None):
     for data_table in data_tables[i]:
-     [datagrid_cpy,axes,axis_x,axis_y,dx,dxmin,dy,dymin,localtitle,stylelist,description,verb_errors] = [data_table[j] for j in ['datagrid_cpy','axes','axis_x','axis_y','dx','dxmin','dy','dymin','localtitle','stylelist','description','verb_errors']]
-     plot_dataset(g,datagrid_cpy,axes,axis_x,axis_y,dx,dxmin,dy,dymin,localtitle,stylelist,description,verb_errors)
+     [datagrid_cpy_list,axes,axis_x,axis_y,dx,dxmin,dy,dymin,localtitle,stylelist,description,verb_errors] = [data_table[j] for j in ['datagrid_cpy_list','axes','axis_x','axis_y','dx','dxmin','dy','dymin','localtitle','stylelist','description','verb_errors']]
+     plot_dataset(g,datagrid_cpy_list,axes,axis_x,axis_y,dx,dxmin,dy,dymin,localtitle,stylelist,description,verb_errors)
   except KeyboardInterrupt: raise
   except: 
    gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
 
 # TABULATE_DATAFILE(): Take datapoints listed in datafile and turn them into a grid of data to pass to PyX
-def tabulate_datafile(multiplot_number,g,axes,settings,linestyles,plotwords,vars,verb_errors):
+def tabulate_datafile(multiplot_number,axes,settings,linestyles,plotwords,vars,verb_errors):
   global last_datafile_filename
 
   # Input datafile filename
@@ -1213,8 +1213,7 @@ def tabulate_dataset(multiplot_number,axes,axis_x,axis_y,plotwords,settings,titl
      stacked_bars[-1-i].append([prev_x,prev_y]+prev_addons)
     if (len(stacked_bars) > 1):
      for dataset in stacked_bars:
-      tabulate_dataset(multiplot_number,axes,axis_x,axis_y,plotwords,settings,title,dataset,len(dataset),columns,description,0,verb_errors)
-     return
+      return tabulate_dataset(multiplot_number,axes,axis_x,axis_y,plotwords,settings,title,dataset,len(dataset),columns,description,0,verb_errors)
 
   try:
     stylelist = []
@@ -1350,9 +1349,7 @@ def tabulate_dataset(multiplot_number,axes,axis_x,axis_y,plotwords,settings,titl
        lineattrs=[ gp_settings.linestyle_list[(plotwords['linetype']-1)%len(gp_settings.linestyle_list)], lw, colour ]
        if (fillcolset != None): lineattrs.extend([fillcolset])
        fromvalue = settings['BOXFROM']
-       if True: # was plotting. The below is probably actually only necessary on log axes, where if fromvalue is <= 0, badness happens
-        if fromvalue < axes['y'][axis_y]['MIN_RANGE']: fromvalue = axes['y'][axis_y]['MIN_RANGE']
-        if fromvalue > axes['y'][axis_y]['MAX_RANGE']: fromvalue = axes['y'][axis_y]['MAX_RANGE']
+       if (fromvalue < 0) and (axes['y'][axis_y]['SETTINGS']['LOG'] == 'ON'==True): fromvalue=1e-300 # On log axes, where if fromvalue is <= 0, badness happens
        stylelist.append(graph.style.histogram(lineattrs=lineattrs, steps=0, fillable=1, fromvalue=fromvalue))
       elif (stylestr in ['steps', 'fsteps', 'histeps']):
        datagrid_cpy      = []
@@ -1398,7 +1395,7 @@ def tabulate_dataset(multiplot_number,axes,axis_x,axis_y,plotwords,settings,titl
     if (len(datagrid_cpy) != 0): datagrid_cpy_list.append(datagrid_cpy)
     if (len(datagrid_cpy_list) == 0): return # No data to plot!
 
-    return {'datagrid_cpy':datagrid_cpy,
+    return {'datagrid_cpy_list':datagrid_cpy_list,
             'axes':axes,
             'axis_x':axis_x,
             'axis_y':axis_y,
@@ -1419,11 +1416,10 @@ def tabulate_dataset(multiplot_number,axes,axis_x,axis_y,plotwords,settings,titl
       gp_error("Failed while plotting %s:"%description)
       gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
       return # Error
-  return
 
 # AXES_AUTOSCALE: Take the output from the above function and see if any autoscaling axes need extending to accommodate it
 
-def axes_autoscale(datagrid_cpy,axes,axis_x,axis_y,stylestr,description,verb_errors):
+def axes_autoscale(multiplot_number,settings,datagrid_cpy_list,axes,axis_x,axis_y,localtitle,stylestr,description,verb_errors):
  global successful_plot_operations
  try:
   for datagrid_cpy in datagrid_cpy_list:
@@ -1483,7 +1479,7 @@ def axes_autoscale(datagrid_cpy,axes,axis_x,axis_y,stylestr,description,verb_err
 
 # PLOT_DATASET(): Take a datagrid and a list of PyX plot styles and actually send it to PyX for plotting
 
-def plot_dataset(g,datagrid_cpy,axes,axis_x,axis_y,dx,dxmin,dy,dymin,localtitle,stylelist,description,verb_errors):
+def plot_dataset(g,datagrid_cpy_list,axes,axis_x,axis_y,dx,dxmin,dy,dymin,localtitle,stylelist,description,verb_errors):
  try:
   for datagrid_cpy in datagrid_cpy_list:
    x_axisname = axes['x'][axis_x]['LINKINFO']['AXISPYXNAME']
@@ -1505,7 +1501,6 @@ def plot_dataset(g,datagrid_cpy,axes,axis_x,axis_y,dx,dxmin,dy,dymin,localtitle,
    gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
    return # Error
  return
-
 
 # WRITE_OUTPUT(): Moves output from file "infile" to file "outfile", possibly backing up any file which might be over-written
 
