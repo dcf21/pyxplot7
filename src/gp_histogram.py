@@ -90,6 +90,31 @@ def directive_histogram(command, vars, settings):
   xmin = datagrid[ 0][1]
   xmax = datagrid[-1][1]
 
+  # If the x1 axis is a log axis we want to do the binning in log space
+  logaxis = False
+  if (gp_settings.axes['x'][1]['LOG'] == 'ON'):
+   logaxis = True
+   base    = gp_settings.axes['x'][1]['LOGBASE']
+   logbase = log(base)     # The (natural) log of the base that we will use
+   if (xmax <= 0):
+    gp_error('Error: trying to bin exclusively non-positive data into logrithmic histogram bins')
+    return
+   if (xmin <= 0):
+    gp_warning('Warning: negative data will be rejected from logrithmically-binned histogram')
+   i=0
+   while (i<len(datagrid)):  # Can't use for here as we want to delete items
+    try: datagrid[i][1] = log(datagrid[i][1])/logbase  # Log all the data, removing negative elements
+    except KeyboardInterrupt: raise
+    except ValueError: 
+     del datagrid[i]
+     continue
+    except OverflowError: 
+     del datagrid[i]
+     continue
+    i += 1
+   xmin = datagrid[ 0][1]
+   xmax = datagrid[-1][1]
+
   # Now we need to work out our bins
   # Precedence: 1. Set of bins listed on command line
   #             2. Binwidth,origin listed on command line (Unimplemented)
@@ -116,6 +141,10 @@ def directive_histogram(command, vars, settings):
    if (ranges[0][1] != None): binrange[1] = ranges[0][1]
 
   counts = histcount(bins, datagrid, binrange)    # Bin the data up
+  # For binning in log(x), convert the bins from log to linear space
+  if (logaxis) : 
+   for i in range(len(bins)) : 
+    bins[i] = base**bins[i]  
   make_histogram_function(datafile, funcname, bins, counts) # Turn the binned data into a function
   return
 
