@@ -375,16 +375,20 @@ def directive_set_unset(userinput):
   elif (userinput['directive'] == "unset") and (userinput['set_option'] == "bar"): # unset bar
      gp_settings.settings['BAR'] = gp_settings.settings_default['BAR']
 
-  elif (userinput['directive'] == "set") and (userinput['set_option'] == "binorigin"): # set bar
+  elif (userinput['directive'] == "set") and (userinput['set_option'] == "binorigin"): # set binorigin
      gp_settings.settings['BINORIGIN'] = float(userinput['bin_origin'])
 
-  elif (userinput['directive'] == "unset") and (userinput['set_option'] == "binorigin"): # unset bar
+  elif (userinput['directive'] == "unset") and (userinput['set_option'] == "binorigin"): # unset binorigin
      gp_settings.settings['BINORIGIN'] = gp_settings.settings_default['BINORIGIN']
 
-  elif (userinput['directive'] == "set") and (userinput['set_option'] == "binwidth"): # set bar
-     gp_settings.settings['BINWIDTH'] = float(userinput['bin_width'])
+  elif (userinput['directive'] == "set") and (userinput['set_option'] == "binwidth"): # set binwidth
+     binwidth = float(userinput['bin_width'])
+     if (binwidth <= 0.0) : 
+      gp_error("Error: width of histogram bins must be greater than 0")
+      return
+     gp_settings.settings['BINWIDTH'] = binwidth
 
-  elif (userinput['directive'] == "unset") and (userinput['set_option'] == "binwidth"): # unset bar
+  elif (userinput['directive'] == "unset") and (userinput['set_option'] == "binwidth"): # unset binwidth
      gp_settings.settings['BINWIDTH'] = gp_settings.settings_default['BINWIDTH']
 
   elif (userinput['directive'] == "set") and (userinput['set_option'] == "boxfrom"): # set boxfrom

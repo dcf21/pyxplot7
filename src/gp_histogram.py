@@ -79,6 +79,12 @@ def directive_histogram(command, vars, settings):
    gp_error("Error reading input datafile:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
    return # Error
 
+  # Check for a blank dataset
+  if (datagrid == []):
+   gp_warning("Warning: No data provided to histogram command!")
+   gp_userspace.gp_function_declare("%s(x) = 0."%funcname)
+   return
+
   # Sort data points into a list in order of x-axis value
   datagrid.sort(gp_math.sort_on_second_list_item)
   xmin = datagrid[ 0][1]
@@ -98,6 +104,7 @@ def directive_histogram(command, vars, settings):
   else:
    if ('binwidth' in command)  : binwidth  = command['binwidth']
    else                        : binwidth  = settings['BINWIDTH']
+   assert (binwidth > 0.0), "Width of histogram bins must be greater than zero"
    if ('binorigin' in command) : binorigin = command['binorigin']
    else                        : binorigin = settings['BINORIGIN']
    bins = get_bins(ranges, xmin, xmax, binwidth, binorigin)
