@@ -43,13 +43,30 @@ replot_focus        = None
 # PLOTORDER_CLEAR(): Clear all items from plot order
 
 def plotorder_clear():
-  global multiplot_plotdesc, replot_focus
-  multiplot_plotdesc  = [] # Wipe the plotting canvas
-  replot_focus        = None
+ global multiplot_plotdesc, replot_focus
+ multiplot_plotdesc  = [] # Wipe the plotting canvas
+ replot_focus        = None
+
+# DIRECTIVE_LIST(): List all items on a multiplot
+
+def directive_list():
+ any_deleted=False
+ gp_report("#  ID | Command")
+ for item in multiplot_plotdesc:
+  if item['deleted']=='ON':
+   line="d"
+   any_deleted=True
+  else:
+   line=" "
+  line += "%4d   "%item['number']
+  line += item['listdesc']
+  gp_report(line)
+ if any_deleted:
+  gp_report("\n# Items marked 'd' are deleted")
 
 # DIRECTIVE_TEXT(): Handles the 'text' command
 
-def directive_text(command,linestyles,vars,settings,interactive):
+def directive_text(command,commandtext,linestyles,vars,settings,interactive):
  if (gp_settings.settings_global['MULTIPLOT'] != 'ON'): plotorder_clear()
 
  title = command['string']
@@ -71,7 +88,8 @@ def directive_text(command,linestyles,vars,settings,interactive):
                   'settings':settings.copy(),
                   'deleted' :'OFF',
                   'rotation':rotation,
-                  'colour':colour
+                  'colour':colour,
+                  'listdesc':commandtext
                   }
  multiplot_plotdesc.append(this_plotdesc)
 
@@ -94,7 +112,7 @@ def directive_text(command,linestyles,vars,settings,interactive):
 
 # DIRECTIVE_ARROW(): Handles the 'arrow' command
 
-def directive_arrow(command,linestyles,vars,settings,interactive):
+def directive_arrow(command,commandtext,linestyles,vars,settings,interactive):
  if (gp_settings.settings_global['MULTIPLOT'] != 'ON'): plotorder_clear()
  
  x0 = command['x1'] ; y0 = command['y1']
@@ -108,7 +126,8 @@ def directive_arrow(command,linestyles,vars,settings,interactive):
                   'y2_pos'  :y1,
                   'style'   :command,
                   'settings':settings.copy(),
-                  'deleted' :'OFF'
+                  'deleted' :'OFF',
+                  'listdesc':commandtext
                   }
  multiplot_plotdesc.append(this_plotdesc)
 
@@ -131,7 +150,7 @@ def directive_arrow(command,linestyles,vars,settings,interactive):
 
 # DIRECTIVE_JPEG(): Handles the 'jpeg' command
 
-def directive_jpeg(command,linestyles,vars,settings,interactive):
+def directive_jpeg(command,commandtext,linestyles,vars,settings,interactive):
  if (gp_settings.settings_global['MULTIPLOT'] != 'ON'): plotorder_clear()
 
  filename = command['filename']
@@ -154,7 +173,8 @@ def directive_jpeg(command,linestyles,vars,settings,interactive):
                   'deleted' :'OFF',
                   'rotation':rotation,
                   'width'   :width,
-                  'height'  :height
+                  'height'  :height,
+                  'listdesc':commandtext
                   }
  multiplot_plotdesc.append(this_plotdesc)
 
@@ -177,7 +197,7 @@ def directive_jpeg(command,linestyles,vars,settings,interactive):
 
 # DIRECTIVE_EPS(): Handles the 'eps' command
 
-def directive_eps(command,linestyles,vars,settings,interactive):
+def directive_eps(command,commandtext,linestyles,vars,settings,interactive):
  if (gp_settings.settings_global['MULTIPLOT'] != 'ON'): plotorder_clear()
 
  filename = command['filename']
@@ -200,7 +220,8 @@ def directive_eps(command,linestyles,vars,settings,interactive):
                   'deleted' :'OFF',
                   'rotation':rotation,
                   'width'   :width,
-                  'height'  :height
+                  'height'  :height,
+                  'listdesc':commandtext
                   }
  multiplot_plotdesc.append(this_plotdesc)
 
@@ -223,7 +244,7 @@ def directive_eps(command,linestyles,vars,settings,interactive):
 
 # DIRECTIVE_PLOT(): Handles the 'plot' command
 
-def directive_plot(command,linestyles,vars,settings,axes,labels,arrows,replot_stat,interactive):
+def directive_plot(command,commandtext,linestyles,vars,settings,axes,labels,arrows,replot_stat,interactive):
   global plotlist, axes_this, replot_focus
   global multiplot_plotdesc
 
@@ -279,7 +300,8 @@ def directive_plot(command,linestyles,vars,settings,axes,labels,arrows,replot_st
                    'labels'  :labels.copy(),
                    'arrows'  :arrows.copy(),
                    'deleted' :'OFF',
-                   'axes'    :None # Fill in this below
+                   'axes'    :None, # Fill in this below
+                   'listdesc':commandtext
                    }
 
   for item in this_plotdesc['plotlist']: # Turn string variables into filenames

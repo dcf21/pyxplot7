@@ -48,6 +48,7 @@ help@2:directive = %r:topic
 history@6:directive = { %d:number_lines }
 histogram@2:directive = [ \[@n { { < %f:min | \*@n:minauto > } < :@n | to@n > { < %f:max | \*@n:maxauto > } } \]@n ]:range_list %v:hist_function \()@2 < %q:filename | %Q:filename | %S:filename > ( every@1 [ { %d:every_item } ]:every_list: ~ index@1 %f:index ~ select@1 %E:select_criterion { < continuous@1:select_cont | discontinuous@1:select_cont > } ~ using@1 { < rows@1:use_rows | columns@1:use_columns > } [ %E:using_item ]:using_list: ~ binwidth@4 %f:binwidth ~ binorigin@4 %f:binorigin ~ bins@n \(@n [ %f:x ]:bin_list, \)@n )
 < jpeg@1:directive | jpg@2:directive:jpeg > = < %q:filename | %Q:filename | %S:filename > ( at@2 %f:x ,@n %f:y ~ rotate@1 %f:rotation ~ width@1 %f:width ~ height@1 %f:height )
+list@2:directive =
 load@2:directive = < %q:filename | %Q:filename | %S:filename >
 move@3:directive = %d:moveno to@1 %f:x ,@n %f:y 
 ?@n:directive:help = %r:topic 

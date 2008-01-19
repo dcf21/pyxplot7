@@ -410,6 +410,27 @@ eps 'filename' at 3,2 rotate 5
 \noindent will place the eps file with its bottom-left corner at position
 $(3,2)$\,cm from the origin, rotated counter-clockwise through 5 degrees.
 
+\subsection{Listing Items on a Multiplot}
+
+A listing of all of the items on a multiplot, giving their reference numbers
+and the commands used to produce them, can be obtained using the
+\indcmdt{list}. For example:
+
+\begin{verbatim}
+pyxplot> list
+#  ID | Command 
+    0   plot f(x) 
+d   1   text 'Figure 1: A plot of f(x)' 
+    2   text 'Figure 1: A plot of $f(x)$' 
+
+# Items marked 'd' are deleted 
+\end{verbatim}
+
+In this example, the user has plotted a graph of $f(x)$, and added a caption to
+it. The {\tt ID} column lists the reference numbers of each multiplot item.
+Item {\tt 1} has been deleted, and this is indicated by the {\tt d} to the left
+of its reference number.
+
 \subsection{Speed Issues}
 \label{set_display}
 

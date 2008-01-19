@@ -1003,7 +1003,7 @@ def directive(line, toplevel=True, interactive=False):
   elif (command['directive'] == "history"):      # history
     directive_history(command)
   elif (command['directive'] == "load"):         # load
-    main_loop([command['filename']])
+    main_loop([command['filename']],True)
   elif (command['directive'] == "save"):         # save
     try:
      savefile = open(os.path.join(gp_settings.cwd, os.path.expanduser(command['filename'])),"w")
@@ -1055,19 +1055,21 @@ def directive(line, toplevel=True, interactive=False):
      gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
 
   elif (command['directive'] == "plot"):         # plot
-    gp_canvas.directive_plot(command,gp_settings.linestyles,gp_userspace.variables,gp_settings.settings,
+    gp_canvas.directive_plot(command,line,gp_settings.linestyles,gp_userspace.variables,gp_settings.settings,
                            gp_settings.axes,gp_settings.labels,gp_settings.arrows,0,interactive)
   elif (command['directive'] == "replot"):       # replot
-    gp_canvas.directive_plot(command,gp_settings.linestyles,gp_userspace.variables,gp_settings.settings,
+    gp_canvas.directive_plot(command,line,gp_settings.linestyles,gp_userspace.variables,gp_settings.settings,
                            gp_settings.axes,gp_settings.labels,gp_settings.arrows,1,interactive)
   elif (command['directive'] == "text"):         # text
-    gp_canvas.directive_text(command,gp_settings.linestyles,gp_userspace.variables,gp_settings.settings,interactive)
+    gp_canvas.directive_text(command,line,gp_settings.linestyles,gp_userspace.variables,gp_settings.settings,interactive)
   elif (command['directive'] == "arrow"):        # arrow
-    gp_canvas.directive_arrow(command,gp_settings.linestyles,gp_userspace.variables,gp_settings.settings,interactive)
+    gp_canvas.directive_arrow(command,line,gp_settings.linestyles,gp_userspace.variables,gp_settings.settings,interactive)
   elif (command['directive'] == "jpeg"):         # jpeg
-    gp_canvas.directive_jpeg(command,gp_settings.linestyles,gp_userspace.variables,gp_settings.settings,interactive)
+    gp_canvas.directive_jpeg(command,line,gp_settings.linestyles,gp_userspace.variables,gp_settings.settings,interactive)
   elif (command['directive'] == "eps"):          # eps
-    gp_canvas.directive_eps(command,gp_settings.linestyles,gp_userspace.variables,gp_settings.settings,interactive)
+    gp_canvas.directive_eps(command,line,gp_settings.linestyles,gp_userspace.variables,gp_settings.settings,interactive)
+  elif (command['directive'] == "list"):         # list
+    gp_canvas.directive_list()
   elif (command['directive'] == "clear"):        # clear
     gp_canvas.plotorder_clear()
     gp_children.send_command_to_csa("A","")
@@ -1223,7 +1225,7 @@ def Interactive():   # Interactive PyXPlot terminal
 
 recurse_depth = 0
 
-def main_loop(commandparams):
+def main_loop(commandparams,flag_glob=False):
  global recurse_depth 
  recurse_depth = recurse_depth + 1 # Recursive loading protection
  if (recurse_depth > 10):
@@ -1239,7 +1241,8 @@ def main_loop(commandparams):
    elif ((commandparams[i] == '-v') or (commandparams[i] == '--version')): # NB: -q option implemented below
     gp_report(gp_text.version)
    else:
-    infiles = glob.glob(os.path.join(gp_settings.cwd, os.path.expanduser(commandparams[i])))
+    infiles = os.path.join(gp_settings.cwd, os.path.expanduser(commandparams[i]))
+    if flag_glob: infiles = glob.glob(infiles)
     if (len(infiles) == 0):
      gp_error("PyXPlot Error: Could not find command file '%s'"%commandparams[i])
      gp_error("Skipping on to next command file")
@@ -1347,7 +1350,7 @@ else:
  gp_settings.interactive = True
 
 # Loop over all config files passed to us on the commandline
-main_loop(sys.argv[1:])
+main_loop(sys.argv[1:],False)
 
 # Close any X11_singlewindow and X11_multiwindow sessions
 gp_children.send_command_to_csa("B","")

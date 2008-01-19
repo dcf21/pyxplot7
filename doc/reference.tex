@@ -169,7 +169,6 @@ return to a state of adding plots to a multiplot rather than editing the
 existing plots; simply call the {\tt plot} command rather than the {\tt replot}
 command to do this.
 
-
 \section{eps}\indcmd{eps}
 
 \begin{verbatim}
@@ -188,6 +187,18 @@ centimetres. If neither is specified then the image will be rendered with the
 native dimensions specified within the postscript.  The {\tt eps} command is
 often useful in multiplot mode, allowing postscript images to be combined with
 plots, text labels, etc.
+
+\section{exec}\indcmd{exec}
+
+The {\tt exec} command can be used to execute PyXPlot commands contained within
+string variables. For example:
+
+\begin{verbatim}
+terminal="eps"
+exec "set terminal %s"%(terminal)
+\end{verbatim}
+
+It can also be used to write obfuscated PyXPlot scripts.
 
 \section{exit}\indcmd{exit}
 
@@ -321,6 +332,27 @@ neither is specified then the image will be rendered with the native dimensions
 specified within the jpeg file (if any). The {\tt jpeg} command is often useful
 in multiplot mode, allowing postscript images to be combined with plots, text
 labels, etc.
+
+\section{list}\indcmd{list}
+
+The {\tt list} command outputs a listing of all of the items on a multiplot,
+giving their reference numbers and the commands used to produce them. For
+example:
+
+\begin{verbatim}
+pyxplot> list
+#  ID | Command 
+    0   plot f(x) 
+d   1   text 'Figure 1: A plot of f(x)' 
+    2   text 'Figure 1: A plot of $f(x)$' 
+
+# Items marked 'd' are deleted 
+\end{verbatim}
+
+In this example, the user has plotted a graph of $f(x)$, and added a caption to
+it. The {\tt ID} column lists the reference numbers of each multiplot item.
+Item {\tt 1} has been deleted, and this is indicated by the {\tt d} to the left
+of its reference number.
 
 \section{load}\indcmd{load}
 
