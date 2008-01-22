@@ -1243,6 +1243,7 @@ def main_loop(commandparams,flag_glob=False):
    else:
     infiles = os.path.join(gp_settings.cwd, os.path.expanduser(commandparams[i]))
     if flag_glob: infiles = glob.glob(infiles)
+    else        : infiles = [infiles]
     if (len(infiles) == 0):
      gp_error("PyXPlot Error: Could not find command file '%s'"%commandparams[i])
      gp_error("Skipping on to next command file")
