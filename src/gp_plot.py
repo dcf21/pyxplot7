@@ -1331,7 +1331,7 @@ def tabulate_dataset(multiplot_number,axes,axis_x,axis_y,plotwords,settings,titl
        if (ptB != None): # The last box we work out the width of
           if (stylestr in ['boxes', 'histeps']):
            if (settings['BOXWIDTH'] <= 0.0)    : datagrid_cpy.append([ ptC[0]                       , ptC[1] , (ptC[0]-ptB[0])/2      ])
-           else                                : datagrid_cpy.append([ ptB[0]                       , ptB[1] , settings['BOXWIDTH']/2 ])
+           else                                : datagrid_cpy.append([ ptC[0]                       , ptC[1] , settings['BOXWIDTH']/2 ])
           if (stylestr == 'impulses')          : datagrid_cpy.append([ ptC[0]                       , ptC[1] , 0.0                    ])
           if (stylestr == 'steps')             : datagrid_cpy.append([ (ptC[0]+ptB[0])/2            , ptC[1] , (ptC[0]-ptB[0])/2      ])
           if (stylestr == 'fsteps')            : datagrid_cpy.append([ ptC[0]                       , ptC[1] , 0.0                    ])
