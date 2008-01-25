@@ -415,16 +415,14 @@ plot sin(x)
 \end{verbatim}
 
 Ranges for the axes of a graph can be specified by placing them in
-square-brackets before the name of the function to be plotted. Leaving a set of
-brackets empty specifies that an axis will be automatically scaled, as happens
-by default. An example of this syntax would be:
+square-brackets before the name of the function to be plotted. An example of
+this syntax would be:
 
 \begin{verbatim}
 plot [-pi:pi] sin(x)
 \end{verbatim}
 
-\noindent which would plot the function $\sin(x)$ across some default range of
-values on the $x$-axis.
+\noindent which would plot the function $\sin(x)$ between $-\pi$ and $\pi$.
 
 \Datafile s may also be plotted as well as functions, in which case the filename
 of the \datafile\ to be plotted should be enclosing in apostrophes. An example of
@@ -2043,15 +2041,17 @@ replacing the $x$ with a $y$.  Hence:
 set y23range [-5:5]
 \end{verbatim}
 
-\noindent sets the range of the 23rd $y$-axis to be between -5 and 5.  The
+\noindent sets the range of the 23rd $y$-axis to be between -5 and 5.  To
+request a range to be automatically scaled an asterix can be used.  The
 following command:
 
 \begin{verbatim}
-set xrange [:10]
+set xrange [:10][*:*]
 \end{verbatim}
 
-\noindent would set the $x$-axis to have an upper limit of 10, but an
-automatically-scaling lower-limit.
+\noindent would set the $x$-axis to have an upper limit of 10, but does not
+affect the lower limit; its range remains at its previous setting.  The first
+y-axis is automatically scaled on both its upper and lower limits.
 
 \subsection{xticdir}\indcmd{set xticdir}
 
