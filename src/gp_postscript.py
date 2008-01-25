@@ -28,6 +28,7 @@ import sys
 from math import *
 
 import gp_settings
+from gp_math import min,max
 
 # Paper sizes
 # See http://www.cl.cam.ac.uk/~mgk25/iso-paper.html
@@ -85,7 +86,6 @@ for size in range(11):
 #  print "%27s %8.2f %8.2f"%(type,size[0],size[1])
 
 mm_to_ps = 72 / 25.4 # Convert mm to postscript 72th of an inch
-margins = {'LEFT':15, 'RIGHT':15, 'TOP':15, 'BOTTOM':30}
 
 # GET_PAPERNAME(): a.k.a What do you call a piece of paper with these dimensions?
 
@@ -163,6 +163,12 @@ def enlarge(filename):
   inbbox = getbbox(filename)
   width  = inbbox[2] - inbbox[0]
   height = inbbox[3] - inbbox[1]
+  # Generate some sensible margins for the plot
+  margins = {}
+  margins['LEFT'] = min(paper_width / 10., 15)
+  margins['RIGHT'] = margins['LEFT']
+  margins['TOP'] = min(paper_height/10., 15)
+  margins['BOTTOM'] = margins['TOP'] * 2
   # Calculate the scaling in the x and y directions to see which is smallest
   xscaling = (paper_width - margins['LEFT'] - margins['RIGHT'])*mm_to_ps/width
   yscaling = (paper_height - margins['TOP'] - margins['BOTTOM'])*mm_to_ps/height
@@ -240,12 +246,16 @@ def epstops(filename):
   infile.close()
   assert (inbbox != None), "Could not read bbox of PyX output"
  
+  # Generate some sensible margins for the plot
+  margins = {}
+  margins['LEFT'] = min(paper_width / 10., 15)
+  margins['RIGHT'] = margins['LEFT']
+  margins['TOP'] = min(paper_height/10., 15)
+  margins['BOTTOM'] = margins['TOP'] * 2
+
   # Generate translation operation
-  margin_x = 15 * mm_to_ps
-  margin_y = margin_x
- 
-  trans_x = margin_x - inbbox[0] # Left margin - left bbox
-  trans_y = paper_height * mm_to_ps - margin_y - inbbox[3]
+  trans_x = margins['LEFT'] * mm_to_ps - inbbox[0] # Left margin - left bbox
+  trans_y = paper_height * mm_to_ps - margins['TOP'] * mm_to_ps - inbbox[3]
  
   # Start producing output postscript
   outfile = open("%s2"%filename,"w")
