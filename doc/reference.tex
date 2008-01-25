@@ -1133,6 +1133,7 @@ set keycolumns 3
 set label <label number> '<text>' [<co-ordinate>] <x>,
                                   [<co-ordinate>] <y>
                                   [rotate <angle>]
+                                  [with colour <colour>]
 \end{verbatim}
 
 \begin{verbatim}
@@ -1178,6 +1179,14 @@ counter-clockwise. The following example would produce upward-running text:
 set label 1 'Hello' 1.2, 2.5 rotate 90
 \end{verbatim}
 
+By default the labels are black; however, an arbitrary colour may be specified
+using the `{\tt with colour}' modifier.  For example:
+
+\begin{verbatim}
+set label 3 'A purple label' 0, 0 with colour purple
+\end{verbatim}
+
+\noindent will place a purple label at the origin.
 
 \subsection{linestyle}\indcmd{set linestyle}
 
@@ -2266,7 +2275,7 @@ supplied format is used for both columns.
 \section{text}\indcmd{text}
 
 \begin{verbatim}
-text '<text string>' [at <x>, <y>] [rotate <angle>]
+text '<text string>' [at <x>, <y>] [rotate <angle>] [with colour <colour>]
 \end{verbatim}
 
 The {\tt text} command is primarily part of the multiplot environment; it can be
@@ -2290,6 +2299,15 @@ counter-clockwise. The following example would produce upward-running text:
 \begin{verbatim}
 text 'Hello' at 1.5, 3.6 rotate 90
 \end{verbatim}
+
+By default the text is black; however, an arbitrary colour may be specified
+using the `{\tt with colour}' modifier.  For example:
+
+\begin{verbatim}
+text 'A purple label' at 0, 0 with colour purple
+\end{verbatim}
+
+\noindent would add a purple label at the origin of the multiplot.
 
 Outside of multiplot mode, the text command can be used to produce images
 consisting simply of one single text item. This can be useful for importing

@@ -127,6 +127,13 @@ in degrees. For example, the following would produce upward-running text:
 set label 1 'Hello World' at axis3 3.0, axis4 2.7 rotate 90
 \end{verbatim}
 
+A colour can also be specified, if desired, using the {\tt with colour}
+modifier.  For example, the following would produce a green label at the origin:
+
+\begin{verbatim}
+set label 2 'This label is green' at 0, 0 with colour green
+\end{verbatim}
+
 \index{fontsize}\index{text!size} The fontsize of these text labels can be set
 globally using the \indcmdt{set fontsize}. This applies not only to the {\tt
 set label} command, but also to plot titles, axis labels, keys, etc. The value
@@ -342,12 +349,13 @@ text 'This is some text' at x,y
 \end{verbatim}
 
 In this case, the string `This is some text' would be rendered at position
-$(x,y)$ on the multiplot. As with the \indcmdt{set label}, a rotation angle
-may optionally be specified to rotate text labels through any given angle,
-measured in degrees counter-clockwise, for example:\indkey{rotate}
+$(x,y)$ on the multiplot. As with the \indcmdt{set label}, a colour may
+optionally be specified with the {\tt with colour} modifier, as well as a
+rotation angle to rotate text labels through any given angle, measured in
+degrees counter-clockwise. For example:\indkey{rotate}
 
 \begin{verbatim} 
-text 'This is some text' at x,y rotate r
+text 'This is some text' at x,y rotate r with colour red
 \end{verbatim}
 
 The commands \indcmdts{set textcolour}, \indcmdts{set texthalign} and
