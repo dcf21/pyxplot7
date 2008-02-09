@@ -490,7 +490,7 @@ def multiplot_plot(linestyles,vars,settings,multiplot_plotdesc):
    if (gp_settings.settings_global['TERMANTIALIAS'] == "ON"): command = command + "-antialias "
    else:                                                      command = command + "+antialias "
    command = command + "%s %s.png"%(fname,fname)
-   os.system(command)
+   if (os.system(command) != 0): raise KeyboardInterrupt
    write_output("%s.png"%fname,out_fname,settings)
   elif (gp_settings.settings_global['TERMTYPE'] == "GIF"):                  # GIF output
    command = "convert -density %f -quality 100 "%gp_settings.settings_global['DPI']
@@ -501,7 +501,7 @@ def multiplot_plot(linestyles,vars,settings,multiplot_plotdesc):
    if (gp_settings.settings_global['TERMANTIALIAS'] == "ON"): command = command + "-antialias "
    else:                                                      command = command + "+antialias "
    command = command + "%s %s.gif"%(fname,fname)
-   os.system(command)
+   if (os.system(command) != 0): raise KeyboardInterrupt
    write_output("%s.gif"%fname,out_fname,settings)
   elif (gp_settings.settings_global['TERMTYPE'] == "JPG"):                  # JPG output
    command = "convert -density %f -quality 100 "%gp_settings.settings_global['DPI']
@@ -509,7 +509,7 @@ def multiplot_plot(linestyles,vars,settings,multiplot_plotdesc):
    if (gp_settings.settings_global['TERMANTIALIAS'] == "ON"): command = command + "-antialias "
    else:                                                      command = command + "+antialias "
    command = command + "%s %s.jpg"%(fname,fname)
-   os.system(command)
+   if (os.system(command) != 0): raise KeyboardInterrupt
    write_output("%s.jpg"%fname,out_fname,settings)
 
   return unsuccessful_plot_operations

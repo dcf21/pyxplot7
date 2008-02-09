@@ -899,7 +899,7 @@ def directive_history(userinput):
 
 line_combiner = ""
 
-def directive(line, toplevel=True, interactive=False):
+def directive(line, recurse_depth, toplevel=True, interactive=False):
   global exitting, line_combiner
 
   if toplevel: gp_settings.cmd_history.append(line)
@@ -939,7 +939,7 @@ def directive(line, toplevel=True, interactive=False):
    linelist = [line.strip()]
   if (len(linelist) > 1):
    for i in range(len(linelist)):
-    directive(linelist[i], False, interactive)
+    directive(linelist[i], recurse_depth, False, interactive)
    return(2) 
 
   line     = line.strip() # Get rid of leading/trailing spaces
@@ -1003,7 +1003,7 @@ def directive(line, toplevel=True, interactive=False):
   elif (command['directive'] == "history"):      # history
     directive_history(command)
   elif (command['directive'] == "load"):         # load
-    main_loop([command['filename']],True)
+    main_loop([command['filename']],True,recurse_depth+1)
   elif (command['directive'] == "save"):         # save
     try:
      savefile = open(os.path.join(gp_settings.cwd, os.path.expanduser(command['filename'])),"w")
@@ -1190,7 +1190,7 @@ def directive(line, toplevel=True, interactive=False):
     return(1)
   return (0)
 
-def Interactive():   # Interactive PyXPlot terminal
+def Interactive(recurse_depth):   # Interactive PyXPlot terminal
   global exitting,line_combiner,SCIPY_ABSENT
   exitting=0
   if (sys.stdin.isatty() and gp_settings.display_splash): # Only print welcome blurb if running interactively, i.e. not from pipe
@@ -1207,13 +1207,13 @@ def Interactive():   # Interactive PyXPlot terminal
           if (line_combiner == ""): prompt = "pyxplot> "
           else                    : prompt = ".......> "
           input_cmd = raw_input(prompt)
-          try: directive(input_cmd, interactive=True)
+          try: directive(input_cmd, recurse_depth, interactive=True)
           except KeyboardInterrupt: gp_warning("Received SIGINT. Terminating command.")
         except KeyboardInterrupt: gp_report("") # CTRL-C at command-prompt just gives a new command prompt
       else:
         linenumber=linenumber+1
         gp_error_setstreaminfo(linenumber,"input stream")
-        directive(raw_input()) # Don't print command prompt when running from a pipe
+        directive(raw_input(), recurse_depth) # Don't print command prompt when running from a pipe
   except (KeyboardInterrupt,EOFError): pass # EOFError == CTRL-D
   if sys.stdin.isatty():
    if gp_settings.display_splash: gp_report("\nGoodbye. Have a nice day.")
@@ -1223,19 +1223,15 @@ def Interactive():   # Interactive PyXPlot terminal
 
 # Main loop
 
-recurse_depth = 0
-
-def main_loop(commandparams,flag_glob=False):
- global recurse_depth 
- recurse_depth = recurse_depth + 1 # Recursive loading protection
- if (recurse_depth > 10):
+def main_loop(commandparams,flag_glob=False,recurse_depth=0):
+ if (recurse_depth > 10): # Recursive loading protection
   gp_warning("Warning: recursive file loading detecting; load command failing")
   return
 
  if (len(commandparams) > 0): # Input files specified on commandline
   for i in range(0,len(commandparams)):
    if (commandparams[i] == '-'): # A minus on commandline means interactive
-    Interactive()
+    Interactive(recurse_depth)
    elif ((commandparams[i] == '-h') or (commandparams[i] == '--help')):
     gp_report(gp_text.help)
    elif ((commandparams[i] == '-v') or (commandparams[i] == '--version')): # NB: -q option implemented below
@@ -1262,7 +1258,7 @@ def main_loop(commandparams,flag_glob=False):
        for line in instream.readlines():
         linenumber=linenumber+1
         gp_error_setstreaminfo(linenumber,"file '%s'"%infile)
-        status = directive(line)
+        status = directive(line,recurse_depth)
         if (firstline and (status == 1)):
          gp_error("Error on first line of commandfile: Is this is valid script?")
          gp_error("Aborting")
@@ -1271,7 +1267,7 @@ def main_loop(commandparams,flag_glob=False):
         if (exitting==1): break
        gp_error_setstreaminfo(-1,"")
  else: # Otherwise enter interactive mode
-   Interactive()
+   Interactive(recurse_depth)
 
 # MAIN ENTRY POINT
 
