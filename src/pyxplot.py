@@ -1225,7 +1225,7 @@ def Interactive(recurse_depth):   # Interactive PyXPlot terminal
 
 def main_loop(commandparams,flag_glob=False,recurse_depth=0):
  if (recurse_depth > 10): # Recursive loading protection
-  gp_warning("Warning: recursive file loading detecting; load command failing")
+  gp_warning("Warning: recursive file loading detected; load command failing")
   return
 
  if (len(commandparams) > 0): # Input files specified on commandline
