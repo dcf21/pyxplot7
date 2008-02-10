@@ -579,6 +579,7 @@ def plot_dataset_makeaxes_makenonlink(Msettings, Maxes_this):
  for [direction, axis_list] in Maxes_this.iteritems():
   if (direction != 'z'): # 2D plots don't have z axes
    for [number,axis] in axis_list.iteritems():
+
     if ((axis['LINKINFO']['LINKED'] != 'ON') and (axis["AXIS"] == None)):
 
      axisname = axis['LINKINFO']['AXISNAME']

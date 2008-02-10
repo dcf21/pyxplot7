@@ -291,6 +291,7 @@ def getticks(axis, axis_length, sepmaj, sepmin, ticks_realise, ticksep, axis_typ
   axis_max   = max(axis['MIN_RANGE'], axis['MAX_RANGE'])
   axis_set   = axis['SETTINGS']
   axis_base  = axis['SETTINGS']['LOGBASE']
+  axis_length= math.fabs(axis_length)
 
   tick_sets = {}
 
