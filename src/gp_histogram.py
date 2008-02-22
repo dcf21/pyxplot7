@@ -102,8 +102,9 @@ def directive_histogram(command, vars, settings):
    if (xmin <= 0):
     gp_warning('Warning: negative data will be rejected from logrithmically-binned histogram')
    i=0
-   while (i<len(datagrid)):  # Can't use for here as we want to delete items
-    try: datagrid[i][1] = log(datagrid[i][1])/logbase  # Log all the data, removing negative elements
+   # Log all the data, deleting those that are negative
+   while (i<len(datagrid)):
+    try: datagrid[i][1] = log(datagrid[i][1])/logbase
     except KeyboardInterrupt: raise
     except ValueError: 
      del datagrid[i]
@@ -112,13 +113,14 @@ def directive_histogram(command, vars, settings):
      del datagrid[i]
      continue
     i += 1
+   # Reset these to possible new values
    xmin = datagrid[ 0][1]
    xmax = datagrid[-1][1]
 
   # Now we need to work out our bins
-  # Precedence: 1. Set of bins listed on command line
-  #             2. Binwidth,origin listed on command line (Unimplemented)
-  #             3. Set of bins set as a setting 
+  # Precedence: 1. Set of bins specified by user in command
+  #             2. Binwidth,origin specified by user in command
+  #             3. Set of bins set as a setting (not currently implemented)
   #             4. Binwidth,origin set as a setting
 
   if ('bin_list,' in command):
@@ -133,8 +135,9 @@ def directive_histogram(command, vars, settings):
    if ('binorigin' in command) : binorigin = command['binorigin']
    else                        : binorigin = settings['BINORIGIN']
    bins = get_bins(ranges, xmin, xmax, binwidth, binorigin)
+   if (bins == None): return
   
-  # Check for user-specified data ranges to consider
+  # Check for user-specified data ranges to consider, else use maximum range of data
   binrange = [xmin, xmax]
   if (len(ranges) > 0):
    if (ranges[0][0] != None): binrange[0] = ranges[0][0]
@@ -192,14 +195,24 @@ def get_bins(ranges, xmin, xmax, binwidth, binorigin):
   # Expand the ends of the outside bins to match the provided bin pattern
   xbinmin = floor((xbinmin-binorigin)/binwidth)*binwidth + binorigin
   xbinmax = ceil((xbinmax-binorigin)/binwidth)*binwidth + binorigin
+
+  # Deal with the case where the minimum datum and the lower edge of the bottom bin are in exactly the same place by adding one more bin
+  if (xmin == xbinmin and (len(ranges)==0 or ranges[0][0]==None)): xbinmin -= binwidth
+
   Nbins = (int)((xbinmax-xbinmin)/binwidth) + 1
+
+  # Check for a silly number of bins
+  if (Nbins > 1e6):
+   gp_error('Too many bins (%d) for histogram command!'%Nbins)
+   return None
+  if (Nbins > 1e4): gp_warning('You have specified a large number (%d) of bins in the histogram command.  This may require a large amount of memory and time...'%Nbins)
 
   bins = [i*binwidth+xbinmin for i in range(Nbins)]  
   return bins
 
 # HISTCOUNT(): Produce counts with which to plot a histogram, into the bins
 # supplied in bins[]. Returns a list such that counts[i] is the number of items
-# with bins[i-1]<x<bins[i]
+# with bins[i-1] < x <= bins[i]
 
 def histcount(bins, datagrid, binrange):
   counts = [0]*(len(bins))
@@ -214,7 +227,7 @@ def histcount(bins, datagrid, binrange):
     if (x<=bins[i]):
      counts[i]+=1
      break
-  counts[0] = 0
+  counts[0] = 0 # This is the number of points with x < xbinmin
 
   # Divide by width of bins to obtain an histogram
   for i in range(1,len(bins)):

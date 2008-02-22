@@ -310,3 +310,13 @@ syntax as in the {\tt plot} and {\tt fit} commands; only points that fall in
 that range will then be binned.  In the same way as for the {\tt plot} command,
 the \indmodt{index}, \indmodt{every}, \indmodt{using} and \indmodt{select}
 modifiers can also be used to bin different portions of a datafile.
+
+Note that, although a histogram is similar to a bar chart, they are subltly
+different.  A bar chart has the {\it height} of the bar equal to the number of
+points that it represents; for a histogram the {\it area} of the bar is equal to
+the number of points.  To draw a bar chart of a set of data use the histogram
+command and then multiply by the bin width when plotting.
+
+If the function produced by the histogram command is plotted using the
+\indmod{with boxes} modifier, box boundaries will be drawn to coincide with the
+bins that the histogram was made with.
