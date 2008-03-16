@@ -45,7 +45,7 @@ $(EPSDIR)/%.eps: $(EXAMPLEDIR)/%.ppl
 	echo "Making postscript documentation..."
 	dvips -Pcmz -Pamz $< -o $@ > /dev/null 2> /dev/null
 
-pyxplot.dvi: changelog.tex configuration.tex definitions.tex externals.tex first_steps.tex fit_maths.tex introduction.tex numerics.tex other_apps.tex plotting.tex pyxplot.tex reference.tex vector_graphics.tex
+pyxplot.dvi: changelog.tex colours.tex configuration.tex definitions.tex externals.tex first_steps.tex fit_maths.tex introduction.tex numerics.tex other_apps.tex plotting.tex pyxplot.tex reference.tex vector_graphics.tex
 	echo "Compiling documentation..."
 	latex pyxplot.tex > /dev/null 2> /dev/null
 	latex pyxplot.tex > /dev/null 2> /dev/null
