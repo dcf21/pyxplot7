@@ -263,12 +263,12 @@ def directive_plot(command,commandtext,linestyles,vars,settings,axes,labels,arro
   # Now make a local copy of axes, and store it in multiplot_plotdesc[n]['axes']
   # We need a copy, because user may change axis ranges in the plot command, overriding settings
   # in gp_settings lists of axes.
-  if (replot_stat == 0) or (not 1 in axes_this['x']): # Latter or statement because default values above aren't so good is user types "replot" before "plot"
-   axes_this = { 'x':{},'y':{},'z':{} } # Make a local copy of the list 'axes', NB: replot on same axes second time around
-   for [direction,axis_list_to] in axes_this.iteritems():
-    for [number,axis] in axes[direction].iteritems():
+  if (replot_stat == 0): axes_this = { 'x':{},'y':{},'z':{} } # NB: replot on same axes as before when replotting, so do not clear axes_this
+  for [direction,axis_list_to] in axes_this.iteritems():
+   for [number,axis] in axes[direction].iteritems():
+    if number not in axis_list_to:
      axis_list_to[number] = {'SETTINGS':axis.copy(), 'MIN_USED':None, 'MAX_USED':None, 'AXIS':None}
-     # Nones are min/max range of data plotted on each axis and PyX axis
+     # 'AXIS' will become a PyX axis object in due course
 
   # Now read range specifications, modifying local copy of axes as required
   # NB: Any ranges that are set go into ['SETTINGS']['MIN/MAX'], not ['MIN_USED'] or ['MAX_USED']

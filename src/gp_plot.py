@@ -158,7 +158,6 @@ def multiplot_plot(linestyles,vars,settings,multiplot_plotdesc):
   #         This is achieved with a dry-run of the plotting process.
   for this_plotdesc in [x for x in multiplot_plotdesc if x['itemtype'] == 'plot']:
    [Mplotlist, Mkey, Msettings, Mlabels, Marrows, Mdeleted, Maxes_this, multiplot_number] = [ this_plotdesc[x] for x in ['plotlist', 'key', 'settings', 'labels', 'arrows', 'deleted', 'axes', 'number'] ]
-   any_autoscaling_axes = 0
    for [direction,axis_list] in Maxes_this.iteritems():
     for [number,axis] in axis_list.iteritems():
      axis['MIN_USED'] = axis['SETTINGS']['MIN']
@@ -174,12 +173,8 @@ def multiplot_plot(linestyles,vars,settings,multiplot_plotdesc):
        axis['MAX_USED'] = None
        gp_warning("Warning: Log axis %s%d set with range maximum < 0 -- this is impossible, so autoscaling instead."%(direction,number))
 
-     if ((axis['MIN_USED'] == None) or (axis['MIN_USED'] == None)):
-      any_autoscaling_axes = 1
-   # If we have some autoscaling axes on this plot, we need to check out the range of the data, otherwise not.
-   if ((any_autoscaling_axes == 1) and (Mdeleted != 'ON')):
-    g = None # We have no graph.... yet
-    data_tables[multiplot_number] = dataset_tabulate_axes_autoscale(multiplot_number,Mplotlist,Msettings,Maxes_this,linestyles,vars)
+   g = None # We have no graph.... yet
+   data_tables[multiplot_number] = dataset_tabulate_axes_autoscale(multiplot_number,Mplotlist,Msettings,Maxes_this,linestyles,vars)
 
   # Step 2: Propagate range information from linked axes to their parent axes.
   # Repeat twice, as if plots B and C both link to A, and plot B causes plot A's scale to change, we want to
