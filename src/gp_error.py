@@ -27,7 +27,7 @@ import traceback
 # Print traceback on error?
 
 DEBUG = False
-# DEBUG = True
+DEBUG = True
 
 # Used to inform user of line number of errors in scripts
 

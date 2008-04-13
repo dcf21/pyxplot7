@@ -38,6 +38,7 @@ import gp_histogram
 import os
 import sys
 from math import *
+import copy
 import glob
 import operator
 import exceptions
@@ -793,9 +794,9 @@ def dataset_tabulate_axes_autoscale(multiplot_number,Mplotlist,Msettings,Maxes_t
     plotitem=Mplotlist[i]
     if ('filename' in plotitem)==filename_in:
      try:
-      data_tables[i] = handler(multiplot_number,Maxes_this,Msettings,linestyles,plotitem,vars,verb_errors)
-      if (data_tables[i] != None):
-       for data_table in data_tables[i]:
+      data_tables[i] = flatten_list(handler(multiplot_number,Maxes_this,Msettings,linestyles,plotitem,vars,verb_errors))
+      for data_table in data_tables[i]:
+       if (data_table != None):
         [datagrid_cpy_list,axes,axis_x,axis_y,localtitle,stylestr,description,verb_errors] = [data_table[j] for j in ['datagrid_cpy_list','axes','axis_x','axis_y','localtitle','stylestr','description','verb_errors']]
         axes_autoscale(multiplot_number,Msettings,datagrid_cpy_list,axes,axis_x,axis_y,localtitle,stylestr,description,verb_errors)
      except KeyboardInterrupt: raise
@@ -808,8 +809,8 @@ def plot_tabulated_data(g,Mplotlist,data_tables):
  for i in range(len(Mplotlist)):
   plotitem=Mplotlist[i]
   try:
-   if (data_tables[i] != None):
-    for data_table in data_tables[i]:
+   for data_table in data_tables[i]:
+    if (data_table != None):
      [datagrid_cpy_list,axes,axis_x,axis_y,dx,dxmin,dy,dymin,localtitle,stylelist,description,verb_errors] = [data_table[j] for j in ['datagrid_cpy_list','axes','axis_x','axis_y','dx','dxmin','dy','dymin','localtitle','stylelist','description','verb_errors']]
      plot_dataset(g,datagrid_cpy_list,axes,axis_x,axis_y,dx,dxmin,dy,dymin,localtitle,stylelist,description,verb_errors)
   except KeyboardInterrupt: raise
@@ -1071,7 +1072,7 @@ def tabulate_function(multiplot_number,axes,settings,linestyles,plotwords,vars,v
    [rows, columns, datagrid] = totalgrid[data_section]
    if (data_section == 1): repeat = 0 # Are we to use same style as previous lump of data we plotted?
    else                  : repeat = 1
-   return [tabulate_dataset(multiplot_number,axes,axis_x,axis_y,plotwords,settings,title,datagrid,rows,columns,"function '%s'"%function_str,repeat,verb_errors)]
+   return tabulate_dataset(multiplot_number,axes,axis_x,axis_y,plotwords,settings,title,datagrid,rows,columns,"function '%s'"%function_str,repeat,verb_errors)
 
 # WITH_WORDS_CLEANUP(): Take a dictionary of style words, and clean up by: (i)
 # Replacing colour numbers with colour names as necessary, and (ii)
@@ -1199,25 +1200,25 @@ def tabulate_dataset(multiplot_number,axes,axis_x,axis_y,plotwords,settings,titl
     prev_x       = None # x-coordinate of previous bar; used to test whether we're going to stack more on top of it
     prev_y       = None # Accumulator for adding up height of stacked bar in stacked barcharts
     prev_addons  = []   # Further columns after the height y
-    i            = None # The stacking height of the current bar
+    i            = 0    # The stacking height of the current bar
     for datapoint in datagrid:
      if (datapoint[0] != prev_x): # We have a new x-coordinate, so start stacking a new stacked bar
-      for j in range(len(stacked_bars)):
-       while (len(stacked_bars[-1]) > len(stacked_bars[j])):
-        stacked_bars[j].append([prev_x,prev_y]+prev_addons)
       i      = 0
       prev_x = datapoint[0]
       prev_y = 0.0
       prev_addons = datapoint[2:]
      else: # This point is at the same x-coordinate as previous point, so stack on top of it
       i += 1
-     if (i >= len(stacked_bars)): stacked_bars.insert(0, stacked_bars[0][:-1]) # If we have a record stacking height, create a new barchart behind previous highest.
+     if (i >= len(stacked_bars)): stacked_bars.insert(0, copy.deepcopy(stacked_bars[0]) ) # If we have a record stacking height, create a new barchart behind previous highest.
      prev_y += datapoint[1]
      prev_addons = datapoint[2:]
-     stacked_bars[-1-i].append([prev_x,prev_y]+prev_addons)
+     if (i==0):
+      for j in range(len(stacked_bars)):
+       stacked_bars[-1-j].append([prev_x,prev_y]+prev_addons)
+     else:
+      stacked_bars[-1-i][-1] = [prev_x,prev_y]+prev_addons
     if (len(stacked_bars) > 1):
-     for dataset in stacked_bars:
-      return tabulate_dataset(multiplot_number,axes,axis_x,axis_y,plotwords,settings,title,dataset,len(dataset),columns,description,0,verb_errors)
+     return flatten_list([tabulate_dataset(multiplot_number,axes,axis_x,axis_y,plotwords,settings,title,dataset,len(dataset),columns,description,0,verb_errors) for dataset in stacked_bars])
 
   try:
     stylelist = []
@@ -1420,6 +1421,16 @@ def tabulate_dataset(multiplot_number,axes,axis_x,axis_y,plotwords,settings,titl
       gp_error("Failed while plotting %s:"%description)
       gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
       return # Error
+
+# FLATTEN_LIST(): Flatten a hierachy of lists into a single list
+
+def flatten_list(input):
+ if type(input)!=list: return [input]
+ output=[]
+ for item in input:
+  if type(item) == list: output.extend(flatten_list(item))
+  else                 : output.append(item)
+ return output
 
 # AXES_AUTOSCALE: Take the output from the above function and see if any autoscaling axes need extending to accommodate it
 
