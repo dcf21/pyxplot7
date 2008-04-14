@@ -823,7 +823,7 @@ default the existing file would be overwritten by the new one, when the
 {\tt backup} setting is turned on, it is renamed, placing a tilde at the end of
 its filename. For example, suppose that a plot were to be written with filename
 `{\tt out.ps}', but such a file already existed.  With the backup setting turned on
-the existing file would be renamed `{\tt out.ps\~}' to save it from being overwritten.
+the existing file would be renamed `{\tt out.ps$\sim$}' to save it from being overwritten.
 
 The setting may be turned off via {\tt set nobackup}.
 
@@ -1221,26 +1221,22 @@ set linewidth <value>
 \end{verbatim}
 
 Sets the default linewidth, in units of pt, of the lines used to plot datasets
-onto graphs with the `{\tt lines}' plot style (see the {\tt plot} command for
-details of plot styles), for example in the following statement:
+onto graphs with the `{\tt lines}' plot style.  For example in the following
+statement:
 
 \begin{verbatim}
+set linewidth 3
 plot sin(x) with lines
 \end{verbatim}
 
-The linewidths of individual datasets can be set as follows; the {\tt set
-linewidth} setting only affects plot statements where no linewidth is manually
-specified:
-
-\begin{verbatim}
-plot sin(x) with lines linewidth 5.0
-\end{verbatim}
-
+\noindent lines of three times the fefault thickness are plotted.  The
+{\tt set linewidth} setting only affects plot statements where no linewidth is
+manually specified.
 
 \subsection{logscale}\indcmd{set logscale}
 
 \begin{verbatim}
-set logscale [<axis> ... ] <base>
+set logscale [<axis> ... ] [<base>]
 \end{verbatim}
 
 The `{\tt logscale}' setting causes an axis to be laid out with logarithmically,
@@ -1284,7 +1280,8 @@ unset log x1y2
 \end{verbatim}
 
 Optionally, a base may be specified at the end of the {\tt set logscale}
-command, to produce axes labelled in logarithms to arbitrary bases.
+command, to produce axes labelled in logarithms of arbitrary bases.  The default
+base is 10.
 
 \subsection{multiplot}\indcmd{set multiplot}
 
@@ -1322,7 +1319,7 @@ Issuing the command:
 set noarrow
 \end{verbatim}
 
-\noindent removes all arrows, as set using the {\tt set arrow} command, from the current
+\noindent removes all arrows produced with the {\tt set arrow} command from the current
 plot. Alternatively, individual arrows can be removed using the syntax:
 
 \begin{verbatim}
@@ -1330,7 +1327,7 @@ set noarrow 2
 \end{verbatim}
 
 \noindent where the tag `{\tt 2}' here is the identification number given to
-the arrow to be removed when it was initially set using the {\tt set arrow}
+the arrow to be removed when it was initially specified with the {\tt set arrow}
 command.
 
 \subsection{noaxis}\indcmd{set noaxis}
@@ -1357,7 +1354,7 @@ See {\tt display}.
 \subsection{nogrid}\indcmd{set nogrid}
 
 \begin{verbatim}
-set norgrid [<axis> ... ]
+set nogrid [<axis> ... ]
 \end{verbatim}
 
 Issuing the command {\tt set nogrid} removes gridlines from the current plot. On
@@ -1529,10 +1526,10 @@ referred if the user issues a command such as:
 plot sin(x) with colour 5
 \end{verbatim}
 
-\noindent requesting the fifth colour from the palette. By default, this palette contains
-a range of distinctive colours, however the user can choose to substitute his
-own list of colours for these using the {\tt set palette} command. It should be
-followed by a comma-separated list of colour names, for example:
+\noindent requesting the fifth colour from the palette. By default, this palette
+contains a range of distinctive colours, however the user can choose to
+substitute his own list of colours using the {\tt set palette} command. It
+should be followed by a comma-separated list of colour names, for example:
 
 \begin{verbatim}
 set palette red,green,blue
@@ -1604,11 +1601,19 @@ set pointsize 1.5
 
 \subsection{preamble}\indcmd{set preamble}
 
+\begin{verbatim}
+set preamble <text>
+\end{verbatim}
+
 The {\tt preamble} setting changes the preamble that is prepended to each item of
 text rendered using \LaTeX{}.  This allows, for example, different packages to
 be loaded by default and user-defined macros to be set up.
 
 \subsection{samples}\indcmd{set samples}
+
+\begin{verbatim}
+set samples <value>
+\end{verbatim}
 
 The {\tt samples} setting determines the number of values along the $x$-axis at
 which functions are evaluated when they are plotted. For example:
@@ -1617,13 +1622,12 @@ which functions are evaluated when they are plotted. For example:
 set samples 100
 \end{verbatim}
 
-\noindent causes 100 points to be evaluated.  Increasing this value will cause functions
-to be plotted more smoothly, but also more slowly, and the resulting postscript
-files generated will be correspondingly larger.
+\noindent causes 100 points to be evaluated.  Increasing this value will cause
+functions to be plotted more smoothly, but also more slowly, and the postscript
+files generated will also be larger.
 
-When functions are plotted with the {\tt points} plot style, this also affects
-the number of points plotted.
-
+When functions are plotted with the {\tt points} plot style, this setting
+controls the number of points plotted.
 
 \subsection{size}\indcmd{set size}
 
@@ -1659,25 +1663,17 @@ command.
 set size ratio <ratio>
 \end{verbatim}
 
-The command:
-
-\begin{verbatim}
-set size ratio x
-\end{verbatim}
-
-\noindent sets the aspect ratio of plots produced by PyXPlot.  The height of resulting
-plots will equal the plot width, as set by the {\tt set width} command,
-multiplied by this aspect ratio. The value $x$ in the above statement can be
-substituted with any positive value, for example:
+This command sets the aspect ratio of plots produced by PyXPlot.  The height of
+resulting plots will equal the plot width, as set by the {\tt set width}
+command, multiplied by this aspect ratio.  For example:
 
 \begin{verbatim}
 set size ratio 2.0
 \end{verbatim}
 
-\noindent would cause PyXPlot to produce plots that are twice as high as they are wide.
-
-The default aspect ratio which PyXPlot uses is a golden ratio of
-$2/(1+\sqrt{5})$, which matches that of a sheet of A4 paper.
+\noindent would cause PyXPlot to produce plots that are twice as high as they
+are wide.  The default aspect ratio which PyXPlot uses is a golden ratio of
+$2/(1+\sqrt{5})$.
 
 
 \subsubsection{square}\index{set size command!square modifier@{\tt square} modifier}
@@ -1753,7 +1749,8 @@ found below.
 
 \subsubsection{colour}\index{set terminal command!colour modifier@{\tt colour} modifier}
 
-The {\tt colour} terminal option causes plots to be produced in colour.
+The {\tt colour} terminal option causes plots to be produced in colour; this is
+the default behaviour.
 
 \subsubsection{color}\index{set terminal command!color modifier@{\tt color} modifier}
 
@@ -1767,10 +1764,6 @@ shrunk to fit the current paper size.
 
 \subsubsection{eps}\index{set terminal command!eps modifier@{\tt eps} modifier}
 
-\begin{verbatim}
-set terminal eps [<option> ... ]
-\end{verbatim}
-
 Sends output to eps files.  The filename to which output is to be sent should
 be set using the {\tt set output} command; the default is
 `{\tt pyxplot.eps}'.  This terminal produces encapsulated postscript
@@ -1778,10 +1771,6 @@ suitable for including in, for example, \LaTeX documents.
 
 
 \subsubsection{gif}\index{set terminal command!gif modifier@{\tt gif} modifier}
-
-\begin{verbatim}
-set terminal gif [<option> ... ]
-\end{verbatim}
 
 The {\tt gif} terminal renders output as gif files. The filename to which output
 is to be sent should be set using the {\tt set output} command; the default is
@@ -1794,15 +1783,12 @@ for producing gifs with inverted colours.
 \subsubsection{invert}\index{set terminal command!invert modifier@{\tt invert} modifier}
 
 The {\tt invert} terminal option causes the bitmap terminals ({\tt gif}, {\tt
-jpeg}, {\tt png}) to produce output with inverted colours. Useful for producing
-plots for slideshows, where bright colours on a dark background may be desired.
+jpeg}, {\tt png}) to produce output with inverted colours. This is useful for
+producing plots for slideshows, where bright colours on a dark background may be
+desired.
 
 
 \subsubsection{jpeg}\index{set terminal command!jpeg modifier@{\tt jpeg} modifier}
-
-\begin{verbatim}
-set terminal jpeg [<option> ... ]
-\end{verbatim}
 
 The {\tt jpeg} terminal renders output as jpeg files. The filename to which
 output is to be sent should be set using the {\tt set output} command; the
@@ -1813,8 +1799,8 @@ jpegs with inverted colours.
 \subsubsection{landscape}\index{set terminal command!landscape modifier@{\tt landscape} modifier}
 
 The {\tt landscape} terminal option causes PyXPlot's output to be displayed in
-rotated orientation.  Useful for printing as you get more on your sheet of
-paper that way around; probably less useful for plotting things on screen.
+rotated orientation.  This is useful for printing as you get more on your sheet
+of paper that way around; probably less useful for plotting things on screen.
 
 \subsubsection{monochrome}\index{set terminal command!monochrome modifier@{\tt monochrome} modifier}
 
@@ -1837,17 +1823,9 @@ converse of {\tt inverse}.
 \subsubsection{pdf}\index{set terminal command!pdf modifier@{\tt pdf}
 modifier}
 
-\begin{verbatim}
-set terminal pdf [<option> ... ]
-\end{verbatim}
-
 The {\tt pdf} terminal options causes pdf format output files to be produced.
 
 \subsubsection{png}\index{set terminal command!png modifier@{\tt png} modifier}
-
-\begin{verbatim}
-set terminal png [<option> ... ]
-\end{verbatim}
 
 The {\tt png} terminal renders output as png files. The filename to which output
 is to be sent should be set using the {\tt set output} command; the default is
@@ -1865,10 +1843,6 @@ upright (normal) orientation.
 
 \subsubsection{postscript}\index{set terminal command!postscript modifier@{\tt postscript} modifier}
 
-\begin{verbatim}
-set terminal postscript [<option> ... ]
-\end{verbatim}
-
 Sends output to postscript files. The filename to which output is to be sent
 should be set using the {\tt set output} command; the default is {\tt
 pyxplot.ps}.  This terminal produces non-encapsulated postscript suitable for
@@ -1877,7 +1851,7 @@ sending directly to a printer.
 \subsubsection{solid}\index{set terminal command!solid modifier@{\tt solid} modifier}
 
 The solid option causes the {\tt gif} and {\tt png} terminals to produce output
-with a non-transparent background. The converse of {\tt transparent}.
+with a non-transparent background, the converse of {\tt transparent}.
 
 
 \subsubsection{transparent}\index{set terminal command!transparent modifier@{\tt transparent} modifier}
@@ -1922,7 +1896,8 @@ set textcolour red
 
 \noindent causes all text labels, including the labels on graph axes and
 legends, etc. to be rendered in red. Any of the recognised colour names listed
-in Section~\ref{colour_names} can be used.
+in Section~\ref{colour_names} can be used, as can a number which indexes into
+the current palette.
 
 \subsection{texthalign}\indcmd{set texthalign}
 
@@ -1944,7 +1919,7 @@ set texthalign right
 \subsection{textvalign}\indcmd{set textvalign}
 
 \begin{verbatim}
-set textvalign ( bottom | center | top )
+set textvalign ( bottom | centre | top )
 \end{verbatim}
 
 The `{\tt textvalign}' setting controls how text labels, placed on plots using the
@@ -1975,7 +1950,7 @@ set title 'foo'
 way to remove a title, having set one, is via:
 
 \begin{verbatim}
-set title ''
+unset title
 \end{verbatim}
    
 \subsection{width}\indcmd{set width}
@@ -2000,7 +1975,7 @@ setting, controls the number of pixels across the final image.
 set xlabel '<text>'
 \end{verbatim}
 
-The {\tt xlabel} setting controls the label placed on its $x$-axis (abscissa).
+The {\tt xlabel} setting controls the label placed on the $x$-axis (abscissa).
 For example:
 
 \begin{verbatim}
@@ -2230,26 +2205,8 @@ set output 'sine.dat'
 tabulate [-pi:pi] sin(x)
 \end{verbatim}
 
-The format statement used to print the output file is chosen automatically with
-integers and small numbers treated differently.  If desired, however, a format
-statement may be specified using the {\tt with format} specifier; it should be a
-standard Python format string.  If there are not enough columns available in the
-supplied format statement it will be repeated for each line of the \datafile.
-
-The {\tt index}, {\tt every}, {\tt using} and {\tt select} modifiers work in the
-same way as for the {\tt plot} command.  For example multiple functions may be
-tabulated into the same file with the {\tt using} modifier:
-
-\begin{verbatim}
-tabulate [0:2*pi] sin(x):cos(x):tan(x) u 1:2:3:4
-\end{verbatim}
-
-The {\tt samples} setting can be used to control the number of points that are
-inserted into the \datafile.  If the $x$-axis is set to be logarithmic then the
-points at which the functions are evaluated are spaced logarithmically.
-
 The {\tt tabulate} command can also be used to select portions of \datafile s.
-For example, to print the third, sixth and ninth columns of the \datafile\ {\tt
+For example, to select the third, sixth and ninth columns of the \datafile\ {\tt
 data.dat}, but only when the arcsine of the value in the fourth column is
 positive:
 
@@ -2257,7 +2214,6 @@ positive:
 set output 'filtered.dat'
 tabulate 'data.dat' u 3:6:9 select (asin($4)>0)
 \end{verbatim}
-
 
 The format used in each column of the output file is chosen automatically with
 integers and small numbers treated intelligently to produce output which
@@ -2277,16 +2233,26 @@ If there are not enough columns present in the supplied format statement it
 will be repeated in a cyclic fashion; e.g. in the example above the single
 supplied format is used for both columns.
 
+The {\tt index}, {\tt every}, {\tt using} and {\tt select} modifiers work in the
+same way as for the {\tt plot} command.  For example multiple functions may be
+tabulated into the same file with the {\tt using} modifier:
+
+\begin{verbatim}
+tabulate [0:2*pi] sin(x):cos(x):tan(x) u 1:2:3:4
+\end{verbatim}
+
+The {\tt samples} setting can be used to control the number of points that are
+inserted into the \datafile.  If the $x$-axis is set to be logarithmic then the
+points at which the functions are evaluated are spaced logarithmically.
+
 \section{text}\indcmd{text}
 
 \begin{verbatim}
 text '<text string>' [at <x>, <y>] [rotate <angle>] [with colour <colour>]
 \end{verbatim}
 
-The {\tt text} command is primarily part of the multiplot environment; it can be
-used to add blocks of text to a multiplot. It can, however, also be used in
-single plot mode, in a way that is described below. As always in PyXPlot, the
-text is rendered using \LaTeX. An example would be:
+The {\tt text} command is used to add blocks of text to a multiplot. An example
+would be:
 
 \begin{verbatim}
 text 'Hello World!' at 0,2
@@ -2336,7 +2302,7 @@ displayed on the terminal at that time. For example:
 undelete 1
 \end{verbatim}
 
-\noindent will cause the previously item numbered {\tt 1} to reappear.
+\noindent will cause the previously deleted item numbered {\tt 1} to reappear.
   
 \section{unset}\indcmd{unset}
 
