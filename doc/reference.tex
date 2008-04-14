@@ -26,11 +26,19 @@
 This chapter contains an alphabetically ordered list of all the commands that
 PyXPlot understands.
 
+\section{?}\indcmd{?}
+
+\begin{verbatim}
+? [<help option> ... ]
+\end{verbatim}
+
+The {\tt ?} symbol is a shortcut to the {\tt help} command.
+
 \section{!}\indcmd{!}
 
 \begin{verbatim}
 ! <shell command>
-<command> `<shell command>` ...
+... `<shell command>` ...
 \end{verbatim}
 
 Shell commands can be executed from within PyXPlot by pre-fixing them with
@@ -64,24 +72,24 @@ Arrows may be placed on multiplot pages independently of any plots using the
 {\tt arrow} command, which has the syntax:
 
 \begin{verbatim}
-arrow from x,y to x,y
+arrow from x1,y1 to x2,y2
 \end{verbatim}
 
 The {\tt arrow} command may be followed by the \indmodt{with} keyword to
-specify to style of the arrow. The style keywords which are accepted are
+specify the style of the arrow. The style keywords which are accepted are
 \indkeyt{nohead}, \indkeyt{head} (default) or \indkeyt{twohead}, in addition to
 keywords such as \indkeyt{colour}, \indkeyt{linewidth} or \indkeyt{linetype},
 which have the same syntax and meaning as in the {\tt plot} command. An example
 would be:
 
 \begin{verbatim}
-arrow from x,y to x,y with twohead linetype 2 colour blue
+arrow from x1,y1 to x2,y2 with twohead linetype 2 colour blue
 \end{verbatim}
 
 Arrows receive unique multiplot identification numbers which count sequentially
 from one, and which are output to the terminal after the {\tt arrow} command is
-called. By reference to these numbers, they can later be deleted and undeleted
-with the {\tt delete} and {\tt undelete} commands respectively.
+called. By reference to these numbers, they can be deleted and undeleted
+subsequently with the {\tt delete} and {\tt undelete} commands respectively.
 
 \section{cd}\indcmd{cd}
 
@@ -89,8 +97,8 @@ with the {\tt delete} and {\tt undelete} commands respectively.
 cd <directory>
 \end{verbatim}
 
-PyXPlot's {\tt cd} command is very similar to the shell cd command; it can be used to
-change the current working directory. For example:
+PyXPlot's {\tt cd} command is very similar to the shell {\tt cd} command; it 
+changes the current working directory. For example:
 
 \begin{verbatim}
 cd foo
@@ -115,10 +123,10 @@ delete <plot number>, ...
 \end{verbatim}
 
 The {\tt delete} command is part of the multiplot environment; it removes
-plots, arrows or text items from a multiplot page. The desired items should be
-identified using a comma-separated list of their reference numbers, which count
-sequentially from zero for the first item created on a multiplot page, and are
-displayed on the terminal when items are created.  For example:
+plots, arrows or text items from a multiplot page. The items to be deleted should be
+identified using a comma-separated list of their reference numbers.  Reference
+numbers count sequentially from zero for the first item created on a multiplot
+page, and are displayed on the terminal when items are created.  For example:
 
 \begin{verbatim}
 delete 1,2,3
@@ -190,6 +198,10 @@ plots, text labels, etc.
 
 \section{exec}\indcmd{exec}
 
+\begin{verbatim}
+exec <command>
+\end{verbatim}
+
 The {\tt exec} command can be used to execute PyXPlot commands contained within
 string variables. For example:
 
@@ -224,15 +236,15 @@ fit [<range specifier> ...] <function> '<datafile>'
     via <variable>[, <variable>, ...]
 \end{verbatim}
 
-The {\tt fit} command may be used to fit functional forms to \datapoint s in
-\datafile s. A simple example might be:
+The {\tt fit} command may be used to fit functional forms to data in
+files. A simple example might be:
 
 \begin{verbatim}
 f(x) = a*x+b
 fit f(x) 'data.dat' index 1 using 2:3 via a,b
 \end{verbatim}
 
-\noindent The coefficients to be varied are listed after the keyword
+\noindent The coefficients to be varied are listed after the 
 \indkeyt{via} keyword; the modifiers \indmodt{index}, \indmodt{every} and
 \indmodt{using} have the same meanings as in the {\tt plot} command.
 
@@ -248,7 +260,7 @@ help [<topic> [<sub-topic> ... ] ]
 \end{verbatim}
 
 The {\tt help} command provides an hierachical source of information which
-is supplementary to that in this manual.  To obtain information on any
+is supplementary to that in the Users' Guide.  To obtain information on any
 particular topic, type {\tt help} followed by the name of the topic. For
 example:
 
@@ -307,7 +319,7 @@ user-specified bins.
 \section{history}\indcmd{history}
 
 \begin{verbatim}
-history [N]
+history [<N>]
 \end{verbatim}
 
 The {\tt history} command outputs the current command-line history to the
@@ -330,10 +342,13 @@ image by any angle, measured in degrees counter-clockwise.  The {\tt width} or
 the image should be rendered; both should be specified in centimetres. If
 neither is specified then the image will be rendered with the native dimensions
 specified within the jpeg file (if any). The {\tt jpeg} command is often useful
-in multiplot mode, allowing postscript images to be combined with plots, text
-labels, etc.
+in multiplot mode, allowing images to be combined with plots, text labels, etc.
 
 \section{list}\indcmd{list}
+
+\begin{verbatim}
+list
+\end{verbatim}
 
 The {\tt list} command outputs a listing of all of the items on a multiplot,
 giving their reference numbers and the commands used to produce them. For
@@ -425,7 +440,7 @@ plot [-pi:pi] sin(x)
 \noindent which would plot the function $\sin(x)$ between $-\pi$ and $\pi$.
 
 \Datafile s may also be plotted as well as functions, in which case the filename
-of the \datafile\ to be plotted should be enclosing in apostrophes. An example of
+of the \datafile\ to be plotted should be enclosed in apostrophes. An example of
 this syntax would be:
 
 \begin{verbatim}
@@ -437,6 +452,15 @@ plot 'data.dat' with points
 expected of input \datafile s, and how PyXPlot may be directed to plot only
 certain portions of \datafile s.
 
+Multiple datasets can be plotted on a single graph by listing them with commas
+separating them:
+
+\begin{verbatim}
+plot sin(x) with colour blue, cos(x) with linetype 2
+\end{verbatim}
+
+\subsection{axes}\indcmd{plot axes}
+
 In plots which have multiple parallel axes -- for example, an $x$-axis along its
 lower edge and an $x2$-axis along its upper edge -- the pair of axes against
 which data should be plotted should be specified using the modifier {\tt axes}
@@ -445,6 +469,8 @@ following the name of the function or \datafile\ to be plotted, for example:
 \begin{verbatim}
 plot sin(x) axes x2y1
 \end{verbatim}
+
+\subsection{with}\indcmd{plot with}
 
 The style in which data should be plotted may be specified following the
 modifier {\tt with}, with the following syntax:
@@ -483,7 +509,7 @@ used to render the crosses, circles, etc, used to mark \datapoint s.
 one of the recognised colour names or by an integer,
 to use one from the current palette.  \item[{\tt fillcolour}] -- relavant to the
 {\tt boxes} and {\tt wboxes} plot
-styles, specifies a colour in which bar charts should be filled.
+styles, specifies a colour with which bar charts should be filled.
 \end{description}
 
 An example using several of these keywords would be:
@@ -491,13 +517,6 @@ An example using several of these keywords would be:
 \begin{verbatim}
 plot sin(x) axes x2y1 with colour blue linetype 2 \
                            linewidth 5
-\end{verbatim}
-
-Multiple datasets can be plotted on a single graph by listing them with commas
-separating them:
-
-\begin{verbatim}
-plot sin(x) with colour blue, cos(x) with linetype 2
 \end{verbatim}
 
 
@@ -527,14 +546,6 @@ pwd
 The {\tt pwd} command prints the location of the current working directory.
 
 
-\section{?}\indcmd{?}
-
-\begin{verbatim}
-? [<help option> ... ]
-\end{verbatim}
-
-The {\tt ?} symbol is a shortcut to the {\tt help} command.
-
 
 \section{quit}\indcmd{quit}
 
@@ -542,15 +553,8 @@ The {\tt ?} symbol is a shortcut to the {\tt help} command.
 quit
 \end{verbatim}
 
-The {\tt quit} command can be used to exit PyXPlot. If multiple command files,
-or a mixture of command files and interactive sessions, are specified on the
-command line, then PyXPlot moves onto the next command-line item after receiving
-the {\tt exit} command.
-
-PyXPlot may also be quit be pressing CTRL-D or via the {\tt exit} command. In
-interactive mode, CTRL-C terminates the current command, if one is running.
-When running a script, CTRL-C terminates execution of it.
-
+The {\tt exit} command can be used to exit PyXPlot. See {\tt exit} for more
+details.
 
 \section{refresh}\indcmd{refresh}
 
@@ -561,13 +565,11 @@ refresh
 The {\tt refresh} command produces an exact copy of the latest display. This can
 be useful, for example, after changing the terminal type, to produce a second
 copy of a plot in a different graphic format. It differs from the {\tt replot}
-command in that it doesn't replot anything; subsequent usages of the {\tt set}
-command since the previous {\tt plot} command have no affect on the output. The
-{\tt refresh} command is also especially useful in the multiplot environment; it
-can be used to produce second copies of multiplot pages where there need not
-necessarily even be any plots; there might perhaps only be textual items and
-arrows.
-
+command in that it doesn't replot anything; use of the {\tt set} command since
+the previous {\tt plot} command has no affect on the output. The {\tt refresh}
+command is also especially useful in the multiplot environment; it can be used
+to produce second copies of multiplot pages where there need not necessarily
+even be any plots; there might perhaps only be textual items and arrows.
 
 \section{replot}\indcmd{replot}
 
@@ -656,7 +658,7 @@ the lines of:
 \end{tabular}
 
 More details of the functions of each individual setting can be found in the
-subsections below, which represents a complete list of the recognised setting
+subsections below, which forms a complete list of the recognised setting
 keywords.
 
 The reader should also see the {\tt show} command, which can be used to display
@@ -736,6 +738,9 @@ data.  Multiple axes can be specified, viz.:
 \begin{verbatim}
 set autoscale x1y3
 \end{verbatim}
+
+Note that ranges explicitly specified in a \indcmdt{plot} will override
+the autoscale setting.
 
 
 \subsection{axescolour}\indcmd{set axescolour}
@@ -818,7 +823,7 @@ default the existing file would be overwritten by the new one, when the
 {\tt backup} setting is turned on, it is renamed, placing a tilde at the end of
 its filename. For example, suppose that a plot were to be written with filename
 `{\tt out.ps}', but such a file already existed.  With the backup setting turned on
-the existing file would be renamed `{\tt out.ps~}' to save it from being overwritten.
+the existing file would be renamed `{\tt out.ps\~}' to save it from being overwritten.
 
 The setting may be turned off via {\tt set nobackup}.
 
@@ -992,10 +997,10 @@ set grid
 \end{verbatim}
 
 \noindent would cause a grid to be drawn with its gridlines connecting to the ticks of
-the default axes (usually the first $x$- and $y$-axes). Conversely, issuing:
+the first $x$- and $y$-axes. Conversely, issuing:
 
 \begin{verbatim}
-unset grid
+set nogrid
 \end{verbatim}
 
 \noindent would remove from the plot all gridlines associated with the ticks of any axes.
