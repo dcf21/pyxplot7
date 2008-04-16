@@ -65,6 +65,18 @@ optionally be followed by a number, to display the last $n$ commands, e.g.:
 history 20
 \end{verbatim}
 
+\section{Reading data from a pipe}
+
+PyXPlot usually reads data from a file, but it possible to read data via a pipe
+from standard input.  To do this one uses the magic filename `{\tt -}':
+
+\begin{verbatim}
+plot '-' with lines
+\end{verbatim}
+
+This facility should be used with caution; it is generally preferable to write
+data to a file in order that it can be perused at a later date.
+
 \section{Formatting and Terminals}
 \label{set_terminal2}
 
@@ -396,7 +408,13 @@ recognised by the =$\sim$ operator.
 Strings may also be put together using the string substitution operator, {\tt
 \%}\index{\% operator@{\tt \%} operator}, which works in a similar fashion to
 Python string substitution operator\index{string operators!substitution}. This
-is described in detail in Section~\ref{string_subs_op}.
+is described in detail in Section~\ref{string_subs_op}.  For example, to
+concatenate the two strings contained in variables {\tt a} and {\tt b} into
+variable {\tt c} one would run:\index{string operators!concatenation}
+
+\begin{verbatim}
+c = "%s%s"%(a,b)
+\end{verbatim}
 
 One common practical application of these string operators is to label plots
 with the title of the \datafile\ being plotted, as in:
