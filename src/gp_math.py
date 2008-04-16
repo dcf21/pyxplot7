@@ -32,7 +32,7 @@ try:
   EXP_MAX = EXP_MAX + 1
   dummy = float("1e%d"%EXP_MAX)
 except OverflowError: pass
-EXP_MAX = EXP_MAX-4             # EXP_MAX is the largest floating point exponent that we can cope with
+EXP_MAX = EXP_MAX-5             # EXP_MAX is the largest floating point exponent that we can cope with
 FLT_MAX = float("1e%d"%EXP_MAX) # FLT_MAX is the largest floating point number that we can cope with
 
 # RASTER MAKING FUNCTIONS

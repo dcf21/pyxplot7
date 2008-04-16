@@ -30,7 +30,7 @@ description = ""
 sys.stdout.write("""
 .\" pyxplot_watch.man
 .\" Dominic Ford
-.\" 07/12/2007
+.\" 19/04/2008
 
 .\" Man page for pyxplot_watch
 

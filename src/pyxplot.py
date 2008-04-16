@@ -335,6 +335,10 @@ def directive_set_unset(userinput):
 
 
   elif (userinput['set_option'] == 'autoscale'): # set autoscale | unset autoscale
+     if userinput['axes'] == []:
+      for axis_dir in gp_settings.axes.keys(): # If the user specifies no axis, act on all axes
+       for axis_n in gp_settings.axes[axis_dir].keys():
+        userinput['axes'].append({'axis':'%s%d'%(axis_dir,axis_n)})
      for axis_dict in userinput['axes']:
       axisname = axis_dict['axis']
       [direction,number,axis,commit] = access_axis(axisname)[0]
@@ -350,6 +354,10 @@ def directive_set_unset(userinput):
         gp_canvas.axes_this[direction][axis_n] = {'SETTINGS':gp_settings.axes[direction][axis_n].copy(), 'MIN_USED':None, 'MAX_USED':None, 'AXIS':None}
 
   elif (userinput['directive'] == "unset") and (userinput['set_option'] == "axis"): # unset axis
+      if userinput['axes'] == []: 
+       for axis_dir in gp_settings.axes.keys(): # If the user specifies no axis, act on all axes
+        for axis_n in gp_settings.axes[axis_dir].keys():
+         userinput['axes'].append({'axis':'%s%d'%(axis_dir,axis_n)})
       for axis_dict in userinput['axes']:
        direction = axis_dict['axis'][0]
        axis_n = int(axis_dict['axis'][1:])
@@ -545,6 +553,10 @@ def directive_set_unset(userinput):
      gp_settings.settings['LINEWIDTH'] = gp_settings.settings_default['LINEWIDTH']
 
   elif (userinput['set_option'] == 'logscale'):         # set logscale
+     if userinput['axes'] == []: 
+      for axis_dir in gp_settings.axes.keys(): # If the user specifies no axis, act on all axes
+       for axis_n in gp_settings.axes[axis_dir].keys():
+        userinput['axes'].append({'axis':'%s%d'%(axis_dir,axis_n)})
      if 'base' not in userinput: userinput['base'] = 10 # default use base 10
      if (userinput['base'] < 2) or (userinput['base'] > 1024):
       gp_warning("Warning: Attempt to use log axis with base %d. PyXPlot only supports bases in the range 2 - 1024. Defaulting to base 10."%userinput['base'])
@@ -603,6 +615,10 @@ def directive_set_unset(userinput):
         gp_error("Error removing label %d -- no such label."%label_id)
 
   elif (userinput['directive'] == "set") and (userinput['set_option'] == 'nologscale'): # set nologscale
+     if userinput['axes'] == []: 
+      for axis_dir in gp_settings.axes.keys(): # If the user specifies no axis, act on all axes
+       for axis_n in gp_settings.axes[axis_dir].keys():
+        userinput['axes'].append({'axis':'%s%d'%(axis_dir,axis_n)})
      if 'base' not in userinput: userinput['base'] = 10 # default use base 10
      if (userinput['base'] < 2) or (userinput['base'] > 1024):
       gp_warning("Warning: Attempt to use log axis with base %d. PyXPlot only supports bases in the range 2 - 1024. Defaulting to base 10."%userinput['base'])

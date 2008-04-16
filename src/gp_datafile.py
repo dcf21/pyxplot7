@@ -19,11 +19,12 @@
 
 # ----------------------------------------------------------------------------
 
+import gp_math
 import gp_eval
 import gp_settings
 from gp_error import *
 
-from math import sqrt, pi
+from math import fabs, sqrt, pi
 
 import os
 import sys
@@ -142,7 +143,7 @@ def make_datagrid(iterator, description, lineunit, index, usingrowcol, using_lis
    fudged_using_list = False
 
   # Tidy stuff up and set default arrays
-  using_list = using_list[:] # This is funky python shit
+  using_list = using_list[:]
   for i in range(len(using_list)): using_list[i] = using_list[i].strip()
   columns    = len(using_list)
   columns_using = columns # The number of columns of data specified in the "using" statement
@@ -371,6 +372,7 @@ def evaluate_using(data_item, using_list, vars_local, style, firsterror, verb_er
   for k in range(len(using_list)):
    value = gp_eval.gp_eval(using_list[k], vars_local, verbose=False)
    if (not SCIPY_ABSENT) and (not scipy.isfinite(value)): raise ValueError
+   if (fabs(value) > gp_math.FLT_MAX): raise ValueError
    if (style[-5:] != "range"):
     if ((firsterror != None) and (k >= firsterror) and (value < 0.0)): # Check for negative error bars
      value = 0.0
@@ -394,7 +396,7 @@ def evaluate_using(data_item, using_list, vars_local, style, firsterror, verb_er
      if (verb_errors): gp_warning("Warning: y lower limit > x value %s%s %s."%(lineunit,fileline,description)) ; errcount+=1
     if (k == 5) and (value < data_item[1]):
      value = data_item[1]
-     if (verb_errors): gp_warning("Warning: y upper limit < y value %s%s %s."%(lineunit,fileline,description)) ; errcount+=1
+     if (verb_errors): gp_warning("Warning: y upper limit < y value %s%s %s."%(lineunit,fileline,description)) ; errcount+=1 
    data_item.append(value)
   return errcount
    

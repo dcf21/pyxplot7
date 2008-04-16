@@ -1,7 +1,7 @@
-2008 Jan ??: PyXPlot 0.7.0
+2008 Apr 19: PyXPlot 0.7.0
 	- Supplying filename '-' to plot causes data to be read from stdin.
 	- Required version of PyX upgraded 0.9 -> 0.10.
-	- exec command command implemented.
+	- exec command implemented.
 	- use of string variables introduced. pythonesque "%s"%string syntax
 	  implemented. perlesque regular expressions implemented.
 	- function evaluation routines overhauled and optimised.

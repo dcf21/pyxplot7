@@ -1354,7 +1354,7 @@ def tabulate_dataset(multiplot_number,axes,axis_x,axis_y,plotwords,settings,titl
        lineattrs=[ gp_settings.linestyle_list[(plotwords['linetype']-1)%len(gp_settings.linestyle_list)], lw, colour ]
        if (fillcolset != None): lineattrs.extend([fillcolset])
        fromvalue = settings['BOXFROM']
-       if (fromvalue < 0) and (axes['y'][axis_y]['SETTINGS']['LOG'] == 'ON'): fromvalue=1e-300 # On log axes, where if fromvalue is <= 0, badness happens
+       if (fromvalue <= 0) and (axes['y'][axis_y]['SETTINGS']['LOG'] == 'ON'): fromvalue=1e-300 # On log axes, where if fromvalue is <= 0, badness happens
        stylelist.append(graph.style.histogram(lineattrs=lineattrs, steps=0, fillable=1, fromvalue=fromvalue))
       elif (stylestr in ['steps', 'fsteps', 'histeps']):
        datagrid_cpy      = []

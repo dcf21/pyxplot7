@@ -37,7 +37,7 @@ MANDIR=${USRDIR}/man/man1
 # Version information.
 
 VERSION=0.7.0-pre0
-DATE=xx/01/2008
+DATE=19/04/2008
 
 default: setup
 

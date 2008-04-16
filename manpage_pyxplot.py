@@ -37,7 +37,7 @@ for line in f.readlines():
 sys.stdout.write("""
 .\" pyxplot.man
 .\" Dominic Ford
-.\" 21/02/2007
+.\" 19/04/2008
 
 .\" Man page for pyxplot
 
