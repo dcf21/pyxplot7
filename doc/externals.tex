@@ -29,7 +29,7 @@ with other programs.
 
 \section{Command Line Switches}
 
-From the shell command line, the PyXPlot accepts the following switches which
+From the shell command line, PyXPlot accepts the following switches which
 modify its behaviour:\index{command line syntax}
 
 \begin{longtable}{p{3.5cm}p{8.5cm}}
@@ -37,7 +37,7 @@ modify its behaviour:\index{command line syntax}
 {\tt -v --version} & Display the current version number of PyXPlot.\\
 {\tt -q --quiet} & Turn off the display of the welcome message on startup. \\
 {\tt -V --verbose} & Display the welcome message on startup, as happens by default. \\
-{\tt -c --colour} & Use colour highlighting\footnote{This will only function on terminals which support colour output.} to display output in green, warning messages in amber, and error messages in red.\footnote{The author apologies to those members of the population who are red/green colourblind, but draws their attention to the following sentence.} These colours can be changed in the {\tt terminal} section of the configuration file; see Section~\ref{configuration} for more details. \\
+{\tt -c --colour} & Use colour highlighting\footnote{This will only function on terminals which support colour output.} to display output in green, warning messages in amber, and error messages in red.\footnote{The authors apologise to those members of the population who are red/green colourblind, but draws their attention to the following sentence.} These colours can be changed in the {\tt terminal} section of the configuration file; see Section~\ref{configuration} for more details. \\
 {\tt -m --monochrome} & Do not use colour highlighting, as happens by default. \\
 \end{longtable}
 
@@ -138,7 +138,7 @@ set terminal { X11_singlewindow | X11_multiwindow | X11_persist |
 \end{verbatim}
 
 \begin{longtable}{p{3cm}p{9cm}}
-{\tt x11\_singlewindow} & Displays plots on the screen (in X11 windows, using \ghostview). Each time a new plot is generated, it replaces the old one, to prevent the desktop from becoming flooded with old plots.\footnote{The author is aware of a bug, that this terminal can occasionally go blank when a new plot is generated. This is a known bug in \ghostview, and can be worked around by selecting File $\to$ Reload within the \ghostview\ window.} {\bf [default when running interactively; see below]}\\
+{\tt x11\_singlewindow} & Displays plots on the screen (in X11 windows, using \ghostview). Each time a new plot is generated, it replaces the old one, to prevent the desktop from becoming flooded with old plots.\footnote{The authors are aware of a bug, that this terminal can occasionally go blank when a new plot is generated. This is a known bug in \ghostview, and can be worked around by selecting File $\to$ Reload within the \ghostview\ window.} {\bf [default when running interactively; see below]}\\
 {\tt x11\_multiwindow} & As above, but each new plot appears in a new window, and the old plots remain visible. As many plots as may be desired can be left on the desktop simultaneously.\\
 {\tt x11\_persist} & As above, but plot windows remain open after PyXPlot closes.\\
 {\tt postscript} & Sends output to a postscript file. The filename for this file should be set using {\tt set output}. {\bf [default when running non-interactively; see below]}\index{postscript output}\\
