@@ -3,7 +3,8 @@
 # The code in this file is part of PyXPlot
 # <http://www.pyxplot.org.uk>
 #
-# Copyright (C) 2006-7 Dominic Ford <coders@pyxplot.org.uk>
+# Copyright (C) 2006-8 Dominic Ford <coders@pyxplot.org.uk>
+#               2008   Ross Church
 #
 # $Id$
 #
@@ -41,3 +42,4 @@ angle $\theta$'
 plot h(x,30,10) title "$\theta=30^\circ;\qquad v=10\,{\rm m\,s^{-1}}$", \
      h(x,60,10) title "$\theta=60^\circ;\qquad v=10\,{\rm m\,s^{-1}}$", \
      h(x,60,15) title "$\theta=60^\circ;\qquad v=15\,{\rm m\,s^{-1}}$"
+

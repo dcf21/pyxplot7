@@ -1,0 +1,92 @@
+# EX_LINESTYLES.PPL
+#
+# The code in this file is part of PyXPlot
+# <http://www.pyxplot.org.uk>
+#
+# Copyright (C) 2006-8 Dominic Ford <coders@pyxplot.org.uk>
+#               2008   Ross Church
+#
+# $Id$
+#
+# PyXPlot is free software; you can redistribute it and/or modify it under the
+# terms of the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any later
+# version.
+#
+# You should have received a copy of the GNU General Public License along with
+# PyXPlot; if not, write to the Free Software Foundation, Inc., 51 Franklin
+# Street, Fifth Floor, Boston, MA  02110-1301, USA
+
+# ----------------------------------------------------------------------------
+
+# This script produces a figure for the PyXPlot Users' Guide
+
+# Call common initialisation script
+reset
+load "examples/fig_init.ppl"
+
+# Set output destination
+set output "examples/eps/ex_linestyles.eps"
+
+# Main body of figure script
+set width 11.0
+set size ratio 1.0
+set xlabel 'invisible'
+set ylabel 'invisible'
+set x2label 'invisible'
+set y2label 'invisible'
+set nokey
+set texthalign left
+set textvalign centre
+set pointsize 1
+set linewidth 2
+
+sepx =  3.0
+sepy = -0.5
+gap  =  0.5
+
+set label 101 'Point type \phantom{0}1' at gap+sepx*0 , sepy* 0
+set label 102 'Point type \phantom{0}2' at gap+sepx*0 , sepy* 1
+set label 103 'Point type \phantom{0}3' at gap+sepx*0 , sepy* 2
+set label 104 'Point type \phantom{0}4' at gap+sepx*0 , sepy* 3
+set label 105 'Point type \phantom{0}5' at gap+sepx*0 , sepy* 4
+set label 106 'Point type \phantom{0}6' at gap+sepx*0 , sepy* 5
+set label 107 'Point type \phantom{0}7' at gap+sepx*0 , sepy* 6
+set label 108 'Point type \phantom{0}8' at gap+sepx*0 , sepy* 7
+set label 109 'Point type \phantom{0}9' at gap+sepx*0 , sepy* 8
+set label 110 'Point type 10'           at gap+sepx*0 , sepy* 9
+set label 111 'Point type 11'           at gap+sepx*0 , sepy*10
+set label 112 'Point type 12'           at gap+sepx*0 , sepy*11
+set label 113 'Point type 13'           at gap+sepx*0 , sepy*12
+
+set label 201 'Line type \phantom{0}1' at gap+sepx*1 , sepy*0
+set label 202 'Line type \phantom{0}2' at gap+sepx*1 , sepy*1
+set label 203 'Line type \phantom{0}3' at gap+sepx*1 , sepy*2
+set label 204 'Line type \phantom{0}4' at gap+sepx*1 , sepy*3
+set label 205 'Line type \phantom{0}5' at gap+sepx*1 , sepy*4
+set label 206 'Line type \phantom{0}6' at gap+sepx*1 , sepy*5
+set label 207 'Line type \phantom{0}7' at gap+sepx*1 , sepy*6
+set label 208 'Line type \phantom{0}8' at gap+sepx*1 , sepy*7
+
+plot [-1:5][-6.5:0.5] 'examples/ex_linestyles.dat' i 0 u ($1+0*sepx):($2+ 0*sepy) w p pt  1, \
+   '' i 0 u ($1+0*sepx):($2+ 1*sepy) w p pt  2, \
+   '' i 0 u ($1+0*sepx):($2+ 2*sepy) w p pt  3, \
+   '' i 0 u ($1+0*sepx):($2+ 3*sepy) w p pt  4, \
+   '' i 0 u ($1+0*sepx):($2+ 4*sepy) w p pt  5, \
+   '' i 0 u ($1+0*sepx):($2+ 5*sepy) w p pt  6, \
+   '' i 0 u ($1+0*sepx):($2+ 6*sepy) w p pt  7, \
+   '' i 0 u ($1+0*sepx):($2+ 7*sepy) w p pt  8, \
+   '' i 0 u ($1+0*sepx):($2+ 8*sepy) w p pt  9, \
+   '' i 0 u ($1+0*sepx):($2+ 9*sepy) w p pt 10, \
+   '' i 0 u ($1+0*sepx):($2+10*sepy) w p pt 11, \
+   '' i 0 u ($1+0*sepx):($2+11*sepy) w p pt 12, \
+   '' i 0 u ($1+0*sepx):($2+12*sepy) w p pt 13, \
+   '' i 1 u ($1+1*sepx):($2+ 0*sepy) w l lt  1, \
+   '' i 1 u ($1+1*sepx):($2+ 1*sepy) w l lt  2, \
+   '' i 1 u ($1+1*sepx):($2+ 2*sepy) w l lt  3, \
+   '' i 1 u ($1+1*sepx):($2+ 3*sepy) w l lt  4, \
+   '' i 1 u ($1+1*sepx):($2+ 4*sepy) w l lt  5, \
+   '' i 1 u ($1+1*sepx):($2+ 5*sepy) w l lt  6, \
+   '' i 1 u ($1+1*sepx):($2+ 6*sepy) w l lt  7, \
+   '' i 1 u ($1+1*sepx):($2+ 7*sepy) w l lt  8
+

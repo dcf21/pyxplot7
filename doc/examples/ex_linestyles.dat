@@ -1,10 +1,9 @@
-# EX_SEMINAR.PPL
+# EX_LINESTYLES.DAT
 #
 # The code in this file is part of PyXPlot
 # <http://www.pyxplot.org.uk>
 #
-# Copyright (C) 2006-8 Dominic Ford <coders@pyxplot.org.uk>
-#               2008   Ross Church
+# Copyright (C) 2006-7 Dominic Ford <coders@pyxplot.org.uk>
 #
 # $Id$
 #
@@ -19,17 +18,11 @@
 
 # ----------------------------------------------------------------------------
 
-# This script produces a figure for the PyXPlot Users' Guide
+# This datafile produces a figure for the PyXPlot Users' Guide
 
-# Call common initialisation script
-reset
-load "examples/fig_init.ppl"
+ 0.00 0.0
 
-# Set output destination
-set output "examples/eps/ex_seminar.eps"
 
-# Main body of figure script
-set xlabel "This is the X axis"
-set ylabel "This is the Y axis"
-set title "A plot of sin(x)"
-plot sin(x)
+-0.50 0.0
+ 0.25 0.0
+

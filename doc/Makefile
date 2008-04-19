@@ -23,7 +23,7 @@
 PYXPLOT = `which pyxplot`
 EXAMPLEDIR = examples
 EPSDIR = $(EXAMPLEDIR)/eps
-EPSFILES = $(EPSDIR)/ex_cover.eps $(EPSDIR)/ex_axislab.eps $(EPSDIR)/ex_fitting.eps $(EPSDIR)/ex_multiaxes.eps $(EPSDIR)/ex_axistics.eps $(EPSDIR)/ex_legends.eps $(EPSDIR)/ex_seminar.eps $(EPSDIR)/ex_barchart1.eps $(EPSDIR)/ex_barchart2.eps $(EPSDIR)/ex_funcsplice1.eps $(EPSDIR)/ex_funcsplice2.eps $(EPSDIR)/ex_map.eps
+EPSFILES = $(EPSDIR)/ex_cover.eps $(EPSDIR)/ex_axislab.eps $(EPSDIR)/ex_fitting.eps $(EPSDIR)/ex_multiaxes.eps $(EPSDIR)/ex_axistics.eps $(EPSDIR)/ex_legends.eps $(EPSDIR)/ex_seminar.eps $(EPSDIR)/ex_barchart1.eps $(EPSDIR)/ex_barchart2.eps $(EPSDIR)/ex_funcsplice1.eps $(EPSDIR)/ex_funcsplice2.eps $(EPSDIR)/ex_map.eps $(EPSDIR)/ex_linestyles.eps
 
 all: $(EPSFILES) pyxplot.pdf
 
