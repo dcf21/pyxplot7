@@ -134,6 +134,7 @@ set terminal { X11_singlewindow | X11_multiwindow | X11_persist |
              { portrait | landscape }
              { invert | noinvert }
              { transparent | solid }
+             { antialias | noantialias }
              { enlarge | noenlarge }
 \end{verbatim}
 
@@ -156,6 +157,9 @@ set terminal { X11_singlewindow | X11_multiwindow | X11_persist |
 {\tt noinvert} & Modifier for the gif, png and jpg terminals; opposite to the above. {\bf [default]}\\
 {\tt transparent} & Modifier for the gif and png terminals; produces output with a transparent background.\index{transparent terminal}\index{gif output!transparency}\index{png output!transparency}\\
 {\tt solid} & Modifier for the gif and png terminals; opposite to the above. {\bf [default]}\\
+{\tt antialias} & Modifier for the gif, jpg and png terminals; produces antialiased output, with colour boundaries smoothed to disguise the effects of pixelisation {\bf [default]}\\
+{\tt noantialias} & Modifier for the gif, jpg and png terminals; opposite to the
+above\\
 {\tt enlarge} & Enlarge or shrink contents to fit the current paper
 size.\index{enlarging output}\\
 {\tt noenlarge} & Do not enlarge output; opposite to the above. {\bf [default]}\\

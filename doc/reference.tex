@@ -1725,6 +1725,7 @@ set terminal { X11_singlewindow | X11_multiwindow | X11_persist |
              { portrait | landscape } 
              { invert | noinvert } 
              { transparent | solid }
+             { antialias | noantialias }
              { enlarge | noenlarge }
 \end{verbatim}
 
@@ -1746,6 +1747,11 @@ command, are used to change the options within some of these graphic formats:
 portrait}, {\tt landscape}, {\tt invert}, {\tt noinvert}, {\tt transparent},
 {\tt solid}, {\tt enlarge}, {\tt noenlarge}. Details of each of these can be
 found below.
+
+\subsubsection{antialias}\index{set terminal command!antialias modifier@{\tt antialias} modifier}
+
+The {\tt antialias} terminal option causes plots produced with the bitmap (gif,
+jpg and png) terminals to be antialiased; this is the default behaviour.
 
 \subsubsection{colour}\index{set terminal command!colour modifier@{\tt colour} modifier}
 
@@ -1807,6 +1813,11 @@ of paper that way around; probably less useful for plotting things on screen.
 The {\tt monochrome} terminal option causes plots to be rendered in black and
 white; by default, different dash styles are used to differentiate between
 lines on plots with several datasets.
+
+\subsubsection{noantialias}\index{set terminal command!noantialias modifier@{\tt noantialias} modifier}
+
+The {\tt noantialias} terminal option causes plots produced with the bitmap
+(gif, jpg and png) terminals not to be antialiased.
 
 \subsubsection{noenlarge}\index{set terminal command!noenlarge modifier@{\tt noenlarge} modifier}
 
