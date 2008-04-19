@@ -32,7 +32,7 @@ As is the case in \gnuplot, PyXPlot can be configured using the \indcmdt{set}
 
 \begin{verbatim}set output 'foo.eps'\end{verbatim}
 
-\noindent would set it to send its plotted output to the file {\tt foo.eps}.
+\noindent would cause plotted output to be written the file {\tt foo.eps}.
 Typing {\tt set} on its own returns a list of all recognised configuration
 parameters of the \indcmdt{set}. The \indcmdt{unset} may be used to return
 settings to their default values; it recognises a similar set of parameter
@@ -186,7 +186,7 @@ with a list of possible values for each:
 
                {\bf Analogous set command:} \indcmdts{set backup}
 
-               When this switch is set to `{\tt ON}', and plot output is being directed to file, attempts to write output over existing files cause a copy of the existing file to be preserved, with a tilda after its old filename (see Section~\ref{filebackup}).
+               When this switch is set to `{\tt ON}', and plot output is being directed to file, attempts to write output over existing files cause a copy of the existing file to be preserved, with a tilde after its old filename (see Section~\ref{filebackup}).
                \\
 {\tt BAR}     & {\bf Possible values:}  Any floating-point number.
 

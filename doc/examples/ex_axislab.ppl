@@ -38,6 +38,6 @@ set yrange [0:]
 set key below
 set title 'Trajectories of rockets fired with speed $v$ and \
 angle $\theta$'
-plot h(x,30,10) title "$\theta=30^o;\qquad v=10\,{\rm m\,s^{-1}}$", \
-     h(x,60,10) title "$\theta=60^o;\qquad v=10\,{\rm m\,s^{-1}}$", \
-     h(x,60,15) title "$\theta=60^o;\qquad v=15\,{\rm m\,s^{-1}}$"
+plot h(x,30,10) title "$\theta=30^\circ;\qquad v=10\,{\rm m\,s^{-1}}$", \
+     h(x,60,10) title "$\theta=60^\circ;\qquad v=10\,{\rm m\,s^{-1}}$", \
+     h(x,60,15) title "$\theta=60^\circ;\qquad v=15\,{\rm m\,s^{-1}}$"

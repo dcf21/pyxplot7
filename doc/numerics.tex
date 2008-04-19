@@ -201,9 +201,9 @@ set samples 200
 functions are evaluated are spaced logarithmically.
 
 The {\tt tabulate} command can also be used to select portions of data files
-for output into a new file.  For example, the following would output the third,
-sixth and ninth columns of the datafile {\tt input.dat}, but only when the
-arcsine of the value in the fourth column is positive:
+for output into a new file.  For example, the following would write out the
+third, sixth and ninth columns of the datafile {\tt input.dat}, but only when
+the arcsine of the value in the fourth column is positive:
 
 \begin{verbatim}
 set output 'filtered.dat'
@@ -279,7 +279,7 @@ routine.\index{scipy}
 
 \section{Histograms}
 
-The \indcmdt{histogram} takes data from a datafile and bins it, producing a
+The \indcmdt{histogram} takes data from a file and bins it, producing a
 function that represents the frequency distribution of the supplied data.  A
 histogram is defined as a function consisting of discrete intervals, the area
 under each of which is equal to the number of points binned in that interval.
@@ -293,10 +293,17 @@ histogram f() 'input.dat'
 into bins of unit width and produce a function $f()$, the value of which at any
 given point was equal to the number of items in the bin at that point.
 
-Three modifiers can be supplied to the {\tt histogram} command. The {\tt
-binwidth} modifier sets the width of the bins used and the {\tt binorigin}
-modifier their origin. Alternatively the {\tt bins} modifier allows an
-arbitrary set of bins to be specified. For example the command:
+Modifiers can be supplied to the \indcmdt{histogram} command to control the bins
+that it uses.  The \indmodt{binwidth} modifier sets the width of the bins used
+and the \indmodt{binorigin} modifier their origin.  For example:
+
+\begin{verbatim}
+histogram wabbitcount() 'rabits.dat' binorigin 0.5 binwidth 2
+\end{verbatim}
+
+\noindent bins the rabbit data into bins between $0.5$ and $2.5$, $2.5$ and
+$4.5$, etc.  Alternatively the \indmodt{bins} modifier allows an arbitrary set
+of bins to be specified. For example the command:
 
 \begin{verbatim}
 histogram g() 'input.dat' bins (1, 2, 4)
@@ -311,12 +318,12 @@ that range will then be binned.  In the same way as for the {\tt plot} command,
 the \indmodt{index}, \indmodt{every}, \indmodt{using} and \indmodt{select}
 modifiers can also be used to bin different portions of a datafile.
 
-Note that, although a histogram is similar to a bar chart, they are subltly
+Note that, although a histogram is similar to a bar chart, they are subtly
 different.  A bar chart has the {\it height} of the bar equal to the number of
 points that it represents; for a histogram the {\it area} of the bar is equal to
-the number of points.  To draw a bar chart of a set of data use the histogram
+the number of points.  To produce a bar chart use the histogram
 command and then multiply by the bin width when plotting.
 
 If the function produced by the histogram command is plotted using the
-\indmod{with boxes} modifier, box boundaries will be drawn to coincide with the
-bins that the histogram was made with.
+\indpst{boxes} plot style, box boundaries will be drawn to coincide with the
+bins into which the data were sorted.

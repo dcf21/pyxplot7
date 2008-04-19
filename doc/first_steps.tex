@@ -111,7 +111,7 @@ set nokey # I'll have no key on _my_ plot
 
 Long commands may be split over multiple lines in the script by terminating
 each line of it with a backslash character, whereupon the following line will
-be appended to the end of it.
+be appended to it.
 
 \section{First Plots}
 \label{first_plots}
@@ -323,8 +323,6 @@ floor($x$)&
 Return the floor of $x$ as a float. This is the largest integral value $\leq x$.\\
 fmod($x,y$)&
 Return fmod(x, y), according to platform C.  x \% y may differ.\\
-frexp($x$)&
-Return the mantissa and exponent of $x$, as pair $(m,e)$. $m$ is a float and $e$ is an int, such that $x = m \times 2^e$. If $x$ is 0, $m$ and $e$ are both 0.  Else $0.5 \leq \mathrm{abs}(m) < 1.0$.\\
 gamma($x$)&
 Return the gamma function.\\
 hypot($x,y$)&
@@ -339,11 +337,9 @@ max($x$,$y$,...)&
 Return the greatest of the numerical values supplied.\\
 min($x$,$y$,...)&
 Return the least of the numerical values supplied.\\
-modf($x$)&
-Return the fractional and integer parts of $x$.  Both results carry the sign of $x$.  The integer part is returned as a real.\\
 \hline
 \end{longtable}
-\caption{A list of mathematical functions which are pre-defined within PyXPlot (contd.\ in Table~\ref{functions_table2}).}
+\caption{A list of mathematical functions which are pre-defined within PyXPlot (cont'd.\ in Table~\ref{functions_table2}).}
 \label{functions_table}
 \end{table}
 
@@ -368,7 +364,7 @@ tanh($x$)&
 Return the hyperbolic tangent of $x$.\\
 \hline
 \end{longtable}
-\caption{A list of mathematical functions which are pre-defined within PyXPlot (contd.\ from Table~\ref{functions_table}).}
+\caption{A list of mathematical functions which are pre-defined within PyXPlot (cont'd.\ from Table~\ref{functions_table}).}
 \label{functions_table2}
 \end{table}
 

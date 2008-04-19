@@ -36,7 +36,7 @@ between \datapoint s, and {\tt points}, which does not connect \datapoint s.
 \subsection{Lines and Points}
 
 The following are PyXPlot's most basic plot styles\footnote{This is not an
-exhaustive list; see Section~\ref{list_of_plotstyles} for such a list.}:
+exhaustive list; see Section~\ref{list_of_plotstyles}.}:
 \begin{itemize}
 \item \indpst{dots} -- places a small dot at each datum.
 \item \indpst{points} -- places a marker symbol at each datum.
@@ -338,20 +338,20 @@ plot sin(x) select (($1>0) and ($2>0))
 with the logical {\tt and} operator. A full list of all of the operators
 recognised by PyXPlot, including logical operators, was given in Chapter~2; see
 Table~\ref{operators_table}.  The select modifier has many applications, for
-example, plotting two-dimensional slices from three-dimensional datasets and
-plotting subsets of \datapoint s from \datafile s.
+example, plotting two-dimensional slices of three-dimensional datasets and
+plotting subsets of data from files.
 
-When plotting using the \indpst{lines}, the default behaviour is for the lines
-plotted not to be broken if a set of datapoints are removed by the select
-modifier.  However, this functionality is sometimes useful.  To cause the
-plotted line to break when points are removed the \indmodt{discontinuous}\ is
-supplied.  For example:
+When plotting using the \indpst{lines} style, the default behaviour is for the
+lines plotted not to be broken if a set of datapoints are removed by the select
+modifier.  However, this behaviour is sometimes undesirable.  To cause the
+plotted line to break when points are removed the \indmodt{discontinuous}\
+modifier is supplied.  For example:
 
 \begin{verbatim}
 plot sin(x) select ($1>0) discontinuous
 \end{verbatim}
 
-plots a disconnected set of peaks from the sine function.
+plots a set of disconnected peaks from the sine function.
 
 \section{Horizontally arranged \Datafile s}
 
@@ -426,7 +426,7 @@ This is illustrated in Figure~\ref{fig:ex_multiaxes}.
 \begin{center}
 \includegraphics{examples/eps/ex_multiaxes.eps}
 \end{center}
-\caption{A plot demonstating the use of large numbers of axes. Odd-numbered
+\caption{A plot demonstrating the use of large numbers of axes. Odd-numbered
 $x$-axes appear below the plot, and even numbered $x$-axes above it; a similar
 rule applies for $y$-axes, to the left and to the right.}
 \label{fig:ex_multiaxes}
@@ -537,7 +537,7 @@ Alternatively, the final form allows ticks to be placed on an axis
 individually, and each given its own textual label.
 
 The following example sets the $x1$-axis to have tick marks at
-$x=0.05, 0.1, 0.2$ and $0.4$.  The $x2$-axis has symbolically labelled tics at
+$x=0.05$, $0.1$, $0.2$ and $0.4$.  The $x2$-axis has symbolically labelled tics at
 $x=1/\pi, 2/\pi$, etc., pointing outwards from the plot.  The left-hand
 $y$-axis has tick marks placed automatically whereas the $y2$-axis has no tics
 at all.  The overall effect is shown in Figure~\ref{fig:ex_axistics}.
@@ -587,8 +587,8 @@ production of the legend can be completely turned off for all datasets using
 the command \indcmdts{set nokey}. The opposite effect can be achieved by the
 \indcmdt{set key}.
 
-This latter command can also be used to dictate where on the plot the legend
-should be placed, using a syntax along the lines of:
+The \indcmdt{set key} command can also be used to dictate where on the plot the
+legend should be placed, using a syntax along the lines of:
 
 \begin{verbatim}
 set key top right
@@ -729,5 +729,5 @@ set nobackup
 \end{verbatim}
 
 When this switch is turned on, pre-existing files will be renamed with a tilde
-at the end of their filenames, rather than being overwritten.
+appended to their filenames, rather than being overwritten.
 

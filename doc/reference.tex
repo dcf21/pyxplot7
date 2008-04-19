@@ -259,7 +259,7 @@ Section~\ref{fit_command}, are worth noting.
 help [<topic> [<sub-topic> ... ] ]
 \end{verbatim}
 
-The {\tt help} command provides an hierachical source of information which
+The {\tt help} command provides an hierarchical source of information which
 is supplementary to that in the Users' Guide.  To obtain information on any
 particular topic, type {\tt help} followed by the name of the topic. For
 example:
@@ -507,7 +507,7 @@ used to render the crosses, circles, etc, used to mark \datapoint s.
 \item[{\tt linestyle}] -- this can be used in conjunction with the {\tt set linestyle} command to save default plot styles. 
 \item[{\tt colour}] -- specifies the colour used to plot the dataset, either by
 one of the recognised colour names or by an integer,
-to use one from the current palette.  \item[{\tt fillcolour}] -- relavant to the
+to use one from the current palette.  \item[{\tt fillcolour}] -- relevant to the
 {\tt boxes} and {\tt wboxes} plot
 styles, specifies a colour with which bar charts should be filled.
 \end{description}
@@ -997,7 +997,7 @@ set grid
 \end{verbatim}
 
 \noindent would cause a grid to be drawn with its gridlines connecting to the ticks of
-the first $x$- and $y$-axes. Conversely, issuing:
+the default axes (usually the first $x$- and $y$-axes).  Conversely, issuing:
 
 \begin{verbatim}
 set nogrid
@@ -1229,7 +1229,7 @@ set linewidth 3
 plot sin(x) with lines
 \end{verbatim}
 
-\noindent lines of three times the fefault thickness are plotted.  The
+\noindent lines of three times the default thickness are plotted.  The
 {\tt set linewidth} setting only affects plot statements where no linewidth is
 manually specified.
 

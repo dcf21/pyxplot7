@@ -22,15 +22,16 @@
 % LaTeX source for the PyXPlot Users' Guide
 
 \chapter{Labelling Plots and Producing Galleries}
+\chaptermark{Labelled Plots and Galleries}
 
-So far, we have talked exclusively about how to plot data in PyXPlot. In this
-chapter, we turn to discuss how to label graphs and place simple vector
-graphics around them.
+So far, we have talked exclusively about how to plot graphs with PyXPlot. In
+this chapter, we discuss how to label graphs and place simple vector graphics
+around them.
 
 \section{Adding Arrows and Text Labels to Plots}
 
 This section describes how to put arrows and text labels on plots; the syntax
-is similar, though not identical, to that used by \gnuplot; PyXPlot extends
+is similar, though not identical, to that used by \gnuplot.  PyXPlot extends
 \gnuplot's syntax to make it possible to to set the colours and styles of
 arrows and text labels.
 
@@ -89,8 +90,8 @@ x0 = 0.0
 y0 = 0.0
 x1 = 1.0
 y1 = 1.0
-set arrow 1 from first  x0, first  x1 \
-            to   screen x1, screen x1 \
+set arrow 1 from first  x0, first  y0 \
+            to   screen x1, screen y1 \
             with nohead
 \end{verbatim}
 
@@ -199,8 +200,10 @@ unset nogrid
 \end{verbatim}
 
 \noindent By default, gridlines are drawn from the major and minor ticks of the
-$x$- and $y$-axes. However, the axes which should be used may be specified
-after the \indcmdt{set grid}\index{grid}:
+default $x$- and $y$-axes (which are the first $x$- and $y$-axes unless set
+otherwise in the configuration file; see Chapter~\ref{configuration}). However,
+the axes which should be used may be specified after the \indcmdt{set
+grid}\index{grid}:
 
 \begin{verbatim}
 set grid x2y2
@@ -319,6 +322,27 @@ any plot on the multiplot page -- after executing {\tt edit~0}, the
 When a new plot is added to the page, the \indcmdt{replot} always switches to
 act upon this most recent plot.
 
+\subsection{Listing Items on a Multiplot}
+
+A listing of all of the items on a multiplot, giving their reference numbers
+and the commands used to produce them, can be obtained using the
+\indcmdt{list}. For example:
+
+\begin{verbatim}
+pyxplot> list
+#  ID | Command 
+    0   plot f(x) 
+d   1   text 'Figure 1: A plot of f(x)' 
+    2   text 'Figure 1: A plot of $f(x)$' 
+
+# Items marked 'd' are deleted 
+\end{verbatim}
+
+In this example, the user has plotted a graph of $f(x)$, and added a caption to
+it. The {\tt ID} column lists the reference numbers of each multiplot item.
+Item {\tt 1} has been deleted, and this is indicated by the {\tt d} to the left
+of its reference number.
+
 \subsection{Linked Axes}
 
 The axes of plots can be linked together, in such a way that they always share
@@ -366,8 +390,8 @@ of text produced with the \indcmdt{text}.  A useful application of this is to
 produce centred headings at the top of multiplots.
 
 As with plots, each text item has a unique identification number, and can be
-moved around, deleted or undeleted with the \indcmdts{delete},
-\indcmdts{undelete} and \indcmdts{move} commands.
+moved around, deleted or undeleted with the \indcmdts{move},
+\indcmdts{delete} and \indcmdts{undelete} commands.
 
 It should be noted that the \indcmdt{text} can also be used outside of the
 multiplot environment, to render a single piece of short text instead of a
@@ -419,27 +443,6 @@ eps 'filename' at 3,2 rotate 5
 \noindent will place the eps file with its bottom-left corner at position
 $(3,2)$\,cm from the origin, rotated counter-clockwise through 5 degrees.
 
-\subsection{Listing Items on a Multiplot}
-
-A listing of all of the items on a multiplot, giving their reference numbers
-and the commands used to produce them, can be obtained using the
-\indcmdt{list}. For example:
-
-\begin{verbatim}
-pyxplot> list
-#  ID | Command 
-    0   plot f(x) 
-d   1   text 'Figure 1: A plot of f(x)' 
-    2   text 'Figure 1: A plot of $f(x)$' 
-
-# Items marked 'd' are deleted 
-\end{verbatim}
-
-In this example, the user has plotted a graph of $f(x)$, and added a caption to
-it. The {\tt ID} column lists the reference numbers of each multiplot item.
-Item {\tt 1} has been deleted, and this is indicated by the {\tt d} to the left
-of its reference number.
-
 \subsection{Speed Issues}
 \label{set_display}
 
@@ -452,7 +455,7 @@ normal behaviour.
 
 This can be especially useful in scripts which produce large multiplots. There
 is no point in producing output at each step in the construction of a large
-multiplot, and so a great speed increase can be achieved by wrapping the script
+multiplot, and a great speed increase can be achieved by wrapping the script
 with:
 
 \begin{verbatim} 
@@ -496,7 +499,7 @@ can be loaded using the \indcmdt{set preamble}. For example:
 
 \begin{verbatim} 
 set preamble \usepackage{marvosym}
-text "{\Huge\Dontwash\ \NoIroning\ \NoTumbler}$\;$ Don't \
+text "{\Huge\Dontwash\ \NoIroning\ \NoTumbler}$\;$ Do not \
 wash, iron or tumble-dry this plot."
 \end{verbatim}
 
