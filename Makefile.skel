@@ -73,7 +73,6 @@ setup:
 	mv -f PyX-0.10/pyx src
 	rm -rf PyX-0.10
 	chmod 755 src/__init__.py
-	${MAKE_COMMAND} -s -C doc PYXPLOT=../src/__init__.py
 	echo "exit" | src/__init__.py
 	${PYTHON_COMMAND} manpage_pyxplot.py       ${DOCDIR}/pyxplot.pdf > pyxplot.1
 	${PYTHON_COMMAND} manpage_pyxplot_watch.py ${DOCDIR}/pyxplot.pdf > pyxplot_watch.1
