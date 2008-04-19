@@ -41,16 +41,16 @@ set y2label 'invisible'
 set nogrid
 
 # Labels for the states
-set label 1 '{\large \sf \itshape Western Australia}' 117, -28
-set label 2 '{\large \sf \itshape South Australia}' 130, -29.5
-set label 3 '{\large \sf \itshape Northern Territory}' 129.5, -20.5
-set label 4 '{\large \sf \itshape Queensland}' 141,-24
-set label 5 '{\large \sf \itshape New South Wales}' 142,-32.5
-set label 6 '{\large \sf \itshape Victoria}' 139,-41
+set label 1 '{\large \sf \slshape Western Australia}' 117, -28
+set label 2 '{\large \sf \slshape South Australia}' 130, -29.5
+set label 3 '{\large \sf \slshape Northern Territory}' 129.5, -20.5
+set label 4 '{\large \sf \slshape Queensland}' 141,-24
+set label 5 '{\large \sf \slshape New South Wales}' 142,-32.5
+set label 6 '{\large \sf \slshape Victoria}' 139,-41
 set arrow 6 from 141,-40 to 142, -37 with nohead
-set label 7 '{\large \sf \itshape Tasmania}' 149,-42
+set label 7 '{\large \sf \slshape Tasmania}' 149,-42
 set arrow 7 from 149, -41.5 to 146.5, -41.75 with nohead
-set label 8 '{\large \sf \itshape Capital Territory}' 151,-37
+set label 8 '{\large \sf \slshape Capital Territory}' 151,-37
 set arrow 8 from 151, -36.25 to 149, -36 with nohead
 
 # Labels for the cities
@@ -65,7 +65,7 @@ set label 16 '{\sf Hobart}' 147.5, -44.25
 set label 17 '{\sf Canberra}' 145, -35.25
 
 # A big label saying "Australia"
-set label 20 '{\Huge \sf \itshape Australia}' 117,-42
+set label 20 '{\Huge \sf \slshape Australia}' 117,-42
 
 # Plot the coastline and cities
 plot [][-45:]'examples/ex_map_1.dat.gz' every ::1 with lines, \
