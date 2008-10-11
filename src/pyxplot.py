@@ -1162,7 +1162,7 @@ def directive(line, recurse_depth, toplevel=True, interactive=False):
         gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
 
   elif (command['directive'] == "move"):         # move
-    if (gp_settings.settings['MULTIPLOT'] != 'ON'):
+    if (gp_settings.settings_global['MULTIPLOT'] != 'ON'):
      gp_error("Error: Can only move items when in multiplot mode.")
     else:
      moveno = command['moveno']
