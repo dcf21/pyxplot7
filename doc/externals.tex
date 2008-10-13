@@ -138,6 +138,8 @@ set terminal { X11_singlewindow | X11_multiwindow | X11_persist |
              { enlarge | noenlarge }
 \end{verbatim}
 
+\newpage %%% WHY IS THIS NECESSARY?
+
 \begin{longtable}{p{3cm}p{9cm}}
 {\tt x11\_singlewindow} & Displays plots on the screen (in X11 windows, using \ghostview). Each time a new plot is generated, it replaces the old one, to prevent the desktop from becoming flooded with old plots.\footnote{The authors are aware of a bug, that this terminal can occasionally go blank when a new plot is generated. This is a known bug in \ghostview, and can be worked around by selecting File $\to$ Reload within the \ghostview\ window.} {\bf [default when running interactively; see below]}\\
 {\tt x11\_multiwindow} & As above, but each new plot appears in a new window, and the old plots remain visible. As many plots as may be desired can be left on the desktop simultaneously.\\
