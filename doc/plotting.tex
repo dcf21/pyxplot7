@@ -212,7 +212,7 @@ plot 'data.dat' with boxes
 midpoints along the $x$-axis between the specified \datapoint s (see, for
 example, Figure~\ref{fig:ex_barchart2}a).  Alternatively, the widths of the
 bars may be set using the {\tt set boxwidth} command. In this case, all of
-the bars will be centred upon their specified $x$-coordinates, and have total
+the bars will be centred upon their specified $x$-co-ordinates, and have total
 widths equalling that specified in the \indcmdt{set boxwidth}. Consequently, there may be
 gaps between them, or they may overlap, as seen in
 Figure~\ref{fig:ex_barchart2}(b).
@@ -221,7 +221,8 @@ Figure~\ref{fig:ex_barchart2}(b).
 \begin{center}
 \includegraphics{examples/eps/ex_barchart2.eps}
 \end{center}
-\caption{A gallery of the various bar chart styles which PyXPlot can produce.
+\caption[A gallery of the various bar chart styles which PyXPlot can produce]
+{A gallery of the various bar chart styles which PyXPlot can produce.
 See the text for more details.  The script and data file used to produce this
 image are available on the PyXPlot website at
 \protect\url{http://www.pyxplot.org.uk/examples/Manual/04barchart2/}.}
@@ -241,7 +242,7 @@ plot 'data.dat' using 1:2:3 with wboxes
 \end{verbatim}
 
 \noindent This plot style expects three columns of data to be provided: the
-$x$- and $y$-coordinates of each bar in the first two, and the width of the
+$x$- and $y$-co-ordinates of each bar in the first two, and the width of the
 bars in the third.  Figure~\ref{fig:ex_barchart2}(c) shows an example of this
 plot style in use.
 
@@ -263,7 +264,9 @@ chart with the boxes starting from their default position of $y=0$.
 \begin{center}
 \includegraphics{examples/eps/ex_barchart1.eps}
 \end{center}
-\caption{A second gallery of the various bar chart styles which PyXPlot can
+\caption[A second gallery of the various bar chart styles which PyXPlot can
+produce]
+{A second gallery of the various bar chart styles which PyXPlot can
 produce. See the text for more details.  The script and data file used to
 produce this image are available on the PyXPlot website at
 \protect\url{http://www.pyxplot.org.uk/examples/Manual/03barchart1/}.}
@@ -287,7 +290,7 @@ width; see Figure~\ref{fig:ex_barchart1}(c) for an example.
 \subsection{Stacked Bar Charts}
 
 If several \datapoint s are supplied to the \indpst{boxes} or \indpst{wboxes}
-plot styles at a common $x$-coordinate, then the bars are stacked one above
+plot styles at a common $x$-co-ordinate, then the bars are stacked one above
 another into a stacked barchart. Consider the following \datafile:
 
 \begin{verbatim} 
@@ -426,7 +429,8 @@ This is illustrated in Figure~\ref{fig:ex_multiaxes}.
 \begin{center}
 \includegraphics{examples/eps/ex_multiaxes.eps}
 \end{center}
-\caption{A plot demonstrating the use of large numbers of axes. Odd-numbered
+\caption[A plot demonstrating the use of large numbers of axes]
+{A plot demonstrating the use of large numbers of axes. Odd-numbered
 $x$-axes appear below the plot, and even numbered $x$-axes above it; a similar
 rule applies for $y$-axes, to the left and to the right.}
 \label{fig:ex_multiaxes}
@@ -558,7 +562,8 @@ set noy2tics
 \begin{center}
 \includegraphics{examples/eps/ex_axistics.eps}
 \end{center}
-\caption{A plot illustrating some of the crossing points of the function
+\caption[A plot demonsrating the use of custom axis ticks]
+{A plot illustrating some of the crossing points of the function
 $\exp(x)\sin(1/x)$.  The commands used to set up ticking on the axes in this
 plot are as given in the text.}
 \label{fig:ex_axistics}
@@ -600,7 +605,7 @@ The following recognised positioning keywords are self-explanatory:
 key outside the plot, on its right side. The words \indkeyt{below} and
 \indkeyt{above} place legends below and above the plot respectively.
 
-In addition, two positional offset coordinates may be specified after such
+In addition, two positional offset co-ordinates may be specified after such
 keywords -- the first value is assumed to be an $x$-offset, and the second a
 $y$-offset, both in units of centimetres. For example:
 
@@ -626,7 +631,8 @@ Figure~\ref{fig:ex_legends}.
 \begin{center}
 \includegraphics{examples/eps/ex_legends.eps}
 \end{center}
-\caption{This plot shows how rapidly three functions, often approximated as
+\caption[A plot demonstrating the use of a two-column legend]
+{This plot shows how rapidly three functions, often approximated as
 $x$, deviate from that approximation.  Furthermore it is an example of a plot
 with a two-column legend, positioned below the plot using {\tt set key below}.
 The complete script used to produce the plot can be found on the PyXPlot

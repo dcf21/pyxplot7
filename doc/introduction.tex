@@ -27,7 +27,7 @@
 \section{Overview}
 
 {\sc PyXPlot} is a stand-alone command-line graphing package that is simple to
-use yet produces high-quality attractive output, suitable for use in
+use yet produces high-quality attractive output suitable for use in
 publications. For ease of use, its interface is based heavily upon that of the
 popular {\sc \gnuplot}\index{gnuplot} plotting package, so users do not need to
 learn a whole new scripting language. However, it uses the PyX graphics library
@@ -61,7 +61,7 @@ licensing restrictions. Moreover, none of these are as easy to use as \gnuplot.
 Both \gnuplot\ and Pgplot were developed in the mid-1980s. At that time, the
 quality of their output seemed state-of-the-art. But this is less true today.
 In most journal articles today, the text and equations are rendered with a high
-degree of professionalism by the \LaTeX\ typesetting system. But all to often,
+degree of professionalism by the \LaTeX\ typesetting system. But all too often,
 the graphs are less neat.  The same is often true of the slides used in
 presentations: graphs are often rendered with less professionalism than the
 text around them.
@@ -95,7 +95,7 @@ especially if the programme was originally written by someone else. But a simple
 The similarity of PyXPlot's interface to that of \gnuplot\ is such that simple
 scripts written for \gnuplot\ should work with PyXPlot with minimal
 modification; \gnuplot\ users should be able to get started very quickly.
-However, PyXPlot is still work in progress, and a small number of \gnuplot's
+However, PyXPlot is still a work in progress, and a small number of \gnuplot's
 features are still missing.  A detailed list of which features are supported
 can be found in Section~\ref{missing_features}. The new features which have
 been added to the interface are described in
@@ -175,14 +175,16 @@ Linux}\index{installation!under Debian}\index{installation!under Ubuntu}
 \subsection{Installation within Linux Distributions}
 
 PyXPlot is available as a user-installable package within some Linux
-distributions. Gentoo has such a package already.\index{Gentoo
-Linux}\index{installation!under Gentoo}\footnote{See
-\url{http://gentoo-portage.com/sci-visualization/pyxplot}}. Debian will have
-such a package in their next release, {\it Lenny}, which is scheduled for late
-2008.  Ubuntu will have such a package in their next release, {\it Hardy
-Heron}, which is scheduled for 24th April 2008. In the meantime, Debian and
-Ubuntu users can download the package from the PyXPlot website, for manual
-installation:
+distributions. Gentoo\index{Gentoo Linux}\index{installation!under
+Gentoo}\footnote{See \url{http://gentoo-portage.com/sci-visualization/pyxplot}}
+and Ubuntu\index{Ubuntu Linux}\index{installation!under Ubuntu}\footnote{Note
+that there is an error in the packaging of PyXPlot in {\it Hardy Herron} and
+{\it Intrepid Ibex}, which means that the {\tt tetex-extra} package, upon which
+PyXPlot depends, is not automatically installed with PyXPlot.} already have
+such packages. Debian will have such a package in their next release, {\it
+Lenny}, which is scheduled for late 2008. Alternatively, and to ensure that
+they are using the latest version, Debian and Ubuntu users can download the
+package from the PyXPlot website and install it manually by typing:
 
 \begin{verbatim}
 dpkg -i pyxplot_0.7.0.deb

@@ -35,7 +35,7 @@ following chapters, we shall go on to describe the ways in which PyXPlot
 extends \gnuplot's interface.
 
 Describing \gnuplot's interface in its entirety is a substantial task, and what
-follows is only an overview; novice users can find many excellent tutorials on
+follows is only an overview; novice users may find many excellent tutorials on
 the web which will greatly supplement what is provided below.
 
 \section{Getting Started}
@@ -46,7 +46,7 @@ into which commands can be typed. PyXPlot can be exited either by typing
 \indcmdts{exit}, \indcmdts{quit}, or by pressing CTRL-D.
 
 As you begin to plot increasingly complicated graphs, the number of commands
-require to set them up and plot them will grow.  It will soon become
+required to set them up and plot them will grow.  It will soon become
 preferable, instead of typing these commands into an interactive session, to
 store lists of commands as scripts, which are simply text files containing
 PyXPlot commands. These may be executed by passing the filename of the command
@@ -126,8 +126,8 @@ plot sin(x)
 
 \noindent It is also possible to plot data stored in files on disk. The
 following would plot data from a file {\tt data.dat}, taking the
-$x$-coordinate of each point from the first column of the \datafile, and the
-$y$-coordinate from the second.  The \datafile\ is assumed to be in plain text
+$x$-co-ordinate of each point from the first column of the \datafile, and the
+$y$-co-ordinate from the second.  The \datafile\ is assumed to be in plain text
 format\footnote{If the filename of a \datafile\ ends with a {\tt .gz} suffix,
 it is assuming to be gzipped plaintext, and is decoded accordingly.}, with
 columns separated by whitespace and/or commas\footnote{This format is
@@ -217,8 +217,9 @@ angle $\theta$'
 \begin{center}
 \includegraphics{examples/eps/ex_axislab.eps}
 \end{center}
-\caption{A plot of the trajectories of rockets fired with different initial
-velocities.  The key demonstrates the use of \LaTeX to render mathematical
+\caption[A plot of the trajectories of rockets fired with different initial velocities]
+{A plot of the trajectories of rockets fired with different initial
+velocities.  The key demonstrates the use of \LaTeX\ to render mathematical
 symbols attractively.  The full PyXPlot script used to generate this figure is
 available on the PyXPlot website at
 \protect\url{http://www.pyxplot.org.uk/examples/Manual/01axislab/}.}
@@ -226,10 +227,10 @@ available on the PyXPlot website at
 \end{figure}
 
 \noindent The output produced by these commands is shown in
-Figure~\ref{fig:ex_axislab}.  Note that the labels and title (and indeed all
-text labels in the PyXPlot system) are rendered using \LaTeX, and so any
-\LaTeX\ commands can be used.  As a caveat, however, this does mean that care
-needs to be taken to escape any of \LaTeX's reserved characters -- i.e.:
+Figure~\ref{fig:ex_axislab}.  Note that the labels and title, and indeed all
+text labels in PyXPlot, are rendered using \LaTeX, and so any \LaTeX\ commands
+can be used.  As a caveat, however, this does mean that care needs to be taken
+to escape any of \LaTeX's reserved characters -- i.e.:
 $\backslash$~\&~\%~\#~\{~\}~\$~\_~\^{} or $\sim$.
 
 Because of the use of quotes to delimit text labels, special care needs to be
@@ -295,7 +296,7 @@ recognised by PyXPlot is given in
 Table~\ref{operators_table}.\index{functions!pre-defined}\index{operators}
 
 \begin{table}
-\begin{longtable}{|lp{8cm}|}
+\begin{tabular}{|lp{8cm}|}
 \hline
 acos($x$)&
 Return the arc cosine (measured in radians) of $x$.\\
@@ -338,13 +339,13 @@ Return the greatest of the numerical values supplied.\\
 min($x$,$y$,...)&
 Return the least of the numerical values supplied.\\
 \hline
-\end{longtable}
+\end{tabular}
 \caption{A list of mathematical functions which are pre-defined within PyXPlot (cont'd.\ in Table~\ref{functions_table2}).}
 \label{functions_table}
 \end{table}
 
 \begin{table}
-\begin{longtable}{|lp{8cm}|}
+\begin{tabular}{|lp{8cm}|}
 \hline
 pow($x,y$)&
 Return $x^y$.\\
@@ -363,13 +364,13 @@ Return the tangent of $x$ (measured in radians).\\
 tanh($x$)&
 Return the hyperbolic tangent of $x$.\\
 \hline
-\end{longtable}
+\end{tabular}
 \caption{A list of mathematical functions which are pre-defined within PyXPlot (cont'd.\ from Table~\ref{functions_table}).}
 \label{functions_table2}
 \end{table}
 
 \begin{table}
-\begin{longtable}{|lp{8cm}|}
+\begin{tabular}{|lp{8cm}|}
 \hline
 {\tt +} & Algebraic sum \\
 {\tt -} & Algebraic subtraction \\
@@ -392,7 +393,7 @@ Return the hyperbolic tangent of $x$.\\
 {\tt and} & Logical and \\
 {\tt or} & Logical or \\
 \hline
-\end{longtable}
+\end{tabular}
 \caption{A list of mathematical operators which PyXPlot recognises.}
 \label{operators_table}
 \end{table}
@@ -506,7 +507,7 @@ both be valid statements:
 
 \begin{verbatim}
 plot 'data.dat' index 1 every 2:3
-plot 'data.dat' index 1 every :::3
+plot 'data.dat' index 1 every ::3
 \end{verbatim}
 
 \noindent The first would plot only every other \datapoint\ from every third
@@ -611,25 +612,25 @@ set width 20
 The {\tt set size} command can also be used to set the aspect ratio of plots by
 following it with the keyword {\tt ratio}\indcmd{set size ratio}. The number
 which follows should be the desired ratio of height to width. The following,
-for example would produce plots three times as high as they are wide:
+for example, would produce plots three times as high as they are wide:
 
 \begin{verbatim}
 set size ratio 3.0
 \end{verbatim}
 
-The command {\tt set size noratio} returns to PyXPlot's default aspect ratio of
-the golden ratio\footnote{Artists have used this aspect ratio since ancient
-times. The Pythagoreans observed its frequent occurance in geometry, and
-Phidias (490\,-–\,430~{\scriptsize BC}) used it repeatedly in the architecture
-of the Parthenon. Renaissance artists such as Dal\'i, in keeping with their
-discipleship to classical aesthetics in many areas, often used the ratio.
-Leonardi Da Vinci observed that many bodily proportions closely approximate the
-golden ratio. Some even went so far as to suggest that the ratio had a divine
-origin (e.g.\ Pacioli~1509). As for the authors of this present work, we do
-assert that plots with golden aspect ratios are pleasing to the eye, but we
-leave the ponderance of the theological significance as an exercise for the
-reader.}, i.e.\ $\left((1+\sqrt{5})/2\right)^{-1}$. The special command {\tt
-set size square}\indcmd{set size square} sets the aspect ratio to unity.
+\noindent The command {\tt set size noratio} returns to PyXPlot's default
+aspect ratio of the golden ratio\footnote{Artists have used this aspect ratio
+since ancient times. The Pythagoreans observed its frequent occurance in
+geometry, and Phidias (490\,-–\,430~{\scriptsize BC}) used it repeatedly in the
+architecture of the Parthenon. Renaissance artists such as Dal\'i, who were in
+many ways disciples of classical aesthetics, often used the ratio.  Leonardi Da
+Vinci observed that many bodily proportions closely approximate the golden
+ratio. Some even went so far as to suggest that the ratio had a divine origin
+(e.g.\ Pacioli~1509). As for the authors of this present work, we do assert
+that plots with golden aspect ratios are pleasing to the eye, but leave the
+ponderance of its theological significance as an exercise for the reader.},
+i.e.\ $\left((1+\sqrt{5})/2\right)^{-1}$. The special command {\tt set size
+square}\indcmd{set size square} sets the aspect ratio to unity.
 
 \section{Data Styles}
 
@@ -667,7 +668,7 @@ plot 'data.dat' with yerrorbars
 \end{verbatim}
 
 \noindent In this case, three columns of data need to be specified: the $x$-
-and $y$-coordinates of each \datapoint, plus the size of the vertical errorbar
+and $y$-co-ordinates of each \datapoint, plus the size of the vertical errorbar
 on that \datapoint. By default, the first three columns of the \datafile\ are
 used, but once again (see Section~\ref{plot_datafiles}), the {\tt using}
 modifier can be used:
@@ -819,7 +820,8 @@ plot 'square.dat' title 'data' with points pointsize 2, \
 \begin{center}
 \includegraphics{examples/eps/ex_fitting.eps}
 \end{center}
-\caption{The output from a script that fits a truncated Fourier series to a
+\caption[The output from a script that fits a truncated Fourier series to a
+sampled square wave]{The output from a script that fits a truncated Fourier series to a
 sampled square wave.  Even with only three terms the Gibbs pheonomenon is
 becoming apparent (see \protect\url{http://en.wikipedia.org/wiki/Gibbs_phenomenon} for
 an explanation).} 

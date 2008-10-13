@@ -76,14 +76,14 @@ set arrow 1 from 0,0 to 1,1 with nohead \
 linetype 1 c blue
 \end{verbatim}
 
-As in \gnuplot, the coordinates for the start and end points of the arrow can
-be specified in a range of coordinate systems. The co-ordinate system to be
+As in \gnuplot, the co-ordinates for the start and end points of the arrow can
+be specified in a range of co-ordinate systems. The co-ordinate system to be
 used should be specified immediately before the co-ordinate value. The default
 system, \indcot{first} measures the graph using the $x$- and $y$-axes. The
 \indcot{second} system uses the $x2$- and $y2$-axes. The \indcot{screen} and
 \indcot{graph} systems both measure in centimetres from the origin of the
 graph. In the following example, we use these specifiers, and specify
-coordinates using variables rather than doing so explicitly:
+co-ordinates using variables rather than doing so explicitly:
 
 \begin{verbatim}
 x0 = 0.0
@@ -118,8 +118,8 @@ set nolabel 1
 unset label 1
 \end{verbatim}
 
-\noindent The positional coordinates for the text label, placed after the {\tt
-at} keyword, can be specified in any of the coordinate systems described for
+\noindent The positional co-ordinates for the text label, placed after the {\tt
+at} keyword, can be specified in any of the co-ordinate systems described for
 arrows above. A rotation angle may optionally be specified after the keyword
 \indkeyt{rotate}, to rotate text counter-clockwise by a given angle, measured
 in degrees. For example, the following would produce upward-running text:
@@ -174,7 +174,8 @@ An example of a somewhat unconventional plot containing many labels and lines ca
 \begin{center}
 \includegraphics[width=\textwidth]{examples/eps/ex_map.eps}
 \end{center}
-\caption{A map of Australia, plotted using PyXPlot.  The data were obtained
+\caption[A map of Australia, plotted using PyXPlot]
+{A map of Australia, plotted using PyXPlot.  The data were obtained
 from \protect\url{http://www.maproom.psu.edu/dcw/} (for the coastal outlines
 and state boundaries) and \protect\url{http://en.wikipedia.org} (for the city
 locations).  The data files and script used to produce this map can be
@@ -250,7 +251,7 @@ The mode is entered by the command \indcmdts{set multiplot}.  This can be
 compared to taking a blank sheet of paper on which to place plots.  Plots are
 then placed on that sheet of paper, as usual, with the {\tt plot} command. The
 position of each plot is set using the \indcmdt{set origin}, which takes a
-comma-separated $(x,y)$ coordinate pair, measured in centimetres. The
+comma-separated $(x,y)$ co-ordinate pair, measured in centimetres. The
 following, for example, would plot a graph of $\sin(x)$ to the left of a plot
 of $\cos(x)$:
 
