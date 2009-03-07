@@ -174,45 +174,11 @@ pyx_colours={
 "Grey":pyx.color.cmyk.Grey,
 "Black":pyx.color.cmyk.Black,
 "White":pyx.color.cmyk.White,
-"Grey05":pyx.color.gray(0.05),
-"Grey10":pyx.color.gray(0.10),
-"Grey15":pyx.color.gray(0.15),
-"Grey20":pyx.color.gray(0.20),
-"Grey25":pyx.color.gray(0.25),
-"Grey30":pyx.color.gray(0.30),
-"Grey35":pyx.color.gray(0.35),
-"Grey40":pyx.color.gray(0.40),
-"Grey45":pyx.color.gray(0.45),
-"Grey50":pyx.color.gray(0.50),
-"Grey55":pyx.color.gray(0.55),
-"Grey60":pyx.color.gray(0.60),
-"Grey65":pyx.color.gray(0.65),
-"Grey70":pyx.color.gray(0.70),
-"Grey75":pyx.color.gray(0.75),
-"Grey80":pyx.color.gray(0.80),
-"Grey85":pyx.color.gray(0.85),
-"Grey90":pyx.color.gray(0.90),
-"Grey95":pyx.color.gray(0.95),
-"Gray05":pyx.color.gray(0.05),
-"Gray10":pyx.color.gray(0.10),
-"Gray15":pyx.color.gray(0.15),
-"Gray20":pyx.color.gray(0.20),
-"Gray25":pyx.color.gray(0.25),
-"Gray30":pyx.color.gray(0.30),
-"Gray35":pyx.color.gray(0.35),
-"Gray40":pyx.color.gray(0.40),
-"Gray45":pyx.color.gray(0.45),
-"Gray50":pyx.color.gray(0.50),
-"Gray55":pyx.color.gray(0.55),
-"Gray60":pyx.color.gray(0.60),
-"Gray65":pyx.color.gray(0.65),
-"Gray70":pyx.color.gray(0.70),
-"Gray75":pyx.color.gray(0.75),
-"Gray80":pyx.color.gray(0.80),
-"Gray85":pyx.color.gray(0.85),
-"Gray90":pyx.color.gray(0.90),
-"Gray95":pyx.color.gray(0.95)
 }
+
+for greylevel in range(0,101):
+ pyx_colours["Grey%02d"%greylevel] = pyx.color.gray(float(greylevel)/100)
+ pyx_colours["Gray%02d"%greylevel] = pyx.color.gray(float(greylevel)/100)
 
 # Available options for different data types
 
