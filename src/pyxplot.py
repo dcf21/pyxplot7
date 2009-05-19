@@ -997,7 +997,7 @@ def directive(line, recurse_depth, toplevel=True, interactive=False):
       gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
   elif (command['directive'] == "exec"):         # exec
     for exec_line in command['command'].split("\n"):
-      directive(exec_line)
+      directive(exec_line, recurse_depth+1)
   elif (command['directive'] == "quit"):         # exit / quit
     exitting = 1
     return(0)
