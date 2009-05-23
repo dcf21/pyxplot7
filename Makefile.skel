@@ -3,8 +3,8 @@
 # The code in this file is part of PyXPlot
 # <http://www.pyxplot.org.uk>
 #
-# Copyright (C) 2006-8 Dominic Ford <coders@pyxplot.org.uk>
-#               2008   Ross Church
+# Copyright (C) 2006-9 Dominic Ford <coders@pyxplot.org.uk>
+#               2008-9 Ross Church
 #
 # $Id$
 #
@@ -36,8 +36,8 @@ MANDIR=${USRDIR}/man/man1
 
 # Version information.
 
-VERSION=0.7.0
-DATE=2/12/2008
+VERSION=0.7.1
+DATE=24/05/2009
 
 default: setup
 
@@ -68,10 +68,6 @@ setup:
 	echo "DOCDIR='${DOCDIR}'"          >> src/gp_version_install.py
 	echo "GHOSTVIEW='${GV_COMMAND}'"   >> src/gp_version_install.py
 	echo "GHOSTVIEW_OPT='${GV_OPT}'"   >> src/gp_version_install.py
-	rm -rf src/pyx
-	gzip -dc PyX-0.10.tar.gz | tar xf -
-	mv -f PyX-0.10/pyx src
-	rm -rf PyX-0.10
 	chmod 755 src/__init__.py
 	echo "exit" | src/__init__.py
 	${PYTHON_COMMAND} manpage_pyxplot.py       ${DOCDIR}/pyxplot.pdf > pyxplot.1

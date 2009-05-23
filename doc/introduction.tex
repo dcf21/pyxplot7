@@ -1,9 +1,10 @@
 % INTRODUCTION.TEX
 %
-% The documentation in this file is part of PyXPlot <http://www.pyxplot.org.uk>
+% The documentation in this file is part of PyXPlot
+% <http://www.pyxplot.org.uk>
 %
-% Copyright (C) 2006-8 Dominic Ford <coders@pyxplot.org.uk>
-%               2008   Ross Church
+% Copyright (C) 2006-9 Dominic Ford <coders@pyxplot.org.uk>
+%               2008-9 Ross Church
 %
 % $Id$
 %
@@ -137,7 +138,7 @@ packages (not included) be installed:\index{system requirements}
 
 \vspace{0.5cm}
 \begin{tabular}{ll}
-Python       & (Version 2.3 or later)\index{python} \\
+Python       & (Version 2.4 or later)\index{python} \\
 Latex        & (Used for all textual labels)\index{latex} \\
 \imagemagick & (needed for the gif, png and jpg terminals)\index{ImageMagick} \\
 \end{tabular}
@@ -165,8 +166,8 @@ without it:
 \vspace{0.5cm}
 
 Debian and Ubuntu users can find the above software in the packages {\tt
-texlive}, {\tt gv}, {\tt imagemagick}, {\tt python2.3}, {\tt
-python2.3-scipy}.\index{Debian Linux}\index{Ubuntu
+texlive}, {\tt gv}, {\tt imagemagick}, {\tt python}, {\tt
+python-scipy}.\index{Debian Linux}\index{Ubuntu
 Linux}\index{installation!under Debian}\index{installation!under Ubuntu}
 
 \section{Installation}
@@ -176,18 +177,18 @@ Linux}\index{installation!under Debian}\index{installation!under Ubuntu}
 
 PyXPlot is available as a user-installable package within some Linux
 distributions. Gentoo\index{Gentoo Linux}\index{installation!under
-Gentoo}\footnote{See \url{http://gentoo-portage.com/sci-visualization/pyxplot}}
-and Ubuntu\index{Ubuntu Linux}\index{installation!under Ubuntu}\footnote{Note
-that there is an error in the packaging of PyXPlot in {\it Hardy Herron} and
-{\it Intrepid Ibex}, which means that the {\tt tetex-extra} package, upon which
-PyXPlot depends, is not automatically installed with PyXPlot.} already have
-such packages. Debian will have such a package in their next release, {\it
-Lenny}, which is scheduled for late 2008. Alternatively, and to ensure that
-they are using the latest version, Debian and Ubuntu users can download the
-package from the PyXPlot website and install it manually by typing:
+Gentoo}\footnote{See
+\url{http://gentoo-portage.com/sci-visualization/pyxplot}}, Ubuntu\index{Ubuntu
+Linux}\index{installation!under Ubuntu}\footnote{Note that at the time of
+writing, there is an error in the packaging of PyXPlot in Ubuntu which means
+that the {\tt tetex-extra} package, upon which PyXPlot depends, is not
+automatically installed with PyXPlot.} and Debian already have such packages.
+Alternatively, and to ensure that they are using the latest version, Debian and
+Ubuntu users can download the package from the PyXPlot website and install it
+manually by typing:
 
 \begin{verbatim}
-dpkg -i pyxplot_0.7.0.deb
+dpkg -i pyxplot_0.7.1.deb
 \end{verbatim}
 
 \subsection{Installation as User}
@@ -202,7 +203,7 @@ administrator.\index{installation!user-level}
 \item Unpack the distributed .tar.gz:
 
 \begin{verbatim}
-tar xvfz pyxplot_0.7.0.tar.gz
+tar xvfz pyxplot_0.7.1.tar.gz
 cd pyxplot
 \end{verbatim}
 

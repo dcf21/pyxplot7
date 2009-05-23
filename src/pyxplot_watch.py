@@ -3,8 +3,8 @@
 # The code in this file is part of PyXPlot
 # <http://www.pyxplot.org.uk>
 #
-# Copyright (C) 2006-8 Dominic Ford <coders@pyxplot.org.uk>
-#               2008   Ross Church
+# Copyright (C) 2006-9 Dominic Ford <coders@pyxplot.org.uk>
+#               2008-9 Ross Church
 #
 # $Id$
 #
@@ -24,6 +24,7 @@ import gp_text
 from gp_error import *
 
 import os
+import subprocess
 import sys
 import time
 import glob
@@ -51,7 +52,10 @@ def do_pyxplot(filename):
     os.system("pyxplot %s > /dev/null"%filename) # Always discard stdout
     gp_report("[%s] Completed %s."%(time.ctime(),filename))
   else:
-    (streamin, streamout, streamerr) = os.popen3("pyxplot %s"%filename)
+    sp = subprocess.Popen("pyxplot %s"%filename, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE);
+    streamin  = sp.stdin;
+    streamout = sp.stdout;
+    streamerr = sp.stderr;
     stringout = streamout.read()
     stringerr = streamerr.read()
     streamin.close() ; streamout.close() ; streamerr.close()

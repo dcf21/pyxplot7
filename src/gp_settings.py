@@ -3,8 +3,8 @@
 # The code in this file is part of PyXPlot
 # <http://www.pyxplot.org.uk>
 #
-# Copyright (C) 2006-8 Dominic Ford <coders@pyxplot.org.uk>
-#               2008   Ross Church
+# Copyright (C) 2006-9 Dominic Ford <coders@pyxplot.org.uk>
+#               2008-9 Ross Church
 #
 # $Id$
 #
@@ -20,11 +20,12 @@
 # ----------------------------------------------------------------------------
 
 import os
+import subprocess
 import sys
 import copy
 import glob
 import ConfigParser
-import pyx
+import dcfpyx
 
 import gp_userspace
 import gp_postscript
@@ -37,7 +38,7 @@ import gp_eval
 
 from gp_symbollist import symbol_list
 
-linestyle_list = [pyx.style.linestyle.solid, pyx.style.linestyle.dashed, pyx.style.linestyle.dotted, pyx.style.linestyle.dashdotted, pyx.style.dash((3,2,1,1,1,2),0), pyx.style.dash((3,1,1,3,1,1),0), pyx.style.dash((3,1,3,1,3,1),0), pyx.style.dash((4,4),0)]
+linestyle_list = [dcfpyx.style.linestyle.solid, dcfpyx.style.linestyle.dashed, dcfpyx.style.linestyle.dotted, dcfpyx.style.linestyle.dashdotted, dcfpyx.style.dash((3,2,1,1,1,2),0), dcfpyx.style.dash((3,1,1,3,1,1),0), dcfpyx.style.dash((3,1,3,1,3,1),0), dcfpyx.style.dash((4,4),0)]
 
 #
 # CONFIGURATION FILE HANDLING
@@ -105,80 +106,80 @@ def config_lookup_opt2(section, option, default, options): # As above, but capit
 # Make a dictionary of PyX colours called pyx_colours
 
 pyx_colours={
-"Greenyellow":pyx.color.cmyk.GreenYellow,
-"Yellow":pyx.color.cmyk.Yellow,
-"Goldenrod":pyx.color.cmyk.Goldenrod,
-"Dandelion":pyx.color.cmyk.Dandelion,
-"Apricot":pyx.color.cmyk.Apricot,
-"Peach":pyx.color.cmyk.Peach,
-"Melon":pyx.color.cmyk.Melon,
-"Yelloworange":pyx.color.cmyk.YellowOrange,
-"Orange":pyx.color.cmyk.Orange,
-"Burntorange":pyx.color.cmyk.BurntOrange,
-"Bittersweet":pyx.color.cmyk.Bittersweet,
-"Redorange":pyx.color.cmyk.RedOrange,
-"Mahogany":pyx.color.cmyk.Mahogany,
-"Maroon":pyx.color.cmyk.Maroon,
-"Brickred":pyx.color.cmyk.BrickRed,
-"Red":pyx.color.cmyk.Red,
-"Orangered":pyx.color.cmyk.OrangeRed,
-"Rubinered":pyx.color.cmyk.RubineRed,
-"Wildstrawberry":pyx.color.cmyk.WildStrawberry,
-"Salmon":pyx.color.cmyk.Salmon,
-"Carnationpink":pyx.color.cmyk.CarnationPink,
-"Magenta":pyx.color.cmyk.Magenta,
-"Violetred":pyx.color.cmyk.VioletRed,
-"Rhodamine":pyx.color.cmyk.Rhodamine,
-"Mulberry":pyx.color.cmyk.Mulberry,
-"Redviolet":pyx.color.cmyk.RedViolet,
-"Fuchsia":pyx.color.cmyk.Fuchsia,
-"Lavender":pyx.color.cmyk.Lavender,
-"Thistle":pyx.color.cmyk.Thistle,
-"Orchid":pyx.color.cmyk.Orchid,
-"Darkorchid":pyx.color.cmyk.DarkOrchid,
-"Purple":pyx.color.cmyk.Purple,
-"Plum":pyx.color.cmyk.Plum,
-"Violet":pyx.color.cmyk.Violet,
-"Royalpurple":pyx.color.cmyk.RoyalPurple,
-"Blueviolet":pyx.color.cmyk.BlueViolet,
-"Periwinkle":pyx.color.cmyk.Periwinkle,
-"Cadetblue":pyx.color.cmyk.CadetBlue,
-"Cornflowerblue":pyx.color.cmyk.CornflowerBlue,
-"Midnightblue":pyx.color.cmyk.MidnightBlue,
-"Navyblue":pyx.color.cmyk.NavyBlue,
-"Royalblue":pyx.color.cmyk.RoyalBlue,
-"Blue":pyx.color.cmyk.Blue,
-"Cerulean":pyx.color.cmyk.Cerulean,
-"Cyan":pyx.color.cmyk.Cyan,
-"Processblue":pyx.color.cmyk.ProcessBlue,
-"Skyblue":pyx.color.cmyk.SkyBlue,
-"Turquoise":pyx.color.cmyk.Turquoise,
-"Tealblue":pyx.color.cmyk.TealBlue,
-"Aquamarine":pyx.color.cmyk.Aquamarine,
-"Bluegreen":pyx.color.cmyk.BlueGreen,
-"Emerald":pyx.color.cmyk.Emerald,
-"Junglegreen":pyx.color.cmyk.JungleGreen,
-"Seagreen":pyx.color.cmyk.SeaGreen,
-"Green":pyx.color.cmyk.Green,
-"Forestgreen":pyx.color.cmyk.ForestGreen,
-"Pinegreen":pyx.color.cmyk.PineGreen,
-"Limegreen":pyx.color.cmyk.LimeGreen,
-"Yellowgreen":pyx.color.cmyk.YellowGreen,
-"Springgreen":pyx.color.cmyk.SpringGreen,
-"Olivegreen":pyx.color.cmyk.OliveGreen,
-"Rawsienna":pyx.color.cmyk.RawSienna,
-"Sepia":pyx.color.cmyk.Sepia,
-"Brown":pyx.color.cmyk.Brown,
-"Tan":pyx.color.cmyk.Tan,
-"Gray":pyx.color.cmyk.Gray,
-"Grey":pyx.color.cmyk.Grey,
-"Black":pyx.color.cmyk.Black,
-"White":pyx.color.cmyk.White,
+"Greenyellow":dcfpyx.color.cmyk.GreenYellow,
+"Yellow":dcfpyx.color.cmyk.Yellow,
+"Goldenrod":dcfpyx.color.cmyk.Goldenrod,
+"Dandelion":dcfpyx.color.cmyk.Dandelion,
+"Apricot":dcfpyx.color.cmyk.Apricot,
+"Peach":dcfpyx.color.cmyk.Peach,
+"Melon":dcfpyx.color.cmyk.Melon,
+"Yelloworange":dcfpyx.color.cmyk.YellowOrange,
+"Orange":dcfpyx.color.cmyk.Orange,
+"Burntorange":dcfpyx.color.cmyk.BurntOrange,
+"Bittersweet":dcfpyx.color.cmyk.Bittersweet,
+"Redorange":dcfpyx.color.cmyk.RedOrange,
+"Mahogany":dcfpyx.color.cmyk.Mahogany,
+"Maroon":dcfpyx.color.cmyk.Maroon,
+"Brickred":dcfpyx.color.cmyk.BrickRed,
+"Red":dcfpyx.color.cmyk.Red,
+"Orangered":dcfpyx.color.cmyk.OrangeRed,
+"Rubinered":dcfpyx.color.cmyk.RubineRed,
+"Wildstrawberry":dcfpyx.color.cmyk.WildStrawberry,
+"Salmon":dcfpyx.color.cmyk.Salmon,
+"Carnationpink":dcfpyx.color.cmyk.CarnationPink,
+"Magenta":dcfpyx.color.cmyk.Magenta,
+"Violetred":dcfpyx.color.cmyk.VioletRed,
+"Rhodamine":dcfpyx.color.cmyk.Rhodamine,
+"Mulberry":dcfpyx.color.cmyk.Mulberry,
+"Redviolet":dcfpyx.color.cmyk.RedViolet,
+"Fuchsia":dcfpyx.color.cmyk.Fuchsia,
+"Lavender":dcfpyx.color.cmyk.Lavender,
+"Thistle":dcfpyx.color.cmyk.Thistle,
+"Orchid":dcfpyx.color.cmyk.Orchid,
+"Darkorchid":dcfpyx.color.cmyk.DarkOrchid,
+"Purple":dcfpyx.color.cmyk.Purple,
+"Plum":dcfpyx.color.cmyk.Plum,
+"Violet":dcfpyx.color.cmyk.Violet,
+"Royalpurple":dcfpyx.color.cmyk.RoyalPurple,
+"Blueviolet":dcfpyx.color.cmyk.BlueViolet,
+"Periwinkle":dcfpyx.color.cmyk.Periwinkle,
+"Cadetblue":dcfpyx.color.cmyk.CadetBlue,
+"Cornflowerblue":dcfpyx.color.cmyk.CornflowerBlue,
+"Midnightblue":dcfpyx.color.cmyk.MidnightBlue,
+"Navyblue":dcfpyx.color.cmyk.NavyBlue,
+"Royalblue":dcfpyx.color.cmyk.RoyalBlue,
+"Blue":dcfpyx.color.cmyk.Blue,
+"Cerulean":dcfpyx.color.cmyk.Cerulean,
+"Cyan":dcfpyx.color.cmyk.Cyan,
+"Processblue":dcfpyx.color.cmyk.ProcessBlue,
+"Skyblue":dcfpyx.color.cmyk.SkyBlue,
+"Turquoise":dcfpyx.color.cmyk.Turquoise,
+"Tealblue":dcfpyx.color.cmyk.TealBlue,
+"Aquamarine":dcfpyx.color.cmyk.Aquamarine,
+"Bluegreen":dcfpyx.color.cmyk.BlueGreen,
+"Emerald":dcfpyx.color.cmyk.Emerald,
+"Junglegreen":dcfpyx.color.cmyk.JungleGreen,
+"Seagreen":dcfpyx.color.cmyk.SeaGreen,
+"Green":dcfpyx.color.cmyk.Green,
+"Forestgreen":dcfpyx.color.cmyk.ForestGreen,
+"Pinegreen":dcfpyx.color.cmyk.PineGreen,
+"Limegreen":dcfpyx.color.cmyk.LimeGreen,
+"Yellowgreen":dcfpyx.color.cmyk.YellowGreen,
+"Springgreen":dcfpyx.color.cmyk.SpringGreen,
+"Olivegreen":dcfpyx.color.cmyk.OliveGreen,
+"Rawsienna":dcfpyx.color.cmyk.RawSienna,
+"Sepia":dcfpyx.color.cmyk.Sepia,
+"Brown":dcfpyx.color.cmyk.Brown,
+"Tan":dcfpyx.color.cmyk.Tan,
+"Gray":dcfpyx.color.cmyk.Gray,
+"Grey":dcfpyx.color.cmyk.Grey,
+"Black":dcfpyx.color.cmyk.Black,
+"White":dcfpyx.color.cmyk.White,
 }
 
 for greylevel in range(0,101):
- pyx_colours["Grey%02d"%greylevel] = pyx.color.gray(float(greylevel)/100)
- pyx_colours["Gray%02d"%greylevel] = pyx.color.gray(float(greylevel)/100)
+ pyx_colours["Grey%02d"%greylevel] = dcfpyx.color.gray(float(greylevel)/100)
+ pyx_colours["Gray%02d"%greylevel] = dcfpyx.color.gray(float(greylevel)/100)
 
 # Available options for different data types
 
@@ -302,7 +303,7 @@ settings_default['DATASTYLE'] = {'style':settings_default['DATASTYLE']}
 settings_default['FUNCSTYLE'] = {'style':settings_default['FUNCSTYLE']}
 
 try:
-  get_papersize = os.popen("locale -c LC_PAPER 2> /dev/null") # Read locale papersize
+  get_papersize = subprocess.Popen("locale -c LC_PAPER 2> /dev/null", stdout=subprocess.PIPE).stdout; # Read locale papersize
   get_papersize.readline()
   settings_global_default['PAPER_HEIGHT'] = float(get_papersize.readline())
   settings_global_default['PAPER_WIDTH']  = float(get_papersize.readline())

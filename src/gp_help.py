@@ -3,8 +3,8 @@
 # The code in this file is part of PyXPlot
 # <http://www.pyxplot.org.uk>
 #
-# Copyright (C) 2006-8 Dominic Ford <coders@pyxplot.org.uk>
-#               2008   Ross Church
+# Copyright (C) 2006-9 Dominic Ford <coders@pyxplot.org.uk>
+#               2008-9 Ross Church
 #
 # $Id$
 #
@@ -20,6 +20,7 @@
 # ----------------------------------------------------------------------------
 
 import os
+import subprocess
 import sys
 import re
 import xml.dom.pulldom
@@ -81,7 +82,7 @@ def wordwrap_display(input, interactive):
   # Display help
   text_out = re.sub('#',' ',text_out) # Hash sign is used as a hard space
   if (sys.stdin.isatty() and interactive):
-    f = os.popen("less","w")
+    f = subprocess.Popen("less",stdin=subprocess.PIPE).stdin;
     f.write(text_out)
     f.close()
   else:

@@ -3,8 +3,8 @@
 # The code in this file is part of PyXPlot
 # <http://www.pyxplot.org.uk>
 #
-# Copyright (C) 2006-8 Dominic Ford <coders@pyxplot.org.uk>
-#               2008   Ross Church
+# Copyright (C) 2006-9 Dominic Ford <coders@pyxplot.org.uk>
+#               2008-9 Ross Church
 #
 # $Id$
 #
@@ -43,7 +43,7 @@ import glob
 import operator
 import exceptions
 import re
-from pyx import *
+from dcfpyx import *
 
 # --------------------------
 # This is a temporary piece of sickness. Remove ASAP.
@@ -811,8 +811,8 @@ def plot_tabulated_data(g,Mplotlist,data_tables):
   try:
    for data_table in data_tables[i]:
     if (data_table != None):
-     [datagrid_cpy_list,axes,axis_x,axis_y,dx,dxmin,dy,dymin,localtitle,stylelist,description,verb_errors] = [data_table[j] for j in ['datagrid_cpy_list','axes','axis_x','axis_y','dx','dxmin','dy','dymin','localtitle','stylelist','description','verb_errors']]
-     plot_dataset(g,datagrid_cpy_list,axes,axis_x,axis_y,dx,dxmin,dy,dymin,localtitle,stylelist,description,verb_errors)
+     [datagrid_cpy_list,axes,axis_x,axis_y,dx,dxmin,dxmax,dy,dymin,dymax,localtitle,stylelist,description,verb_errors] = [data_table[j] for j in ['datagrid_cpy_list','axes','axis_x','axis_y','dx','dxmin','dxmax','dy','dymin','dymax','localtitle','stylelist','description','verb_errors']]
+     plot_dataset(g,datagrid_cpy_list,axes,axis_x,axis_y,dx,dxmin,dxmax,dy,dymin,dymax,localtitle,stylelist,description,verb_errors)
   except KeyboardInterrupt: raise
   except: 
    gp_error("Error:" , sys.exc_info()[1], "(" , sys.exc_info()[0] , ")")
@@ -1406,8 +1406,10 @@ def tabulate_dataset(multiplot_number,axes,axis_x,axis_y,plotwords,settings,titl
             'axis_y':axis_y,
             'dx':dx,
             'dxmin':dxmin,
+            'dxmax':dxmax,
             'dy':dy,
             'dymin':dymin,
+            'dymax':dymax,
             'localtitle':localtitle,
             'stylelist':stylelist,
             'stylestr':stylestr,
@@ -1494,7 +1496,7 @@ def axes_autoscale(multiplot_number,settings,datagrid_cpy_list,axes,axis_x,axis_
 
 # PLOT_DATASET(): Take a datagrid and a list of PyX plot styles and actually send it to PyX for plotting
 
-def plot_dataset(g,datagrid_cpy_list,axes,axis_x,axis_y,dx,dxmin,dy,dymin,localtitle,stylelist,description,verb_errors):
+def plot_dataset(g,datagrid_cpy_list,axes,axis_x,axis_y,dx,dxmin,dxmax,dy,dymin,dymax,localtitle,stylelist,description,verb_errors):
  try:
   for datagrid_cpy in datagrid_cpy_list:
    x_axisname = axes['x'][axis_x]['LINKINFO']['AXISPYXNAME']

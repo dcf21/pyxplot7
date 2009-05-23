@@ -3,8 +3,8 @@
 # The code in this file is part of PyXPlot
 # <http://www.pyxplot.org.uk>
 #
-# Copyright (C) 2006-8 Dominic Ford <coders@pyxplot.org.uk>
-#               2008   Ross Church
+# Copyright (C) 2006-9 Dominic Ford <coders@pyxplot.org.uk>
+#               2008-9 Ross Church
 #
 # $Id$
 #
@@ -22,7 +22,7 @@
 # Functions which decide where to put major / minor ticks on axes
 
 import gp_math
-import pyx
+import dcfpyx
 import math
 
 # The maximum number of ticks along any axis
@@ -277,7 +277,7 @@ def ticks_pyx(tick_pos_list, ticklevel, axis_min, axis_max, exclude_list=[]):
   if not exclude:
    if (ticklevel == 0): label = tick[1]
    else               : label = ""
-   ticks_pyx_out.append(pyx.graph.axis.tick.tick(tick[0], label=label, ticklevel=ticklevel))
+   ticks_pyx_out.append(dcfpyx.graph.axis.tick.tick(tick[0], label=label, ticklevel=ticklevel))
    tick_prev_x = tick[0]
 
  return ticks_pyx_out

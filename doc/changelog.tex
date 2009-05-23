@@ -3,8 +3,8 @@
 % The documentation in this file is part of PyXPlot
 % <http://www.pyxplot.org.uk>
 %
-% Copyright (C) 2006-8 Dominic Ford <coders@pyxplot.org.uk>
-%               2008   Ross Church
+% Copyright (C) 2006-9 Dominic Ford <coders@pyxplot.org.uk>
+%               2008-9 Ross Church
 %
 % $Id$
 %
@@ -23,6 +23,29 @@
 
 \chapter{ChangeLog}
 \index{ChangeLog}
+
+\subsection*{2009 May 24: PyXPlot 0.7.1}
+
+\subsubsection*{Summary:}
+
+This release has no major new features, but fixes several serious bugs in version 0.7.0.
+
+\subsubsection*{Details:}
+
+\begin{itemize}
+\item The {\tt exec} command did not work in PyXPlot 0.7.0; this issue has been resolved.
+\item The {\tt xyerrorrange} plot style did not work in PyXPlot 0.7.0; this issue has been resolved.
+\item PyXPlot 0.7.0 produces large numbers of python deprecation error messages when run under python 2.6; the code has been updated to remove references to deprecated python functions.
+\end{itemize}
+
+\subsubsection*{Details -- Change of System Requirements:}
+
+\begin{itemize}
+\item In order to fix some of the bugs listed above, it has been necessary to
+fix bugs in the PyX graphics library as well as those in PyXPlot. As a result,
+and to ensure that these bugfixes reach users as quickly as possible, we have
+opted to ship our own modified version of PyX 0.10, called dcfPyX with PyXPlot.
+\end{itemize}
 
 \subsection*{2008 Oct 14: PyXPlot 0.7.0}
 

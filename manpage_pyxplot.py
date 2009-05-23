@@ -3,8 +3,8 @@
 # The code in this file is part of PyXPlot
 # <http://www.pyxplot.org.uk>
 #
-# Copyright (C) 2006-8 Dominic Ford <coders@pyxplot.org.uk>
-#               2008   Ross Church
+# Copyright (C) 2006-9 Dominic Ford <coders@pyxplot.org.uk>
+#               2008-9 Ross Church
 #
 # $Id$
 #
@@ -37,7 +37,7 @@ for line in f.readlines():
 sys.stdout.write("""
 .\" pyxplot.man
 .\" Dominic Ford
-.\" 14/10/2008
+.\" 24/05/2009
 
 .\" Man page for pyxplot
 

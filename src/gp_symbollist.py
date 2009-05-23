@@ -3,8 +3,8 @@
 # The code in this file is part of PyXPlot
 # <http://www.pyxplot.org.uk>
 #
-# Copyright (C) 2006-8 Dominic Ford <coders@pyxplot.org.uk>
-#               2008   Ross Church
+# Copyright (C) 2006-9 Dominic Ford <coders@pyxplot.org.uk>
+#               2008-9 Ross Church
 #
 # $Id$
 #
@@ -21,8 +21,8 @@
 
 # A list of the symbol types used by the 'points' plot style
 
-import pyx
-from pyx import attr, path
+import dcfpyx
+from dcfpyx import attr, path
 
 # The following is a modified version of symbol definitions from the file:
 # pyx/graph/style.py
@@ -33,7 +33,7 @@ def _upperlimit_symbol(c, x_pt, y_pt, size_pt, attrs):
     c.draw(path.path(path.moveto_pt(x_pt-0.5*size_pt, y_pt             ),
                      path.lineto_pt(x_pt+0.5*size_pt, y_pt             )), attrs)
     c.draw(path.path(path.moveto_pt(x_pt            , y_pt             ),
-                     path.lineto_pt(x_pt            , y_pt-2.0*size_pt )), attrs+[pyx.deco.earrow(size=size_pt*pyx.unit.v_pt)])
+                     path.lineto_pt(x_pt            , y_pt-2.0*size_pt )), attrs+[dcfpyx.deco.earrow(size=size_pt*dcfpyx.unit.v_pt)])
 
 upperlimit = attr.changelist([_upperlimit_symbol])
 
@@ -43,23 +43,23 @@ def _lowerlimit_symbol(c, x_pt, y_pt, size_pt, attrs):
     c.draw(path.path(path.moveto_pt(x_pt-0.5*size_pt, y_pt             ),
                      path.lineto_pt(x_pt+0.5*size_pt, y_pt             )), attrs)
     c.draw(path.path(path.moveto_pt(x_pt            , y_pt             ),
-                     path.lineto_pt(x_pt            , y_pt+2.0*size_pt )), attrs+[pyx.deco.earrow(size=size_pt*pyx.unit.v_pt)])
+                     path.lineto_pt(x_pt            , y_pt+2.0*size_pt )), attrs+[dcfpyx.deco.earrow(size=size_pt*dcfpyx.unit.v_pt)])
 
 lowerlimit = attr.changelist([_lowerlimit_symbol])
 
 # List of symbol types, corresponding to point types 1,2,3,etc.
 
-symbol_list = [[[pyx.graph.style.symbol.cross   ,False]],
-               [[pyx.graph.style.symbol.plus    ,False]],
-               [[pyx.graph.style.symbol.cross   ,False] , [pyx.graph.style.symbol.plus    ,False]],
-               [[pyx.graph.style.symbol.square  ,False]],
-               [[pyx.graph.style.symbol.triangle,False]],
-               [[pyx.graph.style.symbol.circle  ,False]],
-               [[pyx.graph.style.symbol.diamond ,False]],
-               [[pyx.graph.style.symbol.square  ,True ]],
-               [[pyx.graph.style.symbol.triangle,True ]],
-               [[pyx.graph.style.symbol.circle  ,True ]],
-               [[pyx.graph.style.symbol.diamond ,True ]],
+symbol_list = [[[dcfpyx.graph.style.symbol.cross   ,False]],
+               [[dcfpyx.graph.style.symbol.plus    ,False]],
+               [[dcfpyx.graph.style.symbol.cross   ,False] , [dcfpyx.graph.style.symbol.plus    ,False]],
+               [[dcfpyx.graph.style.symbol.square  ,False]],
+               [[dcfpyx.graph.style.symbol.triangle,False]],
+               [[dcfpyx.graph.style.symbol.circle  ,False]],
+               [[dcfpyx.graph.style.symbol.diamond ,False]],
+               [[dcfpyx.graph.style.symbol.square  ,True ]],
+               [[dcfpyx.graph.style.symbol.triangle,True ]],
+               [[dcfpyx.graph.style.symbol.circle  ,True ]],
+               [[dcfpyx.graph.style.symbol.diamond ,True ]],
                [[upperlimit                     ,False]],
                [[lowerlimit                     ,False]]
                ]

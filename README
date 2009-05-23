@@ -1,9 +1,9 @@
  ____       __  ______  _       _      PYXPLOT
-|  _ \ _   _\ \/ /  _ \| | ___ | |_    Version 0.7.0
-| |_) | | | |\  /| |_) | |/ _ \| __|   14/10/2008
+|  _ \ _   _\ \/ /  _ \| | ___ | |_    Version 0.7.1
+| |_) | | | |\  /| |_) | |/ _ \| __|   24/05/2009
 |  __/| |_| |/  \|  __/| | (_) | |_
-|_|    \__, /_/\_\_|   |_|\___/ \__|   Copyright (C) 2006-8 Dominic Ford
-       |___/                                         2008   Ross Church
+|_|    \__, /_/\_\_|   |_|\___/ \__|   Copyright (C) 2006-9 Dominic Ford
+       |___/                                         2008-9 Ross Church
 
 With thanks to Joerg Lehmann, Andre Wobst and Michael Schindler for writing
 PyX.
@@ -78,7 +78,7 @@ you need to contact your system administrator.
 
 * Unpack the distributed .tar.gz:
 
-tar xvfz pyxplot_0.7.0.tar.gz
+tar xvfz pyxplot_0.7.1.tar.gz
 cd pyxplot
 
 * Run the installation script:

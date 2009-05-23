@@ -3,8 +3,8 @@
 # The code in this file is part of PyXPlot
 # <http://www.pyxplot.org.uk>
 #
-# Copyright (C) 2006-8 Dominic Ford <coders@pyxplot.org.uk>
-#               2008   Ross Church
+# Copyright (C) 2006-9 Dominic Ford <coders@pyxplot.org.uk>
+#               2008-9 Ross Church
 #
 # $Id$
 #
@@ -53,8 +53,8 @@ init = r"""
 |  _ \ _   _\ \/ /  _ \| | ___ | |_    Version """+VERSION+r"""
 | |_) | | | |\  /| |_) | |/ _ \| __|   """+DATE+r"""
 |  __/| |_| |/  \|  __/| | (_) | |_
-|_|    \__, /_/\_\_|   |_|\___/ \__|   Copyright (C) 2006-8 Dominic Ford
-       |___/                                         2008   Ross Church
+|_|    \__, /_/\_\_|   |_|\___/ \__|   Copyright (C) 2006-9 Dominic Ford
+       |___/                                         2008-9 Ross Church
 
 With thanks to Joerg Lehmann, Andre Wobst and Michael Schindler for writing
 PyX.

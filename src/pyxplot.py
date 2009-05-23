@@ -3,8 +3,8 @@
 # The code in this file is part of PyXPlot
 # <http://www.pyxplot.org.uk>
 #
-# Copyright (C) 2006-8 Dominic Ford <coders@pyxplot.org.uk>
-#               2008   Ross Church
+# Copyright (C) 2006-9 Dominic Ford <coders@pyxplot.org.uk>
+#               2008-9 Ross Church
 #
 # $Id$
 #
@@ -41,6 +41,7 @@ from gp_error import *
 import gp_plot
 
 import os
+import subprocess
 import sys
 import stat
 import glob
@@ -939,7 +940,7 @@ def directive(line, recurse_depth, toplevel=True, interactive=False):
   for i in range(len(linesplit)):
    if ((i%2) == 1):
     os.chdir(gp_settings.cwd)
-    shell_cmd = os.popen(linesplit[i],"r")
+    shell_cmd = subprocess.Popen(linesplit[i],stdout=subprocess.PIPE).stdout;
     linesplit[i] = shell_cmd.read().replace('\n',' ')
     shell_cmd.close()
     os.chdir(gp_settings.tempdir)
