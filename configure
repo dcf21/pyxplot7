@@ -46,7 +46,7 @@ for prog in "latex  " "convert"
 
 PYTHON_COMMAND=""
 PYTHON_PACKSMISSING_COMMAND=""
-for pyprog in "python2.3" "python2.4" "python2.5" "python   "
+for pyprog in "python2.4" "python2.5" "python2.6" "python   "
  do
   echo $ECHO_N "Checking for ${pyprog}         ............. $ECHO_C"
   pyprogpath=`which ${pyprog} 2> /dev/null`
@@ -57,7 +57,7 @@ for pyprog in "python2.3" "python2.4" "python2.5" "python   "
   fi
   echo "YES"
   echo $ECHO_N "Checking for ${pyprog}/VERSION ............. $ECHO_C"
-  pythonout=`echo "import os ; import sys ; import re; test = re.match(r'(\\d*)\\.(\\d*)',sys.version) ; assert ((int(test.group(1)) > 2) or ((int(test.group(1)) == 2) and (int(test.group(2)) >= 3))) ; print 'qzxq'" | ${pyprog} 2> /dev/null`
+  pythonout=`echo "import os ; import sys ; import re; test = re.match(r'(\\d*)\\.(\\d*)',sys.version) ; assert ((int(test.group(1)) > 2) or ((int(test.group(1)) == 2) and (int(test.group(2)) >= 4))) ; print 'qzxq'" | ${pyprog} 2> /dev/null`
   if [ "`echo $pythonout | sed 's/.*\(qzxq\).*/\1/'`" != "qzxq" ] ; then
    echo "NO"
    continue
