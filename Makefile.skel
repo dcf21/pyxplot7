@@ -77,9 +77,9 @@ setup:
 
 install:
 	install -d ${SRCDIR} ${BINDIR} ${DOCDIR} ${MANDIR} ${DOCDIR}/examples ${DOCDIR}/examples/eps
-	rm -rf ${SRCDIR}/pyx
-	cp -r src/pyx ${SRCDIR}
-	chmod -R 755 ${SRCDIR}/pyx
+	rm -rf ${SRCDIR}/dcfpyx
+	cp -r src/dcfpyx ${SRCDIR}
+	chmod -R 755 ${SRCDIR}/dcfpyx
 	install -m644 src/*.py ${SRCDIR}
 	install -m644 src/gp_version_install.py ${SRCDIR}/gp_version.py
 	install -m644 src/*.pyc ${SRCDIR}

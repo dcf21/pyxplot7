@@ -103,7 +103,7 @@ whichout_ggv=`which ggv 2> /dev/null`
 if [ "`echo $whichout_gv | sed 's/\([a-z]*\).*/\1/'`" = "no" ] ; then whichout_gv="" ; fi
 if [ "`echo $whichout_ggv | sed 's/\([a-z]*\).*/\1/'`" = "no" ] ; then whichout_ggv="" ; fi
 if [ "$whichout_gv" != "" ] ; then
- echo $ECHO_N "YES (gv"
+ echo $ECHO_N "YES (gv$ECHO_C"
  echo "GV_COMMAND=${whichout_gv}" >> Makefile 
  if [ "`gv --v 2> /dev/null`" = "" ]; then 
   echo ", single hyphen options)" 
