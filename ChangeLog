@@ -1,4 +1,4 @@
-2009 May 24: PyXPlot 0.7.1
+2009 Nov 17: PyXPlot 0.7.1
 	- Bug fix to the xyerrorrange plot style.
 	- Bug fix to the exec command.
 	- Bug fix to remove deprecation error messgaes when run on python 2.6.

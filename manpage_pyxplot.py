@@ -34,10 +34,10 @@ for line in f.readlines():
  elif (line[0:2] == "2."): state = 2
  elif (state == 1)       : description += line
 
-sys.stdout.write("""
+sys.stdout.write(r"""
 .\" pyxplot.man
 .\" Dominic Ford
-.\" 24/05/2009
+.\" 17/11/2009
 
 .\" Man page for pyxplot
 
@@ -53,12 +53,12 @@ gnuplot, which produces publication-quality output.
 Full documentation can be found in:
 %s
 .SH COMMAND LINE OPTIONS
-  -h, --help:       Display this help.
-  -v, --version:    Display version number.
-  -q, --quiet:      Turn off initial welcome message.
-  -V, --verbose:    Turn on initial welcome message.
-  -c, --colour:     Use coloured highlighting of output.
-  -m, --monochrome: Turn off coloured highlighting.
+  \-h, \-\-help:       Display this help.
+  \-v, \-\-version:    Display version number.
+  \-q, \-\-quiet:      Turn off initial welcome message.
+  \-V, \-\-verbose:    Turn on initial welcome message.
+  \-c, \-\-colour:     Use coloured highlighting of output.
+  \-m, \-\-monochrome: Turn off coloured highlighting.
 .SH AUTHOR
 %s.
 .SH CREDITS
